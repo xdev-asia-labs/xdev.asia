@@ -1,0 +1,353 @@
+---
+id: 019c9619-ab11-7011-c111-ab1100000011
+title: 'Bài 11: OCR & Document Understanding'
+slug: bai-11-ocr-document-understanding
+description: >-
+  OCR pipeline: Tesseract, EasyOCR, PaddleOCR. Document layout
+  analysis: LayoutLM, Donut. Table extraction. Invoice/receipt
+  processing. Handwriting recognition. Tiếng Việt OCR challenges.
+duration_minutes: 150
+is_free: true
+video_url: null
+sort_order: 10
+section_title: "Phần 4: Ứng dụng Thực tế & Deployment"
+course:
+  id: 019c9619-aa06-7006-b006-aa0600000006
+  title: "Computer Vision với Deep Learning: Từ CNN đến Vision Transformer"
+  slug: computer-vision-deep-learning
+---
+
+## Giới thiệu
+
+**OCR** (Optical Character Recognition) = đọc chữ từ ảnh. Nghe đơn giản nhưng thực tế rất phức tạp: chữ nghiêng, mờ, nhiều ngôn ngữ, handwriting, bảng biểu... Bài này cover từ OCR cơ bản đến **Document Understanding** hiện đại.
+
+> 🎯 **Use cases:** Đọc biển số xe, xử lý hóa đơn/invoice, digitize tài liệu, form extraction.
+
+---
+
+## 1. OCR Pipeline
+
+### 1.1 Các bước cơ bản
+
+```
+Input Image (ảnh chứa chữ)
+    ↓
+1. Preprocessing:  Denoise, deskew, binarize
+    ↓
+2. Text Detection: Tìm vùng có chữ (bounding boxes)
+    ↓
+3. Text Recognition: Đọc chữ trong mỗi vùng
+    ↓
+4. Post-processing: Sửa lỗi, format output
+    ↓
+Output: Text + positions
+```
+
+### 1.2 OCR Engines phổ biến
+
+| Engine | Loại | Tiếng Việt | Speed | Accuracy | Free? |
+|--------|------|-----------|-------|----------|-------|
+| **Tesseract** | Traditional | ⭐⭐ | ⚡ Nhanh | ⭐⭐⭐ | ✅ |
+| **EasyOCR** | Deep Learning | ⭐⭐⭐⭐ | 🔥 Vừa | ⭐⭐⭐⭐ | ✅ |
+| **PaddleOCR** | Deep Learning | ⭐⭐⭐⭐⭐ | ⚡ Nhanh | ⭐⭐⭐⭐⭐ | ✅ |
+| **Google Vision** | Cloud API | ⭐⭐⭐⭐⭐ | ⚡ | ⭐⭐⭐⭐⭐ | 💰 |
+| **Azure AI Vision** | Cloud API | ⭐⭐⭐⭐⭐ | ⚡ | ⭐⭐⭐⭐⭐ | 💰 |
+
+---
+
+## 2. Hands-on: Các OCR Engines
+
+### 2.1 Tesseract
+
+```python
+"""Tesseract OCR — engine classic"""
+# pip install pytesseract
+# macOS: brew install tesseract
+# Ubuntu: sudo apt install tesseract-ocr tesseract-ocr-vie
+
+import pytesseract
+from PIL import Image
+import cv2
+
+# Basic OCR
+image = Image.open("document.png")
+text = pytesseract.image_to_string(image, lang="vie")  # Tiếng Việt
+print(text)
+
+# OCR với bounding boxes
+data = pytesseract.image_to_data(image, lang="vie", output_type=pytesseract.Output.DICT)
+
+img_cv = cv2.imread("document.png")
+for i, word in enumerate(data['text']):
+    if word.strip() and int(data['conf'][i]) > 60:  # Confidence > 60%
+        x, y, w, h = data['left'][i], data['top'][i], data['width'][i], data['height'][i]
+        cv2.rectangle(img_cv, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.putText(img_cv, word, (x, y-5),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+```
+
+### 2.2 EasyOCR
+
+```python
+"""EasyOCR — Deep Learning, hỗ trợ 80+ ngôn ngữ"""
+# pip install easyocr
+import easyocr
+
+# Khởi tạo (tải model lần đầu)
+reader = easyocr.Reader(['vi', 'en'])  # Tiếng Việt + Anh
+
+# OCR
+results = reader.readtext("invoice.jpg")
+
+for (bbox, text, confidence) in results:
+    print(f"  [{confidence:.2%}] {text}")
+    # bbox = [[x1,y1], [x2,y2], [x3,y3], [x4,y4]] — 4 corners
+
+# OCR trên ảnh OpenCV
+import cv2
+img = cv2.imread("invoice.jpg")
+
+for (bbox, text, confidence) in results:
+    if confidence > 0.5:
+        # Vẽ polygon
+        pts = [tuple(map(int, pt)) for pt in bbox]
+        cv2.polylines(img, [np.array(pts)], True, (0, 255, 0), 2)
+        cv2.putText(img, text, pts[0],
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+```
+
+### 2.3 PaddleOCR — Tốt nhất cho tiếng Việt
+
+```python
+"""PaddleOCR — SOTA accuracy, đặc biệt tốt cho CJK + Vietnamese"""
+# pip install paddlepaddle paddleocr
+from paddleocr import PaddleOCR
+
+# Khởi tạo
+ocr = PaddleOCR(
+    use_angle_cls=True,    # Tự phát hiện chữ xoay
+    lang='vi',             # Tiếng Việt
+    use_gpu=True,
+)
+
+# OCR
+result = ocr.ocr("document.jpg", cls=True)
+
+for line in result[0]:
+    bbox = line[0]           # 4 điểm
+    text = line[1][0]        # Text
+    confidence = line[1][1]  # Confidence
+    print(f"  [{confidence:.2%}] {text}")
+```
+
+---
+
+## 3. Preprocessing cho OCR
+
+```python
+"""Preprocessing cải thiện OCR accuracy đáng kể"""
+import cv2
+import numpy as np
+
+def preprocess_for_ocr(image_path):
+    img = cv2.imread(image_path)
+
+    # 1. Grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # 2. Denoise
+    denoised = cv2.fastNlMeansDenoising(gray, h=10)
+
+    # 3. Binarize (Otsu's threshold)
+    _, binary = cv2.threshold(denoised, 0, 255,
+                               cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # 4. Deskew (sửa nghiêng)
+    coords = np.column_stack(np.where(binary < 128))
+    if len(coords) > 0:
+        angle = cv2.minAreaRect(coords)[-1]
+        if angle < -45:
+            angle = -(90 + angle)
+        else:
+            angle = -angle
+
+        if abs(angle) > 0.5:
+            h, w = binary.shape
+            center = (w // 2, h // 2)
+            M = cv2.getRotationMatrix2D(center, angle, 1.0)
+            binary = cv2.warpAffine(binary, M, (w, h),
+                                     flags=cv2.INTER_CUBIC,
+                                     borderMode=cv2.BORDER_REPLICATE)
+
+    # 5. Remove borders / noise
+    kernel = np.ones((2, 2), np.uint8)
+    binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+
+    return binary
+
+# Sử dụng
+clean_image = preprocess_for_ocr("noisy_scan.jpg")
+text = pytesseract.image_to_string(clean_image, lang="vie")
+```
+
+---
+
+## 4. Document Layout Analysis
+
+### 4.1 Vấn đề
+
+```
+Trang tài liệu có:
+- Tiêu đề (header)
+- Đoạn văn (paragraph)
+- Bảng (table)
+- Hình ảnh (figure)
+- Chú thích (caption)
+- Header / Footer
+
+→ OCR chỉ đọc CHỮ. Layout Analysis hiểu CẤUTRÚC.
+```
+
+### 4.2 LayoutLM — Transformer cho Document
+
+```python
+"""LayoutLMv3: hiểu layout + text + image cùng lúc"""
+from transformers import LayoutLMv3Processor, LayoutLMv3ForTokenClassification
+from PIL import Image
+
+processor = LayoutLMv3Processor.from_pretrained(
+    "microsoft/layoutlmv3-base",
+    apply_ocr=True,  # Tự chạy OCR
+)
+model = LayoutLMv3ForTokenClassification.from_pretrained(
+    "microsoft/layoutlmv3-base",
+    num_labels=7,  # title, text, table, figure, list, ...
+)
+
+image = Image.open("paper_page.png")
+encoding = processor(image, return_tensors="pt")
+
+with torch.no_grad():
+    outputs = model(**encoding)
+
+# Predictions cho mỗi token
+predictions = outputs.logits.argmax(-1).squeeze()
+# Label: 0=other, 1=title, 2=text, 3=table, 4=figure, 5=list, 6=footer
+```
+
+### 4.3 Table Extraction
+
+```python
+"""Trích xuất bảng từ ảnh"""
+# pip install img2table
+from img2table.document import Image as Img2TableImage
+from img2table.ocr import PaddleOCR as Img2TableOCR
+
+# OCR engine
+ocr = Img2TableOCR(lang="vie")
+
+# Detect và extract tables
+doc = Img2TableImage(src="invoice_with_table.jpg")
+tables = doc.extract_tables(ocr=ocr)
+
+for i, table in enumerate(tables):
+    print(f"\nTable {i+1}:")
+    df = table.df  # Pandas DataFrame!
+    print(df.to_string())
+    df.to_csv(f"table_{i+1}.csv", index=False)
+```
+
+---
+
+## 5. Invoice / Receipt Processing
+
+```python
+"""Pipeline xử lý hóa đơn"""
+import re
+from paddleocr import PaddleOCR
+
+ocr = PaddleOCR(lang='vi')
+
+def process_invoice(image_path):
+    """Extract thông tin từ hóa đơn"""
+    result = ocr.ocr(image_path)
+
+    # Tập hợp tất cả text
+    all_text = []
+    for line in result[0]:
+        text = line[1][0]
+        confidence = line[1][1]
+        bbox = line[0]
+        all_text.append({
+            "text": text,
+            "confidence": confidence,
+            "y_center": (bbox[0][1] + bbox[2][1]) / 2,
+        })
+
+    full_text = "\n".join([t["text"] for t in all_text])
+
+    # Extract thông tin bằng regex
+    info = {}
+
+    # Số hóa đơn
+    invoice_match = re.search(r'(?:Số|No|Invoice)\s*[:#]?\s*(\S+)', full_text, re.IGNORECASE)
+    if invoice_match:
+        info["invoice_number"] = invoice_match.group(1)
+
+    # Ngày
+    date_match = re.search(r'(\d{2}[/-]\d{2}[/-]\d{4})', full_text)
+    if date_match:
+        info["date"] = date_match.group(1)
+
+    # Tổng tiền
+    total_match = re.search(r'(?:Tổng|Total|Thành tiền)\s*[:]?\s*([\d,.]+)', full_text, re.IGNORECASE)
+    if total_match:
+        info["total"] = total_match.group(1)
+
+    return info
+
+# Test
+info = process_invoice("invoice_sample.jpg")
+print(f"📄 Invoice: {info}")
+```
+
+---
+
+## 6. Tiếng Việt OCR — Thách thức
+
+```
+Thách thức riêng cho tiếng Việt:
+1. Dấu: sắc, huyền, hỏi, ngã, nặng → dễ nhầm
+2. Ký tự đặc biệt: ă, â, ê, ô, ơ, ư, đ
+3. Tone marks nhỏ trên chữ hoa: Ả, Ẵ, Ỗ
+4. Font chữ đa dạng (đặc biệt trong tài liệu cũ)
+5. Mixed language: Việt + English trong cùng document
+
+Tips:
+✅ Dùng PaddleOCR hoặc EasyOCR (tốt cho tiếng Việt)
+✅ Preprocessing: denoise + binarize + deskew
+✅ Post-processing: spell check tiếng Việt
+✅ Test trên data thật trước khi deploy
+```
+
+---
+
+## Tóm tắt
+
+| Concept | Ghi nhớ |
+|---------|---------|
+| **Tesseract** | Classic OCR, nhanh, free, cần preprocessing |
+| **EasyOCR** | Deep Learning, 80+ ngôn ngữ, dễ dùng |
+| **PaddleOCR** | SOTA accuracy, tốt nhất cho tiếng Việt |
+| **Preprocessing** | Denoise + Binarize + Deskew → tăng accuracy |
+| **Layout Analysis** | LayoutLMv3 hiểu cấu trúc tài liệu |
+| **Table Extraction** | img2table → Pandas DataFrame |
+
+## Bài tập tổng hợp
+
+1. **OCR Comparison:** Chạy cả 3 engine (Tesseract, EasyOCR, PaddleOCR) trên 5 ảnh tiếng Việt. So sánh accuracy.
+2. **Invoice Parser:** Xây pipeline đọc hóa đơn: extract số hóa đơn, ngày, tổng tiền.
+3. **Preprocessing Impact:** Chạy OCR trước và sau preprocessing. Accuracy tăng bao nhiêu %?
+4. **Table Reader:** Extract bảng từ 3 ảnh chứa bảng khác nhau. Export CSV.
+
+> **Bài tiếp theo:** Multimodal AI — GPT-4o Vision, Gemini Vision cho image understanding.

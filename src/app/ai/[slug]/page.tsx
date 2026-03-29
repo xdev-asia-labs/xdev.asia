@@ -11,7 +11,9 @@ import { IconChevronRight, IconClock, IconBrain } from "@/components/Icons";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-    return getAIPostSlugs().map((slug) => ({ slug }));
+    const slugs = getAIPostSlugs();
+    if (slugs.length === 0) return [{ slug: "_" }];
+    return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

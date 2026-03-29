@@ -1,0 +1,413 @@
+---
+id: 019c9619-ac07-7007-d107-ac0700000007
+title: 'Bài 7: LLMOps vs MLOps — Paradigm Shift'
+slug: bai-7-llmops-vs-mlops
+description: >-
+  LLMOps paradigm: differences from traditional MLOps. LLM-specific
+  challenges: prompt engineering, evaluation, hallucination, cost management.
+  LLMOps stack overview. When to fine-tune vs prompt engineer.
+duration_minutes: 120
+is_free: true
+video_url: null
+sort_order: 6
+section_title: "Phần 3: LLMOps"
+course:
+  id: 019c9619-aa07-7007-b007-aa0700000007
+  title: "MLOps & LLMOps: Đưa AI lên Production"
+  slug: mlops-llmops
+---
+
+## Giới thiệu
+
+MLOps đã khó — LLMOps còn khó hơn. LLM không giống model truyền thống: bạn không train từ đầu, evaluation rất khó, và chi phí inference cao gấp 100x.
+
+> 🎯 **LLMOps** = quy trình đưa LLM applications lên production hiệu quả.
+
+---
+
+## 1. MLOps vs LLMOps — Khác gì?
+
+```
+Traditional ML:
+  Data → Feature Eng → Train Model → Deploy → Monitor
+  ✅ Model nhỏ (MB)
+  ✅ Train trên dataset nhỏ (GB)
+  ✅ Evaluation rõ ràng (accuracy, F1)
+  ✅ Inference rẻ (<1ms)
+
+LLM:
+  Prompt → LLM API → Post-process → Deploy → Monitor
+  ❌ Model rất lớn (100B params, 100GB+)
+  ❌ Không train (hoặc fine-tune rất đắt)
+  ❌ Evaluation mơ hồ (chất lượng text?)
+  ❌ Inference đắt ($0.01-$0.10/request)
+```
+
+### So sánh chi tiết:
+
+| Aspect | Traditional ML | LLMOps |
+|--------|---------------|--------|
+| **Model** | Train from scratch | Pre-trained, prompt/fine-tune |
+| **Data** | Structured (tabular) | Unstructured (text, code) |
+| **Training** | Hours-days | Weeks-months (or N/A) |
+| **Cost** | Train expensive, serve cheap | Train VERY expensive, serve expensive |
+| **Evaluation** | Clear metrics (acc, F1) | Subjective + multiple dimensions |
+| **Versioning** | Model weights | Prompts + model selection |
+| **Deployment** | Self-host easy | API calls or huge GPU servers |
+| **Monitoring** | Data drift | Prompt drift, hallucination, toxicity |
+| **Failure mode** | Wrong prediction | Hallucination, harmful content |
+
+---
+
+## 2. LLMOps Stack
+
+```
+┌─────────────────────────────────────────────────┐
+│                  LLMOps Stack                    │
+├──────────────┬──────────────────────────────────┤
+│ Layer        │ Components                        │
+├──────────────┼──────────────────────────────────┤
+│ Foundation   │ OpenAI, Anthropic, Google, Llama  │
+│ Models       │ Mistral, Cohere                   │
+├──────────────┼──────────────────────────────────┤
+│ Prompt       │ Prompt templates, versioning      │
+│ Management   │ A/B testing, optimization         │
+├──────────────┼──────────────────────────────────┤
+│ RAG          │ Vector DBs, embeddings, chunking  │
+│ Pipeline     │ retrieval, re-ranking             │
+├──────────────┼──────────────────────────────────┤
+│ Orchestration│ LangChain, LlamaIndex, DSPy       │
+│              │ Agents, chains, tool use           │
+├──────────────┼──────────────────────────────────┤
+│ Evaluation   │ Human eval, LLM-as-judge          │
+│              │ Benchmarks, A/B testing            │
+├──────────────┼──────────────────────────────────┤
+│ Observability│ LangSmith, Langfuse, Arize        │
+│              │ Tracing, logging, debugging        │
+├──────────────┼──────────────────────────────────┤
+│ Guardrails   │ Content filtering, PII detection   │
+│              │ Output validation, rate limiting    │
+├──────────────┼──────────────────────────────────┤
+│ Cost Mgmt    │ Caching, routing, token counting   │
+│              │ Budget alerts, model selection      │
+└──────────────┴──────────────────────────────────┘
+```
+
+---
+
+## 3. LLM Application Patterns
+
+### 3.1 Direct API Call
+
+```python
+"""Pattern 1: Direct API call — đơn giản nhất"""
+from openai import OpenAI
+
+client = OpenAI()
+
+def classify_sentiment(text):
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "Classify sentiment as positive/negative/neutral. Return ONLY the label."},
+            {"role": "user", "content": text},
+        ],
+        temperature=0,
+        max_tokens=10,
+    )
+    return response.choices[0].message.content.strip()
+
+# Simple, nhưng:
+# ❌ Không cache
+# ❌ Không track prompts
+# ❌ Không monitor
+# ❌ Không fallback
+```
+
+### 3.2 Production-Ready Pattern
+
+```python
+"""Pattern 2: Production-ready LLM call"""
+from openai import OpenAI
+import hashlib
+import json
+import time
+import logging
+from functools import lru_cache
+
+logger = logging.getLogger(__name__)
+
+class LLMService:
+    def __init__(self):
+        self.client = OpenAI()
+        self.cache = {}  # Redis in production
+        self.total_tokens = 0
+        self.total_cost = 0
+
+    def call(self, messages, model="gpt-4o-mini", **kwargs):
+        """Production LLM call with caching, logging, and fallback"""
+
+        # 1. Check cache
+        cache_key = self._cache_key(messages, model)
+        if cache_key in self.cache:
+            logger.info(f"Cache hit: {cache_key[:8]}")
+            return self.cache[cache_key]
+
+        # 2. Call with retry
+        for attempt in range(3):
+            try:
+                start = time.time()
+                response = self.client.chat.completions.create(
+                    model=model,
+                    messages=messages,
+                    **kwargs,
+                )
+                latency = time.time() - start
+
+                # 3. Track usage
+                usage = response.usage
+                self.total_tokens += usage.total_tokens
+                cost = self._calculate_cost(model, usage)
+                self.total_cost += cost
+
+                # 4. Log
+                logger.info(
+                    f"LLM call: model={model}, tokens={usage.total_tokens}, "
+                    f"latency={latency:.2f}s, cost=${cost:.4f}"
+                )
+
+                result = response.choices[0].message.content
+                self.cache[cache_key] = result
+                return result
+
+            except Exception as e:
+                logger.warning(f"Attempt {attempt+1} failed: {e}")
+                if attempt == 2:
+                    # Fallback to cheaper model
+                    if model != "gpt-4o-mini":
+                        logger.info("Falling back to gpt-4o-mini")
+                        return self.call(messages, model="gpt-4o-mini", **kwargs)
+                    raise
+                time.sleep(2 ** attempt)
+
+    def _cache_key(self, messages, model):
+        content = json.dumps({"messages": messages, "model": model})
+        return hashlib.md5(content.encode()).hexdigest()
+
+    def _calculate_cost(self, model, usage):
+        prices = {
+            "gpt-4o": {"input": 2.50/1e6, "output": 10.0/1e6},
+            "gpt-4o-mini": {"input": 0.15/1e6, "output": 0.60/1e6},
+        }
+        p = prices.get(model, prices["gpt-4o-mini"])
+        return usage.prompt_tokens * p["input"] + \
+               usage.completion_tokens * p["output"]
+```
+
+### 3.3 RAG Pattern
+
+```python
+"""Pattern 3: RAG (Retrieval-Augmented Generation)"""
+from openai import OpenAI
+import chromadb
+
+class RAGService:
+    def __init__(self):
+        self.llm = OpenAI()
+        self.db = chromadb.HttpClient(host="localhost", port=8000)
+        self.collection = self.db.get_collection("knowledge_base")
+
+    def query(self, question, top_k=5):
+        # 1. Retrieve relevant documents
+        results = self.collection.query(
+            query_texts=[question],
+            n_results=top_k,
+        )
+
+        # 2. Build context
+        context = "\n\n".join(results['documents'][0])
+
+        # 3. Generate answer
+        response = self.llm.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": f"""
+Answer based ONLY on the provided context.
+If the answer is not in the context, say "I don't know."
+
+Context:
+{context}
+"""},
+                {"role": "user", "content": question},
+            ],
+        )
+
+        return {
+            "answer": response.choices[0].message.content,
+            "sources": results['metadatas'][0],
+        }
+```
+
+---
+
+## 4. LLM Evaluation — Thách thức lớn
+
+### 4.1 Vấn đề
+
+```
+Traditional ML: accuracy = 0.92 → Good!
+
+LLM: "Summarize this article" → ???
+  - Chính xác?
+  - Đầy đủ?
+  - Ngắn gọn?
+  - Đúng tone?
+  - Không hallucinate?
+  → Rất khó đo tự động
+```
+
+### 4.2 Evaluation Framework
+
+```python
+"""LLM Evaluation pipeline"""
+from openai import OpenAI
+import json
+
+client = OpenAI()
+
+def evaluate_with_llm_judge(question, answer, reference_answer=None):
+    """LLM-as-a-Judge evaluation"""
+    eval_prompt = f"""
+Evaluate the following answer on these criteria (1-5 scale):
+
+1. **Correctness**: Is the answer factually correct?
+2. **Completeness**: Does it cover all key points?
+3. **Conciseness**: Is it appropriately concise?
+4. **Relevance**: Does it actually answer the question?
+5. **Harmlessness**: Is it safe and appropriate?
+
+Question: {question}
+Answer: {answer}
+{"Reference: " + reference_answer if reference_answer else ""}
+
+Respond in JSON: {{"correctness": X, "completeness": X, "conciseness": X, "relevance": X, "harmlessness": X, "explanation": "..."}}
+"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": eval_prompt}],
+        response_format={"type": "json_object"},
+    )
+
+    return json.loads(response.choices[0].message.content)
+
+
+# Chạy evaluation trên test set
+test_cases = [
+    {
+        "question": "Python list comprehension là gì?",
+        "reference": "List comprehension là cú pháp ngắn gọn để tạo list mới từ iterable.",
+    },
+    # ... more test cases
+]
+
+results = []
+for tc in test_cases:
+    answer = my_llm_service.query(tc["question"])
+    eval_result = evaluate_with_llm_judge(
+        tc["question"], answer, tc.get("reference")
+    )
+    results.append(eval_result)
+    print(f"Q: {tc['question'][:50]}... → Score: {eval_result}")
+
+# Aggregate
+avg_scores = {
+    key: sum(r[key] for r in results) / len(results)
+    for key in ["correctness", "completeness", "relevance"]
+}
+print(f"\n📊 Average scores: {avg_scores}")
+```
+
+---
+
+## 5. Decision Framework: Prompt vs Fine-tune vs RAG
+
+```
+                      Cần domain knowledge?
+                       /              \
+                     Yes               No
+                      |                 |
+               Data có sẵn?      Task phức tạp?
+               /          \        /        \
+             Yes           No    Yes         No
+              |             |     |           |
+        Fine-tune     RAG + Prompt  Few-shot   Zero-shot
+         + RAG        Engineering   Prompting  Prompting
+
+Quy tắc ngón cái:
+  1. Thử Prompt Engineering trước (rẻ, nhanh)
+  2. Thêm RAG nếu cần knowledge (medium effort)
+  3. Fine-tune cuối cùng (đắt, chậm, nhưng mạnh)
+```
+
+| Approach | Cost | Effort | Khi nào dùng |
+|----------|------|--------|-------------|
+| **Zero-shot** | 💰 | 🔨 | Task đơn giản, model mạnh |
+| **Few-shot** | 💰 | 🔨🔨 | Cần examples, format cụ thể |
+| **RAG** | 💰💰 | 🔨🔨🔨 | Cần domain knowledge, data thay đổi |
+| **Fine-tune** | 💰💰💰 | 🔨🔨🔨🔨 | Task đặc thù, cần style riêng |
+
+---
+
+## 6. LLMOps Lifecycle
+
+```python
+"""LLMOps Lifecycle trong practice"""
+
+# Phase 1: Prototype (1-2 tuần)
+# - Thử nhiều prompts trong playground
+# - So sánh models (GPT-4o vs Claude vs Gemini)
+# - Build basic RAG nếu cần
+
+# Phase 2: Evaluation (1-2 tuần)
+# - Tạo eval dataset (50-200 test cases)
+# - LLM-as-judge evaluation
+# - Human evaluation (sample)
+# - Benchmark: latency, cost, accuracy
+
+# Phase 3: Production (1-2 tuần)
+# - Prompt versioning
+# - Caching (semantic cache)
+# - Rate limiting
+# - Error handling & fallbacks
+# - Guardrails (content filter)
+
+# Phase 4: Monitoring (ongoing)
+# - Track: latency, cost, token usage
+# - Track: user feedback, thumbs up/down
+# - Track: hallucination rate
+# - Data drift detection
+# - A/B testing prompts
+```
+
+---
+
+## Tóm tắt
+
+| Concept | Ghi nhớ |
+|---------|---------|
+| **LLMOps** | MLOps adaptted cho LLM applications |
+| **Key differences** | No training, expensive inference, hard evaluation |
+| **LLMOps Stack** | Models → Prompts → RAG → Orchestration → Eval → Observability |
+| **Evaluation** | LLM-as-judge + human eval + automated metrics |
+| **Decision** | Prompt first → RAG → Fine-tune (escalate as needed) |
+| **Production** | Cache + retry + fallback + guardrails |
+
+## Bài tập
+
+1. **Stack Analysis:** Team bạn đang dùng LLM nào? Liệt kê components cần cho production.
+2. **Evaluation:** Tạo eval dataset 20 test cases. Chạy LLM-as-judge. Report scores.
+3. **Production Wrapper:** Wrap OpenAI API call với cache, retry, fallback, cost tracking.
+4. **Decision Matrix:** Cho 3 use cases, quyết định: prompt vs RAG vs fine-tune. Giải thích.
+
+> **Bài tiếp theo:** Prompt Management & A/B Testing.
