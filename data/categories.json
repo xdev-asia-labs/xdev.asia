@@ -1,0 +1,46 @@
+[
+  {
+    "id": "019c9616-cat1-7001-a001-000000000001",
+    "name": "AI & Machine Learning",
+    "slug": "ai-machine-learning",
+    "description": "Trí tuệ nhân tạo, học máy, deep learning và các mô hình ngôn ngữ lớn",
+    "type": "course",
+    "parent_id": null,
+    "sort_order": 1,
+    "posts_count": 0,
+    "courses_count": 1
+  },
+  {
+    "id": "019c9616-cat2-7002-a002-000000000002",
+    "name": "Web Development",
+    "slug": "web-development",
+    "description": "Phát triển ứng dụng web với các công nghệ hiện đại",
+    "type": "course",
+    "parent_id": null,
+    "sort_order": 2,
+    "posts_count": 0,
+    "courses_count": 0
+  },
+  {
+    "id": "019c9616-cat3-7003-a003-000000000003",
+    "name": "DevOps & Cloud",
+    "slug": "devops-cloud",
+    "description": "DevOps, CI/CD, Docker, Kubernetes và cloud computing",
+    "type": "course",
+    "parent_id": null,
+    "sort_order": 3,
+    "posts_count": 0,
+    "courses_count": 0
+  },
+  {
+    "id": "019c9616-cat4-7004-a004-000000000004",
+    "name": "Lập trình",
+    "slug": "lap-trinh",
+    "description": "Bài viết về lập trình và công nghệ",
+    "type": "blog",
+    "parent_id": null,
+    "sort_order": 1,
+    "posts_count": 0,
+    "courses_count": 0
+  }
+]

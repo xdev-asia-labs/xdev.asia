@@ -1,0 +1,20 @@
+[
+  { "name": "AI", "slug": "ai" },
+  { "name": "LLM", "slug": "llm" },
+  { "name": "Machine Learning", "slug": "machine-learning" },
+  { "name": "Deep Learning", "slug": "deep-learning" },
+  { "name": "Python", "slug": "python" },
+  { "name": "PyTorch", "slug": "pytorch" },
+  { "name": "Transformer", "slug": "transformer" },
+  { "name": "NLP", "slug": "nlp" },
+  { "name": "RAG", "slug": "rag" },
+  { "name": "Fine-tuning", "slug": "fine-tuning" },
+  { "name": "Prompt Engineering", "slug": "prompt-engineering" },
+  { "name": "OpenAI", "slug": "openai" },
+  { "name": "Anthropic", "slug": "anthropic" },
+  { "name": "Ollama", "slug": "ollama" },
+  { "name": "Docker", "slug": "docker" },
+  { "name": "Web Development", "slug": "web-development" },
+  { "name": "JavaScript", "slug": "javascript" },
+  { "name": "TypeScript", "slug": "typescript" }
+]

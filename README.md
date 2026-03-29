@@ -1,37 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# xdev.asia
 
-## Getting Started
+Static-export Next.js site for xdev.asia.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- React 19
+- Tailwind CSS 4
+- MDX content loaded from `content/`
+
+## Development
+
+Install dependencies and start the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build the static site locally:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Content Source Of Truth
 
-## Learn More
+Primary content now lives in MDX files:
 
-To learn more about Next.js, take a look at the following resources:
+- `content/posts/*.md`
+- `content/series/<slug>/index.md`
+- `content/series/<slug>/chapters/**/lessons/*.md`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app reads posts and series content from MDX via `src/lib/data.ts`. Legacy JSON under `data/` should be treated as migration input, not the main authoring format.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Writing New Content
 
-## Deploy on Vercel
+Create a new file in the matching content collection.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Example blog post:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# xdev.asia
+```mdx
+---
+id: post-new
+title: Tieu de bai viet
+slug: tieu-de-bai-viet
+excerpt: Mo ta ngan
+featured_image: uploads/example.jpg
+type: post
+reading_time: 8
+view_count: 0
+published_at: 2026-03-27T00:00:00.000000Z
+created_at: 2026-03-27T00:00:00.000000Z
+author:
+  id: admin
+  name: xDev
+  avatar: avatars/example.jpg
+category:
+  id: devops
+  name: DevOps
+  slug: devops
+tags:
+  - name: PostgreSQL
+    slug: postgresql
+comments_count: 0
+---
+
+## Noi dung bai viet
+
+Ban co the viet Markdown thong thuong.
+
+- Danh sach
+- Code block
+- Table
+
+Hoac chen HTML neu can.
+```
+
+Notes:
+
+- Keep frontmatter shape compatible with existing files already generated in `content/`.
+- `slug` must match the file name.
+- Body content can be Markdown and inline HTML.
+- Images using old Laravel-style paths such as `uploads/...` are mapped to local mirrored assets in `public/storage/uploads/`.
+
+## Migrating Old JSON Content
+
+Convert legacy JSON content into Markdown:
+
+```bash
+npm run migrate:md
+```
+
+Default behavior is non-destructive: existing Markdown files are not overwritten.
+
+If you explicitly want to regenerate Markdown from JSON and overwrite current files:
+
+```bash
+npm run migrate:md:force
+```
+
+## Important Files
+
+- `src/lib/data.ts`: content loading and lesson fallback logic
+- `src/lib/content.ts`: MDX file reading and Markdown-to-HTML rendering
+- `scripts/migrate-json-to-md.mjs`: one-time JSON to Markdown migration utility
+- `mdx-components.tsx`: required MDX integration hook for Next.js App Router
