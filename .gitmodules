@@ -1,0 +1,3 @@
+[submodule "xStatic"]
+	path = xStatic
+	url = git@github.com:xdev-asia-labs/xStatic.git
