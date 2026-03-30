@@ -24,9 +24,9 @@ author:
   name: Duy Tran
   avatar: avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg
 category:
-  id: 019c9617-fac1-71f4-b665-ef72b9169543
-  name: Database
-  slug: database-course
+  id: 019c9617-faa6-70d6-8679-ee4de1f177b3
+  name: DevSecOps
+  slug: devsecops
 tags:
   - name: PostgreSQL High Availability với Patroni & etcd Course
     slug: postgresql-high-availability-voi-patroni-etcd-course

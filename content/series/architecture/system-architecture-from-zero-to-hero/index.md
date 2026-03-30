@@ -29,8 +29,8 @@ author:
   avatar: avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg
 category:
   id: 019d8a21-b200-7001-c001-a1b2c3d4e5f6
-  name: Architecture
-  slug: architecture
+  name: Kiến trúc hệ thống
+  slug: kien-truc-he-thong
 tags:
   - name: SystemDesign
     slug: system-design

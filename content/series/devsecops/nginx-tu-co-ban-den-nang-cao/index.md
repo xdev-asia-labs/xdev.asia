@@ -24,9 +24,9 @@ author:
   name: Duy Tran
   avatar: avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg
 category:
-  id: 019c9617-fac6-7303-a252-787f8d1a1404
-  name: Web Server
-  slug: web-server
+  id: 019c9617-faa6-70d6-8679-ee4de1f177b3
+  name: DevSecOps
+  slug: devsecops
 tags:
   - name: devops
     slug: devops

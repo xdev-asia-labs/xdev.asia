@@ -25,8 +25,8 @@ author:
   avatar: avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg
 category:
   id: 019c9617-facb-72da-8191-e6d44b88fb3e
-  name: Spring Boot
-  slug: spring-boot
+  name: Lập Trình
+  slug: lap-trinh
 tags:
   - name: Microservices
     slug: microservices
