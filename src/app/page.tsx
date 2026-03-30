@@ -3,7 +3,7 @@ import Image from "next/image";
 import PostCard from "@/components/PostCard";
 import SeriesCard from "@/components/SeriesCard";
 import HeroBanner3D from "@/components/HeroBanner3D";
-import { getAllPosts, getAllSeries, getAllAISeries, getSettings, formatDate } from "@/lib/data";
+import { getAllPosts, getAllSeries, getSettings, formatDate, getSeriesByCategory } from "@/lib/data";
 import { showcaseRepos } from "@/lib/showcase-server";
 import { RepoCard } from "@/components/ShowcaseCard";
 import { getValidImageUrl } from "@/utils/image";
@@ -13,8 +13,15 @@ export default function Home() {
     const allPosts = getAllPosts();
     const allSeriesItems = getAllSeries();
     const posts = allPosts.slice(0, 6);
-    const seriesItems = allSeriesItems.slice(0, 4);
-    const aiSeries = getAllAISeries();
+
+    // AI series — highlighted
+    const aiSeries = getSeriesByCategory("ai-machine-learning");
+
+    // Featured series — non-AI, sorted by enrollment/rating
+    const otherSeries = allSeriesItems
+        .filter((s) => s.category?.slug !== "ai-machine-learning")
+        .sort((a, b) => (b.enrollment_count + b.view_count) - (a.enrollment_count + a.view_count))
+        .slice(0, 4);
     const settings = getSettings();
     const featuredRepos = showcaseRepos.slice(0, 3);
 
@@ -29,11 +36,10 @@ export default function Home() {
                 tagline={settings.site_tagline || settings.site_description || "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế"}
                 postCount={allPosts.length}
                 seriesCount={allSeriesItems.length}
-                aiSeriesCount={aiSeries.length}
                 projectCount={showcaseRepos.length}
             />
 
-            {/* ─── AI & Machine Learning ─── */}
+            {/* ─── AI & Machine Learning — Highlighted ─── */}
             {aiSeries.length > 0 && (
                 <section className="ai-section-bg py-14 lg:py-18">
                     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,21 +53,19 @@ export default function Home() {
                                     Chuỗi bài học AI
                                 </h2>
                                 <p className="section-subtitle">
-                                    Mình tổng hợp kiến thức AI từ Machine Learning, Deep Learning đến LLM, Fine-tuning, RAG và MLOps.
+                                    Từ Machine Learning, Deep Learning đến LLM, Fine-tuning, RAG và MLOps — tất cả đều hands-on.
                                 </p>
                             </div>
-                            <Link href="/ai/" className="link-brand shrink-0 self-start md:self-auto">
+                            <Link href="/series/ai-machine-learning/" className="link-brand shrink-0 self-start md:self-auto">
                                 <IconBrain size={15} />
-                                Xem tất cả AI Courses
+                                Xem tất cả AI Series
                                 <IconArrowRight size={14} />
                             </Link>
                         </div>
 
-                        <div className="flex flex-wrap justify-center gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {aiSeries.slice(0, 8).map((series, index) => (
-                                <div key={series.id} className="ai-series-card w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)]">
-                                    <SeriesCard series={series} priority={index < 2} basePath="/ai/series" />
-                                </div>
+                                <SeriesCard key={series.id} series={series} priority={index < 2} />
                             ))}
                         </div>
                     </div>
@@ -69,7 +73,7 @@ export default function Home() {
             )}
 
             {/* ─── Series nổi bật ─── */}
-            {seriesItems.length > 0 && (
+            {otherSeries.length > 0 && (
                 <section className="py-14 lg:py-18">
                     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -80,7 +84,7 @@ export default function Home() {
                                 </div>
                                 <h2 className="section-title">Series nổi bật</h2>
                                 <p className="section-subtitle">
-                                    Phát triển kỹ năng với các series thực tế, từ cơ bản đến nâng cao.
+                                    Kubernetes, Nginx, PostgreSQL, Spring Boot — phát triển kỹ năng từ cơ bản đến nâng cao.
                                 </p>
                             </div>
                             <Link href="/series/" className="link-brand shrink-0 self-start md:self-auto">
@@ -89,7 +93,7 @@ export default function Home() {
                             </Link>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {seriesItems.map((series, index) => (
+                            {otherSeries.map((series, index) => (
                                 <SeriesCard key={series.id} series={series} priority={index === 0} />
                             ))}
                         </div>
@@ -118,12 +122,12 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
                             {/* Featured post — large */}
                             {featuredPost && (
                                 <div className="lg:col-span-3">
                                     <Link href={`/blog/${featuredPost.slug}/`} className="group block h-full">
-                                        <article className="glass-card rounded-2xl overflow-hidden h-full">
+                                        <article className="post-card rounded-2xl overflow-hidden h-full flex flex-col">
                                             <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
                                                 <Image
                                                     src={getValidImageUrl(featuredPost.featured_image, featuredPost.slug)}
@@ -131,42 +135,57 @@ export default function Home() {
                                                     fill
                                                     sizes="(max-width: 1024px) 100vw, 60vw"
                                                     priority
-                                                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                                    className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                                                 />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                                 {featuredPost.category && (
-                                                    <span className="absolute top-4 left-4 inline-flex items-center px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider text-white bg-brand-600/90 backdrop-blur-sm">
+                                                    <span className="absolute top-4 left-4 inline-flex items-center px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider text-white bg-brand-600/90 backdrop-blur-sm shadow-sm">
                                                         {featuredPost.category.name}
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="p-5">
-                                                <h3 className="text-lg lg:text-xl font-bold text-zinc-900 group-hover:text-brand-600 transition-colors leading-snug mb-2">
+                                            <div className="p-5 flex flex-col flex-1">
+                                                <h3 className="text-lg lg:text-xl font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 leading-snug mb-2">
                                                     {featuredPost.title}
                                                 </h3>
                                                 {featuredPost.excerpt && (
-                                                    <p className="text-sm text-zinc-500 line-clamp-2 leading-relaxed mb-3">
+                                                    <p className="text-sm text-zinc-500 line-clamp-2 leading-relaxed mb-3 flex-1">
                                                         {featuredPost.excerpt}
                                                     </p>
                                                 )}
-                                                <div className="flex items-center gap-3 text-xs text-zinc-400">
+                                                {/* Tags */}
+                                                {featuredPost.tags?.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1.5 mb-3">
+                                                        {featuredPost.tags.slice(0, 3).map((tag) => (
+                                                            <span key={tag.slug} className="tag-pill text-[10px] px-2 py-0.5">
+                                                                {tag.name}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <div className="pt-3 border-t border-zinc-100 flex items-center gap-2.5 text-xs text-zinc-400">
                                                     {featuredPost.author?.avatar ? (
                                                         <Image
                                                             src={getValidImageUrl(featuredPost.author.avatar, featuredPost.author.name)}
                                                             alt={featuredPost.author.name}
-                                                            width={24}
-                                                            height={24}
+                                                            width={22}
+                                                            height={22}
                                                             style={{ height: "auto" }}
-                                                            className="rounded-full ring-2 ring-white object-cover"
+                                                            className="rounded-full ring-1 ring-zinc-200 object-cover"
                                                         />
                                                     ) : (
-                                                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-2 ring-white text-[10px] font-bold">
+                                                        <div className="w-5.5 h-5.5 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-1 ring-zinc-200 text-[10px] font-bold">
                                                             {featuredPost.author.name.charAt(0)}
                                                         </div>
                                                     )}
                                                     <span className="font-medium text-zinc-600">{featuredPost.author.name}</span>
+                                                    <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
+                                                    <time dateTime={featuredPost.published_at ?? undefined}>
+                                                        {formatDate(featuredPost.published_at)}
+                                                    </time>
                                                     {featuredPost.reading_time && (
                                                         <>
-                                                            <span className="w-1 h-1 rounded-full bg-zinc-300" />
+                                                            <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
                                                             <span>{featuredPost.reading_time} phút đọc</span>
                                                         </>
                                                     )}
@@ -178,33 +197,33 @@ export default function Home() {
                             )}
 
                             {/* Side posts — stacked */}
-                            <div className="lg:col-span-2 flex flex-col gap-4">
+                            <div className="lg:col-span-2 flex flex-col gap-3">
                                 {sidePosts.map((post) => (
                                     <Link key={post.id} href={`/blog/${post.slug}/`} className="group block">
-                                        <article className="glass-card rounded-xl overflow-hidden flex flex-row h-full">
-                                            <div className="relative w-28 sm:w-36 shrink-0 bg-surface-100">
+                                        <article className="post-card rounded-xl overflow-hidden flex flex-row h-full">
+                                            <div className="relative w-28 sm:w-32 shrink-0 bg-surface-100">
                                                 <Image
                                                     src={getValidImageUrl(post.featured_image, post.slug)}
                                                     alt={post.title}
                                                     fill
-                                                    sizes="144px"
-                                                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                                    sizes="128px"
+                                                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
                                                 />
                                             </div>
-                                            <div className="p-3.5 flex flex-col justify-center min-w-0">
+                                            <div className="p-3.5 flex flex-col justify-center min-w-0 flex-1">
                                                 {post.category && (
                                                     <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 mb-1">
                                                         {post.category.name}
                                                     </span>
                                                 )}
-                                                <h3 className="text-sm font-bold text-zinc-900 group-hover:text-brand-600 transition-colors line-clamp-2 leading-snug mb-1">
+                                                <h3 className="text-sm font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 line-clamp-2 leading-snug mb-1.5">
                                                     {post.title}
                                                 </h3>
                                                 <div className="flex items-center gap-2 text-[11px] text-zinc-400">
-                                                    <span>{post.author.name}</span>
+                                                    <span className="font-medium text-zinc-500">{post.author.name}</span>
                                                     {post.reading_time && (
                                                         <>
-                                                            <span className="w-1 h-1 rounded-full bg-zinc-300" />
+                                                            <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
                                                             <span>{post.reading_time} phút</span>
                                                         </>
                                                     )}
@@ -265,11 +284,11 @@ export default function Home() {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center">
                                 <Link
-                                    href="/ai/"
+                                    href="/series/"
                                     className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm bg-white text-blue-700 shadow-lg shadow-blue-900/20 hover:shadow-blue-900/30 transition-all duration-300 hover:-translate-y-0.5"
                                 >
-                                    <IconBrain size={16} />
-                                    Học AI ngay
+                                    <IconBook size={16} />
+                                    Xem Series
                                 </Link>
                                 <Link
                                     href="/series/"

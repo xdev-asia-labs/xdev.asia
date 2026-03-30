@@ -1,0 +1,325 @@
+---
+id: 019d8b30-bb18-7018-c018-f0c4e8000018
+title: 'Bài 18: Garment Rendering — Render áo lên Avatar với Multi-view'
+slug: bai-18-garment-rendering-render-ao-len-avatar
+description: >-
+  Cloth simulation và rendering: draping design lên 3D body,
+  fabric physics, wrinkle generation. Multi-view output:
+  front, side, back view. Lighting và material system.
+duration_minutes: 210
+is_free: true
+video_url: null
+sort_order: 17
+section_title: "Phần 5: Virtual Try-On & Computer Vision"
+course:
+  id: 019d8b30-a100-7001-b001-f0c4e8000001
+  title: "AI Thực Chiến: Xây dựng AI Platform cho Fashion & Print-on-Demand"
+  slug: ai-thuc-chien-fashion-print-on-demand
+---
+
+## Giới thiệu
+
+Avatar đã có, design đã có — giờ cần **render áo lên avatar**. Không phải chỉ dán texture phẳng lên, mà phải có cloth simulation: vải phải drape tự nhiên, wrinkle ở chỗ gấp, design phải warp theo bề mặt áo.
+
+---
+
+## 1. Garment Rendering Pipeline
+
+```
+Design (PNG)     +     Avatar (3D mesh)     +     Garment Template
+     │                       │                         │
+     └───────────┬───────────┘                         │
+                 │                                     │
+        ┌────────▼────────┐              ┌─────────────▼──────────────┐
+        │ UV Mapping       │              │ Cloth Simulation            │
+        │ Design → texture │              │ Draping, wrinkles, gravity │
+        └────────┬────────┘              └─────────────┬──────────────┘
+                 │                                     │
+                 └───────────────┬─────────────────────┘
+                                 │
+                        ┌────────▼────────┐
+                        │ Final Rendering  │
+                        │ Lighting, shadow │
+                        │ Multi-view output│
+                        └─────────────────┘
+                                 │
+                    ┌────────────┼────────────┐
+                    ▼            ▼            ▼
+               Front View   Side View   Back View
+```
+
+---
+
+## 2. Garment Template System
+
+```python
+class GarmentTemplate:
+    """Template 3D mesh cho các loại áo"""
+
+    TEMPLATES = {
+        "tshirt_regular": {
+            "mesh": "garments/tshirt_regular.obj",
+            "uv_map": "garments/tshirt_regular_uv.png",
+            "print_zones": {
+                "front_chest": {"uv_range": (0.2, 0.15, 0.8, 0.65)},
+                "back_print": {"uv_range": (0.2, 0.15, 0.8, 0.70)},
+                "left_chest": {"uv_range": (0.55, 0.20, 0.75, 0.40)},
+            },
+        },
+        "tshirt_oversize": {
+            "mesh": "garments/tshirt_oversize.obj",
+            "uv_map": "garments/tshirt_oversize_uv.png",
+            "print_zones": {
+                "front_chest": {"uv_range": (0.15, 0.12, 0.85, 0.68)},
+                "back_print": {"uv_range": (0.15, 0.12, 0.85, 0.72)},
+            },
+        },
+    }
+
+    def get_template(
+        self, garment_type: str, size: str
+    ) -> trimesh.Trimesh:
+        template = self.TEMPLATES[garment_type]
+        mesh = trimesh.load(template["mesh"])
+
+        # Scale mesh theo size
+        scale_factor = self._get_scale(size)
+        mesh.apply_scale(scale_factor)
+
+        return mesh
+```
+
+---
+
+## 3. Design → Garment Texture
+
+```python
+class DesignToTexture:
+    """Map design lên UV texture của áo"""
+
+    def apply_design(
+        self,
+        garment_template: dict,
+        design: Image.Image,
+        print_zone: str = "front_chest",
+        shirt_color: str = "#FFFFFF",
+    ) -> Image.Image:
+        """
+        Tạo texture image cho garment mesh
+
+        1. Start với shirt_color background
+        2. Map design vào đúng UV zone
+        """
+        # Create base texture (shirt color)
+        texture_size = 2048
+        texture = Image.new(
+            "RGBA", (texture_size, texture_size),
+            self._hex_to_rgba(shirt_color),
+        )
+
+        # Get UV range for print zone
+        zone = garment_template["print_zones"][print_zone]
+        uv = zone["uv_range"]  # (u_min, v_min, u_max, v_max)
+
+        # Map design to UV coordinates
+        target_x = int(uv[0] * texture_size)
+        target_y = int(uv[1] * texture_size)
+        target_w = int((uv[2] - uv[0]) * texture_size)
+        target_h = int((uv[3] - uv[1]) * texture_size)
+
+        # Resize design to fit zone
+        design_resized = design.resize(
+            (target_w, target_h),
+            Image.Resampling.LANCZOS,
+        )
+
+        # Paste design onto texture
+        texture.paste(design_resized, (target_x, target_y), design_resized)
+
+        return texture
+```
+
+---
+
+## 4. Cloth Simulation (Simplified)
+
+```python
+class ClothSimulator:
+    """Simulate cloth draping trên body"""
+
+    def drape_garment(
+        self,
+        garment_mesh: trimesh.Trimesh,
+        body_mesh: trimesh.Trimesh,
+    ) -> trimesh.Trimesh:
+        """
+        Basic cloth simulation:
+        1. Fit garment roughly to body
+        2. Push garment vertices outward from body surface
+        3. Add wrinkle displacement
+        """
+        # 1. Align garment to body
+        garment_aligned = self._align_to_body(
+            garment_mesh, body_mesh
+        )
+
+        # 2. Collision detection & resolution
+        garment_fitted = self._resolve_collisions(
+            garment_aligned, body_mesh,
+            offset=0.5,  # 0.5cm clearance
+        )
+
+        # 3. Add wrinkles
+        garment_wrinkled = self._add_wrinkles(
+            garment_fitted, body_mesh
+        )
+
+        return garment_wrinkled
+
+    def _resolve_collisions(
+        self,
+        garment: trimesh.Trimesh,
+        body: trimesh.Trimesh,
+        offset: float,
+    ) -> trimesh.Trimesh:
+        """Push garment vertices ở bên trong body ra ngoài"""
+        import numpy as np
+
+        vertices = garment.vertices.copy()
+
+        # For each garment vertex, check if inside body
+        for i, v in enumerate(vertices):
+            # Find closest point on body surface
+            closest, distance, face_id = \
+                body.nearest.on_surface([v])
+
+            if distance[0] < offset:
+                # Push outward along body surface normal
+                normal = body.face_normals[face_id[0]]
+                vertices[i] = closest[0] + normal * offset
+
+        garment.vertices = vertices
+        return garment
+
+    def _add_wrinkles(
+        self,
+        garment: trimesh.Trimesh,
+        body: trimesh.Trimesh,
+    ) -> trimesh.Trimesh:
+        """Add realistic wrinkle displacement"""
+        import numpy as np
+
+        vertices = garment.vertices.copy()
+        normals = garment.vertex_normals
+
+        # Simple noise-based wrinkles
+        noise = np.random.normal(0, 0.1, vertices.shape)
+
+        # More wrinkles at joints (armpits, waist)
+        for i, v in enumerate(vertices):
+            # Armpit zone: more wrinkle amplitude
+            if -0.15 < v[0] < 0.15 and 0.1 < v[1] < 0.3:
+                noise[i] *= 2.5
+            # Waist zone
+            if v[1] < -0.2:
+                noise[i] *= 1.5
+
+        vertices += normals * noise * 0.003
+        garment.vertices = vertices
+
+        return garment
+```
+
+---
+
+## 5. Multi-View Rendering
+
+```python
+class MultiViewRenderer:
+    """Render avatar + garment từ nhiều góc"""
+
+    def render_views(
+        self,
+        avatar: AvatarMesh,
+        garment: trimesh.Trimesh,
+        views: list[str] = ["front", "side", "back"],
+    ) -> dict[str, Image.Image]:
+        scene = self._create_scene(avatar, garment)
+        results = {}
+
+        camera_angles = {
+            "front": (0, 0, 3),         # z-axis front
+            "side": (3, 0, 0),          # x-axis side
+            "back": (0, 0, -3),         # -z-axis back
+            "three_quarter": (2, 0.5, 2), # 3/4 view
+        }
+
+        for view_name in views:
+            camera_pos = camera_angles[view_name]
+            image = self._render_from_angle(
+                scene, camera_pos
+            )
+            results[view_name] = image
+
+        return results
+
+    def _create_scene(
+        self, avatar: AvatarMesh, garment: trimesh.Trimesh
+    ) -> trimesh.Scene:
+        scene = trimesh.Scene()
+        scene.add_geometry(avatar.mesh, node_name="body")
+        scene.add_geometry(garment, node_name="garment")
+        return scene
+
+    def _render_from_angle(
+        self,
+        scene: trimesh.Scene,
+        camera_position: tuple,
+        resolution: tuple = (800, 1200),
+    ) -> Image.Image:
+        """Render scene from specific camera angle"""
+        import pyrender
+
+        # Convert trimesh scene to pyrender
+        pr_scene = pyrender.Scene()
+
+        for name, mesh in scene.geometry.items():
+            pr_mesh = pyrender.Mesh.from_trimesh(mesh)
+            pr_scene.add(pr_mesh)
+
+        # Camera
+        camera = pyrender.PerspectiveCamera(yfov=np.pi / 4)
+        camera_pose = self._look_at(
+            eye=camera_position,
+            target=(0, 0, 0),
+            up=(0, 1, 0),
+        )
+        pr_scene.add(camera, pose=camera_pose)
+
+        # Lights
+        light = pyrender.DirectionalLight(
+            color=[1.0, 1.0, 1.0], intensity=3.0
+        )
+        pr_scene.add(light, pose=camera_pose)
+
+        # Render
+        renderer = pyrender.OffscreenRenderer(*resolution)
+        color, depth = renderer.render(pr_scene)
+        renderer.delete()
+
+        return Image.fromarray(color)
+```
+
+---
+
+## Tổng kết
+
+Garment Rendering:
+
+1. **Garment templates** — pre-built 3D meshes cho các loại áo
+2. **UV mapping** — map design vào đúng print zone trên texture
+3. **Cloth simulation** — collision resolution, wrinkle generation
+4. **Multi-view** — render front, side, back, three-quarter views
+5. **Pyrender** — offscreen rendering cho server-side image generation
+
+Bài tiếp theo: **Real-time Virtual Try-On** — 360° rotation và animation trong browser.

@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { IconArrowRight, IconBrain, IconBook, IconCode, IconRocket } from "./Icons";
+import { IconArrowRight, IconBook, IconCode, IconRocket } from "./Icons";
 
 interface HeroBannerProps {
     siteName: string;
     tagline: string;
     postCount: number;
     seriesCount: number;
-    aiSeriesCount: number;
     projectCount: number;
 }
 
@@ -17,13 +16,11 @@ export default function HeroBanner3D({
     tagline,
     postCount,
     seriesCount,
-    aiSeriesCount,
     projectCount,
 }: HeroBannerProps) {
     const stats = [
         { value: postCount, label: "Bài viết", icon: IconCode },
         { value: seriesCount, label: "Series", icon: IconBook },
-        { value: aiSeriesCount, label: "AI Courses", icon: IconBrain },
         { value: projectCount, label: "Projects", icon: IconRocket },
     ];
 
@@ -60,24 +57,18 @@ export default function HeroBanner3D({
                     {/* CTA Buttons */}
                     <div className="mt-8 flex flex-wrap gap-3">
                         <Link
-                            href="/ai/"
-                            className="btn-primary"
-                        >
-                            <IconBrain size={16} />
-                            Học AI
-                            <IconArrowRight size={14} />
-                        </Link>
-                        <Link
                             href="/series/"
-                            className="btn-secondary"
+                            className="btn-primary"
                         >
                             <IconBook size={16} />
                             Khám phá Series
+                            <IconArrowRight size={14} />
                         </Link>
                         <Link
                             href="/blog/"
-                            className="btn-ghost"
+                            className="btn-secondary"
                         >
+                            <IconCode size={16} />
                             Đọc Blog
                         </Link>
                     </div>

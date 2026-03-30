@@ -3,25 +3,22 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import Fuse from "fuse.js";
-import { IconSearch, IconCode, IconBook, IconBrain } from "@/components/Icons";
+import { IconSearch, IconCode, IconBook } from "@/components/Icons";
 import type { SearchItem } from "@/lib/data";
 
 const typeLabels: Record<string, string> = {
     post: "Bài viết",
     series: "Series",
-    "ai-series": "AI Series",
 };
 
 const typeIcons: Record<string, typeof IconCode> = {
     post: IconCode,
     series: IconBook,
-    "ai-series": IconBrain,
 };
 
 const typeColors: Record<string, string> = {
     post: "bg-blue-50 text-blue-600",
     series: "bg-emerald-50 text-emerald-600",
-    "ai-series": "bg-purple-50 text-purple-600",
 };
 
 export default function SearchClient({ items }: { items: SearchItem[] }) {

@@ -28,6 +28,41 @@ function fileExists(filePath: string): boolean {
   return fs.existsSync(path.join(dataDir, filePath));
 }
 
+// Resolve series slug to compound slug for categorized directory structure
+// e.g. "ai-llm-tu-co-ban-den-nang-cao" → "ai-machine-learning/ai-llm-tu-co-ban-den-nang-cao"
+let _seriesSlugMap: Map<string, string> | null = null;
+
+function getSeriesSlugMap(): Map<string, string> {
+  if (_seriesSlugMap) return _seriesSlugMap;
+  const seriesDir = path.join(process.cwd(), "content", "series");
+  const map = new Map<string, string>();
+  if (!fs.existsSync(seriesDir)) return map;
+
+  for (const entry of fs.readdirSync(seriesDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const entryDir = path.join(seriesDir, entry.name);
+
+    if (fs.existsSync(path.join(entryDir, "index.md"))) {
+      map.set(entry.name, entry.name);
+      continue;
+    }
+
+    for (const sub of fs.readdirSync(entryDir, { withFileTypes: true })) {
+      if (!sub.isDirectory()) continue;
+      if (fs.existsSync(path.join(entryDir, sub.name, "index.md"))) {
+        map.set(sub.name, `${entry.name}/${sub.name}`);
+      }
+    }
+  }
+
+  _seriesSlugMap = map;
+  return map;
+}
+
+function resolveSeriesCompoundSlug(seriesSlug: string): string {
+  return getSeriesSlugMap().get(seriesSlug) || seriesSlug;
+}
+
 type PostFrontmatter = Omit<Post, "content" | "comments"> & {
   comments?: Comment[];
   comments_count?: number;
@@ -41,19 +76,70 @@ type LessonFrontmatter = Omit<Lesson, "content" | "course"> & {
   course_slug?: string;
 };
 
+function buildSectionsFromLessonFiles(seriesSlug: string): Section[] | null {
+  const seriesCollection = `series/${resolveSeriesCompoundSlug(seriesSlug)}`;
+  const lessonPaths = listMdxRelativePaths(seriesCollection)
+    .filter((p) => p.includes("/lessons/") && !p.endsWith("/index"));
+
+  if (lessonPaths.length === 0) return null;
+
+  const lessonsBySection = new Map<string, LessonSummary[]>();
+  const sectionOrder = new Map<string, number>();
+
+  for (const lessonPath of lessonPaths) {
+    const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(seriesCollection, lessonPath);
+    if (!mdxLesson) continue;
+
+    const fm = mdxLesson.data;
+    const sectionTitle = fm.section_title || "Nội dung khóa học";
+
+    if (!lessonsBySection.has(sectionTitle)) {
+      lessonsBySection.set(sectionTitle, []);
+      sectionOrder.set(sectionTitle, sectionOrder.size);
+    }
+
+    lessonsBySection.get(sectionTitle)!.push({
+      id: fm.id,
+      title: fm.title,
+      slug: fm.slug || normalizeLessonSlugFromPath(lessonPath),
+      description: fm.description ?? null,
+      duration_minutes: fm.duration_minutes ?? null,
+      is_free: fm.is_free ?? true,
+      sort_order: fm.sort_order ?? 0,
+      video_url: fm.video_url ?? null,
+    });
+  }
+
+  const sections: Section[] = [];
+  for (const [title, lessons] of lessonsBySection) {
+    lessons.sort((a, b) => a.sort_order - b.sort_order);
+    sections.push({
+      id: `section-${sectionOrder.get(title) ?? 0}`,
+      title,
+      description: null,
+      sort_order: sectionOrder.get(title) ?? 0,
+      lessons,
+    });
+  }
+
+  sections.sort((a, b) => a.sort_order - b.sort_order);
+  return sections;
+}
+
 function normalizeLessonSlugFromPath(lessonPath: string): string {
   const fileName = lessonPath.split("/").at(-1) || lessonPath;
   return fileName.replace(/^\d+-/, "");
 }
 
 function getLessonMdxDocument(seriesSlug: string, lessonSlug: string): { data: LessonFrontmatter; content: string } | null {
-  const directDoc = readMdxDocument<LessonFrontmatter>(`series/${seriesSlug}/chapters`, lessonSlug);
+  const compoundSlug = resolveSeriesCompoundSlug(seriesSlug);
+  const directDoc = readMdxDocument<LessonFrontmatter>(`series/${compoundSlug}/chapters`, lessonSlug);
   if (directDoc) return directDoc;
 
-  const lessonPaths = listMdxRelativePaths(`series/${seriesSlug}`)
+  const lessonPaths = listMdxRelativePaths(`series/${compoundSlug}`)
     .filter((relativePath) => relativePath.includes("/lessons/") && !relativePath.endsWith("/index"));
   for (const lessonPath of lessonPaths) {
-    const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`series/${seriesSlug}`, lessonPath);
+    const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`series/${compoundSlug}`, lessonPath);
     if (!mdxLesson) continue;
 
     const frontmatterSlug = mdxLesson.data.slug || "";
@@ -127,9 +213,10 @@ function getPostFromMdx(slug: string): Post | null {
 
 
 function getAllSeriesFromMdx(): SeriesIndex[] {
-  const series = listMdxSlugs("series")
-    .map((slug) => {
-      const document = readMdxDocument<SeriesFrontmatter>("series", slug);
+  const slugMap = getSeriesSlugMap();
+  const series = [...slugMap.entries()]
+    .map(([slug, compoundSlug]) => {
+      const document = readMdxDocument<SeriesFrontmatter>("series", compoundSlug);
       if (!document) return null;
 
       const data = document.data;
@@ -160,7 +247,7 @@ function getAllSeriesFromMdx(): SeriesIndex[] {
 }
 
 function getSeriesFromMdx(slug: string): Series | null {
-  const document = readMdxDocument<SeriesFrontmatter>("series", slug);
+  const document = readMdxDocument<SeriesFrontmatter>("series", resolveSeriesCompoundSlug(slug));
   if (!document) return null;
 
   return normalizeSeries({
@@ -170,8 +257,6 @@ function getSeriesFromMdx(slug: string): Series | null {
 }
 
 function createFallbackSections(series: Series): Section[] {
-  if (series.sections.length > 0) return series.sections;
-
   const totalLessons = Math.max(series.lesson_count || 0, series.content ? 1 : 0);
   if (totalLessons <= 0) return [];
 
@@ -204,6 +289,16 @@ function createFallbackSections(series: Series): Section[] {
 }
 
 function normalizeSeries(series: Series): Series {
+  // Try to build sections from actual lesson files on disk
+  const fileSections = buildSectionsFromLessonFiles(series.slug);
+  if (fileSections && fileSections.length > 0) {
+    return { ...series, sections: fileSections };
+  }
+
+  // Fall back to frontmatter sections if present
+  if (series.sections.length > 0) return series;
+
+  // Last resort: generate placeholder sections from lesson_count
   return {
     ...series,
     sections: createFallbackSections(series),
@@ -224,7 +319,7 @@ export function getBlogCategories(): Category[] {
   return getCategories().filter((c) => c.type === "blog");
 }
 
-export function getSeriesCategories(): Category[] {
+export function getCourseCategories(): Category[] {
   return getCategories().filter((c) => c.type === "course");
 }
 
@@ -256,208 +351,6 @@ export function getPostSlugs(): string[] {
   return getAllPosts().map((p) => p.slug);
 }
 
-
-// AI Blog (content/ai/blog/)
-function getAllAIPostsFromMdx(): PostIndex[] {
-  const posts = collectPostsFromCollection("ai/blog");
-  return sortByPublishedDate(posts);
-}
-
-function getAIPostFromMdx(slug: string): Post | null {
-  for (const relPath of listMdxRelativePaths("ai/blog")) {
-    const document = readMdxDocumentByRelativePath<PostFrontmatter>("ai/blog", relPath);
-    if (!document) continue;
-    if (document.data.slug === slug) {
-      return {
-        ...document.data,
-        comments: document.data.comments ?? [],
-        content: renderMdxBodyToHtml(document.content),
-      } satisfies Post;
-    }
-  }
-  return null;
-}
-
-export function getAllAIPosts(): PostIndex[] {
-  return getAllAIPostsFromMdx();
-}
-
-export function getAIPost(slug: string): Post | null {
-  return getAIPostFromMdx(slug);
-}
-
-export function getAIPostSlugs(): string[] {
-  return getAllAIPosts().map((p) => p.slug);
-}
-
-// AI Series (content/ai/series/)
-function getAllAISeriesFromMdx(): SeriesIndex[] {
-  const series = listMdxSlugs("ai/series")
-    .map((slug) => {
-      const document = readMdxDocument<SeriesFrontmatter>("ai/series", slug);
-      if (!document) return null;
-
-      const data = document.data;
-      return {
-        id: data.id,
-        title: data.title,
-        slug: data.slug,
-        description: data.description,
-        featured_image: data.featured_image,
-        level: data.level,
-        duration_hours: data.duration_hours,
-        lesson_count: data.lesson_count,
-        price: data.price,
-        is_free: data.is_free,
-        view_count: data.view_count,
-        average_rating: data.average_rating,
-        review_count: data.review_count,
-        enrollment_count: data.enrollment_count,
-        published_at: data.published_at,
-        author: data.author,
-        category: data.category,
-        tags: data.tags,
-      } satisfies SeriesIndex;
-    })
-    .filter((item): item is SeriesIndex => item !== null);
-
-  return sortByPublishedDate(series);
-}
-
-function getAISeriesFromMdx(slug: string): Series | null {
-  const document = readMdxDocument<SeriesFrontmatter>("ai/series", slug);
-  if (!document) return null;
-
-  return normalizeSeries({
-    ...document.data,
-    content: renderMdxBodyToHtml(document.content),
-  } satisfies Series);
-}
-
-export function getAllAISeries(): SeriesIndex[] {
-  return getAllAISeriesFromMdx();
-}
-
-export function getAISeries(slug: string): Series | null {
-  return getAISeriesFromMdx(slug);
-}
-
-export function getAISeriesSlugs(): string[] {
-  return getAllAISeries().map((item) => item.slug);
-}
-
-function getAILessonMdxDocument(seriesSlug: string, lessonSlug: string): { data: LessonFrontmatter; content: string } | null {
-  const directDoc = readMdxDocument<LessonFrontmatter>(`ai/series/${seriesSlug}/chapters`, lessonSlug);
-  if (directDoc) return directDoc;
-
-  const relativePaths = listMdxRelativePaths(`ai/series/${seriesSlug}`)
-    .filter((p) => p.includes("/lessons/") && !p.endsWith("/index"));
-
-  for (const lessonPath of relativePaths) {
-    const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`ai/series/${seriesSlug}`, lessonPath);
-    if (!mdxLesson) continue;
-    const frontmatterSlug = mdxLesson.data.slug;
-    const pathSlug = normalizeLessonSlugFromPath(lessonPath);
-    if (frontmatterSlug === lessonSlug || pathSlug === lessonSlug) {
-      return mdxLesson;
-    }
-  }
-
-  return null;
-}
-
-export function getAILesson(seriesSlug: string, lessonSlug: string): Lesson | null {
-  const mdxLesson = getAILessonMdxDocument(seriesSlug, lessonSlug);
-  if (mdxLesson) {
-    const frontmatter = mdxLesson.data;
-    const course = frontmatter.course ?? {
-      id: frontmatter.course_id ?? "",
-      title: frontmatter.course_title ?? "",
-      slug: frontmatter.course_slug ?? seriesSlug,
-    };
-    return {
-      id: frontmatter.id,
-      title: frontmatter.title,
-      slug: frontmatter.slug,
-      description: frontmatter.description,
-      content: renderMdxBodyToHtml(mdxLesson.content),
-      duration_minutes: frontmatter.duration_minutes,
-      is_free: frontmatter.is_free,
-      video_url: frontmatter.video_url,
-      sort_order: frontmatter.sort_order,
-      section_title: frontmatter.section_title ?? "",
-      course,
-    } satisfies Lesson;
-  }
-
-  // Fallback: from series sections
-  const series = getAISeries(seriesSlug);
-  if (!series) return null;
-
-  for (const section of series.sections) {
-    const lesson = section.lessons.find((l) => l.slug === lessonSlug);
-    if (!lesson) continue;
-
-    const generatedContent =
-      lesson.slug === "tong-quan" && series.content
-        ? series.content
-        : `<h2>${lesson.title}</h2><p>Nội dung bài học đang được cập nhật.</p><p><a href="/ai/series/${series.slug}/">Mở trang series</a></p>`;
-
-    return {
-      id: lesson.id,
-      title: lesson.title,
-      slug: lesson.slug,
-      description: lesson.description,
-      content: generatedContent,
-      duration_minutes: lesson.duration_minutes,
-      is_free: lesson.is_free,
-      video_url: lesson.video_url,
-      sort_order: lesson.sort_order,
-      section_title: section.title,
-      course: {
-        id: series.id,
-        title: series.title,
-        slug: series.slug,
-      },
-    };
-  }
-
-  return null;
-}
-
-export function getAISeriesLessonSlugs(): { seriesSlug: string; lessonSlug: string }[] {
-  const seriesItems = getAllAISeries();
-  const slugs: { seriesSlug: string; lessonSlug: string }[] = [];
-
-  for (const series of seriesItems) {
-    const mdxLessonPaths = listMdxRelativePaths(`ai/series/${series.slug}`)
-      .filter((relativePath) => relativePath.includes("/lessons/") && !relativePath.endsWith("/index"));
-    if (mdxLessonPaths.length > 0) {
-      const uniqueSlugs = new Set<string>();
-      for (const lessonPath of mdxLessonPaths) {
-        const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`ai/series/${series.slug}`, lessonPath);
-        if (!mdxLesson) continue;
-        const lessonSlug = mdxLesson.data.slug || normalizeLessonSlugFromPath(lessonPath) || "";
-        if (!lessonSlug) continue;
-        uniqueSlugs.add(lessonSlug);
-      }
-      for (const lessonSlug of uniqueSlugs) {
-        slugs.push({ seriesSlug: series.slug, lessonSlug });
-      }
-      continue;
-    }
-
-    const fullSeries = getAISeries(series.slug);
-    if (!fullSeries) continue;
-    for (const section of fullSeries.sections) {
-      for (const lesson of section.lessons) {
-        slugs.push({ seriesSlug: series.slug, lessonSlug: lesson.slug });
-      }
-    }
-  }
-  return slugs;
-}
-
 // Series (content/series/)
 export function getAllSeries(): SeriesIndex[] {
   return getAllSeriesFromMdx();
@@ -469,6 +362,33 @@ export function getSeries(slug: string): Series | null {
 
 export function getSeriesSlugs(): string[] {
   return getAllSeries().map((item) => item.slug);
+}
+
+export function getSeriesSlugsWithCategory(): { category: string; slug: string }[] {
+  return getAllSeries().map((item) => ({
+    category: item.category?.slug || "uncategorized",
+    slug: item.slug,
+  }));
+}
+
+export interface SeriesCategory {
+  slug: string;
+  name: string;
+}
+
+export function getSeriesCategories(): SeriesCategory[] {
+  const seriesItems = getAllSeries();
+  const map = new Map<string, string>();
+  for (const s of seriesItems) {
+    if (s.category) {
+      map.set(s.category.slug, s.category.name);
+    }
+  }
+  return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
+}
+
+export function getSeriesByCategory(categorySlug: string): SeriesIndex[] {
+  return getAllSeries().filter((s) => s.category?.slug === categorySlug);
 }
 
 // Lessons
@@ -515,7 +435,7 @@ export function getLesson(
     const generatedContent =
       lesson.slug === "tong-quan" && series.content
         ? series.content
-          : `<h2>${lesson.title}</h2><p>Noi dung bai hoc dang duoc cap nhat. Trong thoi gian cho doi, ban co the tham khao trang series de theo lo trinh day du.</p><p><a href=\"/series/${series.slug}/\">Mo trang series</a></p>`;
+          : `<h2>${lesson.title}</h2><p>Noi dung bai hoc dang duoc cap nhat. Trong thoi gian cho doi, ban co the tham khao trang series de theo lo trinh day du.</p><p><a href=\"/series/${series.category?.slug || "uncategorized"}/${series.slug}/\">Mo trang series</a></p>`;
 
     return {
       id: lesson.id,
@@ -544,12 +464,13 @@ export function getSeriesLessonSlugs(): { seriesSlug: string; lessonSlug: string
   const slugs: { seriesSlug: string; lessonSlug: string }[] = [];
 
   for (const series of seriesItems) {
-    const mdxLessonPaths = listMdxRelativePaths(`series/${series.slug}`)
+    const compoundSlug = resolveSeriesCompoundSlug(series.slug);
+    const mdxLessonPaths = listMdxRelativePaths(`series/${compoundSlug}`)
       .filter((relativePath) => relativePath.includes("/lessons/") && !relativePath.endsWith("/index"));
     if (mdxLessonPaths.length > 0) {
       const uniqueSlugs = new Set<string>();
       for (const lessonPath of mdxLessonPaths) {
-        const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`series/${series.slug}`, lessonPath);
+        const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`series/${compoundSlug}`, lessonPath);
         if (!mdxLesson) continue;
 
         const lessonSlug = mdxLesson.data.slug || normalizeLessonSlugFromPath(lessonPath) || "";
@@ -612,7 +533,7 @@ export function getPostsByTopic(topicSlug: string): PostIndex[] {
 
 // Search index
 export interface SearchItem {
-  type: "post" | "series" | "ai-series";
+  type: "post" | "series";
   title: string;
   slug: string;
   excerpt: string;
@@ -644,19 +565,7 @@ export function buildSearchIndex(): SearchItem[] {
       excerpt: series.description || "",
       category: series.category?.name || "",
       tags: series.tags.map((t) => t.name),
-      url: `/series/${series.slug}/`,
-    });
-  }
-
-  for (const series of getAllAISeries()) {
-    items.push({
-      type: "ai-series",
-      title: series.title,
-      slug: series.slug,
-      excerpt: series.description || "",
-      category: series.category?.name || "AI",
-      tags: series.tags.map((t) => t.name),
-      url: `/ai/series/${series.slug}/`,
+      url: `/series/${series.category?.slug || "uncategorized"}/${series.slug}/`,
     });
   }
 

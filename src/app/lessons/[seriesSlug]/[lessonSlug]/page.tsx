@@ -38,6 +38,8 @@ export default async function LessonPage({
     if (!lesson) notFound();
 
     const series = getSeries(seriesSlug);
+    const categorySlug = series?.category?.slug || "uncategorized";
+    const categoryName = series?.category?.name || "Series";
 
     // Flat list of all lessons across sections for prev/next nav
     const allLessons = series
@@ -56,7 +58,11 @@ export default async function LessonPage({
                     <IconChevronRight size={14} className="text-zinc-300" />
                     <Link href="/series/" className="hover:text-brand-600 transition-colors">Series</Link>
                     <IconChevronRight size={14} className="text-zinc-300" />
-                    <Link href={`/series/${seriesSlug}/`} className="hover:text-brand-600 transition-colors truncate max-w-40">
+                    <Link href={`/series/${categorySlug}/`} className="hover:text-brand-600 transition-colors">
+                        {categoryName}
+                    </Link>
+                    <IconChevronRight size={14} className="text-zinc-300" />
+                    <Link href={`/series/${categorySlug}/${seriesSlug}/`} className="hover:text-brand-600 transition-colors truncate max-w-40">
                         {lesson.course.title}
                     </Link>
                     <IconChevronRight size={14} className="text-zinc-300 shrink-0" />
@@ -144,7 +150,7 @@ export default async function LessonPage({
                         <aside className="xl:col-span-1">
                             <div className="sticky top-24 rounded-2xl overflow-hidden glass-card" style={{ transform: "none" }}>
                                 <div className="px-5 py-4 border-b border-zinc-100">
-                                    <Link href={`/series/${seriesSlug}/`} className="text-xs font-bold uppercase tracking-wider text-brand-600 hover:underline">
+                                    <Link href={`/series/${categorySlug}/${seriesSlug}/`} className="text-xs font-bold uppercase tracking-wider text-brand-600 hover:underline">
                                         ← {lesson.course.title}
                                     </Link>
                                     <h2 className="text-sm font-bold text-zinc-900 mt-1">Nội dung series</h2>

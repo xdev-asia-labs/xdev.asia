@@ -73,17 +73,19 @@ html { scroll-behavior: smooth; }
 /* ═══════════════════════════════════════════════════════════════
    CARDS — Clean, elevated
    ═══════════════════════════════════════════════════════════════ */
-.glass-card {
+.glass-card,
+.post-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 1rem;
-  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.glass-card:hover {
+.glass-card:hover,
+.post-card:hover {
   border-color: #bfdbfe;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.07), 0 2px 8px rgba(0, 0, 0, 0.03);
+  transform: translateY(-3px);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -426,6 +428,62 @@ html { scroll-behavior: smooth; }
 .tag-pill:hover {
   background: #dbeafe;
   border-color: #bfdbfe;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOPIC FILTER TABS
+   ═══════════════════════════════════════════════════════════════ */
+.topic-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.topic-tab:hover {
+  color: #2563eb;
+  border-color: #bfdbfe;
+  background: #f0f7ff;
+}
+.topic-tab-active,
+.topic-tab-active:hover {
+  color: #ffffff;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+.topic-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.125rem;
+  padding: 0 0.35rem;
+  border-radius: 1rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.25);
+  color: inherit;
+}
+.topic-tab:not(.topic-tab-active) .topic-tab-count {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERO GRADIENT — Used on listing pages
+   ═══════════════════════════════════════════════════════════════ */
+.hero-gradient {
+  background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 60%, #ffffff 100%);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 /* ═══════════════════════════════════════════════════════════════

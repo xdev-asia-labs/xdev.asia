@@ -30,6 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`${inter.variable} h-full antialiased`}>
+      <head>
+        <link rel="alternate" type="application/rss+xml" title={settings.site_name || "xDev"} href="/feed.xml/" />
+      </head>
       <body className="min-h-full flex flex-col font-sans bg-white text-zinc-800">
         <Header topics={navTopics} />
         <main className="flex-1">{children}</main>

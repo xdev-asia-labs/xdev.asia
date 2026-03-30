@@ -7,10 +7,11 @@ import { IconClock } from "./Icons";
 
 export default function PostCard({ post, priority = false }: { post: PostIndex; priority?: boolean }) {
     const imageUrl = getValidImageUrl(post.featured_image, post.slug);
+    const visibleTags = post.tags?.slice(0, 3) ?? [];
 
     return (
-        <article className="group glass-card rounded-2xl overflow-hidden">
-            <Link href={`/blog/${post.slug}/`}>
+        <article className="group post-card rounded-2xl overflow-hidden flex flex-col h-full">
+            <Link href={`/blog/${post.slug}/`} className="block">
                 <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
                     <Image
                         src={imageUrl}
@@ -18,51 +19,65 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         priority={priority}
-                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                        className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {post.category && (
-                        <span className="absolute top-3 left-3 inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider text-white bg-brand-600/90 backdrop-blur-sm">
+                        <span className="absolute top-3 left-3 inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider text-white bg-brand-600/90 backdrop-blur-sm shadow-sm">
                             {post.category.name}
                         </span>
                     )}
                 </div>
             </Link>
-            <div className="p-5">
+            <div className="p-5 flex flex-col flex-1">
                 <Link href={`/blog/${post.slug}/`}>
-                    <h2 className="text-base font-bold text-zinc-900 group-hover:text-brand-600 transition-colors line-clamp-2 leading-snug">
+                    <h2 className="text-[0.95rem] font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 line-clamp-2 leading-snug">
                         {post.title}
                     </h2>
                 </Link>
                 {post.excerpt && (
-                    <p className="mt-2.5 text-sm text-zinc-500 line-clamp-2 leading-relaxed">
+                    <p className="mt-2 text-[0.82rem] text-zinc-500 line-clamp-2 leading-relaxed flex-1">
                         {post.excerpt}
                     </p>
                 )}
-                <div className="mt-4 flex items-center gap-3 text-xs font-medium text-zinc-400">
+
+                {/* Tags */}
+                {visibleTags.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                        {visibleTags.map((tag) => (
+                            <span key={tag.slug} className="tag-pill text-[10px] px-2 py-0.5">
+                                {tag.name}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                {/* Meta */}
+                <div className="mt-3 pt-3 border-t border-zinc-100 flex items-center gap-2.5 text-xs text-zinc-400">
                     {post.author?.avatar ? (
                         <Image
                             src={getValidImageUrl(post.author.avatar, post.author.name)}
                             alt={post.author.name}
-                            width={22}
-                            height={22}
+                            width={20}
+                            height={20}
                             style={{ height: "auto" }}
-                            className="rounded-full ring-2 ring-white object-cover"
+                            className="rounded-full ring-1 ring-zinc-200 object-cover"
                         />
                     ) : (
-                        <div className="w-5.5 h-5.5 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-2 ring-white text-[10px] font-bold">
+                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-1 ring-zinc-200 text-[9px] font-bold">
                             {post.author.name.charAt(0)}
                         </div>
                     )}
-                    <span className="text-zinc-600">{post.author.name}</span>
-                    <span className="w-1 h-1 rounded-full bg-zinc-300" />
-                    <time dateTime={post.published_at ?? undefined}>
+                    <span className="font-medium text-zinc-600 truncate">{post.author.name}</span>
+                    <span className="w-0.5 h-0.5 rounded-full bg-zinc-300 shrink-0" />
+                    <time dateTime={post.published_at ?? undefined} className="shrink-0">
                         {formatDate(post.published_at)}
                     </time>
                     {post.reading_time && (
                         <>
-                            <span className="w-1 h-1 rounded-full bg-zinc-300" />
-                            <span className="flex items-center gap-1">
-                                <IconClock size={12} />
+                            <span className="w-0.5 h-0.5 rounded-full bg-zinc-300 shrink-0" />
+                            <span className="flex items-center gap-1 shrink-0">
+                                <IconClock size={11} />
                                 {post.reading_time} phút
                             </span>
                         </>

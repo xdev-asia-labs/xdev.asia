@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SeriesCard from "@/components/SeriesCard";
-import { getAllSeries } from "@/lib/data";
-import { IconBook } from "@/components/Icons";
+import { getAllSeries, getSeriesCategories } from "@/lib/data";
+import { IconBook, IconArrowRight } from "@/components/Icons";
 
 export const metadata: Metadata = {
     title: "Series",
@@ -10,6 +11,13 @@ export const metadata: Metadata = {
 
 export default function SeriesPage() {
     const seriesItems = getAllSeries();
+    const categories = getSeriesCategories();
+
+    // Group series by category
+    const grouped = categories.map((cat) => ({
+        ...cat,
+        items: seriesItems.filter((s) => s.category?.slug === cat.slug),
+    })).filter((g) => g.items.length > 0);
 
     return (
         <div>
@@ -26,25 +34,50 @@ export default function SeriesPage() {
                         Học theo <span className="gradient-text">lộ trình</span>
                     </h1>
                     <p className="text-zinc-500 max-w-2xl">
-                        Quản lý nội dung theo từng series để dễ theo dõi và học theo lộ trình.
+                        {seriesItems.length} series được chia theo từng chủ đề để dễ theo dõi và học theo lộ trình.
                     </p>
+
+                    {/* Category tabs */}
+                    {categories.length > 1 && (
+                        <div className="flex flex-wrap gap-2 mt-6">
+                            {categories.map((cat) => (
+                                <Link
+                                    key={cat.slug}
+                                    href={`/series/${cat.slug}/`}
+                                    className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-white border border-zinc-200 text-zinc-600 hover:border-brand-300 hover:text-brand-600 hover:bg-brand-50 transition-all"
+                                >
+                                    {cat.name}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
-            {/* Series Grid */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {seriesItems.map((series, index) => (
-                        <SeriesCard key={series.id} series={series} priority={index === 0} />
-                    ))}
-                </div>
-                {seriesItems.length === 0 && (
-                    <div className="text-center py-20">
-                        <IconBook size={48} className="text-zinc-300 mx-auto mb-4" />
-                        <p className="text-zinc-500">Chưa có series nào.</p>
+            {/* Series grouped by category */}
+            {grouped.map((group) => (
+                <section key={group.slug} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-xl font-bold text-zinc-900">{group.name}</h2>
+                        <Link href={`/series/${group.slug}/`} className="link-brand text-sm">
+                            Xem tất cả
+                            <IconArrowRight size={14} />
+                        </Link>
                     </div>
-                )}
-            </section>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        {group.items.map((series, index) => (
+                            <SeriesCard key={series.id} series={series} priority={index === 0} />
+                        ))}
+                    </div>
+                </section>
+            ))}
+
+            {seriesItems.length === 0 && (
+                <div className="text-center py-20">
+                    <IconBook size={48} className="text-zinc-300 mx-auto mb-4" />
+                    <p className="text-zinc-500">Chưa có series nào.</p>
+                </div>
+            )}
         </div>
     );
 }

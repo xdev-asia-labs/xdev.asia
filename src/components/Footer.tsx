@@ -56,7 +56,6 @@ export default function Footer() {
                         <ul className="space-y-2.5">
                             {[
                                 { href: "/blog/", label: "Blog" },
-                                { href: "/ai/", label: "AI" },
                                 { href: "/series/", label: "Series" },
                                 { href: "/showcase/", label: "Showcase" },
                                 { href: "/search/", label: "Tìm kiếm" },
