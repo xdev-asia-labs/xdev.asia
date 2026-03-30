@@ -11,7 +11,7 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
     return (
         <article className="group glass-card rounded-2xl overflow-hidden">
             <Link href={`/blog/${post.slug}/`}>
-                <div className="relative aspect-[16/10] overflow-hidden bg-surface-100">
+                <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
                     <Image
                         src={imageUrl}
                         alt={post.title}

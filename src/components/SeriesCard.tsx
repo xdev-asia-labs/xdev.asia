@@ -22,7 +22,7 @@ export default function SeriesCard({ series, priority = false, basePath = "/seri
     return (
         <article className="group flex flex-col h-full glass-card rounded-2xl overflow-hidden">
             <Link href={`${basePath}/${series.slug}/`}>
-                <div className="relative aspect-[4/3] overflow-hidden bg-surface-100">
+                <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
                     <Image
                         src={imageUrl}
                         alt={series.title}
@@ -58,18 +58,23 @@ export default function SeriesCard({ series, priority = false, basePath = "/seri
 
                 <div className="mt-4 pt-3 flex items-center justify-between text-sm font-medium text-zinc-400 border-t border-zinc-100">
                     <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1.5">
-                            <IconBook size={14} className="text-zinc-400" />
-                            {series.lesson_count} bài
-                        </span>
-                        {series.duration_hours && (
+                        {series.lesson_count > 0 && (
+                            <span className="flex items-center gap-1.5">
+                                <IconBook size={14} className="text-zinc-400" />
+                                {series.lesson_count} bài
+                            </span>
+                        )}
+                        {Number(series.duration_hours) > 0 && (
                             <>
-                                <span className="w-1 h-1 rounded-full bg-zinc-300" />
+                                {series.lesson_count > 0 && <span className="w-1 h-1 rounded-full bg-zinc-300" />}
                                 <span className="flex items-center gap-1.5">
                                     <IconClock size={14} className="text-zinc-400" />
                                     {series.duration_hours}h
                                 </span>
                             </>
+                        )}
+                        {series.lesson_count === 0 && (!series.duration_hours || series.duration_hours === 0) && (
+                            <span className="text-xs text-zinc-300 italic">Đang cập nhật</span>
                         )}
                     </div>
                     {series.average_rating > 0 && (

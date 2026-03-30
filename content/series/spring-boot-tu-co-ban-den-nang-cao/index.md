@@ -1,6 +1,6 @@
 ---
 id: 019c9617-fcab-71c4-aaaa-a3e7571ff53f
-title: 'SPRING BOOT: TỪ CƠ BẢN ĐẾN NÂNG CAO'
+title: 'Spring Boot: Từ Cơ bản đến Nâng cao'
 slug: spring-boot-tu-co-ban-den-nang-cao
 description: >-
   Khóa học toàn diện về Spring Boot từ cơ bản đến nâng cao, giúp bạn xây dựng
@@ -21,7 +21,7 @@ published_at: '2025-12-08T08:37:00.000000Z'
 created_at: '2026-02-25T18:38:00.000000Z'
 author:
   id: 019c9616-d2b4-713f-9b2c-40e2e92a05cf
-  name: DUY TRAN
+  name: Duy Tran
   avatar: avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg
 category:
   id: 019c9617-facb-72da-8191-e6d44b88fb3e

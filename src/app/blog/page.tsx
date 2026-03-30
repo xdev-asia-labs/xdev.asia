@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PostCard from "@/components/PostCard";
-import { getAllPosts } from "@/lib/data";
+import { getAllPosts, getAvailableTopics } from "@/lib/data";
 import { IconCode } from "@/components/Icons";
 
 export const metadata: Metadata = {
     title: "Blog",
-    description: "Bài viết về lập trình, DevOps, kiến trúc hệ thống và công nghệ",
+    description: "Bài viết về lập trình, AI, DevSecOps, kiến trúc hệ thống và công nghệ",
 };
 
 export default function BlogPage() {
     const posts = getAllPosts();
+    const topics = getAvailableTopics();
 
     return (
         <div>
@@ -26,8 +28,26 @@ export default function BlogPage() {
                         Bài viết <span className="gradient-text">mới nhất</span>
                     </h1>
                     <p className="text-zinc-500 max-w-2xl">
-                        Bài viết về lập trình, DevOps, kiến trúc hệ thống và công nghệ.
+                        Bài viết về lập trình, AI, DevSecOps, kiến trúc hệ thống và công nghệ.
                     </p>
+
+                    {/* Topic filter tabs */}
+                    {topics.length > 0 && (
+                        <div className="mt-6 flex flex-wrap gap-2">
+                            <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-600 text-white">
+                                Tất cả
+                            </span>
+                            {topics.map((topic) => (
+                                <Link
+                                    key={topic.slug}
+                                    href={`/blog/topic/${topic.slug}/`}
+                                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-500 bg-white border border-zinc-200 hover:border-brand-300 hover:text-brand-600 transition-colors"
+                                >
+                                    {topic.name}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 

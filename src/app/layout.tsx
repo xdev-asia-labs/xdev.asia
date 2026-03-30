@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import type { NavTopic } from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getSettings } from "@/lib/data";
+import { getSettings, getAvailableTopics } from "@/lib/data";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -11,6 +12,7 @@ const inter = Inter({
 });
 
 const settings = getSettings();
+const navTopics: NavTopic[] = getAvailableTopics().map(({ slug, name, icon }) => ({ slug, name, icon }));
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans bg-white text-zinc-800">
-        <Header />
+        <Header topics={navTopics} />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

@@ -1,12 +1,17 @@
 {
   "site_name": "xDev Asia",
-  "site_description": "Nền tảng chia sẻ kiến thức lập trình và công nghệ",
-  "meta_keywords": "lập trình, khóa học, AI, LLM, machine learning, web development",
+  "site_description": "Blog cá nhân về lập trình, AI, DevOps và công nghệ",
+  "site_tagline": "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế",
+  "meta_keywords": "lập trình, khóa học, AI, LLM, machine learning, web development, devops",
   "site_url": "https://xdev.asia",
+  "site_email": "",
   "logo_url": null,
   "favicon_url": null,
   "google_analytics_id": "",
   "facebook_url": "",
   "twitter_url": "",
-  "github_url": "https://github.com/xdev-asia"
+  "github_url": "https://github.com/xdev-asia",
+  "youtube_url": "",
+  "tiktok_url": "",
+  "linkedin_url": ""
 }

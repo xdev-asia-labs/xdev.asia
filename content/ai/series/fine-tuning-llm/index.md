@@ -22,7 +22,7 @@ published_at: '2026-03-29T12:00:00.000000Z'
 created_at: '2026-03-29T12:00:00.000000Z'
 author:
   id: 019c9616-d2b4-713f-9b2c-40e2e92a05cf
-  name: DUY TRAN
+  name: Duy Tran
   avatar: avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg
 category:
   id: 019c9618-bb00-7000-b000-bb0000000001

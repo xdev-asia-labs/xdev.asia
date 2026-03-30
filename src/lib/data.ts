@@ -107,48 +107,24 @@ function collectPostsFromCollection(collection: string): PostIndex[] {
 }
 
 function getAllPostsFromMdx(): PostIndex[] {
-  // Try content/blog/ first (new structure), fallback to content/posts/
-  let posts = collectPostsFromCollection("blog");
-  if (posts.length === 0) {
-    posts = collectPostsFromCollection("posts");
-  }
-  return sortByPublishedDate(posts);
+  return sortByPublishedDate(collectPostsFromCollection("blog"));
 }
 
 function getPostFromMdx(slug: string): Post | null {
-  // Search in content/blog/ recursively, then fallback to content/posts/
-  for (const collection of ["blog", "posts"]) {
-    const relativePaths = listMdxRelativePaths(collection);
-    for (const relPath of relativePaths) {
-      const document = readMdxDocumentByRelativePath<PostFrontmatter>(collection, relPath);
-      if (!document) continue;
-      if (document.data.slug === slug) {
-        return {
-          ...document.data,
-          comments: document.data.comments ?? [],
-          content: renderMdxBodyToHtml(document.content),
-        } satisfies Post;
-      }
+  for (const relPath of listMdxRelativePaths("blog")) {
+    const document = readMdxDocumentByRelativePath<PostFrontmatter>("blog", relPath);
+    if (!document) continue;
+    if (document.data.slug === slug) {
+      return {
+        ...document.data,
+        comments: document.data.comments ?? [],
+        content: renderMdxBodyToHtml(document.content),
+      } satisfies Post;
     }
   }
   return null;
 }
 
-// News (content/news/)
-function getAllNewsFromMdx(): PostIndex[] {
-  const posts = collectPostsFromCollection("news");
-  return sortByPublishedDate(posts);
-}
-
-function getNewsFromMdx(slug: string): Post | null {
-  const document = readMdxDocument<PostFrontmatter>("news", slug);
-  if (!document) return null;
-  return {
-    ...document.data,
-    comments: document.data.comments ?? [],
-    content: renderMdxBodyToHtml(document.content),
-  } satisfies Post;
-}
 
 function getAllSeriesFromMdx(): SeriesIndex[] {
   const series = listMdxSlugs("series")
@@ -280,18 +256,6 @@ export function getPostSlugs(): string[] {
   return getAllPosts().map((p) => p.slug);
 }
 
-// News (content/news/)
-export function getAllNews(): PostIndex[] {
-  return getAllNewsFromMdx();
-}
-
-export function getNews(slug: string): Post | null {
-  return getNewsFromMdx(slug);
-}
-
-export function getNewsSlugs(): string[] {
-  return getAllNews().map((p) => p.slug);
-}
 
 // AI Blog (content/ai/blog/)
 function getAllAIPostsFromMdx(): PostIndex[] {
@@ -608,6 +572,95 @@ export function getSeriesLessonSlugs(): { seriesSlug: string; lessonSlug: string
     }
   }
   return slugs;
+}
+
+// Topics – driven by categories.json, enriched with actual post counts
+export interface Topic {
+  slug: string;
+  name: string;
+  icon: string;
+  description: string;
+  postCount: number;
+}
+
+export function getAvailableTopics(): Topic[] {
+  const categories = getCategories().filter((c) => c.type === "blog");
+  const posts = getAllPosts();
+
+  // Count posts per category slug
+  const countMap = new Map<string, number>();
+  for (const post of posts) {
+    if (post.category) {
+      countMap.set(post.category.slug, (countMap.get(post.category.slug) || 0) + 1);
+    }
+  }
+
+  return categories
+    .map((cat) => ({
+      slug: cat.slug,
+      name: cat.name,
+      icon: cat.icon || "code",
+      description: cat.description || "",
+      postCount: countMap.get(cat.slug) || 0,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function getPostsByTopic(topicSlug: string): PostIndex[] {
+  return getAllPosts().filter((p) => p.category?.slug === topicSlug);
+}
+
+// Search index
+export interface SearchItem {
+  type: "post" | "series" | "ai-series";
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: string;
+  tags: string[];
+  url: string;
+}
+
+export function buildSearchIndex(): SearchItem[] {
+  const items: SearchItem[] = [];
+
+  for (const post of getAllPosts()) {
+    items.push({
+      type: "post",
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt || "",
+      category: post.category?.name || "",
+      tags: post.tags.map((t) => t.name),
+      url: `/blog/${post.slug}/`,
+    });
+  }
+
+  for (const series of getAllSeries()) {
+    items.push({
+      type: "series",
+      title: series.title,
+      slug: series.slug,
+      excerpt: series.description || "",
+      category: series.category?.name || "",
+      tags: series.tags.map((t) => t.name),
+      url: `/series/${series.slug}/`,
+    });
+  }
+
+  for (const series of getAllAISeries()) {
+    items.push({
+      type: "ai-series",
+      title: series.title,
+      slug: series.slug,
+      excerpt: series.description || "",
+      category: series.category?.name || "AI",
+      tags: series.tags.map((t) => t.name),
+      url: `/ai/series/${series.slug}/`,
+    });
+  }
+
+  return items;
 }
 
 // Reviews

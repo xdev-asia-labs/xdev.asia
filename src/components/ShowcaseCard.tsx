@@ -53,9 +53,9 @@ export function AppCard({ app }: { app: ShowcaseApp }) {
                 <div className="flex items-center gap-2">
                     <Link
                         href={`/showcase/${app.slug}/`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-600 hover:text-white transition-colors hover:bg-brand-600 border border-brand-200"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-600 hover:text-white transition-colors hover:bg-brand-600 border border-brand-200 whitespace-nowrap"
                     >
-                        Chi tiết →
+                        Chi tiết&nbsp;→
                     </Link>
                     {app.appStoreUrl && (
                         <a
@@ -103,7 +103,7 @@ export function RepoCard({ repo }: { repo: ShowcaseRepo }) {
             </div>
 
             {/* Stats & Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-zinc-100">
+            <div className="pt-4 border-t border-zinc-100 space-y-3">
                 <div className="flex items-center gap-4 text-xs text-zinc-500">
                     <span className="flex items-center gap-1.5">
                         <span className="w-3 h-3 rounded-full" style={{ backgroundColor: repo.languageColor }} />
@@ -121,9 +121,9 @@ export function RepoCard({ repo }: { repo: ShowcaseRepo }) {
                 <div className="flex items-center gap-2">
                     <Link
                         href={`/showcase/${repo.slug}/`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-600 hover:text-white transition-colors hover:bg-brand-600 border border-brand-200"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-600 hover:text-white transition-colors hover:bg-brand-600 border border-brand-200 whitespace-nowrap"
                     >
-                        Chi tiết →
+                        Chi tiết&nbsp;→
                     </Link>
                     {repo.homepage && (
                         <a
