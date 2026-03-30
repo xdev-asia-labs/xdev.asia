@@ -1,0 +1,412 @@
+---
+id: 019c9617-fc06-7006-a006-fc0600000006
+title: 'Bài 6: DTO Pattern, Validation & Global Exception Handling'
+slug: bai-6-dto-validation-exception-handling
+description: >-
+  Data Transfer Object pattern với record classes. Bean Validation (@Valid, @NotNull,
+  @Size, custom validator). @ControllerAdvice, @ExceptionHandler, ProblemDetail RFC 9457.
+duration_minutes: 150
+is_free: true
+video_url: null
+sort_order: 5
+section_title: "Phần 2: Xây dựng REST API"
+course:
+  id: 019c9617-fcab-71c4-aaaa-a3e7571ff53f
+  title: "Spring Boot 4: Từ Cơ bản đến Nâng cao"
+  slug: spring-boot-tu-co-ban-den-nang-cao
+---
+
+## Giới thiệu
+
+Trong production, bạn không bao giờ expose trực tiếp Entity ra API. DTO pattern tách biệt representation layer với persistence layer. Kết hợp với Bean Validation và Global Exception Handling, bạn sẽ xây dựng API robust và professional.
+
+---
+
+## 1. DTO Pattern với Java Records
+
+### 1.1 Tại sao cần DTO?
+
+```
+Client ←→ Controller ←→ Service ←→ Repository ←→ Database
+           │                          │
+         DTO/Request              Entity/Model
+         DTO/Response
+
+Lý do:
+- Không expose fields nhạy cảm (password hash, internal IDs)
+- Decouple API contract khỏi database schema
+- Validate input tại boundary
+- Versioning API dễ dàng hơn
+```
+
+### 1.2 Sử dụng Java Records cho DTO
+
+```java
+// Entity - ánh xạ database
+@Entity
+@Table(name = "users")
+public class User {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String email;
+    private String passwordHash;
+    private String role;
+    private boolean active;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    // getters, setters...
+}
+
+// Request DTO - nhận input từ client
+public record CreateUserRequest(
+    String name,
+    String email,
+    String password
+) {}
+
+public record UpdateUserRequest(
+    String name,
+    String email
+) {}
+
+// Response DTO - trả về cho client
+public record UserResponse(
+    Long id,
+    String name,
+    String email,
+    String role,
+    LocalDateTime createdAt
+) {
+    // Factory method từ Entity
+    public static UserResponse from(User user) {
+        return new UserResponse(
+            user.getId(),
+            user.getName(),
+            user.getEmail(),
+            user.getRole(),
+            user.getCreatedAt()
+        );
+    }
+}
+```
+
+### 1.3 Mapping trong Service
+
+```java
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public UserResponse create(CreateUserRequest request) {
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPasswordHash(passwordEncoder.encode(request.password()));
+        user.setRole("USER");
+        user.setActive(true);
+        user.setCreatedAt(LocalDateTime.now());
+
+        User saved = userRepository.save(user);
+        return UserResponse.from(saved);
+    }
+
+    public List<UserResponse> findAll() {
+        return userRepository.findAll().stream()
+            .map(UserResponse::from)
+            .toList();
+    }
+}
+```
+
+---
+
+## 2. Bean Validation
+
+### 2.1 Dependency
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+
+### 2.2 Validation Annotations
+
+```java
+public record CreateUserRequest(
+    @NotBlank(message = "Tên không được để trống")
+    @Size(min = 2, max = 100, message = "Tên phải từ 2-100 ký tự")
+    String name,
+
+    @NotBlank(message = "Email không được để trống")
+    @Email(message = "Email không hợp lệ")
+    String email,
+
+    @NotBlank(message = "Mật khẩu không được để trống")
+    @Size(min = 8, message = "Mật khẩu phải ít nhất 8 ký tự")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$",
+             message = "Mật khẩu phải có chữ hoa, chữ thường và số")
+    String password,
+
+    @Min(value = 0, message = "Tuổi phải >= 0")
+    @Max(value = 150, message = "Tuổi phải <= 150")
+    Integer age,
+
+    @NotNull(message = "Ngày sinh không được null")
+    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
+    LocalDate dateOfBirth
+) {}
+```
+
+### 2.3 Kích hoạt Validation trong Controller
+
+```java
+@PostMapping
+public ResponseEntity<UserResponse> createUser(
+        @Valid @RequestBody CreateUserRequest request) {
+    // @Valid trigger validation
+    // Nếu invalid, Spring tự động throw MethodArgumentNotValidException
+    UserResponse user = userService.create(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(user);
+}
+```
+
+### 2.4 Chú thích validation phổ biến
+
+| Annotation | Mô tả |
+|-----------|--------|
+| `@NotNull` | Không null |
+| `@NotBlank` | Không null, không empty, không chỉ spaces |
+| `@NotEmpty` | Không null, không empty (cho String, Collection) |
+| `@Size(min, max)` | Giới hạn length |
+| `@Min` / `@Max` | Giới hạn số |
+| `@Email` | Định dạng email |
+| `@Pattern` | Regex pattern |
+| `@Past` / `@Future` | Date trong quá khứ/tương lai |
+| `@Positive` / `@Negative` | Số dương/âm |
+
+### 2.5 Custom Validator
+
+```java
+// Tạo custom annotation
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = UniqueEmailValidator.class)
+public @interface UniqueEmail {
+    String message() default "Email đã được sử dụng";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}
+
+// Implement validator
+public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
+
+    private final UserRepository userRepository;
+
+    public UniqueEmailValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public boolean isValid(String email, ConstraintValidatorContext context) {
+        if (email == null) return true; // @NotBlank sẽ handle null
+        return !userRepository.existsByEmail(email);
+    }
+}
+
+// Sử dụng
+public record CreateUserRequest(
+    @NotBlank String name,
+    @Email @UniqueEmail String email,
+    @NotBlank @Size(min = 8) String password
+) {}
+```
+
+---
+
+## 3. Global Exception Handling
+
+### 3.1 ProblemDetail (RFC 9457)
+
+Spring Boot 4.x hỗ trợ ProblemDetail — chuẩn RFC 9457 cho error responses:
+
+```json
+{
+    "type": "https://api.example.com/errors/validation",
+    "title": "Validation Error",
+    "status": 400,
+    "detail": "Request validation failed",
+    "instance": "/api/v1/users",
+    "errors": [
+        {"field": "email", "message": "Email không hợp lệ"},
+        {"field": "password", "message": "Mật khẩu phải ít nhất 8 ký tự"}
+    ]
+}
+```
+
+### 3.2 @ControllerAdvice — Global Exception Handler
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    // Validation errors
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleValidationErrors(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Validation Error");
+        problem.setDetail("Request validation failed");
+        problem.setInstance(URI.create(request.getRequestURI()));
+
+        List<Map<String, String>> errors = ex.getBindingResult()
+            .getFieldErrors().stream()
+            .map(error -> Map.of(
+                "field", error.getField(),
+                "message", error.getDefaultMessage() != null
+                    ? error.getDefaultMessage() : "Invalid value"
+            ))
+            .toList();
+
+        problem.setProperty("errors", errors);
+        return problem;
+    }
+
+    // Resource not found
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleNotFound(
+            ResourceNotFoundException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setTitle("Resource Not Found");
+        problem.setDetail(ex.getMessage());
+        problem.setInstance(URI.create(request.getRequestURI()));
+        return problem;
+    }
+
+    // Duplicate resource
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ProblemDetail handleDuplicate(
+            DuplicateResourceException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setTitle("Duplicate Resource");
+        problem.setDetail(ex.getMessage());
+        problem.setInstance(URI.create(request.getRequestURI()));
+        return problem;
+    }
+
+    // Catch-all for unexpected errors
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleGeneral(
+            Exception ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatus(
+            HttpStatus.INTERNAL_SERVER_ERROR);
+        problem.setTitle("Internal Server Error");
+        problem.setDetail("An unexpected error occurred");
+        problem.setInstance(URI.create(request.getRequestURI()));
+        // Không expose exception details cho client trong production
+        return problem;
+    }
+}
+```
+
+### 3.3 Custom Exception Classes
+
+```java
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String resource, String field, Object value) {
+        super(String.format("%s not found with %s: '%s'", resource, field, value));
+    }
+}
+
+public class DuplicateResourceException extends RuntimeException {
+    public DuplicateResourceException(String resource, String field, Object value) {
+        super(String.format("%s already exists with %s: '%s'", resource, field, value));
+    }
+}
+
+// Sử dụng trong service
+@Service
+public class UserService {
+    public UserResponse findById(Long id) {
+        return userRepository.findById(id)
+            .map(UserResponse::from)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
+}
+```
+
+---
+
+## 4. Bật ProblemDetail trong Spring Boot
+
+```yaml
+# application.yaml
+spring:
+  mvc:
+    problemdetails:
+      enabled: true # Bật ProblemDetail cho tất cả exceptions
+```
+
+---
+
+## 5. Response Envelope Pattern (Optional)
+
+```java
+// API Response wrapper
+public record ApiResponse<T>(
+    boolean success,
+    T data,
+    String message,
+    LocalDateTime timestamp
+) {
+    public static <T> ApiResponse<T> ok(T data) {
+        return new ApiResponse<>(true, data, null, LocalDateTime.now());
+    }
+
+    public static <T> ApiResponse<T> ok(T data, String message) {
+        return new ApiResponse<>(true, data, message, LocalDateTime.now());
+    }
+
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(false, null, message, LocalDateTime.now());
+    }
+}
+
+// Sử dụng
+@GetMapping("/{id}")
+public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable Long id) {
+    UserResponse user = userService.findById(id);
+    return ResponseEntity.ok(ApiResponse.ok(user));
+}
+```
+
+---
+
+## Tóm tắt
+
+- DTO pattern tách biệt API contract khỏi database entities, dùng Java Records cho immutable DTOs
+- Bean Validation (@Valid, @NotBlank, @Email...) validate input tại controller layer, hỗ trợ custom validators
+- @RestControllerAdvice + @ExceptionHandler xử lý exceptions tập trung, sử dụng ProblemDetail (RFC 9457) cho error responses chuẩn hóa
+
+## Bài tập
+
+1. Tạo DTO cho entity Product: CreateProductRequest (với validation), UpdateProductRequest, ProductResponse (không expose cost price)
+2. Implement custom validator `@ValidSlug` kiểm tra slug chỉ chứa lowercase letters, numbers và dashes
+3. Tạo GlobalExceptionHandler xử lý ít nhất 4 loại exceptions khác nhau, trả về ProblemDetail chuẩn RFC 9457

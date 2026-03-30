@@ -1,15 +1,16 @@
 ---
 id: 019c9617-fcab-71c4-aaaa-a3e7571ff53f
-title: 'Spring Boot: Từ Cơ bản đến Nâng cao'
+title: 'Spring Boot 4: Từ Cơ bản đến Nâng cao'
 slug: spring-boot-tu-co-ban-den-nang-cao
 description: >-
-  Khóa học toàn diện về Spring Boot từ cơ bản đến nâng cao, giúp bạn xây dựng
-  ứng dụng backend chuyên nghiệp với REST APIs, microservices, security, testing
-  và deployment trong môi trường production.
+  Khóa học toàn diện về Spring Boot 4.x từ cơ bản đến nâng cao, giúp bạn xây dựng
+  ứng dụng backend chuyên nghiệp với REST APIs, Spring Data JPA, Spring Security,
+  JWT, OAuth2, microservices, testing, Docker và deployment trong môi trường production.
+  Cập nhật Spring Boot 4.0 với Spring Framework 7, Virtual Threads, GraalVM Native Image.
 featured_image: uploads/2025/12/b9b052d3-d12c-42d8-be18-e7fd38dafe4f-1-201-a-e7538382.jpeg
 level: beginner
-duration_hours: 0
-lesson_count: 0
+duration_hours: 60
+lesson_count: 24
 price: '0.00'
 is_free: true
 view_count: 14
@@ -40,7 +41,281 @@ tags:
     slug: rest-api
   - name: Enterprise
     slug: enterprise
-sections: []
+sections:
+  - id: section-01
+    title: "Phần 1: Nền tảng Spring Boot"
+    description: Hiểu kiến trúc Spring, IoC Container, Dependency Injection và Auto-Configuration
+    sort_order: 1
+    lessons:
+      - id: 019c9617-fc01-7001-a001-fc0100000001
+        title: 'Bài 1: Spring Boot là gì? — Lịch sử, Kiến trúc và Hệ sinh thái Spring'
+        slug: bai-1-spring-boot-la-gi
+        description: >-
+          Tổng quan về Spring Framework và Spring Boot. Lịch sử phát triển từ Spring 1.0 đến
+          Spring Boot 4.x. Kiến trúc layered, các module chính và khi nào nên dùng Spring Boot.
+        duration_minutes: 90
+        is_free: true
+        sort_order: 0
+        video_url: null
+      - id: 019c9617-fc02-7002-a002-fc0200000002
+        title: 'Bài 2: Cài đặt Môi trường & Khởi tạo Project với Spring Initializr'
+        slug: bai-2-cai-dat-moi-truong-va-khoi-tao-project
+        description: >-
+          Cài đặt JDK 21+, IDE (IntelliJ IDEA/VS Code), Maven/Gradle. Khởi tạo project
+          với Spring Initializr, cấu trúc thư mục và chạy ứng dụng đầu tiên.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 1
+        video_url: null
+      - id: 019c9617-fc03-7003-a003-fc0300000003
+        title: 'Bài 3: Auto-Configuration, Spring IoC Container & Application Properties'
+        slug: bai-3-auto-configuration-ioc-container
+        description: >-
+          Cơ chế Auto-Configuration hoạt động như thế nào. IoC Container, ApplicationContext,
+          BeanFactory. Cấu hình ứng dụng với application.properties/yaml và Profile.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 2
+        video_url: null
+      - id: 019c9617-fc04-7004-a004-fc0400000004
+        title: 'Bài 4: Dependency Injection & Bean Lifecycle'
+        slug: bai-4-dependency-injection-bean-lifecycle
+        description: >-
+          Constructor Injection, Setter Injection, Field Injection. Bean Scope (Singleton,
+          Prototype, Request, Session). Bean Lifecycle callbacks, @PostConstruct, @PreDestroy,
+          @Conditional annotations.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 3
+        video_url: null
+  - id: section-02
+    title: "Phần 2: Xây dựng REST API"
+    description: Thiết kế và triển khai RESTful API chuyên nghiệp với Spring Web MVC
+    sort_order: 2
+    lessons:
+      - id: 019c9617-fc05-7005-a005-fc0500000005
+        title: 'Bài 5: REST API Foundations — @RestController & Request Mapping'
+        slug: bai-5-rest-api-foundations
+        description: >-
+          HTTP methods, @RestController, @RequestMapping, @GetMapping, @PostMapping.
+          Path variables, query parameters, request headers. Response entity và status codes.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 4
+        video_url: null
+      - id: 019c9617-fc06-7006-a006-fc0600000006
+        title: 'Bài 6: DTO Pattern, Validation & Global Exception Handling'
+        slug: bai-6-dto-validation-exception-handling
+        description: >-
+          Data Transfer Object pattern với record classes. Bean Validation (@Valid, @NotNull,
+          @Size, custom validator). @ControllerAdvice, @ExceptionHandler, ProblemDetail RFC 9457.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 5
+        video_url: null
+      - id: 019c9617-fc07-7007-a007-fc0700000007
+        title: 'Bài 7: Spring Data JPA — Entity, Repository & Query Methods'
+        slug: bai-7-spring-data-jpa-entity-repository
+        description: >-
+          JPA Entity mapping, @Entity, @Id, @GeneratedValue. JpaRepository interface,
+          derived query methods, @Query với JPQL/Native SQL. Auditing với @CreatedDate,
+          @LastModifiedDate.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 6
+        video_url: null
+      - id: 019c9617-fc08-7008-a008-fc0800000008
+        title: 'Bài 8: Quan hệ Entity, Pagination & Specification'
+        slug: bai-8-quan-he-entity-pagination-specification
+        description: >-
+          @OneToMany, @ManyToOne, @ManyToMany, @OneToOne. Fetch strategies (LAZY vs EAGER),
+          N+1 problem. Pageable, Sort, Slice. JPA Specification cho dynamic queries.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 7
+        video_url: null
+  - id: section-03
+    title: "Phần 3: Bảo mật ứng dụng"
+    description: Spring Security, JWT, OAuth2 và các best practices bảo mật
+    sort_order: 3
+    lessons:
+      - id: 019c9617-fc09-7009-a009-fc0900000009
+        title: 'Bài 9: Spring Security Fundamentals — Authentication & Authorization'
+        slug: bai-9-spring-security-fundamentals
+        description: >-
+          SecurityFilterChain, HttpSecurity configuration. UserDetailsService, PasswordEncoder,
+          form login, HTTP Basic. Role-based access control (RBAC) với @Secured, @PreAuthorize.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 8
+        video_url: null
+      - id: 019c9617-fc10-7010-a010-fc1000000010
+        title: 'Bài 10: JWT Authentication — Stateless Security cho REST API'
+        slug: bai-10-jwt-authentication
+        description: >-
+          JSON Web Token (JWT) internals. Tạo JWT với jjwt library. Custom JwtAuthenticationFilter,
+          refresh token flow. Stateless session management cho REST API.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 9
+        video_url: null
+      - id: 019c9617-fc11-7011-a011-fc1100000011
+        title: 'Bài 11: OAuth2 & OpenID Connect — Social Login & Resource Server'
+        slug: bai-11-oauth2-openid-connect
+        description: >-
+          OAuth2 Authorization Code flow, Client Credentials. Spring Security OAuth2 Client
+          cho Google/GitHub login. Resource Server với JWT validation. Spring Authorization Server.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 10
+        video_url: null
+      - id: 019c9617-fc12-7012-a012-fc1200000012
+        title: 'Bài 12: Method Security, CORS, CSRF & Security Best Practices'
+        slug: bai-12-method-security-cors-csrf
+        description: >-
+          @PreAuthorize, @PostAuthorize, @Secured SpEL expressions. CORS configuration,
+          CSRF protection cho SPA. Rate limiting, security headers, OWASP Top 10 prevention.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 11
+        video_url: null
+  - id: section-04
+    title: "Phần 4: Tính năng Nâng cao"
+    description: Transaction, Caching, Async, WebSocket và API Documentation
+    sort_order: 4
+    lessons:
+      - id: 019c9617-fc13-7013-a013-fc1300000013
+        title: 'Bài 13: Transaction Management & Caching'
+        slug: bai-13-transaction-management-caching
+        description: >-
+          @Transactional propagation, isolation levels, rollback rules. Spring Cache
+          abstraction với @Cacheable, @CacheEvict, @CachePut. Redis cache integration.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 12
+        video_url: null
+      - id: 019c9617-fc14-7014-a014-fc1400000014
+        title: 'Bài 14: Async Processing, Scheduling & Events'
+        slug: bai-14-async-scheduling-events
+        description: >-
+          @Async với CompletableFuture, Virtual Threads (Java 21+). @Scheduled cron jobs.
+          ApplicationEvent, @EventListener, @TransactionalEventListener. Spring Modulith events.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 13
+        video_url: null
+      - id: 019c9617-fc15-7015-a015-fc1500000015
+        title: 'Bài 15: File Upload/Download, Email & WebSocket'
+        slug: bai-15-file-upload-email-websocket
+        description: >-
+          MultipartFile upload, file storage service. Spring Mail với Thymeleaf templates.
+          WebSocket với STOMP protocol, SockJS fallback, real-time notifications.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 14
+        video_url: null
+      - id: 019c9617-fc16-7016-a016-fc1600000016
+        title: 'Bài 16: API Documentation — OpenAPI 3, Swagger UI & HATEOAS'
+        slug: bai-16-api-documentation-openapi-hateoas
+        description: >-
+          SpringDoc OpenAPI 3 integration, @Operation, @Schema annotations. Swagger UI
+          customization. HATEOAS với Spring HATEOAS, RepresentationModel, WebMvcLinkBuilder.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 15
+        video_url: null
+  - id: section-05
+    title: "Phần 5: Testing & Chất lượng Code"
+    description: Unit test, integration test, API test và monitoring
+    sort_order: 5
+    lessons:
+      - id: 019c9617-fc17-7017-a017-fc1700000017
+        title: 'Bài 17: Unit Testing với JUnit 5 & Mockito'
+        slug: bai-17-unit-testing-junit5-mockito
+        description: >-
+          JUnit 5 annotations, assertions, parameterized tests. Mockito @Mock, @InjectMocks,
+          @Spy, ArgumentCaptor. Testing service layer và utility classes.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 16
+        video_url: null
+      - id: 019c9617-fc18-7018-a018-fc1800000018
+        title: 'Bài 18: Integration Testing — @SpringBootTest & Testcontainers'
+        slug: bai-18-integration-testing-testcontainers
+        description: >-
+          @SpringBootTest, test slices (@WebMvcTest, @DataJpaTest, @JsonTest). Testcontainers
+          cho PostgreSQL, Redis, Kafka. @DynamicPropertySource, Test Configuration.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 17
+        video_url: null
+      - id: 019c9617-fc19-7019-a019-fc1900000019
+        title: 'Bài 19: API Testing — MockMvc, WebTestClient & REST Assured'
+        slug: bai-19-api-testing-mockmvc-webtestclient
+        description: >-
+          MockMvc cho controller testing. WebTestClient cho reactive endpoints.
+          REST Assured cho end-to-end API testing. Contract Testing với Spring Cloud Contract.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 18
+        video_url: null
+      - id: 019c9617-fc20-7020-a020-fc2000000020
+        title: 'Bài 20: Logging, Monitoring — Actuator, Micrometer & Observability'
+        slug: bai-20-logging-monitoring-actuator
+        description: >-
+          Structured logging với Logback/Log4j2. Spring Boot Actuator endpoints, health checks.
+          Micrometer metrics, Prometheus integration. Distributed tracing với OpenTelemetry.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 19
+        video_url: null
+  - id: section-06
+    title: "Phần 6: Microservices & Production"
+    description: Docker, microservices architecture, message queue và CI/CD
+    sort_order: 6
+    lessons:
+      - id: 019c9617-fc21-7021-a021-fc2100000021
+        title: 'Bài 21: Docker & Containerization cho Spring Boot'
+        slug: bai-21-docker-containerization
+        description: >-
+          Dockerfile multi-stage build, Jib, Cloud Native Buildpacks. Docker Compose
+          cho development. GraalVM Native Image với Spring Boot. Layered JARs.
+        duration_minutes: 150
+        is_free: true
+        sort_order: 20
+        video_url: null
+      - id: 019c9617-fc22-7022-a022-fc2200000022
+        title: 'Bài 22: Microservices — Service Discovery, API Gateway & Config Server'
+        slug: bai-22-microservices-service-discovery
+        description: >-
+          Spring Cloud Netflix Eureka, Spring Cloud Gateway. Centralized configuration
+          với Spring Cloud Config. Circuit Breaker với Resilience4j. Service-to-service
+          communication với OpenFeign và RestClient.
+        duration_minutes: 180
+        is_free: true
+        sort_order: 21
+        video_url: null
+      - id: 019c9617-fc23-7023-a023-fc2300000023
+        title: 'Bài 23: Message Queue — Kafka, RabbitMQ & Event-Driven Microservices'
+        slug: bai-23-message-queue-kafka-rabbitmq
+        description: >-
+          Apache Kafka với Spring Kafka — Producer, Consumer, Streams. RabbitMQ với
+          Spring AMQP. Saga pattern, Outbox pattern. Event sourcing basics.
+        duration_minutes: 180
+        is_free: true
+        sort_order: 22
+        video_url: null
+      - id: 019c9617-fc24-7024-a024-fc2400000024
+        title: 'Bài 24: CI/CD, Cloud Deployment & Production Best Practices'
+        slug: bai-24-cicd-cloud-deployment-production
+        description: >-
+          GitHub Actions CI/CD pipeline. Deploy lên AWS (ECS/EKS), GCP (Cloud Run).
+          Kubernetes deployment với Helm charts. Database migration với Flyway/Liquibase.
+          Performance tuning, connection pooling, graceful shutdown.
+        duration_minutes: 180
+        is_free: true
+        sort_order: 23
+        video_url: null
 reviews: []
 quizzes: []
 ---

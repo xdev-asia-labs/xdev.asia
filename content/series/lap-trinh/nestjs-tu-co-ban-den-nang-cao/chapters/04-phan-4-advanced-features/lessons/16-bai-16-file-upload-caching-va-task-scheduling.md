@@ -1,0 +1,302 @@
+---
+id: 019d8b40-a404-7001-b001-nestjs000404
+title: 'Bài 16: File Upload, Caching và Task Scheduling'
+slug: bai-16-file-upload-caching-va-task-scheduling
+description: >-
+  File upload với Multer, S3 storage. Cache với Redis.
+  Task scheduling với @nestjs/schedule. Queue với Bull.
+duration_minutes: 120
+is_free: true
+video_url: null
+sort_order: 16
+section_title: "Phần 4: Advanced Features"
+course:
+  id: 019d8b40-a100-7001-b001-nestjs000001
+  title: 'NestJS: Từ Cơ bản đến Nâng cao'
+  slug: nestjs-tu-co-ban-den-nang-cao
+---
+
+<h2 id="1-file-upload"><strong>1. File Upload với Multer</strong></h2>
+
+<pre><code class="language-bash">npm install @nestjs/platform-express multer
+npm install -D @types/multer
+</code></pre>
+
+<pre><code class="language-typescript">// files/files.controller.ts
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+
+@Controller('files')
+export class FilesController {
+  // Upload 1 file
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, cb) =&gt; {
+        const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        cb(null, `${uniqueName}${extname(file.originalname)}`);
+      },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    fileFilter: (req, file, cb) =&gt; {
+      const allowed = /\.(jpg|jpeg|png|gif|webp)$/i;
+      if (!allowed.test(extname(file.originalname))) {
+        return cb(new BadRequestException('Only image files allowed'), false);
+      }
+      cb(null, true);
+    },
+  }))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return {
+      filename: file.filename,
+      size: file.size,
+      url: `/uploads/${file.filename}`,
+    };
+  }
+
+  // Upload nhiều files
+  @Post('upload-multiple')
+  @UseInterceptors(FilesInterceptor('files', 10))
+  uploadMultiple(@UploadedFiles() files: Express.Multer.File[]) {
+    return files.map((f) =&gt; ({
+      filename: f.filename,
+      size: f.size,
+    }));
+  }
+}
+</code></pre>
+
+<h3>Upload lên S3</h3>
+
+<pre><code class="language-typescript">import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+
+@Injectable()
+export class S3Service {
+  private s3: S3Client;
+
+  constructor(private config: ConfigService) {
+    this.s3 = new S3Client({
+      region: config.get('AWS_REGION'),
+      credentials: {
+        accessKeyId: config.get('AWS_ACCESS_KEY_ID'),
+        secretAccessKey: config.get('AWS_SECRET_ACCESS_KEY'),
+      },
+    });
+  }
+
+  async upload(file: Express.Multer.File, folder: string): Promise&lt;string&gt; {
+    const key = `${folder}/${Date.now()}-${file.originalname}`;
+    
+    await this.s3.send(new PutObjectCommand({
+      Bucket: this.config.get('AWS_S3_BUCKET'),
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    }));
+
+    return `https://${this.config.get('AWS_S3_BUCKET')}.s3.amazonaws.com/${key}`;
+  }
+}
+</code></pre>
+
+<h2 id="2-caching"><strong>2. Caching với Redis</strong></h2>
+
+<pre><code class="language-bash">npm install @nestjs/cache-manager cache-manager cache-manager-redis-yet
+</code></pre>
+
+<pre><code class="language-typescript">// app.module.ts
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
+
+@Module({
+  imports: [
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () =&gt; ({
+        store: await redisStore({
+          socket: { host: 'localhost', port: 6379 },
+          ttl: 60_000, // 60 giây default
+        }),
+      }),
+    }),
+  ],
+})
+export class AppModule {}
+</code></pre>
+
+<pre><code class="language-typescript">// Sử dụng trong service
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+
+@Injectable()
+export class ProductsService {
+  constructor(@Inject(CACHE_MANAGER) private cache: Cache) {}
+
+  async findAll(): Promise&lt;Product[]&gt; {
+    const cacheKey = 'products:all';
+    const cached = await this.cache.get&lt;Product[]&gt;(cacheKey);
+    if (cached) return cached;
+
+    const products = await this.productRepo.find();
+    await this.cache.set(cacheKey, products, 300_000); // 5 phút
+    return products;
+  }
+
+  async update(id: string, dto: UpdateProductDto) {
+    const product = await this.productRepo.save({ id, ...dto });
+    // Invalidate cache
+    await this.cache.del('products:all');
+    await this.cache.del(`products:${id}`);
+    return product;
+  }
+}
+</code></pre>
+
+<h3>Cache Decorator</h3>
+
+<pre><code class="language-typescript">// Custom cache decorator
+export function Cacheable(key: string, ttl = 60_000) {
+  return applyDecorators(
+    UseInterceptors(CacheInterceptor),
+    SetMetadata('cache_key', key),
+    SetMetadata('cache_ttl', ttl),
+  );
+}
+
+// Sử dụng
+@Get()
+@Cacheable('products:all', 300_000)
+findAll() {
+  return this.productsService.findAll();
+}
+</code></pre>
+
+<h2 id="3-scheduling"><strong>3. Task Scheduling</strong></h2>
+
+<pre><code class="language-bash">npm install @nestjs/schedule
+</code></pre>
+
+<pre><code class="language-typescript">// app.module.ts
+import { ScheduleModule } from '@nestjs/schedule';
+
+@Module({
+  imports: [ScheduleModule.forRoot()],
+})
+export class AppModule {}
+</code></pre>
+
+<pre><code class="language-typescript">// tasks/tasks.service.ts
+import { Cron, CronExpression, Interval, Timeout } from '@nestjs/schedule';
+
+@Injectable()
+export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
+
+  // Chạy mỗi ngày lúc 2:00 AM
+  @Cron('0 2 * * *')
+  async handleDailyCleanup() {
+    this.logger.log('Running daily cleanup...');
+    await this.cleanupExpiredSessions();
+    await this.cleanupOldLogs();
+  }
+
+  // Chạy mỗi 30 giây
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  handleHealthCheck() {
+    this.logger.debug('Health check ping');
+  }
+
+  // Chạy mỗi 5 phút
+  @Interval(5 * 60 * 1000)
+  async syncExternalData() {
+    this.logger.log('Syncing external data...');
+  }
+
+  // Chạy 1 lần sau 10 giây khi app start
+  @Timeout(10_000)
+  async onceAfterStartup() {
+    this.logger.log('Warming up caches...');
+    await this.warmupCache();
+  }
+}
+</code></pre>
+
+<h2 id="4-queue"><strong>4. Queue với Bull</strong></h2>
+
+<pre><code class="language-bash">npm install @nestjs/bull bull
+npm install -D @types/bull
+</code></pre>
+
+<pre><code class="language-typescript">// app.module.ts
+import { BullModule } from '@nestjs/bull';
+
+@Module({
+  imports: [
+    BullModule.forRoot({
+      redis: { host: 'localhost', port: 6379 },
+    }),
+    BullModule.registerQueue({ name: 'email' }),
+    BullModule.registerQueue({ name: 'image-processing' }),
+  ],
+})
+export class AppModule {}
+</code></pre>
+
+<pre><code class="language-typescript">// email/email.processor.ts
+import { Processor, Process } from '@nestjs/bull';
+import { Job } from 'bull';
+
+@Processor('email')
+export class EmailProcessor {
+  @Process('send-welcome')
+  async handleWelcomeEmail(job: Job&lt;{ email: string; name: string }&gt;) {
+    const { email, name } = job.data;
+    await this.mailerService.send({
+      to: email,
+      subject: `Chào mừng ${name}!`,
+      template: 'welcome',
+      context: { name },
+    });
+  }
+
+  @Process('send-reset-password')
+  async handleResetPassword(job: Job&lt;{ email: string; token: string }&gt;) {
+    // Gửi email reset password
+  }
+}
+</code></pre>
+
+<pre><code class="language-typescript">// Thêm job vào queue
+@Injectable()
+export class UsersService {
+  constructor(@InjectQueue('email') private emailQueue: Queue) {}
+
+  async register(dto: CreateUserDto) {
+    const user = await this.userRepo.save(dto);
+    
+    await this.emailQueue.add('send-welcome', {
+      email: user.email,
+      name: user.name,
+    }, {
+      delay: 5000,        // Delay 5 giây
+      attempts: 3,        // Retry 3 lần nếu fail
+      backoff: { type: 'exponential', delay: 2000 },
+    });
+
+    return user;
+  }
+}
+</code></pre>
+
+<h2 id="5-tong-ket"><strong>5. Tổng kết</strong></h2>
+
+<ul>
+<li><strong>File Upload</strong>: Multer cho local, S3 cho production, validate file type + size</li>
+<li><strong>Caching</strong>: Redis-backed cache, cache invalidation, custom decorators</li>
+<li><strong>Scheduling</strong>: Cron jobs, intervals, timeouts cho background tasks</li>
+<li><strong>Queue</strong>: Bull + Redis cho async job processing (email, image, report)</li>
+</ul>
+
+<p>Bài tiếp theo sẽ tìm hiểu <strong>NestJS Microservices</strong>.</p>

@@ -1,0 +1,297 @@
+---
+id: 019c9617-fc18-7018-a018-fc1800000018
+title: 'Bài 18: Integration Testing — @SpringBootTest & Testcontainers'
+slug: bai-18-integration-testing-testcontainers
+description: >-
+  @SpringBootTest, @DataJpaTest cho integration testing. Testcontainers — test với
+  real PostgreSQL, Redis trong Docker. Test slices và best practices.
+duration_minutes: 120
+is_free: false
+video_url: null
+sort_order: 17
+section_title: "Phần 5: Testing & Chất lượng Code"
+course:
+  id: 019c9617-fcab-71c4-aaaa-a3e7571ff53f
+  title: "Spring Boot 4: Từ Cơ bản đến Nâng cao"
+  slug: spring-boot-tu-co-ban-den-nang-cao
+---
+
+## Giới thiệu
+
+Integration tests kiểm tra nhiều components hoạt động cùng nhau với real database, real configuration. Testcontainers cho phép chạy PostgreSQL, Redis, Kafka trong Docker containers tự động, đảm bảo test environment giống production.
+
+---
+
+## 1. @SpringBootTest
+
+### 1.1 Full Application Context
+
+```java
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class OrderIntegrationTest {
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Test
+    void shouldCreateAndRetrieveOrder() {
+        // Create
+        var request = new CreateOrderRequest(/* ... */);
+        ResponseEntity<OrderResponse> createResponse = restTemplate
+            .postForEntity("/api/v1/orders", request, OrderResponse.class);
+
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Long orderId = createResponse.getBody().id();
+
+        // Retrieve
+        ResponseEntity<OrderResponse> getResponse = restTemplate
+            .getForEntity("/api/v1/orders/" + orderId, OrderResponse.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody().id()).isEqualTo(orderId);
+    }
+}
+```
+
+---
+
+## 2. Test Slices — Load chỉ phần cần thiết
+
+### 2.1 @DataJpaTest — Test Repository Layer
+
+```java
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+class ProductRepositoryTest {
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
+
+    @Test
+    void shouldFindProductsByCategory() {
+        // Given
+        Product p1 = Product.builder()
+            .name("Spring Boot Book").price(new BigDecimal("450000"))
+            .category("Education").build();
+        Product p2 = Product.builder()
+            .name("Java Mug").price(new BigDecimal("150000"))
+            .category("Merchandise").build();
+        entityManager.persist(p1);
+        entityManager.persist(p2);
+        entityManager.flush();
+
+        // When
+        List<Product> result = productRepository.findByCategory("Education");
+
+        // Then
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getName()).isEqualTo("Spring Boot Book");
+    }
+
+    @Test
+    void shouldSearchByKeyword() {
+        entityManager.persist(Product.builder()
+            .name("Spring Boot Guide").price(BigDecimal.TEN)
+            .category("Book").build());
+        entityManager.flush();
+
+        Page<Product> results = productRepository
+            .searchByKeyword("spring", Pageable.ofSize(10));
+
+        assertThat(results.getContent()).hasSize(1);
+    }
+}
+```
+
+### 2.2 @WebMvcTest — Test Controller Layer
+
+```java
+@WebMvcTest(ProductController.class)
+class ProductControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
+    private ProductService productService;
+
+    @Test
+    void shouldReturnProduct() throws Exception {
+        var product = new ProductResponse(1L, "Book", new BigDecimal("450000"));
+        when(productService.getProduct(1L)).thenReturn(product);
+
+        mockMvc.perform(get("/api/v1/products/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Book"))
+            .andExpect(jsonPath("$.price").value(450000));
+    }
+}
+```
+
+---
+
+## 3. Testcontainers
+
+### 3.1 Setup
+
+```kotlin
+// build.gradle.kts
+testImplementation("org.springframework.boot:spring-boot-testcontainers")
+testImplementation("org.testcontainers:postgresql")
+testImplementation("org.testcontainers:junit-jupiter")
+```
+
+### 3.2 PostgreSQL Container
+
+```java
+@SpringBootTest
+@Testcontainers
+class ProductRepositoryIntegrationTest {
+
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgres =
+        new PostgreSQLContainer<>("postgres:17-alpine");
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Test
+    void shouldSaveAndRetrieveProduct() {
+        Product product = Product.builder()
+            .name("Test Product")
+            .price(new BigDecimal("100000"))
+            .category("Test")
+            .build();
+
+        Product saved = productRepository.save(product);
+
+        assertThat(saved.getId()).isNotNull();
+        assertThat(productRepository.findById(saved.getId()))
+            .isPresent()
+            .hasValueSatisfying(p ->
+                assertThat(p.getName()).isEqualTo("Test Product"));
+    }
+}
+```
+
+### 3.3 Shared Container Pattern (tối ưu performance)
+
+```java
+// Base class cho tất cả integration tests
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
+public abstract class BaseIntegrationTest {
+
+    @Container
+    @ServiceConnection
+    static final PostgreSQLContainer<?> postgres =
+        new PostgreSQLContainer<>("postgres:17-alpine")
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
+
+    @Autowired
+    protected TestRestTemplate restTemplate;
+}
+```
+
+```java
+// Test kế thừa, reuse container
+class OrderIntegrationTest extends BaseIntegrationTest {
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @BeforeEach
+    void setUp() {
+        orderRepository.deleteAll();
+    }
+
+    @Test
+    void shouldCreateOrder() {
+        // Test with real PostgreSQL
+    }
+}
+```
+
+### 3.4 Nhiều containers
+
+```java
+@SpringBootTest
+@Testcontainers
+class FullStackIntegrationTest {
+
+    @Container
+    @ServiceConnection
+    static final PostgreSQLContainer<?> postgres =
+        new PostgreSQLContainer<>("postgres:17-alpine");
+
+    @Container
+    @ServiceConnection
+    static final GenericContainer<?> redis =
+        new GenericContainer<>("redis:7-alpine")
+            .withExposedPorts(6379);
+}
+```
+
+---
+
+## 4. Test Data Management
+
+### 4.1 @Sql — Load test data từ file
+
+```java
+@DataJpaTest
+@Sql("/test-data/products.sql")
+class ProductRepositoryTest {
+
+    @Test
+    @Sql(statements = "DELETE FROM products", executionPhase = AFTER_TEST_METHOD)
+    void shouldFindAllProducts() {
+        List<Product> products = productRepository.findAll();
+        assertThat(products).hasSize(5); // Từ products.sql
+    }
+}
+```
+
+### 4.2 TestFixtures — Helper methods
+
+```java
+public class TestFixtures {
+
+    public static Product aProduct() {
+        return Product.builder()
+            .name("Test Product")
+            .price(new BigDecimal("100000"))
+            .category("Test")
+            .build();
+    }
+
+    public static CreateProductRequest aCreateProductRequest() {
+        return new CreateProductRequest("Test Product",
+            new BigDecimal("100000"), "Test");
+    }
+}
+```
+
+---
+
+## Tóm tắt
+
+- Test Slices (@DataJpaTest, @WebMvcTest) load chỉ phần cần thiết, chạy nhanh hơn @SpringBootTest
+- Testcontainers tự động spin up PostgreSQL, Redis containers — test với real infrastructure
+- @ServiceConnection tự động cấu hình connection properties, không cần manual config
+- Shared Container Pattern reuse container giữa các test classes, giảm startup time
+
+## Bài tập
+
+1. Viết @DataJpaTest cho ProductRepository với Testcontainers PostgreSQL: test save, findAll, custom query methods
+2. Tạo BaseIntegrationTest class với shared PostgreSQL container, viết full integration test cho Order CRUD flow
+3. Test caching: dùng Testcontainers Redis, verify data được cache và evict đúng
