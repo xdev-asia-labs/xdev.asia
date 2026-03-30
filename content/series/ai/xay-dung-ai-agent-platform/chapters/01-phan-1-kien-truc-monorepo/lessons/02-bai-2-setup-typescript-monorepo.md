@@ -1,0 +1,283 @@
+---
+id: 019c961a-aa02-7002-e002-aa0200000002
+title: "Bài 2: Setup TypeScript Monorepo với npm Workspaces"
+slug: bai-2-setup-typescript-monorepo
+description: >-
+  Tạo monorepo từ đầu: npm workspaces, tsconfig project references,
+  shared types, build order. Cấu trúc packages: shared → db → core →
+  gateway → server. ESM modules, path aliases.
+duration_minutes: 150
+is_free: true
+video_url: null
+sort_order: 1
+section_title: "Phần 1: Kiến trúc & Nền tảng Monorepo"
+course:
+  id: 019c9619-bb03-7003-c003-bb0300000003
+  title: "Xây dựng AI Agent Platform từ Zero — Thực chiến với xClaw"
+  slug: xay-dung-ai-agent-platform
+---
+
+## Giới thiệu
+
+Monorepo cho phép quản lý tất cả packages trong một repository — shared types, build order, và atomic changes. Bài này hướng dẫn setup từ đầu.
+
+---
+
+## 1. Khởi tạo Monorepo
+
+### 1.1 Package.json gốc
+
+```json
+{
+  "name": "xclaw",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "packages/channels/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:web\"",
+    "dev:server": "npm run dev -w @xclaw-ai/server",
+    "dev:web": "npm run dev -w @xclaw-ai/web",
+    "test": "vitest",
+    "lint": "eslint packages/*/src"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
+```
+
+### 1.2 Tạo cấu trúc packages
+
+```bash
+mkdir -p packages/{shared,core,db,gateway,server,integrations,domains,skills,ml,web}/src
+```
+
+---
+
+## 2. Shared Package — Foundation Types
+
+### 2.1 packages/shared/package.json
+
+```json
+{
+  "name": "@xclaw-ai/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b --watch"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}
+```
+
+### 2.2 Shared Types
+
+```typescript
+// packages/shared/src/types/agent.ts
+export interface AgentConfig {
+  id: string;
+  name: string;
+  persona: string;
+  systemPrompt?: string;
+  llm: LLMConfig;
+  maxToolIterations: number;
+}
+
+export interface LLMConfig {
+  provider: string;
+  model?: string;
+  apiKey?: string;
+  baseUrl?: string;
+  temperature?: number;
+  maxTokens?: number;
+}
+
+export interface LLMMessage {
+  role: 'system' | 'user' | 'assistant' | 'tool';
+  content: string;
+  images?: string[];
+  toolCalls?: ToolCall[];
+  toolCallId?: string;
+}
+
+export interface LLMResponse {
+  content: string;
+  toolCalls?: ToolCall[];
+  usage?: { promptTokens: number; completionTokens: number; totalTokens: number };
+  finishReason?: 'stop' | 'tool_calls' | 'length';
+}
+```
+
+```typescript
+// packages/shared/src/types/tools.ts
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  parameters: {
+    type: 'object';
+    properties: Record<string, {
+      type: string;
+      description: string;
+      enum?: string[];
+    }>;
+    required?: string[];
+  };
+  sandbox?: { required: boolean };
+}
+
+export interface ToolCall {
+  id: string;
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+export interface ToolResult {
+  toolCallId: string;
+  success: boolean;
+  result: unknown;
+  error?: string;
+  duration: number;
+}
+```
+
+```typescript
+// packages/shared/src/types/streaming.ts
+export type StreamEvent =
+  | { type: 'text-delta'; delta: string }
+  | { type: 'tool-call-start'; toolCallId: string; toolName: string }
+  | { type: 'tool-call-args'; toolCallId: string; args: string }
+  | { type: 'tool-call-end'; toolCallId: string }
+  | { type: 'tool-result'; toolCallId: string; result: ToolResult }
+  | { type: 'finish'; usage?: LLMResponse['usage'] }
+  | { type: 'error'; error: string };
+```
+
+---
+
+## 3. TypeScript Project References
+
+### 3.1 Root tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  }
+}
+```
+
+### 3.2 Package-level tsconfig
+
+```json
+// packages/core/tsconfig.json
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "composite": true
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../shared" },
+    { "path": "../db" }
+  ]
+}
+```
+
+### 3.3 Build Order
+
+```
+shared (0 deps)
+  ↓
+db (depends on shared)
+  ↓
+core (depends on shared, db)
+  ↓
+integrations (depends on shared, core)
+domains (depends on shared, core)
+ml (depends on shared, core)
+  ↓
+skills (depends on shared, core)
+skill-hub (depends on shared, core, skills)
+  ↓
+gateway (depends on shared, db, core, integrations, domains, skills)
+  ↓
+server (depends on all)
+```
+
+---
+
+## 4. npm Workspaces Commands
+
+```bash
+# Install dependencies cho tất cả packages
+npm install
+
+# Build tất cả packages theo dependency order
+npm run build
+
+# Chạy script trong package cụ thể
+npm run dev -w @xclaw-ai/server
+
+# Thêm dependency vào package
+npm install hono -w @xclaw-ai/gateway
+
+# Thêm internal dependency
+# (npm workspaces tự link qua symlinks)
+npm install @xclaw-ai/shared -w @xclaw-ai/core
+```
+
+---
+
+## 5. ESM Configuration
+
+xClaw dùng ESM (ECMAScript Modules) toàn bộ:
+
+```typescript
+// ✅ ESM imports — phải có .js extension
+import { Agent } from './agent/agent.js';
+import { LLMRouter } from '../llm/llm-router.js';
+import type { AgentConfig } from '@xclaw-ai/shared';
+
+// ❌ CommonJS — KHÔNG dùng
+// const { Agent } = require('./agent');
+```
+
+**Lưu ý quan trọng:** Import path phải có `.js` extension ngay cả khi source file là `.ts`. TypeScript compiler sẽ resolve đúng.
+
+---
+
+## 6. Tổng kết
+
+Bạn đã học:
+- Setup npm workspaces monorepo
+- Tạo shared types package
+- TypeScript project references cho build order
+- ESM module configuration
+
+**Bài tiếp theo:** Thiết kế Dual-Database với PostgreSQL (Drizzle ORM) + MongoDB.

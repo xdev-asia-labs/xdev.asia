@@ -244,7 +244,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                         )}
 
                         {/* Reviews */}
-                        {series.reviews.length > 0 && (
+                        {series.reviews && series.reviews.length > 0 && (
                             <section className="mt-12 pt-10 border-t border-zinc-100">
                                 <h2 className="text-2xl font-extrabold tracking-tight text-zinc-900 mb-8 flex items-center gap-3">
                                     <IconStar size={24} className="text-amber-500 fill-current" />

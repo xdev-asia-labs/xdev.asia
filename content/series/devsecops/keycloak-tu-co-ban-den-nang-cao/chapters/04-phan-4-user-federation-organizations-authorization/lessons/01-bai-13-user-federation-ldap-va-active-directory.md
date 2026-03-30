@@ -1,0 +1,645 @@
+---
+id: 019d8b30-b113-7001-c001-e0c5f8100113
+title: 'Bài 13: User Federation - LDAP và Active Directory'
+slug: bai-13-user-federation-ldap-va-active-directory
+description: >-
+  Cấu hình LDAP/AD federation, storage mode (READ_ONLY, WRITABLE, UNSYNCED),
+  edit mode, connection settings (SSL, connection pool), LDAP mappers
+  (User Attribute, Full Name, Group, Role, Hardcoded Role,
+  MSAD User Account Control), password hashing, user synchronization,
+  SSSD/FreeIPA integration, Kerberos bridge, custom User Storage SPI
+  và troubleshooting LDAP issues.
+duration_minutes: 220
+is_free: true
+video_url: null
+sort_order: 13
+section_title: "Phần 4: User Federation, Organizations và Authorization"
+course:
+  id: 019d8b30-b100-7001-c001-e0c5f8100001
+  title: Keycloak từ Cơ bản đến Nâng cao
+  slug: keycloak-tu-co-ban-den-nang-cao
+---
+<h2 id="1-user-federation-tong-quan"><strong>1. User Federation — Tổng quan</strong></h2>
+
+<p>User Federation cho phép Keycloak <strong>kết nối với external user databases</strong> như LDAP, Active Directory, hoặc custom database. Thay vì phải import toàn bộ users vào Keycloak, bạn có thể authenticate trực tiếp từ nguồn bên ngoài.</p>
+
+<p>Để cấu hình User Federation, vào <strong>Admin Console → User Federation</strong>.</p>
+
+<h3 id="11-tai-sao-can-user-federation"><strong>1.1 Tại sao cần User Federation?</strong></h3>
+
+<table>
+<thead>
+<tr><th>Lý do</th><th>Giải thích</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Tập trung quản lý user</strong></td><td>LDAP/AD đã là nguồn user chính trong enterprise → không cần duplicate</td></tr>
+<tr><td><strong>Giữ nguyên hệ thống hiện tại</strong></td><td>Không cần migrate user sang Keycloak</td></tr>
+<tr><td><strong>Single Source of Truth</strong></td><td>User data chỉ tồn tại ở một nơi, tránh inconsistency</td></tr>
+<tr><td><strong>Kerberos SSO</strong></td><td>Tích hợp Kerberos authentication từ Active Directory</td></tr>
+</tbody>
+</table>
+
+<h3 id="12-cac-loai-federation"><strong>1.2 Các loại Federation Provider</strong></h3>
+
+<table>
+<thead>
+<tr><th>Provider</th><th>Mô tả</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>LDAP</strong></td><td>Hỗ trợ OpenLDAP, 389 Directory Server, và các LDAP-compliant servers</td></tr>
+<tr><td><strong>Active Directory</strong></td><td>Microsoft Active Directory (sử dụng LDAP protocol + AD-specific mappers)</td></tr>
+<tr><td><strong>SSSD</strong></td><td>System Security Services Daemon — tích hợp FreeIPA/Red Hat IdM</td></tr>
+<tr><td><strong>Custom User Storage SPI</strong></td><td>Tự viết provider kết nối bất kỳ database nào</td></tr>
+</tbody>
+</table>
+
+<h2 id="2-them-ldap-provider"><strong>2. Thêm LDAP Provider</strong></h2>
+
+<p>Vào <strong>Admin Console → User Federation → Add LDAP providers</strong>.</p>
+
+<h3 id="21-general-options"><strong>2.1 General Options</strong></h3>
+
+<table>
+<thead>
+<tr><th>Setting</th><th>Mô tả</th><th>Giá trị mẫu</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Console display name</strong></td><td>Tên hiển thị trên Admin Console</td><td><code>Corporate LDAP</code></td></tr>
+<tr><td><strong>Priority</strong></td><td>Thứ tự ưu tiên khi có nhiều providers</td><td><code>0</code> (cao nhất)</td></tr>
+<tr><td><strong>Enabled</strong></td><td>Bật/tắt provider</td><td><code>ON</code></td></tr>
+<tr><td><strong>Import users</strong></td><td>Import LDAP users vào Keycloak local database</td><td><code>ON</code></td></tr>
+</tbody>
+</table>
+
+<h3 id="22-connection-settings"><strong>2.2 Connection Settings</strong></h3>
+
+<pre><code class="language-properties"># Connection URL
+Connection URL: ldap://ldap.example.com:389
+# Hoặc LDAPS (SSL):
+Connection URL: ldaps://ldap.example.com:636
+
+# Bind Type
+Bind Type: simple
+
+# Bind DN — tài khoản để Keycloak kết nối LDAP
+Bind DN: cn=admin,dc=example,dc=com
+
+# Bind Credential — mật khẩu
+Bind Credential: ********</code></pre>
+
+<p><strong>Connection Pool Settings:</strong></p>
+
+<table>
+<thead>
+<tr><th>Setting</th><th>Mô tả</th><th>Default</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Connection pooling</strong></td><td>Bật connection pool để tối ưu hiệu năng</td><td><code>ON</code></td></tr>
+<tr><td><strong>Connection pool authentication</strong></td><td>Pool cho authenticated connections</td><td><code>simple</code></td></tr>
+<tr><td><strong>Connection pool debug</strong></td><td>Log debug cho connection pool</td><td><code>OFF</code></td></tr>
+<tr><td><strong>Connection pool initial size</strong></td><td>Số connections khởi tạo ban đầu</td><td><code>1</code></td></tr>
+<tr><td><strong>Connection pool maximum size</strong></td><td>Số connections tối đa</td><td><code>1000</code></td></tr>
+<tr><td><strong>Connection pool timeout</strong></td><td>Thời gian chờ lấy connection từ pool</td><td><code>30000</code> ms</td></tr>
+</tbody>
+</table>
+
+<h3 id="23-ssl-ldaps-configuration"><strong>2.3 SSL/LDAPS Configuration</strong></h3>
+
+<p>Để kết nối LDAPS (port 636), bạn cần import CA certificate vào Keycloak truststore:</p>
+
+<pre><code class="language-bash"># Tải CA certificate từ LDAP server
+openssl s_client -connect ldap.example.com:636 -showcerts &lt; /dev/null 2&gt;/dev/null | \
+  openssl x509 -outform PEM &gt; ldap-ca.pem
+
+# Import vào Java truststore
+keytool -import -alias ldap-ca \
+  -keystore /opt/keycloak/conf/truststore.jks \
+  -file ldap-ca.pem \
+  -storepass changeit -noprompt
+
+# Hoặc sử dụng PEM truststore (Keycloak 24+)
+# Đặt file PEM vào /opt/keycloak/conf/truststores/
+cp ldap-ca.pem /opt/keycloak/conf/truststores/</code></pre>
+
+<p>Cấu hình Keycloak sử dụng truststore:</p>
+
+<pre><code class="language-bash"># keycloak.conf
+# Java keystore
+spi-truststore-file-file=/opt/keycloak/conf/truststore.jks
+spi-truststore-file-password=changeit
+spi-truststore-file-type=JKS
+
+# Hoặc PEM directory (Keycloak 24+)
+truststore-paths=/opt/keycloak/conf/truststores</code></pre>
+
+<h3 id="24-use-start-tls"><strong>2.4 Use StartTLS</strong></h3>
+
+<p>Thay vì LDAPS (port 636), bạn có thể dùng <strong>StartTLS</strong> trên port 389:</p>
+
+<pre><code class="language-properties">Connection URL: ldap://ldap.example.com:389
+Use StartTLS: ON</code></pre>
+
+<p>StartTLS upgrade kết nối LDAP thường thành encrypted connection trên cùng port 389.</p>
+
+<h2 id="3-ldap-searching-settings"><strong>3. LDAP Searching Settings</strong></h2>
+
+<table>
+<thead>
+<tr><th>Setting</th><th>Mô tả</th><th>Giá trị mẫu</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Users DN</strong></td><td>Base DN nơi Keycloak tìm kiếm users</td><td><code>ou=People,dc=example,dc=com</code></td></tr>
+<tr><td><strong>User Object Classes</strong></td><td>LDAP object class cho user entries</td><td><code>inetOrgPerson, organizationalPerson</code></td></tr>
+<tr><td><strong>Username LDAP attribute</strong></td><td>LDAP attribute chứa username</td><td><code>uid</code> (LDAP) / <code>sAMAccountName</code> (AD)</td></tr>
+<tr><td><strong>RDN LDAP attribute</strong></td><td>Attribute dùng cho RDN (Relative Distinguished Name)</td><td><code>uid</code> (LDAP) / <code>cn</code> (AD)</td></tr>
+<tr><td><strong>UUID LDAP attribute</strong></td><td>Attribute dùng làm unique ID</td><td><code>entryUUID</code> (LDAP) / <code>objectGUID</code> (AD)</td></tr>
+<tr><td><strong>Search Scope</strong></td><td><code>One Level</code> hoặc <code>Subtree</code></td><td><code>Subtree</code></td></tr>
+<tr><td><strong>Custom User LDAP Filter</strong></td><td>LDAP filter bổ sung để lọc users</td><td><code>(&amp;(objectClass=person)(memberOf=cn=app-users,ou=Groups,dc=example,dc=com))</code></td></tr>
+<tr><td><strong>Read Timeout</strong></td><td>Timeout cho LDAP read operations</td><td><code>30000</code> ms</td></tr>
+</tbody>
+</table>
+
+<h3 id="31-active-directory-settings"><strong>3.1 Active Directory Settings</strong></h3>
+
+<p>Khi chọn <strong>Vendor = Active Directory</strong>, Keycloak tự động cấu hình các giá trị phù hợp:</p>
+
+<pre><code class="language-properties">Username LDAP attribute: cn
+RDN LDAP attribute: cn
+UUID LDAP attribute: objectGUID
+User Object Classes: person, organizationalPerson, user
+Users DN: cn=Users,dc=corp,dc=example,dc=com</code></pre>
+
+<h2 id="4-storage-modes"><strong>4. Storage Modes</strong></h2>
+
+<p>Keycloak hỗ trợ 3 storage modes quy định cách Keycloak tương tác với LDAP:</p>
+
+<table>
+<thead>
+<tr><th>Mode</th><th>Đọc từ LDAP</th><th>Ghi ngược LDAP</th><th>Import vào Keycloak DB</th><th>Use case</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>READ_ONLY</strong></td><td>✅</td><td>❌</td><td>✅ (cache)</td><td>LDAP là nguồn duy nhất, không cho phép user thay đổi thông tin qua Keycloak</td></tr>
+<tr><td><strong>WRITABLE</strong></td><td>✅</td><td>✅</td><td>✅</td><td>Cho phép user thay đổi thông tin (password, profile) và ghi ngược về LDAP</td></tr>
+<tr><td><strong>UNSYNCED</strong></td><td>✅</td><td>❌</td><td>✅</td><td>Import users từ LDAP, sau đó thay đổi chỉ lưu trong Keycloak DB (không ghi ngược)</td></tr>
+</tbody>
+</table>
+
+<h3 id="41-edit-modes"><strong>4.1 Edit Modes</strong></h3>
+
+<p>Edit Mode quy định hành vi khi user hoặc admin thay đổi thông tin:</p>
+
+<pre><code class="language-text">READ_ONLY:
+  - User không thể đổi password qua Keycloak
+  - Admin không thể edit user attributes
+  - Mọi thay đổi phải thực hiện trực tiếp trên LDAP
+
+WRITABLE:
+  - User có thể đổi password → Keycloak ghi ngược về LDAP
+  - Admin edit user attributes → cập nhật LDAP
+  - Cẩn thận với password policy: phải match giữa Keycloak và LDAP
+
+UNSYNCED:
+  - User đổi password → chỉ lưu trong Keycloak DB
+  - Đăng nhập: Keycloak thử password local trước, nếu fail thì thử LDAP
+  - Phù hợp khi muốn dần migrate users sang Keycloak</code></pre>
+
+<h2 id="5-sync-settings"><strong>5. Sync Settings</strong></h2>
+
+<p>Keycloak có thể đồng bộ users từ LDAP theo 2 cơ chế:</p>
+
+<h3 id="51-periodic-full-sync"><strong>5.1 Periodic Full Sync</strong></h3>
+
+<pre><code class="language-properties"># Import toàn bộ users từ LDAP vào Keycloak DB
+Periodic Full Sync: ON
+Full Sync Period: 604800  # seconds (7 ngày)</code></pre>
+
+<h3 id="52-periodic-changed-users-sync"><strong>5.2 Periodic Changed Users Sync</strong></h3>
+
+<pre><code class="language-properties"># Chỉ đồng bộ users có thay đổi (dựa vào modifyTimestamp)
+Periodic Changed Users Sync: ON
+Changed Users Sync Period: 86400  # seconds (1 ngày)</code></pre>
+
+<h3 id="53-manual-sync"><strong>5.3 Manual Sync</strong></h3>
+
+<p>Bạn có thể trigger sync thủ công từ Admin Console hoặc qua CLI:</p>
+
+<pre><code class="language-bash"># Trigger full sync qua Admin REST API
+curl -X POST "http://localhost:8080/admin/realms/my-realm/user-storage/${LDAP_PROVIDER_ID}/sync?action=triggerFullSync" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+
+# Trigger changed users sync
+curl -X POST "http://localhost:8080/admin/realms/my-realm/user-storage/${LDAP_PROVIDER_ID}/sync?action=triggerChangedUsersSync" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"</code></pre>
+
+<h2 id="6-ldap-mappers"><strong>6. LDAP Mappers</strong></h2>
+
+<p>LDAP Mappers định nghĩa cách Keycloak <strong>map LDAP attributes sang Keycloak user model</strong>. Đây là phần quan trọng nhất khi cấu hình LDAP federation.</p>
+
+<h3 id="61-user-attribute-ldap-mapper"><strong>6.1 user-attribute-ldap-mapper</strong></h3>
+
+<p>Map một LDAP attribute sang một Keycloak user attribute:</p>
+
+<pre><code class="language-text">Mapper Type: user-attribute-ldap-mapper
+LDAP Attribute: mail
+User Model Attribute: email
+Read Only: true
+Always Read Value From LDAP: false
+Is Mandatory In LDAP: true</code></pre>
+
+<p>Các mappers mặc định được tạo tự động:</p>
+
+<table>
+<thead>
+<tr><th>Mapper Name</th><th>LDAP Attribute</th><th>Keycloak Attribute</th></tr>
+</thead>
+<tbody>
+<tr><td>username</td><td><code>uid</code> / <code>sAMAccountName</code></td><td><code>username</code></td></tr>
+<tr><td>email</td><td><code>mail</code></td><td><code>email</code></td></tr>
+<tr><td>first name</td><td><code>givenName</code> / <code>cn</code></td><td><code>firstName</code></td></tr>
+<tr><td>last name</td><td><code>sn</code></td><td><code>lastName</code></td></tr>
+<tr><td>creation date</td><td><code>createTimestamp</code></td><td><code>createTimestamp</code></td></tr>
+<tr><td>modify date</td><td><code>modifyTimestamp</code></td><td><code>modifyTimestamp</code></td></tr>
+</tbody>
+</table>
+
+<h3 id="62-full-name-ldap-mapper"><strong>6.2 full-name-ldap-mapper</strong></h3>
+
+<p>Map LDAP <code>cn</code> (Common Name) sang Keycloak <code>firstName</code> + <code>lastName</code>:</p>
+
+<pre><code class="language-text">Mapper Type: full-name-ldap-mapper
+LDAP Full Name Attribute: cn
+Read Only: true
+Write Only: false</code></pre>
+
+<p>Hữu ích khi LDAP chỉ có <code>cn</code> mà không tách <code>givenName</code>/<code>sn</code>.</p>
+
+<h3 id="63-group-ldap-mapper"><strong>6.3 group-ldap-mapper</strong></h3>
+
+<p>Đồng bộ LDAP groups sang Keycloak groups:</p>
+
+<pre><code class="language-text">Mapper Type: group-ldap-mapper
+LDAP Groups DN: ou=Groups,dc=example,dc=com
+Group Name LDAP Attribute: cn
+Group Object Classes: groupOfNames
+Membership LDAP Attribute: member
+Membership Attribute Type: DN
+Membership User LDAP Attribute: uid
+Mode: READ_ONLY
+User Groups Retrieve Strategy: LOAD_GROUPS_BY_MEMBER_ATTRIBUTE
+Drop non-existing groups during sync: false
+Groups Path: /</code></pre>
+
+<p><strong>User Groups Retrieve Strategy options:</strong></p>
+
+<table>
+<thead>
+<tr><th>Strategy</th><th>Mô tả</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>LOAD_GROUPS_BY_MEMBER_ATTRIBUTE</strong></td><td>Load groups từ LDAP dựa vào member attribute</td></tr>
+<tr><td><strong>GET_GROUPS_FROM_USER_MEMBEROF_ATTRIBUTE</strong></td><td>Đọc <code>memberOf</code> attribute trên user entry</td></tr>
+<tr><td><strong>LOAD_GROUPS_BY_MEMBER_ATTRIBUTE_RECURSIVELY</strong></td><td>Load groups đệ quy (nested groups)</td></tr>
+</tbody>
+</table>
+
+<h3 id="64-role-ldap-mapper"><strong>6.4 role-ldap-mapper</strong></h3>
+
+<p>Đồng bộ LDAP roles/groups sang Keycloak realm roles:</p>
+
+<pre><code class="language-text">Mapper Type: role-ldap-mapper
+LDAP Roles DN: ou=Roles,dc=example,dc=com
+Role Name LDAP Attribute: cn
+Role Object Classes: groupOfNames
+Membership LDAP Attribute: member
+Membership Attribute Type: DN
+Membership User LDAP Attribute: uid
+Mode: READ_ONLY
+Use Realm Roles Mapping: true
+Client ID: (để trống nếu dùng realm roles)</code></pre>
+
+<h3 id="65-hardcoded-ldap-role-mapper"><strong>6.5 hardcoded-ldap-role-mapper</strong></h3>
+
+<p>Tự động gán một role cố định cho <strong>tất cả</strong> users từ LDAP provider:</p>
+
+<pre><code class="language-text">Mapper Type: hardcoded-ldap-role-mapper
+Role: realm-role-name
+# Hoặc client role:
+Role: client-id.client-role-name</code></pre>
+
+<p>Hữu ích khi muốn phân biệt users từ LDAP với local users bằng một role marker.</p>
+
+<h3 id="66-msad-user-account-control-mapper"><strong>6.6 msad-user-account-control-mapper</strong></h3>
+
+<p>Mapper đặc biệt cho <strong>Active Directory</strong>, xử lý <code>userAccountControl</code> attribute:</p>
+
+<pre><code class="language-text">Mapper Type: msad-user-account-control-mapper
+# Xử lý:
+# - Account enabled/disabled status
+# - Password expired status
+# - Account locked status
+# - Require user to change password at next login</code></pre>
+
+<p>Mapper này đọc bitmask <code>userAccountControl</code> của AD để map sang Keycloak user status:</p>
+
+<table>
+<thead>
+<tr><th>AD Flag (bit)</th><th>Keycloak Behavior</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ACCOUNTDISABLE</code> (0x0002)</td><td>User bị disabled trong Keycloak</td></tr>
+<tr><td><code>LOCKOUT</code> (0x0010)</td><td>User bị locked</td></tr>
+<tr><td><code>PASSWORD_EXPIRED</code></td><td>User phải đổi password khi đăng nhập</td></tr>
+</tbody>
+</table>
+
+<h3 id="67-certificate-ldap-mapper"><strong>6.7 certificate-ldap-mapper</strong></h3>
+
+<p>Map LDAP certificate attribute sang Keycloak user attribute cho X.509 authentication:</p>
+
+<pre><code class="language-text">Mapper Type: certificate-ldap-mapper
+LDAP Attribute: userCertificate
+User Model Attribute: usercertificate
+Is DER Formatted: true
+Always Read Value From LDAP: true</code></pre>
+
+<h2 id="7-password-hashing"><strong>7. Password Hashing</strong></h2>
+
+<p>Khi sử dụng LDAP federation, password hashing có một số đặc điểm quan trọng:</p>
+
+<table>
+<thead>
+<tr><th>Scenario</th><th>Password Hash</th><th>Lưu ý</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>READ_ONLY mode</strong></td><td>Password luôn verify trực tiếp với LDAP server</td><td>Keycloak không lưu password hash</td></tr>
+<tr><td><strong>WRITABLE mode</strong></td><td>Password được ghi về LDAP theo LDAP password policy</td><td>LDAP server thực hiện hashing</td></tr>
+<tr><td><strong>UNSYNCED mode</strong></td><td>Password mới lưu trong Keycloak DB với Keycloak hashing</td><td>Password cũ vẫn verify qua LDAP</td></tr>
+</tbody>
+</table>
+
+<pre><code class="language-bash"># Kiểm tra password policy trên LDAP (OpenLDAP)
+ldapsearch -x -H ldap://localhost:389 \
+  -D "cn=admin,dc=example,dc=com" -W \
+  -b "cn=config" "(objectClass=olcGlobal)" olcPasswordHash
+
+# Output ví dụ:
+# olcPasswordHash: {SSHA}</code></pre>
+
+<h2 id="8-sssd-va-freeipa-integration"><strong>8. SSSD và FreeIPA Integration</strong></h2>
+
+<p>Keycloak hỗ trợ tích hợp với <strong>SSSD (System Security Services Daemon)</strong> thông qua D-Bus interface, cho phép authenticate users từ FreeIPA hoặc Red Hat Identity Manager.</p>
+
+<h3 id="81-prerequisites"><strong>8.1 Prerequisites</strong></h3>
+
+<pre><code class="language-bash"># Cài đặt SSSD trên Keycloak server
+sudo dnf install sssd sssd-dbus
+
+# Cấu hình SSSD (/etc/sssd/sssd.conf)
+[sssd]
+services = nss, pam, ifp
+domains = example.com
+
+[domain/example.com]
+id_provider = ipa
+auth_provider = ipa
+access_provider = ipa
+ipa_domain = example.com
+ipa_server = ipa.example.com
+
+[ifp]
+allowed_uids = root, keycloak
+user_attributes = +mail, +givenname, +sn, +telephoneNumber</code></pre>
+
+<h3 id="82-cau-hinh-sssd-federation-provider"><strong>8.2 Cấu hình SSSD Federation Provider</strong></h3>
+
+<p>Trong Admin Console, thêm <strong>SSSD</strong> federation provider — Keycloak sẽ giao tiếp với SSSD qua D-Bus để:</p>
+
+<ul>
+<li>Authenticate users (PAM)</li>
+<li>Lấy user attributes (InfoPipe)</li>
+<li>Lấy group membership</li>
+</ul>
+
+<h2 id="9-kerberos-bridge"><strong>9. Kerberos Bridge</strong></h2>
+
+<p>Keycloak có thể sử dụng <strong>Kerberos authentication</strong> cùng với LDAP federation, cho phép users đăng nhập tự động bằng Kerberos ticket (SPNEGO).</p>
+
+<h3 id="91-cau-hinh-kerberos-voi-ldap"><strong>9.1 Cấu hình Kerberos với LDAP</strong></h3>
+
+<pre><code class="language-properties"># Trong LDAP provider settings
+Allow Kerberos authentication: ON
+Kerberos Realm: EXAMPLE.COM
+Server Principal: HTTP/keycloak.example.com@EXAMPLE.COM
+KeyTab: /etc/keycloak/keycloak.keytab
+Use Kerberos for password authentication: ON</code></pre>
+
+<pre><code class="language-bash"># Tạo keytab cho Keycloak service principal
+kadmin.local -q "addprinc -randkey HTTP/keycloak.example.com@EXAMPLE.COM"
+kadmin.local -q "ktadd -k /etc/keycloak/keycloak.keytab HTTP/keycloak.example.com@EXAMPLE.COM"
+
+# Set permissions
+chown keycloak:keycloak /etc/keycloak/keycloak.keytab
+chmod 600 /etc/keycloak/keycloak.keytab</code></pre>
+
+<h3 id="92-browser-configuration-cho-spnego"><strong>9.2 Browser Configuration cho SPNEGO</strong></h3>
+
+<pre><code class="language-text">Firefox:
+1. about:config
+2. network.negotiate-auth.trusted-uris = .example.com
+3. network.negotiate-auth.delegation-uris = .example.com
+
+Chrome / Edge:
+1. Policy: AuthServerAllowlist = *.example.com
+2. Hoặc command line: --auth-server-whitelist="*.example.com"</code></pre>
+
+<h2 id="10-custom-user-storage-spi"><strong>10. Custom User Storage SPI</strong></h2>
+
+<p>Khi LDAP không đủ, bạn có thể viết <strong>Custom User Storage Provider</strong> để kết nối bất kỳ data source nào (SQL database, REST API, legacy system...).</p>
+
+<h3 id="101-spi-interfaces"><strong>10.1 SPI Interfaces</strong></h3>
+
+<pre><code class="language-java">// UserStorageProviderFactory — tạo provider instances
+public class MyUserStorageProviderFactory
+    implements UserStorageProviderFactory&lt;MyUserStorageProvider&gt; {
+
+    @Override
+    public String getId() {
+        return "my-user-storage";
+    }
+
+    @Override
+    public MyUserStorageProvider create(KeycloakSession session,
+                                         ComponentModel model) {
+        return new MyUserStorageProvider(session, model);
+    }
+}
+
+// UserStorageProvider — implement các interfaces cần thiết
+public class MyUserStorageProvider implements
+    UserStorageProvider,
+    UserLookupProvider,
+    CredentialInputValidator,
+    UserQueryProvider {
+
+    @Override
+    public UserModel getUserByUsername(RealmModel realm, String username) {
+        // Query external database
+        ExternalUser extUser = externalDb.findByUsername(username);
+        if (extUser == null) return null;
+
+        // Wrap vào Keycloak UserModel
+        return new UserAdapter(session, realm, model, extUser);
+    }
+
+    @Override
+    public boolean isValid(RealmModel realm, UserModel user,
+                           CredentialInput input) {
+        if (!supportsCredentialType(input.getType())) return false;
+        // Verify password với external system
+        return externalDb.verifyPassword(
+            user.getUsername(),
+            input.getChallengeResponse()
+        );
+    }
+}</code></pre>
+
+<h3 id="102-deploy-custom-provider"><strong>10.2 Deploy Custom Provider</strong></h3>
+
+<pre><code class="language-bash"># Build JAR
+mvn clean package
+
+# Copy vào Keycloak providers directory
+cp target/my-user-storage.jar /opt/keycloak/providers/
+
+# Rebuild Keycloak
+/opt/keycloak/bin/kc.sh build</code></pre>
+
+<h2 id="11-cau-hinh-ldap-voi-kcadm"><strong>11. Cấu hình LDAP với kcadm.sh</strong></h2>
+
+<p>Sử dụng <code>kcadm.sh</code> để cấu hình LDAP federation qua command line:</p>
+
+<pre><code class="language-bash"># Đăng nhập
+kcadm.sh config credentials \
+  --server http://localhost:8080 \
+  --realm master \
+  --user admin \
+  --password admin
+
+# Tạo LDAP provider
+kcadm.sh create components -r my-realm \
+  -s name="Corporate LDAP" \
+  -s providerId=ldap \
+  -s providerType=org.keycloak.storage.UserStorageProvider \
+  -s 'config.vendor=["other"]' \
+  -s 'config.connectionUrl=["ldap://ldap.example.com:389"]' \
+  -s 'config.bindDn=["cn=admin,dc=example,dc=com"]' \
+  -s 'config.bindCredential=["admin_password"]' \
+  -s 'config.usersDn=["ou=People,dc=example,dc=com"]' \
+  -s 'config.userObjectClasses=["inetOrgPerson, organizationalPerson"]' \
+  -s 'config.usernameLDAPAttribute=["uid"]' \
+  -s 'config.rdnLDAPAttribute=["uid"]' \
+  -s 'config.uuidLDAPAttribute=["entryUUID"]' \
+  -s 'config.editMode=["READ_ONLY"]' \
+  -s 'config.syncRegistrations=["false"]' \
+  -s 'config.searchScope=["2"]' \
+  -s 'config.importEnabled=["true"]' \
+  -s 'config.enabled=["true"]' \
+  -s 'config.priority=["0"]' \
+  -s 'config.fullSyncPeriod=["604800"]' \
+  -s 'config.changedSyncPeriod=["86400"]'
+
+# Lấy LDAP provider ID
+LDAP_ID=$(kcadm.sh get components -r my-realm \
+  --fields id,name \
+  -q providerType=org.keycloak.storage.UserStorageProvider \
+  | jq -r '.[0].id')
+
+# Thêm group mapper
+kcadm.sh create components -r my-realm \
+  -s name="group-mapper" \
+  -s providerId=group-ldap-mapper \
+  -s providerType=org.keycloak.storage.ldap.mappers.LDAPStorageMapper \
+  -s parentId=$LDAP_ID \
+  -s 'config.groups.dn=["ou=Groups,dc=example,dc=com"]' \
+  -s 'config.group.name.ldap.attribute=["cn"]' \
+  -s 'config.group.object.classes=["groupOfNames"]' \
+  -s 'config.membership.ldap.attribute=["member"]' \
+  -s 'config.membership.attribute.type=["DN"]' \
+  -s 'config.membership.user.ldap.attribute=["uid"]' \
+  -s 'config.mode=["READ_ONLY"]' \
+  -s 'config.drop.non.existing.groups.during.sync=["false"]'
+
+# Trigger full sync
+kcadm.sh create user-storage/$LDAP_ID/sync -r my-realm \
+  -s action=triggerFullSync</code></pre>
+
+<h2 id="12-troubleshooting-ldap"><strong>12. Troubleshooting LDAP Issues</strong></h2>
+
+<h3 id="121-connection-issues"><strong>12.1 Connection Issues</strong></h3>
+
+<table>
+<thead>
+<tr><th>Lỗi</th><th>Nguyên nhân</th><th>Giải pháp</th></tr>
+</thead>
+<tbody>
+<tr><td><code>javax.naming.CommunicationException</code></td><td>Không kết nối được LDAP server</td><td>Kiểm tra network, firewall, port 389/636</td></tr>
+<tr><td><code>javax.naming.AuthenticationException</code></td><td>Sai Bind DN hoặc Bind Credential</td><td>Verify bind credentials bằng <code>ldapsearch</code></td></tr>
+<tr><td><code>SSLHandshakeException</code></td><td>Certificate không trusted</td><td>Import CA cert vào truststore</td></tr>
+<tr><td><code>Connection timeout</code></td><td>LDAP server không response</td><td>Tăng connection timeout, kiểm tra DNS</td></tr>
+</tbody>
+</table>
+
+<pre><code class="language-bash"># Test LDAP connection
+ldapsearch -x -H ldap://ldap.example.com:389 \
+  -D "cn=admin,dc=example,dc=com" -W \
+  -b "ou=People,dc=example,dc=com" \
+  "(objectClass=inetOrgPerson)" uid mail cn
+
+# Test LDAPS connection
+ldapsearch -x -H ldaps://ldap.example.com:636 \
+  -D "cn=admin,dc=example,dc=com" -W \
+  -b "dc=example,dc=com" "(uid=testuser)"
+
+# Bật debug logging trong Keycloak
+bin/kc.sh start-dev \
+  --log-level=org.keycloak.storage.ldap:DEBUG</code></pre>
+
+<h3 id="122-sync-failures"><strong>12.2 Sync Failures</strong></h3>
+
+<table>
+<thead>
+<tr><th>Lỗi</th><th>Nguyên nhân</th><th>Giải pháp</th></tr>
+</thead>
+<tbody>
+<tr><td><code>User ... already exists</code></td><td>Username conflict giữa LDAP và local users</td><td>Xóa local user hoặc đổi username mapping</td></tr>
+<tr><td><code>Size limit exceeded</code></td><td>LDAP server giới hạn số kết quả trả về</td><td>Cấu hình paging trên LDAP server, hoặc thêm LDAP filter để giảm scope</td></tr>
+<tr><td><code>Referral</code></td><td>LDAP trả về referral thay vì kết quả</td><td>Set <code>Referral = follow</code> trong connection settings</td></tr>
+</tbody>
+</table>
+
+<h3 id="123-mapper-problems"><strong>12.3 Mapper Problems</strong></h3>
+
+<pre><code class="language-bash"># Kiểm tra LDAP attributes có tồn tại
+ldapsearch -x -H ldap://ldap.example.com:389 \
+  -D "cn=admin,dc=example,dc=com" -W \
+  -b "uid=testuser,ou=People,dc=example,dc=com" \
+  "*" "+"
+
+# Kiểm tra group membership
+ldapsearch -x -H ldap://ldap.example.com:389 \
+  -D "cn=admin,dc=example,dc=com" -W \
+  -b "ou=Groups,dc=example,dc=com" \
+  "(member=uid=testuser,ou=People,dc=example,dc=com)" cn</code></pre>
+
+<h2 id="13-best-practices"><strong>13. Best Practices</strong></h2>
+
+<ul>
+<li><strong>Luôn dùng LDAPS hoặc StartTLS</strong> — tránh gửi credentials dạng plaintext</li>
+<li><strong>Sử dụng service account riêng</strong> cho Bind DN — không dùng admin account</li>
+<li><strong>Giới hạn Search Scope</strong> — dùng Custom User LDAP Filter để chỉ import users cần thiết</li>
+<li><strong>Bật Connection Pool</strong> — giảm overhead tạo connection</li>
+<li><strong>Cấu hình sync period phù hợp</strong> — quá ngắn gây load nặng trên LDAP, quá dài gây stale data</li>
+<li><strong>Monitor sync logs</strong> — Keycloak ghi log chi tiết về sync process</li>
+<li><strong>Test với READ_ONLY trước</strong> — khi mới cấu hình, dùng READ_ONLY để verify trước khi chuyển WRITABLE</li>
+<li><strong>Backup Keycloak DB trước khi sync lớn</strong> — full sync có thể import hàng nghìn users</li>
+</ul>
