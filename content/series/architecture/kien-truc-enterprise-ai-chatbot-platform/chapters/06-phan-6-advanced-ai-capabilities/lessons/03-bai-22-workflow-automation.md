@@ -1,0 +1,526 @@
+---
+id: 019f0b20-b603-7001-e001-f2b8f9000603
+title: 'Bài 22: Workflow Automation — Chatbot-Triggered Workflows & Process Orchestration'
+slug: bai-22-workflow-automation
+description: >-
+  Chatbot-triggered workflows, approval flows, integration với n8n/Temporal,
+  event-driven automation, human-in-the-loop workflows, long-running processes.
+duration_minutes: 90
+is_free: true
+video_url: null
+sort_order: 22
+section_title: "Phần 6: Advanced AI Capabilities"
+course:
+  id: 019f0b20-b100-7001-e001-f2b8f9000001
+  title: Kiến trúc Enterprise AI Chatbot Platform — Từ Prototype đến Production
+  slug: kien-truc-enterprise-ai-chatbot-platform
+---
+
+<h2 id="1-workflow-overview"><strong>1. Chatbot-Triggered Workflows — Tổng quan</strong></h2>
+
+<p>Chatbot enterprise không chỉ trả lời câu hỏi — nó phải <strong>thực thi business processes</strong>. Từ "Tạo ticket Jira", "Approve đơn nghỉ phép" đến "Onboard nhân viên mới" — tất cả cần <strong>workflow engine</strong> mạnh mẽ phía sau.</p>
+
+<pre><code class="language-text">
+┌─────────── WORKFLOW ARCHITECTURE ─────────────────────┐
+│                                                       │
+│  User: "Tạo đơn xin nghỉ phép 3 ngày từ thứ 2"      │
+│                     │                                 │
+│              ┌──────▼──────┐                          │
+│              │  AI Engine  │                          │
+│              │  (Extract   │                          │
+│              │   intent)   │                          │
+│              └──────┬──────┘                          │
+│                     │                                 │
+│              ┌──────▼──────────────────┐              │
+│              │  WORKFLOW ORCHESTRATOR  │              │
+│              │  ┌──────────────────┐   │              │
+│              │  │ 1. Validate      │   │              │
+│              │  │    leave balance  │   │              │
+│              │  │ 2. Create request │   │              │
+│              │  │ 3. Notify manager│   │              │
+│              │  │ 4. Wait approval │   │              │
+│              │  │ 5. Update HR sys │   │              │
+│              │  │ 6. Confirm user  │   │              │
+│              │  └──────────────────┘   │              │
+│              └──────┬──────────────────┘              │
+│                     │                                 │
+│          ┌──────────┼──────────┐                      │
+│          ▼          ▼          ▼                       │
+│     ┌────────┐ ┌────────┐ ┌────────┐                  │
+│     │  HR    │ │ Slack  │ │ Email  │                   │
+│     │ System │ │ Notify │ │ Notify │                   │
+│     └────────┘ └────────┘ └────────┘                   │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+
+<h2 id="2-workflow-engine"><strong>2. Workflow Engine Design</strong></h2>
+
+<pre><code class="language-typescript">
+// Workflow Definition DSL
+interface WorkflowDefinition {
+  id: string;
+  name: string;
+  trigger: WorkflowTrigger;
+  steps: WorkflowStep[];
+  timeout: string; // ISO 8601 duration
+  onError: ErrorHandler;
+}
+
+interface WorkflowStep {
+  id: string;
+  name: string;
+  type: 'action' | 'condition' | 'approval' | 'wait' | 'parallel';
+  config: StepConfig;
+  onSuccess?: string; // Next step ID
+  onFailure?: string;
+}
+
+// Workflow Engine
+class WorkflowEngine {
+  constructor(
+    private readonly store: WorkflowStore,
+    private readonly executor: StepExecutor,
+    private readonly eventBus: EventBus,
+  ) {}
+
+  async startWorkflow(
+    definitionId: string,
+    input: Record&lt;string, unknown&gt;,
+    context: WorkflowContext,
+  ): Promise&lt;WorkflowInstance&gt; {
+    const definition = await this.store.getDefinition(definitionId);
+
+    // Create instance
+    const instance: WorkflowInstance = {
+      id: crypto.randomUUID(),
+      definitionId,
+      status: 'running',
+      input,
+      context,
+      currentStepId: definition.steps[0].id,
+      state: {},
+      startedAt: new Date(),
+      history: [],
+    };
+
+    await this.store.saveInstance(instance);
+
+    // Start execution
+    await this.executeNextStep(instance, definition);
+
+    return instance;
+  }
+
+  private async executeNextStep(
+    instance: WorkflowInstance,
+    definition: WorkflowDefinition,
+  ): Promise&lt;void&gt; {
+    const step = definition.steps.find(
+      s =&gt; s.id === instance.currentStepId,
+    );
+    if (!step) {
+      await this.completeWorkflow(instance, 'completed');
+      return;
+    }
+
+    // Log history
+    instance.history.push({
+      stepId: step.id,
+      stepName: step.name,
+      startedAt: new Date(),
+      status: 'running',
+    });
+
+    try {
+      switch (step.type) {
+        case 'action':
+          await this.executeAction(instance, step);
+          break;
+        case 'condition':
+          await this.evaluateCondition(instance, step, definition);
+          break;
+        case 'approval':
+          await this.requestApproval(instance, step);
+          return; // Pauses here — resumes on approval event
+        case 'wait':
+          await this.scheduleResume(instance, step);
+          return; // Pauses here — resumes on timer
+        case 'parallel':
+          await this.executeParallel(instance, step);
+          break;
+      }
+
+      // Move to next step
+      instance.currentStepId = step.onSuccess ?? null;
+      await this.store.saveInstance(instance);
+
+      if (instance.currentStepId) {
+        await this.executeNextStep(instance, definition);
+      } else {
+        await this.completeWorkflow(instance, 'completed');
+      }
+    } catch (error) {
+      await this.handleStepError(instance, step, error);
+    }
+  }
+
+  // Resume workflow when approval comes in
+  async handleApproval(
+    instanceId: string,
+    approved: boolean,
+    approvedBy: string,
+  ): Promise&lt;void&gt; {
+    const instance = await this.store.getInstance(instanceId);
+    const definition = await this.store.getDefinition(instance.definitionId);
+    const step = definition.steps.find(
+      s =&gt; s.id === instance.currentStepId,
+    );
+
+    // Update history
+    const historyEntry = instance.history.find(
+      h =&gt; h.stepId === step.id && h.status === 'running',
+    );
+    if (historyEntry) {
+      historyEntry.status = approved ? 'approved' : 'rejected';
+      historyEntry.completedAt = new Date();
+      historyEntry.metadata = { approvedBy };
+    }
+
+    // Route based on approval result
+    instance.currentStepId = approved ? step.onSuccess : step.onFailure;
+    instance.state.approvalResult = { approved, approvedBy };
+    await this.store.saveInstance(instance);
+
+    if (instance.currentStepId) {
+      await this.executeNextStep(instance, definition);
+    } else {
+      await this.completeWorkflow(
+        instance,
+        approved ? 'completed' : 'rejected',
+      );
+    }
+  }
+}
+</code></pre>
+
+<h2 id="3-workflow-definitions"><strong>3. Pre-built Workflow Templates</strong></h2>
+
+<pre><code class="language-typescript">
+// Leave Request Workflow
+const leaveRequestWorkflow: WorkflowDefinition = {
+  id: 'leave-request',
+  name: 'Đơn xin nghỉ phép',
+  trigger: { type: 'chatbot', intent: 'request_leave' },
+  timeout: 'P7D', // 7 days
+  steps: [
+    {
+      id: 'validate',
+      name: 'Kiểm tra số ngày phép còn lại',
+      type: 'action',
+      config: {
+        action: 'hr.checkLeaveBalance',
+        input: { employeeId: '{{context.userId}}' },
+      },
+      onSuccess: 'create_request',
+      onFailure: 'insufficient_leave',
+    },
+    {
+      id: 'insufficient_leave',
+      name: 'Thông báo hết phép',
+      type: 'action',
+      config: {
+        action: 'chatbot.sendMessage',
+        input: {
+          message: 'Bạn chỉ còn {{state.remainingDays}} ngày phép. '
+            + 'Không đủ cho {{input.days}} ngày yêu cầu.',
+        },
+      },
+    },
+    {
+      id: 'create_request',
+      name: 'Tạo đơn nghỉ phép',
+      type: 'action',
+      config: {
+        action: 'hr.createLeaveRequest',
+        input: {
+          employeeId: '{{context.userId}}',
+          startDate: '{{input.startDate}}',
+          days: '{{input.days}}',
+          reason: '{{input.reason}}',
+        },
+      },
+      onSuccess: 'notify_manager',
+    },
+    {
+      id: 'notify_manager',
+      name: 'Gửi thông báo cho quản lý',
+      type: 'action',
+      config: {
+        action: 'notification.send',
+        input: {
+          channel: 'slack',
+          recipient: '{{state.managerId}}',
+          message: '{{context.userName}} xin nghỉ phép {{input.days}} ngày.',
+          actions: [
+            { label: 'Approve', value: 'approve' },
+            { label: 'Reject', value: 'reject' },
+          ],
+        },
+      },
+      onSuccess: 'wait_approval',
+    },
+    {
+      id: 'wait_approval',
+      name: 'Chờ phê duyệt',
+      type: 'approval',
+      config: {
+        approvers: ['{{state.managerId}}'],
+        timeout: 'P3D', // 3 days
+        escalateTo: '{{state.hrDirectorId}}',
+      },
+      onSuccess: 'update_hr',
+      onFailure: 'notify_rejected',
+    },
+    {
+      id: 'update_hr',
+      name: 'Cập nhật hệ thống HR',
+      type: 'action',
+      config: {
+        action: 'hr.approveLeave',
+        input: { requestId: '{{state.requestId}}' },
+      },
+      onSuccess: 'confirm_user',
+    },
+    {
+      id: 'confirm_user',
+      name: 'Xác nhận cho nhân viên',
+      type: 'action',
+      config: {
+        action: 'chatbot.sendMessage',
+        input: {
+          message: 'Đơn nghỉ phép đã được duyệt! '
+            + 'Bạn nghỉ từ {{input.startDate}}, {{input.days}} ngày.',
+        },
+      },
+    },
+    {
+      id: 'notify_rejected',
+      name: 'Thông báo từ chối',
+      type: 'action',
+      config: {
+        action: 'chatbot.sendMessage',
+        input: {
+          message: 'Đơn nghỉ phép bị từ chối. Lý do: {{state.rejectionReason}}',
+        },
+      },
+    },
+  ],
+  onError: {
+    action: 'chatbot.sendMessage',
+    input: { message: 'Có lỗi xảy ra khi xử lý đơn. Vui lòng thử lại sau.' },
+  },
+};
+</code></pre>
+
+<h2 id="4-temporal-integration"><strong>4. Temporal Integration — Durable Workflows</strong></h2>
+
+<pre><code class="language-typescript">
+import { proxyActivities, executeChild, sleep } from '@temporalio/workflow';
+
+// Temporal Workflow for long-running processes
+export async function employeeOnboardingWorkflow(
+  input: OnboardingInput,
+): Promise&lt;OnboardingResult&gt; {
+  const { createAccounts, sendNotifications, setupEquipment, hrActivities }
+    = proxyActivities&lt;OnboardingActivities&gt;({
+      startToCloseTimeout: '10 minutes',
+      retry: { maximumAttempts: 3 },
+    });
+
+  // Step 1: Create accounts in parallel
+  const [emailAccount, slackAccount, jiraAccount] = await Promise.all([
+    createAccounts.createEmail(input.employee),
+    createAccounts.createSlack(input.employee),
+    createAccounts.createJira(input.employee),
+  ]);
+
+  // Step 2: Setup equipment (may take days)
+  const equipmentRequest = await setupEquipment.requestLaptop(input.employee);
+
+  // Step 3: Notify chatbot — user gets progress updates
+  await sendNotifications.notifyChatbot({
+    userId: input.requesterId,
+    message: `Accounts created. Equipment request #${equipmentRequest.id} submitted.`,
+  });
+
+  // Step 4: Wait for equipment delivery (durable timer)
+  await sleep('3 days');
+
+  // Step 5: Check equipment status
+  const equipmentStatus = await setupEquipment.checkStatus(equipmentRequest.id);
+
+  // Step 6: Schedule orientation
+  const orientation = await hrActivities.scheduleOrientation({
+    employeeId: input.employee.id,
+    startDate: input.startDate,
+  });
+
+  // Step 7: Child workflow — training plan
+  const trainingCompletion = await executeChild(
+    trainingPlanWorkflow,
+    { args: [{ employeeId: input.employee.id, role: input.employee.role }] },
+  );
+
+  return {
+    employee: input.employee,
+    accounts: { emailAccount, slackAccount, jiraAccount },
+    equipment: equipmentStatus,
+    orientation,
+    trainingCompleted: trainingCompletion,
+  };
+}
+</code></pre>
+
+<h2 id="5-chatbot-workflow-bridge"><strong>5. Chatbot ↔ Workflow Bridge</strong></h2>
+
+<pre><code class="language-typescript">
+class ChatbotWorkflowBridge {
+  constructor(
+    private readonly workflowEngine: WorkflowEngine,
+    private readonly intentMapper: IntentToWorkflowMapper,
+  ) {}
+
+  // Map chatbot intent to workflow
+  async handleIntent(
+    intent: string,
+    parameters: Record&lt;string, unknown&gt;,
+    context: ChatContext,
+  ): Promise&lt;WorkflowResponse&gt; {
+    const workflowId = this.intentMapper.getWorkflow(intent);
+    if (!workflowId) {
+      return { type: 'no_workflow', message: 'No workflow mapped for this intent.' };
+    }
+
+    // Check if user has pending workflow of same type
+    const pending = await this.workflowEngine.findPendingWorkflow(
+      context.userId,
+      workflowId,
+    );
+    if (pending) {
+      return {
+        type: 'existing_workflow',
+        message: `Bạn đã có yêu cầu đang xử lý (ID: ${pending.id}). `
+          + `Trạng thái: ${pending.status}`,
+        workflow: pending,
+      };
+    }
+
+    // Start new workflow
+    const instance = await this.workflowEngine.startWorkflow(
+      workflowId,
+      parameters,
+      {
+        userId: context.userId,
+        tenantId: context.tenantId,
+        conversationId: context.conversationId,
+        channel: context.channel,
+      },
+    );
+
+    return {
+      type: 'workflow_started',
+      message: `Yêu cầu đã được tạo (ID: ${instance.id}). `
+        + `Tôi sẽ cập nhật tiến trình cho bạn.`,
+      workflow: instance,
+    };
+  }
+
+  // Handle workflow status check from chatbot
+  async checkWorkflowStatus(
+    userId: string,
+    workflowId?: string,
+  ): Promise&lt;string&gt; {
+    const workflows = workflowId
+      ? [await this.workflowEngine.getInstance(workflowId)]
+      : await this.workflowEngine.getUserWorkflows(userId);
+
+    if (workflows.length === 0) {
+      return 'Bạn không có yêu cầu nào đang xử lý.';
+    }
+
+    return workflows.map(w =&gt; {
+      const current = w.history.filter(h =&gt; h.status === 'completed').length;
+      const total = w.history.length;
+      return `📋 ${w.definitionId} (ID: ${w.id})\n`
+        + `   Trạng thái: ${w.status}\n`
+        + `   Tiến trình: ${current}/${total} steps\n`
+        + `   Bước hiện tại: ${w.currentStepId}`;
+    }).join('\n\n');
+  }
+}
+</code></pre>
+
+<h2 id="6-event-driven"><strong>6. Event-Driven Automation</strong></h2>
+
+<pre><code class="language-typescript">
+class EventDrivenAutomation {
+  constructor(
+    private readonly eventBus: EventBus,
+    private readonly workflowEngine: WorkflowEngine,
+    private readonly chatbot: ChatbotService,
+  ) {
+    this.registerAutomations();
+  }
+
+  private registerAutomations(): void {
+    // Auto-trigger workflow on specific events
+    this.eventBus.on('ticket.created', async (event) =&gt; {
+      // Auto-assign based on category
+      if (event.data.priority === 'critical') {
+        await this.workflowEngine.startWorkflow('critical-escalation', {
+          ticketId: event.data.ticketId,
+          category: event.data.category,
+        }, { userId: 'system', tenantId: event.data.tenantId });
+      }
+    });
+
+    // Proactive notification automation
+    this.eventBus.on('deployment.completed', async (event) =&gt; {
+      // Notify relevant users via chatbot
+      const subscribers = await this.getDeploymentSubscribers(
+        event.data.service,
+      );
+      for (const userId of subscribers) {
+        await this.chatbot.sendProactiveMessage(userId, {
+          text: `🚀 Service "${event.data.service}" deployed v${event.data.version}`,
+          actions: [
+            { label: 'View changelog', action: 'view_changelog', data: event.data },
+            { label: 'Rollback', action: 'rollback', data: event.data },
+          ],
+        });
+      }
+    });
+
+    // SLA breach automation
+    this.eventBus.on('sla.warning', async (event) =&gt; {
+      await this.workflowEngine.startWorkflow('sla-escalation', {
+        ticketId: event.data.ticketId,
+        remainingMinutes: event.data.remainingMinutes,
+        assignee: event.data.assignee,
+      }, { userId: 'system', tenantId: event.data.tenantId });
+    });
+  }
+}
+</code></pre>
+
+<h2 id="tong-ket"><strong>Tổng kết Bài 22</strong></h2>
+
+<ul>
+<li><strong>Workflow Engine</strong>: State machine approach với action, condition, approval, wait, parallel steps</li>
+<li><strong>Approval Flows</strong>: Pause workflow → notify approver → resume on approval event</li>
+<li><strong>Temporal Integration</strong>: Durable workflows cho long-running processes (days/weeks)</li>
+<li><strong>Chatbot Bridge</strong>: Map intents → workflows, check status, send progress updates</li>
+<li><strong>Event-Driven</strong>: Auto-trigger workflows on business events (ticket, deployment, SLA)</li>
+</ul>
+
+<p><strong>Bài tiếp theo:</strong> GPU Infrastructure & Model Serving — Self-hosted LLM deployment, vLLM/TGI, GPU cluster management, model caching, auto-scaling inference.</p>

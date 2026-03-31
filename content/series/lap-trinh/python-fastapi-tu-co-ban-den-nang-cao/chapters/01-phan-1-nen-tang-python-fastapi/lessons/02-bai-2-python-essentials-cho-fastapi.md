@@ -1,0 +1,398 @@
+---
+id: 019d8b40-a102-7001-b002-fastapi000102
+title: 'Bài 2: Python Essentials cho FastAPI'
+slug: bai-2-python-essentials-cho-fastapi
+description: >-
+  Ôn tập Python cần thiết cho FastAPI: Type Hints, Dataclasses, Decorators,
+  Context Managers, Generators, async/await cơ bản. Virtual environments
+  và dependency management với Poetry/uv.
+duration_minutes: 90
+is_free: true
+video_url: null
+sort_order: 2
+section_title: "Phần 1: Nền tảng Python & FastAPI"
+course:
+  id: 019d8b40-a100-7001-b002-fastapi000001
+  title: 'Python FastAPI: Từ Cơ bản đến Nâng cao'
+  slug: python-fastapi-tu-co-ban-den-nang-cao
+---
+
+<h2 id="1-type-hints"><strong>1. Type Hints - Nền tảng của FastAPI</strong></h2>
+
+<p>Type Hints là tính năng quan trọng nhất của Python mà FastAPI dựa vào. FastAPI sử dụng type hints để tự động validate dữ liệu, generate documentation, và cung cấp editor support.</p>
+
+<h3 id="basic-types"><strong>Basic Types</strong></h3>
+
+<pre><code class="language-python"># Các kiểu dữ liệu cơ bản
+name: str = "FastAPI"
+age: int = 5
+price: float = 9.99
+is_active: bool = True
+
+# Function với type hints
+def greet(name: str, age: int) -> str:
+    return f"Hello {name}, you are {age} years old"
+
+# Python 3.10+ union syntax
+def process(value: int | str) -> str:
+    return str(value)
+
+# Optional (có thể None)
+def find_user(user_id: int) -> str | None:
+    return None
+</code></pre>
+
+<h3 id="collection-types"><strong>Collection Types (Python 3.9+)</strong></h3>
+
+<pre><code class="language-python"># List, Dict, Set, Tuple - dùng lowercase từ Python 3.9+
+names: list[str] = ["Alice", "Bob"]
+scores: dict[str, int] = {"Alice": 95, "Bob": 87}
+unique_ids: set[int] = {1, 2, 3}
+coordinates: tuple[float, float] = (10.5, 20.3)
+
+# Nested types
+matrix: list[list[int]] = [[1, 2], [3, 4]]
+users: dict[str, list[str]] = {"admin": ["read", "write"]}
+
+# Function với collection types
+def get_names(active_only: bool = True) -> list[str]:
+    return ["Alice", "Bob"]
+</code></pre>
+
+<h3 id="advanced-types"><strong>Advanced Types</strong></h3>
+
+<pre><code class="language-python">from typing import Any, Literal, TypeAlias, TypeVar, Generic
+
+# Any - cho phép mọi kiểu (tránh dùng khi có thể)
+data: Any = "anything"
+
+# Literal - giới hạn giá trị cụ thể
+Status: TypeAlias = Literal["active", "inactive", "pending"]
+
+def set_status(status: Status) -> None:
+    print(f"Status: {status}")
+
+# TypeVar và Generic
+T = TypeVar("T")
+
+class Repository(Generic[T]):
+    def get(self, id: int) -> T | None:
+        ...
+    def list(self) -> list[T]:
+        ...
+
+# Callable
+from collections.abc import Callable
+
+def apply(func: Callable[[int, int], int], a: int, b: int) -> int:
+    return func(a, b)
+</code></pre>
+
+<h2 id="2-dataclasses"><strong>2. Dataclasses</strong></h2>
+
+<p>Dataclasses là tiền thân của Pydantic models, giúp tạo classes chứa data một cách gọn gàng:</p>
+
+<pre><code class="language-python">from dataclasses import dataclass, field
+from datetime import datetime
+
+@dataclass
+class User:
+    name: str
+    email: str
+    age: int
+    is_active: bool = True
+    created_at: datetime = field(default_factory=datetime.now)
+    tags: list[str] = field(default_factory=list)
+
+    @property
+    def display_name(self) -> str:
+        return f"{self.name} ({self.email})"
+
+# Sử dụng
+user = User(name="Alice", email="alice@example.com", age=30)
+print(user)  # User(name='Alice', email='alice@example.com', age=30, ...)
+
+# Frozen (immutable)
+@dataclass(frozen=True)
+class Point:
+    x: float
+    y: float
+</code></pre>
+
+<h2 id="3-decorators"><strong>3. Decorators</strong></h2>
+
+<p>FastAPI sử dụng decorators rất nhiều (<code>@app.get()</code>, <code>@app.post()</code>, ...). Hiểu decorators là bắt buộc:</p>
+
+<pre><code class="language-python">import functools
+import time
+from collections.abc import Callable
+from typing import ParamSpec, TypeVar
+
+P = ParamSpec("P")
+R = TypeVar("R")
+
+# Decorator cơ bản
+def timer(func: Callable[P, R]) -> Callable[P, R]:
+    @functools.wraps(func)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start
+        print(f"{func.__name__} took {elapsed:.4f}s")
+        return result
+    return wrapper
+
+@timer
+def slow_function():
+    time.sleep(1)
+    return "done"
+
+# Decorator với tham số
+def retry(max_attempts: int = 3):
+    def decorator(func: Callable[P, R]) -> Callable[P, R]:
+        @functools.wraps(func)
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+            for attempt in range(max_attempts):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_attempts - 1:
+                        raise
+                    print(f"Attempt {attempt + 1} failed: {e}")
+            raise RuntimeError("Unreachable")
+        return wrapper
+    return decorator
+
+@retry(max_attempts=3)
+def fetch_data():
+    ...
+</code></pre>
+
+<h2 id="4-context-managers"><strong>4. Context Managers</strong></h2>
+
+<p>Context managers quan trọng trong FastAPI cho database sessions, file handling:</p>
+
+<pre><code class="language-python">from contextlib import contextmanager, asynccontextmanager
+
+# Sync context manager
+@contextmanager
+def db_session():
+    session = create_session()
+    try:
+        yield session
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+# Async context manager (dùng nhiều trong FastAPI)
+@asynccontextmanager
+async def async_db_session():
+    session = async_create_session()
+    try:
+        yield session
+        await session.commit()
+    except Exception:
+        await session.rollback()
+        raise
+    finally:
+        await session.close()
+
+# Class-based context manager
+class Timer:
+    def __enter__(self):
+        self.start = time.perf_counter()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.elapsed = time.perf_counter() - self.start
+        print(f"Elapsed: {self.elapsed:.4f}s")
+        return False  # Don't suppress exceptions
+</code></pre>
+
+<h2 id="5-generators"><strong>5. Generators và Async Generators</strong></h2>
+
+<p>FastAPI sử dụng generators cho dependency injection và streaming responses:</p>
+
+<pre><code class="language-python"># Generator cơ bản
+def fibonacci(n: int):
+    a, b = 0, 1
+    for _ in range(n):
+        yield a
+        a, b = b, a + b
+
+# Generator expression
+squares = (x ** 2 for x in range(10))
+
+# Generator cho FastAPI dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db  # FastAPI sẽ inject db vào route handler
+    finally:
+        db.close()
+
+# Async generator cho streaming
+async def event_stream():
+    while True:
+        data = await get_latest_event()
+        yield f"data: {data}\n\n"
+</code></pre>
+
+<h2 id="6-async-await"><strong>6. Async/Await cơ bản</strong></h2>
+
+<p>Async/await là tính năng cốt lõi của FastAPI. Hiểu đúng sẽ giúp viết code hiệu quả:</p>
+
+<pre><code class="language-python">import asyncio
+
+# Async function (coroutine)
+async def fetch_user(user_id: int) -> dict:
+    await asyncio.sleep(1)  # Giả lập I/O operation
+    return {"id": user_id, "name": "Alice"}
+
+# Gọi async function
+async def main():
+    user = await fetch_user(1)
+    print(user)
+
+# Chạy concurrent tasks
+async def fetch_all_users(user_ids: list[int]) -> list[dict]:
+    # Chạy song song - KHÔNG tuần tự
+    tasks = [fetch_user(uid) for uid in user_ids]
+    results = await asyncio.gather(*tasks)
+    return list(results)
+
+# asyncio.run() - entry point
+asyncio.run(main())
+</code></pre>
+
+<h3 id="sync-vs-async"><strong>Khi nào dùng async vs sync trong FastAPI?</strong></h3>
+
+<pre><code class="language-python">from fastapi import FastAPI
+
+app = FastAPI()
+
+# ✅ Dùng async khi có I/O operations (database, HTTP calls, file I/O)
+@app.get("/users/{user_id}")
+async def get_user(user_id: int):
+    user = await db.fetch_user(user_id)  # async database query
+    return user
+
+# ✅ Dùng sync khi chỉ có CPU-bound operations
+# FastAPI sẽ tự chạy trong thread pool
+@app.get("/compute")
+def compute_heavy():
+    result = heavy_cpu_computation()  # sync, CPU-bound
+    return {"result": result}
+
+# ❌ TRÁNH: dùng async nhưng gọi sync blocking code
+@app.get("/bad")
+async def bad_example():
+    result = requests.get("https://api.example.com")  # BLOCKING trong async!
+    return result.json()
+</code></pre>
+
+<h2 id="7-virtual-environments"><strong>7. Virtual Environments & Dependency Management</strong></h2>
+
+<h3 id="uv"><strong>uv (Recommended - 2026)</strong></h3>
+
+<pre><code class="language-bash"># Cài đặt uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Khởi tạo project
+uv init my-fastapi-project
+cd my-fastapi-project
+
+# Thêm dependencies
+uv add fastapi uvicorn[standard]
+uv add sqlalchemy alembic asyncpg
+
+# Dev dependencies
+uv add --dev pytest httpx ruff mypy
+
+# Chạy
+uv run uvicorn main:app --reload
+
+# Sync dependencies
+uv sync
+</code></pre>
+
+<h3 id="poetry"><strong>Poetry</strong></h3>
+
+<pre><code class="language-bash"># Cài đặt Poetry
+pip install poetry
+
+# Khởi tạo project
+poetry new my-fastapi-project
+cd my-fastapi-project
+
+# Thêm dependencies
+poetry add fastapi uvicorn[standard]
+poetry add sqlalchemy alembic asyncpg
+
+# Dev dependencies
+poetry add --group dev pytest httpx ruff mypy
+
+# Chạy
+poetry run uvicorn main:app --reload
+</code></pre>
+
+<h2 id="8-project-structure"><strong>8. Cấu trúc Project cơ bản</strong></h2>
+
+<pre><code>my-fastapi-project/
+├── pyproject.toml          # Project config & dependencies
+├── uv.lock                 # Lock file (uv) hoặc poetry.lock
+├── README.md
+├── .env                    # Environment variables
+├── .gitignore
+├── alembic.ini             # Alembic config
+├── alembic/                # Database migrations
+│   ├── env.py
+│   └── versions/
+├── app/
+│   ├── __init__.py
+│   ├── main.py             # FastAPI app entry point
+│   ├── config.py           # Settings & configuration
+│   ├── models/             # SQLAlchemy models
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── schemas/            # Pydantic schemas
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── api/                # Route handlers
+│   │   ├── __init__.py
+│   │   └── v1/
+│   │       ├── __init__.py
+│   │       └── users.py
+│   ├── services/           # Business logic
+│   │   ├── __init__.py
+│   │   └── user_service.py
+│   ├── repositories/       # Data access layer
+│   │   ├── __init__.py
+│   │   └── user_repo.py
+│   └── core/               # Core utilities
+│       ├── __init__.py
+│       ├── database.py
+│       └── security.py
+└── tests/
+    ├── __init__.py
+    ├── conftest.py
+    └── test_users.py
+</code></pre>
+
+<h2 id="tong-ket"><strong>Tổng kết</strong></h2>
+
+<p>Trong bài này, chúng ta đã ôn tập các tính năng Python quan trọng mà FastAPI sử dụng:</p>
+
+<ul>
+<li><strong>Type Hints</strong>: Nền tảng cho validation và documentation tự động</li>
+<li><strong>Dataclasses</strong>: Tiền thân của Pydantic models</li>
+<li><strong>Decorators</strong>: Pattern mà FastAPI sử dụng cho route definitions</li>
+<li><strong>Context Managers</strong>: Quản lý resources (database sessions, files)</li>
+<li><strong>Generators</strong>: Dùng cho dependency injection và streaming</li>
+<li><strong>Async/Await</strong>: Cốt lõi cho hiệu năng cao của FastAPI</li>
+</ul>
+
+<p>Bài tiếp theo sẽ hướng dẫn cài đặt và khởi tạo FastAPI project thực tế.</p>
