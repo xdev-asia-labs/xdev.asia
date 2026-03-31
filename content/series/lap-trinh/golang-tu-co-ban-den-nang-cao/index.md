@@ -8,7 +8,7 @@ description: >-
   Channels, Gin/Fiber framework, GORM, gRPC, Microservices, Testing, Docker
   và triển khai Production. Cập nhật theo Go 1.23+ với generics, iterators
   và các best practices mới nhất 2026.
-featured_image: uploads/2026/03/golang-series-banner-2026.png
+featured_image: uploads/2026/03/golang-banner-v2.png
 level: beginner
 duration_hours: 80
 lesson_count: 20

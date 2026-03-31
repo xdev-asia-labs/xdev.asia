@@ -8,7 +8,7 @@ description: >-
   Laravel API (Sanctum/Passport), Queues, Events, Broadcasting, Livewire,
   Testing, Docker và triển khai Production. Cập nhật theo Laravel 12+ và
   PHP 8.4+ với các best practices mới nhất 2026.
-featured_image: uploads/2026/03/laravel-series-banner-2026.png
+featured_image: uploads/2026/03/laravel-banner-v2.png
 level: beginner
 duration_hours: 80
 lesson_count: 22

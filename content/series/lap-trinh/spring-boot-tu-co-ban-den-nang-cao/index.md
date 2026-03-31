@@ -7,7 +7,7 @@ description: >-
   ứng dụng backend chuyên nghiệp với REST APIs, Spring Data JPA, Spring Security,
   JWT, OAuth2, microservices, testing, Docker và deployment trong môi trường production.
   Cập nhật Spring Boot 4.0 với Spring Framework 7, Virtual Threads, GraalVM Native Image.
-featured_image: uploads/2025/12/b9b052d3-d12c-42d8-be18-e7fd38dafe4f-1-201-a-e7538382.jpeg
+featured_image: uploads/2026/03/spring-boot-banner-v2.png
 level: beginner
 duration_hours: 60
 lesson_count: 24

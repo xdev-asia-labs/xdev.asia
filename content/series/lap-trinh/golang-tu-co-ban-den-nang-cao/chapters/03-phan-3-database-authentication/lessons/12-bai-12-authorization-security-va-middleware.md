@@ -1,0 +1,366 @@
+---
+id: 019d8b40-b304-7001-b003-golang0000304
+title: 'Bài 12: Authorization, Security & Middleware'
+slug: bai-12-authorization-security-va-middleware
+description: >-
+  RBAC với Casbin, permission models. CORS configuration, rate limiting,
+  security headers. Input validation, SQL injection prevention,
+  XSS protection. Custom middleware chains.
+duration_minutes: 120
+is_free: true
+video_url: null
+sort_order: 12
+section_title: "Phần 3: Database & Authentication"
+course:
+  id: 019d8b40-b100-7001-b003-golang0000001
+  title: 'Golang: Từ Cơ bản đến Nâng cao'
+  slug: golang-tu-co-ban-den-nang-cao
+---
+
+<h2 id="1-rbac-voi-casbin"><strong>1. Role-Based Access Control (RBAC) với Casbin</strong></h2>
+
+<h3 id="1-1-setup"><strong>1.1. Setup</strong></h3>
+
+<pre><code class="language-bash">go get github.com/casbin/casbin/v2
+go get github.com/casbin/gorm-adapter/v3
+</code></pre>
+
+<h3 id="1-2-model-config"><strong>1.2. Model Configuration</strong></h3>
+
+<pre><code class="language-ini"># config/rbac_model.conf
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && r.act == p.act
+</code></pre>
+
+<ul>
+<li><strong>sub</strong>: subject (user role)</li>
+<li><strong>obj</strong>: object (API path)</li>
+<li><strong>act</strong>: action (HTTP method)</li>
+</ul>
+
+<h3 id="1-3-policy-rules"><strong>1.3. Policy Rules</strong></h3>
+
+<pre><code class="language-csv"># config/rbac_policy.csv
+p, admin,  /api/*,         GET
+p, admin,  /api/*,         POST
+p, admin,  /api/*,         PUT
+p, admin,  /api/*,         DELETE
+p, admin,  /admin/*,       GET
+p, admin,  /admin/*,       POST
+
+p, editor, /api/posts,     GET
+p, editor, /api/posts,     POST
+p, editor, /api/posts/:id, PUT
+p, editor, /api/posts/:id, DELETE
+
+p, user,   /api/posts,     GET
+p, user,   /api/profile,   GET
+p, user,   /api/profile,   PUT
+
+g, admin, editor
+g, editor, user
+</code></pre>
+
+<h3 id="1-4-casbin-middleware"><strong>1.4. Casbin Middleware</strong></h3>
+
+<pre><code class="language-go">package middleware
+
+import (
+    "net/http"
+    
+    "github.com/casbin/casbin/v2"
+    "github.com/gin-gonic/gin"
+)
+
+func CasbinMiddleware(enforcer *casbin.Enforcer) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        role := GetUserRole(c)
+        path := c.Request.URL.Path
+        method := c.Request.Method
+        
+        allowed, err := enforcer.Enforce(role, path, method)
+        if err != nil {
+            c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+                "error": "Authorization error",
+            })
+            return
+        }
+        
+        if !allowed {
+            c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+                "error": "Access denied",
+            })
+            return
+        }
+        
+        c.Next()
+    }
+}
+
+// Setup enforcer
+func SetupCasbin() (*casbin.Enforcer, error) {
+    enforcer, err := casbin.NewEnforcer("config/rbac_model.conf", "config/rbac_policy.csv")
+    if err != nil {
+        return nil, err
+    }
+    
+    // Load policies
+    if err := enforcer.LoadPolicy(); err != nil {
+        return nil, err
+    }
+    
+    return enforcer, nil
+}
+</code></pre>
+
+<h2 id="2-cors-configuration"><strong>2. CORS Configuration</strong></h2>
+
+<pre><code class="language-bash">go get github.com/gin-contrib/cors
+</code></pre>
+
+<pre><code class="language-go">import "github.com/gin-contrib/cors"
+
+func SetupCORS(r *gin.Engine) {
+    config := cors.Config{
+        AllowOrigins:     []string{"https://example.com", "https://admin.example.com"},
+        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+        ExposeHeaders:    []string{"Content-Length"},
+        AllowCredentials: true,
+        MaxAge:           12 * time.Hour, // Preflight cache
+    }
+    
+    r.Use(cors.New(config))
+}
+
+// ⚠️ KHÔNG dùng AllowAllOrigins: true trong production
+// ⚠️ KHÔNG dùng AllowOrigins: []string{"*"} khi AllowCredentials: true
+</code></pre>
+
+<h2 id="3-rate-limiting"><strong>3. Rate Limiting</strong></h2>
+
+<pre><code class="language-go">package middleware
+
+import (
+    "net/http"
+    "sync"
+    "time"
+    
+    "github.com/gin-gonic/gin"
+    "golang.org/x/time/rate"
+)
+
+type IPRateLimiter struct {
+    mu       sync.RWMutex
+    limiters map[string]*rate.Limiter
+    rate     rate.Limit
+    burst    int
+}
+
+func NewIPRateLimiter(r rate.Limit, burst int) *IPRateLimiter {
+    return &IPRateLimiter{
+        limiters: make(map[string]*rate.Limiter),
+        rate:     r,
+        burst:    burst,
+    }
+}
+
+func (rl *IPRateLimiter) GetLimiter(ip string) *rate.Limiter {
+    rl.mu.Lock()
+    defer rl.mu.Unlock()
+    
+    limiter, exists := rl.limiters[ip]
+    if !exists {
+        limiter = rate.NewLimiter(rl.rate, rl.burst)
+        rl.limiters[ip] = limiter
+    }
+    
+    return limiter
+}
+
+func RateLimitMiddleware(rps float64, burst int) gin.HandlerFunc {
+    limiter := NewIPRateLimiter(rate.Limit(rps), burst)
+    
+    // Cleanup old entries periodically
+    go func() {
+        for range time.Tick(10 * time.Minute) {
+            limiter.mu.Lock()
+            limiter.limiters = make(map[string]*rate.Limiter)
+            limiter.mu.Unlock()
+        }
+    }()
+    
+    return func(c *gin.Context) {
+        ip := c.ClientIP()
+        l := limiter.GetLimiter(ip)
+        
+        if !l.Allow() {
+            c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
+                "error": "Too many requests. Please try again later.",
+            })
+            return
+        }
+        
+        c.Next()
+    }
+}
+
+// Usage: r.Use(RateLimitMiddleware(10, 20)) // 10 req/s, burst 20
+</code></pre>
+
+<h2 id="4-security-headers"><strong>4. Security Headers</strong></h2>
+
+<pre><code class="language-go">func SecurityHeadersMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        c.Header("X-Content-Type-Options", "nosniff")
+        c.Header("X-Frame-Options", "DENY")
+        c.Header("X-XSS-Protection", "1; mode=block")
+        c.Header("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+        c.Header("Content-Security-Policy", "default-src 'self'")
+        c.Header("Referrer-Policy", "strict-origin-when-cross-origin")
+        c.Header("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        
+        c.Next()
+    }
+}
+</code></pre>
+
+<h2 id="5-input-validation"><strong>5. Input Validation</strong></h2>
+
+<pre><code class="language-go">package validator
+
+import (
+    "regexp"
+    
+    "github.com/go-playground/validator/v10"
+)
+
+// Custom validators
+func RegisterCustomValidators(v *validator.Validate) {
+    // Username: chữ, số, gạch dưới, 3-30 ký tự
+    v.RegisterValidation("username", func(fl validator.FieldLevel) bool {
+        re := regexp.MustCompile(`^[a-zA-Z0-9_]{3,30}$`)
+        return re.MatchString(fl.Field().String())
+    })
+    
+    // No HTML tags (XSS prevention)
+    v.RegisterValidation("noscript", func(fl validator.FieldLevel) bool {
+        re := regexp.MustCompile(`<[^>]*>`)
+        return !re.MatchString(fl.Field().String())
+    })
+    
+    // Vietnamese phone number
+    v.RegisterValidation("vnphone", func(fl validator.FieldLevel) bool {
+        re := regexp.MustCompile(`^(\+84|0)(3|5|7|8|9)\d{8}$`)
+        return re.MatchString(fl.Field().String())
+    })
+}
+
+// Input structs with validation
+type CreatePostInput struct {
+    Title   string   `json:"title"   binding:"required,min=5,max=200,noscript"`
+    Content string   `json:"content" binding:"required,min=50"`
+    Tags    []string `json:"tags"    binding:"max=10,dive,min=1,max=50"`
+}
+</code></pre>
+
+<h2 id="6-sql-injection-prevention"><strong>6. SQL Injection Prevention</strong></h2>
+
+<pre><code class="language-go">// ❌ NGUY HIỂM - SQL Injection
+db.Raw("SELECT * FROM users WHERE email = '" + email + "'")
+
+// ✅ AN TOÀN - Parameterized queries
+db.Raw("SELECT * FROM users WHERE email = ?", email)
+
+// ✅ AN TOÀN - GORM methods
+db.Where("email = ?", email).First(&user)
+
+// ✅ AN TOÀN - Named parameters
+db.Where("email = @email AND role = @role", map[string]interface{}{
+    "email": email, "role": role,
+}).First(&user)
+</code></pre>
+
+<h2 id="7-middleware-chain"><strong>7. Middleware Chain Hoàn chỉnh</strong></h2>
+
+<pre><code class="language-go">func SetupRouter(tokenService *auth.TokenService, enforcer *casbin.Enforcer) *gin.Engine {
+    r := gin.New()
+    
+    // Global middleware (thứ tự quan trọng!)
+    r.Use(gin.Recovery())                      // 1. Recover panics
+    r.Use(SecurityHeadersMiddleware())         // 2. Security headers
+    r.Use(SetupCORS(r))                        // 3. CORS
+    r.Use(RequestIDMiddleware())               // 4. Request ID
+    r.Use(LoggingMiddleware())                 // 5. Structured logging
+    r.Use(RateLimitMiddleware(100, 200))       // 6. Rate limit
+    
+    // Public routes
+    public := r.Group("/auth")
+    public.Use(RateLimitMiddleware(5, 10))     // Stricter rate limit for auth
+    {
+        public.POST("/login", authHandler.Login)
+        public.POST("/register", authHandler.Register)
+        public.POST("/refresh", authHandler.RefreshToken)
+    }
+    
+    // Protected routes
+    api := r.Group("/api")
+    api.Use(AuthMiddleware(tokenService))       // Auth required
+    api.Use(CasbinMiddleware(enforcer))         // RBAC check
+    {
+        api.GET("/profile", getProfile)
+        api.PUT("/profile", updateProfile)
+        api.GET("/posts", listPosts)
+        api.POST("/posts", createPost)
+    }
+    
+    return r
+}
+</code></pre>
+
+<h2 id="8-request-id-middleware"><strong>8. Request ID Middleware</strong></h2>
+
+<pre><code class="language-go">import "github.com/google/uuid"
+
+func RequestIDMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        requestID := c.GetHeader("X-Request-ID")
+        if requestID == "" {
+            requestID = uuid.New().String()
+        }
+        
+        c.Set("request_id", requestID)
+        c.Header("X-Request-ID", requestID)
+        c.Next()
+    }
+}
+</code></pre>
+
+<h2 id="9-tong-ket"><strong>9. Tổng kết</strong></h2>
+
+<table>
+<thead><tr><th>Layer</th><th>Mục đích</th><th>Tool</th></tr></thead>
+<tbody>
+<tr><td>Authentication</td><td>Xác thực user</td><td>JWT + bcrypt</td></tr>
+<tr><td>Authorization</td><td>Phân quyền</td><td>Casbin RBAC</td></tr>
+<tr><td>Rate Limiting</td><td>Chống DDoS/brute force</td><td>golang.org/x/time/rate</td></tr>
+<tr><td>Input Validation</td><td>Validate & sanitize input</td><td>go-playground/validator</td></tr>
+<tr><td>SQL Prevention</td><td>Chống SQL injection</td><td>GORM parameterized queries</td></tr>
+<tr><td>Headers</td><td>Security headers</td><td>Custom middleware</td></tr>
+<tr><td>CORS</td><td>Cross-origin control</td><td>gin-contrib/cors</td></tr>
+</tbody>
+</table>
+
+<p>Bài tiếp theo: <strong>WebSockets & Real-time Communication</strong> — gorilla/websocket, chat rooms, và broadcast patterns.</p>

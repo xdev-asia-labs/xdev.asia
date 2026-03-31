@@ -9,7 +9,7 @@ description: >-
   Guards, Interceptors, Pipes, WebSockets, GraphQL, Microservices, Testing,
   Docker và triển khai Production. Cập nhật theo NestJS 11+ và các best practices
   mới nhất 2026.
-featured_image: uploads/2026/03/nestjs-series-banner-2026.png
+featured_image: uploads/2026/03/nestjs-banner-v2.png
 level: beginner
 duration_hours: 80
 lesson_count: 20

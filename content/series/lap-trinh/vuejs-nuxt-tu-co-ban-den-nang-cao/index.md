@@ -7,7 +7,7 @@ description: >-
   Composition API, Reactivity System, Pinia, Vue Router, Nuxt 3, Server-Side
   Rendering, TypeScript, Testing, Deployment. Cập nhật theo Vue 3.5+ và
   Nuxt 3.14+ với các best practices mới nhất 2026.
-featured_image: uploads/2026/03/vuejs-nuxt-series-banner-2026.png
+featured_image: uploads/2026/03/vuejs-nuxt-banner-v2.png
 level: beginner
 duration_hours: 80
 lesson_count: 22

@@ -8,7 +8,7 @@ description: >-
   Worker Threads, Cluster, HTTP/2, Crypto, File System, Child Processes,
   Native Modules, Performance Profiling. Cập nhật theo Node.js 22 LTS với
   các best practices mới nhất 2026.
-featured_image: uploads/2026/03/nodejs-core-series-banner-2026.png
+featured_image: uploads/2026/03/nodejs-banner-v2.png
 level: beginner
 duration_hours: 75
 lesson_count: 20

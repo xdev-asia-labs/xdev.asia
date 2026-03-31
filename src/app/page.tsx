@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
@@ -8,6 +9,45 @@ import { showcaseRepos } from "@/lib/showcase-server";
 import { RepoCard } from "@/components/ShowcaseCard";
 import { getValidImageUrl } from "@/utils/image";
 import { IconArrowRight, IconBrain, IconBook, IconCode, IconRocket, IconGitHub } from "@/components/Icons";
+
+const SITE_URL = "https://xdev.asia";
+
+export const metadata: Metadata = {
+    title: "xDev Asia — Blog lập trình, AI, DevOps & Công nghệ",
+    description:
+        "Blog cá nhân chia sẻ kiến thức lập trình, AI, Machine Learning, DevOps, kiến trúc hệ thống và công nghệ từ kinh nghiệm thực tế. Series học miễn phí từ cơ bản đến nâng cao.",
+    keywords: [
+        "lập trình", "AI", "machine learning", "DevOps", "kiến trúc hệ thống",
+        "web development", "golang", "spring boot", "postgresql", "kubernetes",
+        "LLM", "deep learning", "blog công nghệ", "xdev asia",
+    ],
+    alternates: {
+        canonical: SITE_URL,
+        types: { "application/rss+xml": "/feed.xml/" },
+    },
+    openGraph: {
+        title: "xDev Asia — Blog lập trình, AI, DevOps & Công nghệ",
+        description:
+            "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế. Series học miễn phí từ cơ bản đến nâng cao.",
+        url: SITE_URL,
+        siteName: "xDev Asia",
+        locale: "vi_VN",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "xDev Asia — Blog lập trình, AI, DevOps & Công nghệ",
+        description:
+            "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế.",
+    },
+    robots: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+    },
+};
 
 export default function Home() {
     const allPosts = getAllPosts();
@@ -28,8 +68,31 @@ export default function Home() {
     const featuredPost = posts[0];
     const sidePosts = posts.slice(1, 5);
 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "xDev Asia",
+        url: SITE_URL,
+        description: "Blog cá nhân chia sẻ kiến thức lập trình, AI, Machine Learning, DevOps, kiến trúc hệ thống và công nghệ từ kinh nghiệm thực tế.",
+        inLanguage: "vi",
+        publisher: {
+            "@type": "Person",
+            name: "Duy Tran",
+            url: `${SITE_URL}/gioi-thieu/`,
+        },
+        potentialAction: {
+            "@type": "SearchAction",
+            target: `${SITE_URL}/search/?q={search_term_string}`,
+            "query-input": "required name=search_term_string",
+        },
+    };
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             {/* ─── Hero ─── */}
             <HeroBanner3D
                 siteName={settings.site_name || "xDev"}

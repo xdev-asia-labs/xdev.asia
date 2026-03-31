@@ -8,7 +8,7 @@ description: >-
   Widget tree, State Management (Riverpod/Bloc), Navigation, Firebase,
   REST API, Local Storage, Testing, CI/CD và publish lên App Store/Google Play.
   Cập nhật theo Flutter 3.27+ và Dart 3.6+ với các best practices mới nhất 2026.
-featured_image: uploads/2026/03/flutter-series-banner-2026.png
+featured_image: uploads/2026/03/flutter-banner-v2.png
 level: beginner
 duration_hours: 85
 lesson_count: 22

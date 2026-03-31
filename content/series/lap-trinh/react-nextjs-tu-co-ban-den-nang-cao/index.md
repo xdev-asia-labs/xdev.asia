@@ -7,7 +7,7 @@ description: >-
   Server Components, Server Actions, App Router, TypeScript, Zustand/TanStack Query,
   Tailwind CSS, Authentication, Testing, Vercel deployment. Cập nhật theo
   Next.js 15+ với các best practices mới nhất 2026.
-featured_image: uploads/2026/03/react-nextjs-series-banner-2026.png
+featured_image: uploads/2026/03/react-nextjs-banner-v2.png
 level: beginner
 duration_hours: 85
 lesson_count: 22

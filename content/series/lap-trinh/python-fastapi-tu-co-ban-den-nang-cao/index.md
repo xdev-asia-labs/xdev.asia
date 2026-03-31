@@ -8,7 +8,7 @@ description: >-
   Pydantic, async/await, SQLAlchemy, Alembic, Authentication, Authorization,
   OAuth2, WebSockets, Background Tasks, Testing, Docker và triển khai Production.
   Cập nhật theo FastAPI 0.115+ và Python 3.12+ với các best practices mới nhất 2026.
-featured_image: uploads/2026/03/python-fastapi-series-banner-2026.png
+featured_image: uploads/2026/03/python-fastapi-banner-v2.png
 level: beginner
 duration_hours: 80
 lesson_count: 20
