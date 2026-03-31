@@ -1,0 +1,298 @@
+---
+id: 019e0b20-b209-7a01-e001-f1a7f8000009
+title: "Bài 9: ATLAS — Cài đặt, Tích hợp WebAPI & Giao diện tổng quan"
+slug: bai-9-atlas-cai-dat-tich-hop-webapi-giao-dien-tong-quan
+description: >-
+  Cài đặt ATLAS web application, cấu hình kết nối WebAPI,
+  tổng quan giao diện (Data Sources, Concept Sets, Cohort Definitions,
+  Characterizations, Incidence Rates, Estimation, Prediction),
+  cấu hình Security (OAuth, LDAP), và troubleshooting phổ biến.
+duration_minutes: 90
+is_free: true
+video_url: null
+sort_order: 9
+section_title: "Phần 3: Triển khai OHDSI Platform"
+course:
+  id: 019e0b20-b200-7a01-e001-f1a7f8000001
+  title: "OHDSI & OMOP CDM — Phân tích Dữ liệu Y tế Toàn diện"
+  slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
+---
+
+## Giới thiệu
+
+**ATLAS** là web application chính của hệ sinh thái OHDSI — giao diện trực quan để khám phá dữ liệu, tạo cohort definitions, chạy phân tích characterization, incidence rates, estimation, và prediction. ATLAS demo public: https://atlas-demo.ohdsi.org
+
+---
+
+## 1. Cài đặt ATLAS
+
+### 1.1 Docker Compose (Full Stack)
+
+```yaml
+# docker-compose.yml — OHDSI Full Stack
+services:
+  # CDM Database
+  cdm-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ohdsi
+      POSTGRES_USER: ohdsi_admin
+      POSTGRES_PASSWORD: ${CDM_DB_PASS}
+    volumes:
+      - cdm-db-data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  # WebAPI Database
+  webapi-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ohdsi_webapi
+      POSTGRES_USER: ohdsi
+      POSTGRES_PASSWORD: ${WEBAPI_DB_PASS}
+    volumes:
+      - webapi-db-data:/var/lib/postgresql/data
+
+  # WebAPI Backend
+  webapi:
+    image: ohdsi/webapi:latest
+    depends_on:
+      - webapi-db
+    ports:
+      - "8080:8080"
+    environment:
+      DATASOURCE_URL: jdbc:postgresql://webapi-db:5432/ohdsi_webapi
+      DATASOURCE_USERNAME: ohdsi
+      DATASOURCE_PASSWORD: ${WEBAPI_DB_PASS}
+      DATASOURCE_OHDSI_SCHEMA: webapi
+      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: webapi
+      FLYWAY_DATASOURCE_URL: jdbc:postgresql://webapi-db:5432/ohdsi_webapi
+      FLYWAY_DATASOURCE_USERNAME: ohdsi
+      FLYWAY_DATASOURCE_PASSWORD: ${WEBAPI_DB_PASS}
+      FLYWAY_SCHEMAS: webapi
+      FLYWAY_BASELINE_ON_MIGRATE: "true"
+      SECURITY_PROVIDER: DisabledSecurity
+
+  # ATLAS Frontend
+  atlas:
+    image: ohdsi/atlas:latest
+    depends_on:
+      - webapi
+    ports:
+      - "8088:8080"
+    environment:
+      WEBAPI_URL: http://localhost:8080/WebAPI/
+
+volumes:
+  cdm-db-data:
+  webapi-db-data:
+```
+
+```bash
+# Khởi chạy full stack
+docker compose up -d
+
+# Truy cập ATLAS
+open http://localhost:8088/atlas
+```
+
+### 1.2 Cấu hình ATLAS
+
+```javascript
+// config-local.js — ATLAS configuration
+define([], function () {
+  var configLocal = {};
+
+  // WebAPI URL
+  configLocal.api = {
+    name: 'OHDSI',
+    url: 'http://localhost:8080/WebAPI/'
+  };
+
+  // Authentication
+  configLocal.authProviders = [{
+    "name": "Local Security",
+    "url": "user/login/db",
+    "ajax": true,
+    "icon": "fa fa-database",
+    "isUseCredentialsForm": true
+  }];
+
+  // Default CDM source
+  configLocal.cohortComparisonResultsEnabled = true;
+  configLocal.userAuthenticationEnabled = false;
+
+  return configLocal;
+});
+```
+
+---
+
+## 2. Giao diện ATLAS
+
+### 2.1 Navigation Menu
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  ATLAS — OHDSI                              [Source: ▼]  │
+│                                                          │
+│  ┌──────────────────┐                                    │
+│  │ 🏠 Home          │                                    │
+│  │ 📊 Data Sources  │ ← Xem thống kê dữ liệu CDM       │
+│  │ 🔍 Search        │ ← Tìm concepts trong vocabulary   │
+│  │ 📋 Concept Sets  │ ← Tập hợp concepts (tái sử dụng) │
+│  │ 👥 Cohort Defs   │ ← Định nghĩa nhóm bệnh nhân      │
+│  │ 📈 Characterize  │ ← Mô tả đặc điểm cohort          │
+│  │ 📉 Incidence     │ ← Tỷ lệ mới mắc                 │
+│  │ 🎯 Estimation    │ ← So sánh hiệu quả điều trị      │
+│  │ 🔮 Prediction    │ ← Dự đoán kết quả bệnh nhân      │
+│  │ 🛤️ Pathways      │ ← Lộ trình điều trị               │
+│  │ ⚙️ Configuration │ ← Cài đặt                         │
+│  └──────────────────┘                                    │
+└──────────────────────────────────────────────────────────┘
+```
+
+### 2.2 Data Sources
+
+```
+ATLAS → Data Sources → Chọn CDM Source
+
+Dashboard hiển thị:
+┌──────────────────────────────────────────────────────┐
+│  Data Source: Hospital XYZ Vietnam                    │
+│                                                      │
+│  Summary:                                            │
+│  ├── Persons: 50,000                                 │
+│  ├── Observation Period: 2018 - 2024                 │
+│  ├── Conditions: 1,200,000 records                   │
+│  ├── Drug Exposures: 800,000 records                 │
+│  ├── Measurements: 2,500,000 records                 │
+│  └── Visits: 350,000 records                         │
+│                                                      │
+│  Reports (từ ACHILLES):                              │
+│  ├── Person: Age/Gender distribution                 │
+│  ├── Visit: Visit types, duration                    │
+│  ├── Condition: Top conditions by prevalence          │
+│  ├── Drug: Top drugs by utilization                   │
+│  └── Measurement: Test distributions                 │
+└──────────────────────────────────────────────────────┘
+
+Yêu cầu: ACHILLES phải được chạy trước (xem Bài 13)
+```
+
+### 2.3 Search — Tìm Concepts
+
+```
+ATLAS → Search → Nhập "diabetes"
+
+Kết quả:
+┌──────────┬──────────────────────────────┬────────┬──────────┐
+│ ID       │ Name                         │ Domain │ Standard │
+├──────────┼──────────────────────────────┼────────┼──────────┤
+│ 201820   │ Diabetes mellitus            │ Cond   │ S        │
+│ 201826   │ Type 2 diabetes mellitus     │ Cond   │ S        │
+│ 201254   │ Type 1 diabetes mellitus     │ Cond   │ S        │
+│ 443238   │ Diabetic neuropathy          │ Cond   │ S        │
+│ 4193704  │ Type 2 DM w/renal compl     │ Cond   │ S        │
+└──────────┴──────────────────────────────┴────────┴──────────┘
+
+Click vào concept → xem chi tiết:
+- Hierarchical relationships (parents, children)
+- Related concepts
+- Record count trong CDM (nếu ACHILLES chạy rồi)
+```
+
+---
+
+## 3. Workflow cơ bản trong ATLAS
+
+### 3.1 Tạo Concept Set
+
+```
+Concept Set = tập hợp concepts có thể tái sử dụng
+Ví dụ: "Bệnh tăng huyết áp" = tất cả concepts liên quan HTN
+
+Bước 1: Concept Sets → New Concept Set
+Bước 2: Đặt tên: "Hypertension Conditions"
+Bước 3: Search → "hypertension" → Add concepts:
+         ☑ 320128 Essential hypertension
+         ☑ 316866 Hypertensive disorder (+ Include Descendants)
+Bước 4: Save
+
+Khi Include Descendants = ON:
+  → Tự động bao gồm tất cả con/cháu trong SNOMED hierarchy
+  → Malignant HTN, Renovascular HTN, Gestational HTN... đều được bao gồm
+```
+
+### 3.2 Tạo Cohort Definition (tóm tắt)
+
+```
+Cohort = nhóm bệnh nhân thỏa mãn tiêu chí
+
+Ví dụ: Bệnh nhân tăng huyết áp mới khởi phát
+  Initial Event: Condition = "Hypertension Conditions" (concept set)
+  Inclusion:
+    - Có ít nhất 365 ngày observation trước event
+    - Không có HTN diagnosis trong 365 ngày trước
+  Exit: End of observation period
+
+→ Chi tiết ở Bài 10
+```
+
+---
+
+## 4. Chuyển đổi giữa CDM Sources
+
+```
+ATLAS hỗ trợ multi-source:
+
+Dropdown "Source" → Chọn:
+  ☑ Hospital XYZ Vietnam (50K patients)
+  ○ Hospital ABC Northern (100K patients)
+  ○ Insurance Dataset (500K patients)
+
+Khi chuyển source:
+→ Search results thay đổi (record counts khác)
+→ Cohort generation chạy trên source đó
+→ Characterization results từ source đó
+
+→ Cùng 1 cohort definition, chạy trên nhiều sources
+→ So sánh kết quả cross-source
+```
+
+---
+
+## 5. ATLAS Configuration Tips
+
+```
+Performance:
+- WebAPI cần ít nhất 2GB RAM (4GB khuyến nghị)
+- CDM database cần indexes đầy đủ
+- ACHILLES results cache giúp Data Sources load nhanh
+
+Security:
+- Production PHẢI enable authentication
+- Dùng HTTPS (reverse proxy: Nginx/Traefik)
+- Restrict network access đến WebAPI
+
+Usability:
+- Bookmark cohort definitions, concept sets (shared via URL)
+- Export/Import cohort definitions (JSON format)
+- Cộng đồng OHDSI chia sẻ cohort definitions phổ biến
+  trên forums.ohdsi.org
+```
+
+---
+
+## Tóm tắt
+
+| Component | Mục đích |
+|-----------|---------|
+| ATLAS | Web UI cho phân tích dữ liệu OMOP CDM |
+| WebAPI | REST API backend kết nối ATLAS ↔ CDM Database |
+| Data Sources | Dashboard thống kê CDM (cần ACHILLES) |
+| Concept Sets | Tập hợp concepts tái sử dụng cho cohort definitions |
+| Cohort Definitions | Định nghĩa nhóm bệnh nhân bằng tiêu chí lâm sàng |
+
+**Bài tiếp theo**: ATLAS — Concept Sets & Cohort Definitions

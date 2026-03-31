@@ -118,6 +118,13 @@ const banners = [
     colors: ["#306998", "#FFD43B"],
     icon: "Py",
   },
+  {
+    filename: "ohdsi-omop-cdm-series-banner.png",
+    title: "OHDSI &amp; OMOP CDM",
+    subtitle: "Phan Tich Du Lieu Y Te Toan Dien",
+    colors: ["#1B365D", "#2E86AB"],
+    icon: "OH",
+  },
 ];
 
 function generateSVG({ title, subtitle, colors, icon }) {

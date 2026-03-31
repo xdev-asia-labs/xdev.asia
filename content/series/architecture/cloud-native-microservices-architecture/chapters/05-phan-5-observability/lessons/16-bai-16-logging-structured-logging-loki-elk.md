@@ -1,0 +1,508 @@
+---
+id: 019d8a22-c316-7a10-b001-a1b2c3d4e516
+title: "Bài 16: Logging — Structured Logging, Loki & ELK Stack"
+slug: bai-16-logging-structured-logging-loki-elk
+description: >-
+  Structured logging best practices, log levels strategy, Fluent Bit
+  log collection, Loki vs Elasticsearch, LogQL, log correlation với
+  traceId, log retention policies và cost optimization.
+duration_minutes: 90
+is_free: true
+video_url: null
+sort_order: 16
+section_title: "Phần 5: Observability — Ba trụ cột"
+course:
+  id: 019d8a22-c300-7a10-b001-a1b2c3d4e5f7
+  title: "Cloud Native Microservices Architecture"
+  slug: cloud-native-microservices-architecture
+---
+
+## Giới thiệu
+
+Trong monolith, bạn có thể `ssh` vào server và `tail -f` log file. Trong microservices với hàng chục service chạy trên hàng trăm pod động, cách đó không còn khả thi. **Centralized logging** là yêu cầu bắt buộc.
+
+Nhưng chỉ thu thập log thôi chưa đủ — log phải có cấu trúc, có thể query, và liên kết với traces để debug hiệu quả.
+
+---
+
+## 1. Structured Logging
+
+### 1.1 Tại sao Structured Logging?
+
+**Unstructured log** — khó parse tự động:
+```
+2026-03-31 10:15:30 INFO Order O-001 created for customer C-042, total 500000 VND, 3 items, took 45ms
+```
+
+**Structured log** (JSON) — machine-readable, queryable:
+```json
+{
+  "timestamp": "2026-03-31T10:15:30.123Z",
+  "level": "INFO",
+  "service": "order-service",
+  "version": "1.2.3",
+  "traceId": "abc123def456",
+  "spanId": "span789abc",
+  "message": "Order created successfully",
+  "orderId": "O-001",
+  "customerId": "C-042",
+  "totalAmount": 500000,
+  "currency": "VND",
+  "itemCount": 3,
+  "durationMs": 45
+}
+```
+
+### 1.2 Log Levels Strategy
+
+```
+TRACE — Rất chi tiết, chỉ dùng khi debug cụ thể
+        Không bao giờ enable ở production
+
+DEBUG — Thông tin debug (function calls, variable values)
+        Chỉ enable ở development, có thể bật tạm ở staging
+
+INFO  — Sự kiện business quan trọng (order created, payment processed)
+        Enable ở production — đây là log chính cần thu thập
+
+WARN  — Tình huống không mong đợi nhưng system vẫn hoạt động
+        (deprecated API call, slow query > 500ms, retry attempt)
+
+ERROR — Lỗi cần xử lý nhưng service vẫn chạy
+        (external service timeout, validation failure)
+
+FATAL — Lỗi nghiêm trọng, service sắp shutdown
+        (database connection lost, out of memory)
+```
+
+**Nguyên tắc**:
+- INFO log là "audit trail" — mỗi action quan trọng cần một INFO log
+- ERROR log phải kèm stack trace và đủ context để debug không cần thêm thông tin
+- Không log sensitive data (password, credit card, PII)
+
+### 1.3 Structured Logging Implementation
+
+**Java (Spring Boot với Logback + Logstash encoder)**:
+```xml
+<!-- logback-spring.xml -->
+<configuration>
+  <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <customFields>{"service":"order-service","version":"${APP_VERSION}"}</customFields>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="JSON"/>
+  </root>
+</configuration>
+```
+
+```java
+// Sử dụng MDC (Mapped Diagnostic Context) cho correlation
+import org.slf4j.MDC;
+
+@Component
+public class RequestLoggingFilter implements Filter {
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
+        MDC.put("traceId", extractOrGenerateTraceId(request));
+        MDC.put("userId", extractUserId(request));
+        try {
+            chain.doFilter(req, res);
+        } finally {
+            MDC.clear();
+        }
+    }
+}
+
+// Trong service code
+@Slf4j
+public class OrderService {
+    public Order createOrder(CreateOrderRequest req) {
+        log.info("Creating order", // message
+            kv("customerId", req.getCustomerId()),
+            kv("itemCount", req.getItems().size()),
+            kv("totalAmount", req.getTotal())
+        );
+        // ...
+    }
+}
+```
+
+**Node.js (Pino)**:
+```javascript
+import pino from 'pino';
+
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  formatters: {
+    level: (label) => ({ level: label }),
+  },
+  base: {
+    service: 'order-service',
+    version: process.env.APP_VERSION,
+  },
+});
+
+// Usage
+logger.info({ orderId, customerId, totalAmount }, 'Order created successfully');
+logger.error({ err, orderId }, 'Failed to process order');
+```
+
+---
+
+## 2. Log Collection Architecture
+
+### 2.1 Tổng quan Pipeline
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Kubernetes Cluster                        │
+│                                                              │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │ Order Service│  │Payment Svc   │  │ Inventory Svc│      │
+│  │ (Pod)        │  │ (Pod)        │  │ (Pod)        │      │
+│  │ stdout/stderr│  │ stdout/stderr│  │ stdout/stderr│      │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘      │
+│         │                 │                  │              │
+│         └─────────────────┴──────────────────┘              │
+│                           │                                 │
+│              ┌────────────▼──────────────┐                  │
+│              │   Fluent Bit (DaemonSet)  │                  │
+│              │  - Tail /var/log/pods/    │                  │
+│              │  - Parse JSON             │                  │
+│              │  - Enrich (node, pod)     │                  │
+│              │  - Buffer & retry         │                  │
+│              └────────────┬──────────────┘                  │
+└───────────────────────────┼─────────────────────────────────┘
+                            │
+               ┌────────────▼────────────┐
+               │    Log Aggregation      │
+               │   Loki / Elasticsearch  │
+               └────────────┬────────────┘
+                            │
+               ┌────────────▼────────────┐
+               │      Visualization      │
+               │   Grafana / Kibana      │
+               └─────────────────────────┘
+```
+
+### 2.2 Fluent Bit Configuration
+
+```yaml
+# fluent-bit ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: monitoring
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush         5
+        Daemon        Off
+        Log_Level     info
+
+    [INPUT]
+        Name              tail
+        Tag               kube.*
+        Path              /var/log/containers/*.log
+        Parser            docker
+        DB                /run/fluent-bit/flb_kube.db
+        Mem_Buf_Limit     10MB
+        Skip_Long_Lines   On
+        Refresh_Interval  10
+
+    [FILTER]
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Merge_Log           On
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+
+    [FILTER]
+        Name    grep
+        Match   kube.*
+        # Loại bỏ health check logs
+        Exclude log /health
+
+    [OUTPUT]
+        Name          loki
+        Match         kube.*
+        Host          loki.monitoring.svc
+        Port          3100
+        Labels        job=fluentbit, node=${NODE_NAME}
+        Label_keys    $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
+        Remove_keys   kubernetes,stream
+        Auto_Kubernetes_Labels  On
+```
+
+---
+
+## 3. Loki — Log Aggregation
+
+### 3.1 Loki vs Elasticsearch
+
+| | Loki | Elasticsearch |
+|--|------|---------------|
+| Indexing | Chỉ index labels (metadata) | Full-text index toàn bộ log |
+| Storage | Rẻ hơn nhiều (S3/MinIO) | Tốn storage và memory |
+| Query | LogQL (simple, label-focused) | Lucene/KQL (powerful full-text) |
+| Setup | Đơn giản | Phức tạp (cluster, shards) |
+| Use case | Cloud native, cost-sensitive | Compliance, full-text search |
+| Integration | Grafana native | Kibana |
+
+**Khi nào chọn Loki**: Hầu hết trường hợp cloud native — chi phí thấp, tích hợp native với Grafana, đủ tốt cho operational logs.
+
+**Khi nào chọn Elasticsearch**: Cần compliance/audit log search, full-text search trong log content, đã có Kibana ecosystem.
+
+### 3.2 Loki Architecture
+
+```
+┌──────────────────────────────────────────────────┐
+│                   Loki                           │
+│                                                  │
+│  ┌─────────────┐  ┌─────────────────────────┐   │
+│  │  Distributor│──▶│   Ingester (in-memory)  │   │
+│  │  (receive)  │  │                         │   │
+│  └─────────────┘  └───────────┬─────────────┘   │
+│                               │ flush            │
+│  ┌─────────────┐  ┌───────────▼─────────────┐   │
+│  │  Querier    │  │   Object Storage        │   │
+│  │  (read)     │  │   (S3/MinIO/GCS)        │   │
+│  └──────┬──────┘  └─────────────────────────┘   │
+│         │                                        │
+└─────────┼────────────────────────────────────────┘
+          │ LogQL
+          ▼
+      Grafana
+```
+
+### 3.3 Cài đặt Loki và Grafana
+
+```bash
+helm repo add grafana https://grafana.github.io/helm-charts
+
+# Cài Loki (simple scalable mode)
+helm upgrade --install loki grafana/loki \
+  --namespace monitoring \
+  --set loki.storage.type=s3 \
+  --set loki.storage.s3.bucket=loki-logs \
+  --set loki.storage.s3.region=ap-southeast-1
+
+# Cài Grafana Alloy (Fluent Bit alternative từ Grafana)
+helm upgrade --install alloy grafana/alloy \
+  --namespace monitoring
+```
+
+---
+
+## 4. LogQL — Log Query Language
+
+### 4.1 Stream Selector
+
+Chọn log streams bằng labels:
+```logql
+# Tất cả log từ order-service
+{service="order-service"}
+
+# Log từ namespace services-prod
+{namespace="services-prod"}
+
+# Kết hợp nhiều labels
+{namespace="services-prod", app="order-service", pod=~"order-service-.*"}
+```
+
+### 4.2 Filter Expressions
+
+```logql
+# Chứa chuỗi
+{service="order-service"} |= "ERROR"
+
+# Không chứa
+{service="order-service"} != "health"
+
+# Regex match
+{service="order-service"} |~ "order.*created"
+
+# Parse JSON và filter
+{service="order-service"}
+  | json
+  | level = "ERROR"
+  | durationMs > 1000
+
+# Pipeline phức tạp
+{namespace="services-prod"}
+  | json
+  | level = "ERROR"
+  | line_format "{{.service}}: {{.message}} (trace: {{.traceId}})"
+```
+
+### 4.3 Metric Queries
+
+```logql
+# Đếm ERROR logs mỗi 5 phút
+sum(rate({service="order-service"} |= "ERROR" [5m])) by (service)
+
+# Log volume theo service
+sum(bytes_rate({namespace="services-prod"}[5m])) by (service)
+
+# Top 5 services nhiều lỗi nhất
+topk(5,
+  sum(count_over_time({namespace="services-prod"} |= "ERROR" [1h]))
+  by (service)
+)
+```
+
+---
+
+## 5. Log Correlation với Traces
+
+Mục tiêu: Từ một log entry, nhảy ngay sang trace tương ứng, và ngược lại.
+
+### 5.1 Inject Trace Context vào Log
+
+```java
+// Spring Boot với Micrometer Tracing tự động inject
+// Log sẽ có traceId và spanId từ MDC
+
+// Kết quả log:
+{
+  "timestamp": "...",
+  "level": "ERROR",
+  "service": "order-service",
+  "traceId": "abc123def456789",   ← đây
+  "spanId": "span789",             ← đây
+  "message": "Payment failed"
+}
+```
+
+### 5.2 Grafana Derived Fields
+
+Cấu hình Grafana để tạo link từ traceId trong log sang Jaeger:
+
+```json
+// Trong Loki datasource config (Grafana)
+{
+  "derivedFields": [
+    {
+      "matcherRegex": "traceId=(\\w+)",
+      "name": "TraceID",
+      "url": "http://jaeger:16686/trace/$${__value.raw}",
+      "datasourceUid": "jaeger"
+    }
+  ]
+}
+```
+
+Giờ khi xem log trong Grafana, traceId sẽ tự động thành clickable link mở Jaeger trace.
+
+---
+
+## 6. Retention & Cost Optimization
+
+### 6.1 Log Retention Policy
+
+```yaml
+# Loki retention config
+limits_config:
+  # Giữ log 30 ngày cho prod
+  retention_period: 720h
+
+  # Per-stream override
+  per_stream_rate_limit: 10MB
+  per_stream_rate_limit_burst: 30MB
+
+compactor:
+  retention_enabled: true
+  retention_delete_delay: 2h
+```
+
+**Retention strategy theo tier**:
+```
+Hot  (0-7 ngày)   : SSD storage  — query nhanh
+Warm (7-30 ngày)  : HDD storage  — query chậm hơn
+Cold (30-365 ngày): S3 Glacier   — archive only
+```
+
+### 6.2 Giảm Log Volume
+
+```logql
+# Filtering trước khi ingest (Fluent Bit)
+# Loại bỏ health check, static assets, debug logs từ noisy service
+```
+
+```yaml
+# Trong Fluent Bit:
+[FILTER]
+    Name    grep
+    Match   kube.*
+    Exclude log (GET /health|GET /metrics|\.css|\.js|\.png)
+
+[FILTER]
+    Name    grep
+    Match   kube.monitoring.*
+    Exclude log .*  # Bỏ hoàn toàn log từ monitoring namespace
+```
+
+**Sampling cho high-volume services**:
+```java
+// Chỉ log 10% DEBUG requests bình thường, 100% errors
+if (random.nextDouble() < 0.1 || isError) {
+    log.debug("Request processed", kv("endpoint", endpoint));
+}
+```
+
+---
+
+## 7. Best Practices
+
+**Logging Checklist:**
+```
+□ Structured JSON logging
+□ Consistent field names (snake_case) across services
+□ traceId / spanId có mặt trong mọi log line
+□ Correlation ID từ user request
+□ Không log PII (email, phone, card numbers)
+□ Error logs kèm stack trace
+□ Business events quan trọng có INFO log
+□ Health check endpoints bị filter khỏi logs
+□ Log retention policy phù hợp với compliance
+□ Alerting trên ERROR log spike
+```
+
+**Field naming convention:**
+```json
+{
+  "timestamp": "2026-03-31T10:00:00Z",   // ISO 8601
+  "level": "INFO",                         // UPPERCASE
+  "service": "order-service",              // kebab-case
+  "version": "1.2.3",                      // semver
+  "traceId": "abc123",                     // camelCase
+  "spanId": "def456",
+  "userId": "u-001",                       // camelCase
+  "message": "...",                        // human-readable
+  // Domain fields: snake_case
+  "order_id": "O-001",
+  "total_amount": 500000,
+  "duration_ms": 45                        // unit suffix
+}
+```
+
+---
+
+## Tóm tắt
+
+| Khái niệm | Mục đích |
+|-----------|---------|
+| Structured Logging | Machine-readable, queryable log format |
+| Log Levels | Kiểm soát verbosity phù hợp môi trường |
+| Fluent Bit | DaemonSet thu thập log từ tất cả pods |
+| Loki | Log aggregation, cost-effective cho cloud native |
+| LogQL | Query log bằng labels và filter expressions |
+| Log Correlation | Liên kết log với distributed traces |
+| Retention Policy | Cân bằng cost và compliance requirements |
+
+**Bài tiếp theo**: Distributed Tracing — OpenTelemetry & Jaeger

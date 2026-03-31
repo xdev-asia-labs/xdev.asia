@@ -1,0 +1,412 @@
+---
+id: 019d8a22-c320-7a10-b001-a1b2c3d4e520
+title: "Bài 20: Chaos Engineering — Kiểm chứng độ tin cậy hệ thống"
+slug: bai-20-chaos-engineering-kiem-chung-do-tin-cay
+description: >-
+  Chaos Engineering principles, Chaos Monkey & LitmusChaos,
+  thiết kế chaos experiments, steady state hypothesis,
+  blast radius control, game days, và building a culture of resilience.
+duration_minutes: 90
+is_free: true
+video_url: null
+sort_order: 20
+section_title: "Phần 6: Resiliency Patterns"
+course:
+  id: 019d8a22-c300-7a10-b001-a1b2c3d4e5f7
+  title: "Cloud Native Microservices Architecture"
+  slug: cloud-native-microservices-architecture
+---
+
+## Giới thiệu
+
+Bạn đã implement Circuit Breaker, Retry, Bulkhead... Nhưng làm sao chứng minh chúng thực sự hoạt động khi production có sự cố?
+
+**Chaos Engineering** là discipline xác nhận khả năng chịu lỗi của hệ thống bằng cách **chủ động** gây ra sự cố trong môi trường production hoặc staging — trước khi chúng xảy ra ngoài ý muốn.
+
+> *"If you don't practice failure, you don't actually know how your system will behave during it."* — Netflix
+
+---
+
+## 1. Chaos Engineering Principles
+
+### 1.1 Định nghĩa
+
+Chaos Engineering không phải là "phá hệ thống cho vui". Đây là quy trình khoa học có kiểm soát:
+
+```
+1. Xác định Steady State (baseline bình thường)
+2. Đặt ra Hypothesis ("nếu X xảy ra, hệ thống vẫn ổn vì...")
+3. Thiết kế experiment với blast radius nhỏ
+4. Chạy experiment
+5. Quan sát kết quả
+6. So sánh với hypothesis
+7. Nếu sai → fix → verify
+8. Nếu đúng → mở rộng scope
+```
+
+### 1.2 Steady State Hypothesis
+
+```yaml
+# Ví dụ Steady State cho e-commerce:
+steady_state:
+  metrics:
+    - name: "Order success rate"
+      query: "rate(http_requests_total{service='order',status='201'}[5m])"
+      threshold: "> 0.99"      # > 99% thành công
+
+    - name: "p99 latency"
+      query: "histogram_quantile(0.99, ...)"
+      threshold: "< 500ms"
+
+    - name: "Active orders being processed"
+      query: "order_processing_active"
+      threshold: "> 0"          # Vẫn đang xử lý orders
+```
+
+Chaos experiment chỉ **pass** khi steady state vẫn được duy trì trong và sau experiment.
+
+### 1.3 Các loại Chaos
+
+```
+Infrastructure Chaos:
+  - Pod kill / crash loop
+  - Node failure
+  - Network partition
+  - Resource starvation (CPU, memory)
+
+Application Chaos:
+  - Latency injection (làm service chậm giả)
+  - Error injection (trả về 500 ngẫu nhiên)
+  - Dependency failure mocking
+
+Data Chaos:
+  - Database failover
+  - Cache eviction
+  - Message queue backlog
+
+Security Chaos:
+  - Certificate expiry simulation
+  - Auth service unavailability
+```
+
+---
+
+## 2. Công cụ Chaos Engineering
+
+### 2.1 LitmusChaos (Kubernetes-native)
+
+LitmusChaos là CNCF project, cloud-native chaos engineering platform cho Kubernetes:
+
+```bash
+# Cài đặt LitmusChaos
+kubectl apply -f https://litmuschaos.github.io/litmus/litmus-operator-v3.x.yaml
+
+# Cài ChaosCenterCLI
+curl -O https://litmusctl-bucket.s3-website.us-east-2.amazonaws.com/litmusctl-linux-amd64-latest.tar.gz
+```
+
+### 2.2 Pod Kill Experiment
+
+```yaml
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: pod-kill-experiment
+  namespace: services-prod
+spec:
+  engineState: 'active'
+  appinfo:
+    appns: 'services-prod'
+    applabel: 'app=payment-service'
+    appkind: 'deployment'
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-delete
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: '60'       # Thử nghiệm 60 giây
+            - name: CHAOS_INTERVAL
+              value: '10'       # Kill pod mỗi 10 giây
+            - name: FORCE
+              value: 'false'    # Graceful delete
+            - name: PODS_AFFECTED_PERC
+              value: '50'       # Kill 50% pods
+```
+
+### 2.3 Network Latency Injection
+
+```yaml
+# Inject 500ms latency vào 50% requests từ/đến payment-service
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: network-latency-experiment
+spec:
+  experiments:
+    - name: pod-network-latency
+      spec:
+        components:
+          env:
+            - name: NETWORK_INTERFACE
+              value: 'eth0'
+            - name: NETWORK_LATENCY
+              value: '500'      # 500ms latency
+            - name: JITTER
+              value: '100'      # ± 100ms jitter
+            - name: TOTAL_CHAOS_DURATION
+              value: '120'
+            - name: PODS_AFFECTED_PERC
+              value: '50'       # Chỉ ảnh hưởng 50% pods
+```
+
+### 2.4 CPU Stress
+
+```yaml
+- name: pod-cpu-hog
+  spec:
+    components:
+      env:
+        - name: CPU_CORES
+          value: '1'          # Stress 1 CPU core toàn bộ
+        - name: TOTAL_CHAOS_DURATION
+          value: '60'
+        - name: CPU_LOAD
+          value: '100'        # 100% CPU usage
+```
+
+---
+
+## 3. Thiết kế Chaos Experiments
+
+### 3.1 Blast Radius Control
+
+Luôn bắt đầu với blast radius nhỏ nhất:
+
+```
+Tăng dần theo giai đoạn:
+
+Stage 1: Dev environment, 1 pod
+  → Xác nhận mechanism hoạt động
+
+Stage 2: Staging, 25% pods
+  → Xác nhận hành vi dưới partial failure
+
+Stage 3: Production, giờ thấp điểm, 10% pods
+  → Xác nhận dưới real traffic
+
+Stage 4: Production, 50% pods
+  → Xác nhận major failure handling
+
+Stage 5: Production, node failure
+  → Multi-availability zone resilience
+```
+
+### 3.2 Experiment Template
+
+```yaml
+# chaos-experiment-template.yaml
+experiment:
+  name: "Payment Service Pod Kill"
+  version: "1.0"
+  hypothesis: >
+    Khi 50% pods của payment-service bị kill,
+    order success rate vẫn > 95% nhờ:
+    (1) Kubernetes tự restart pods mới
+    (2) Circuit Breaker chuyển sang Half-Open khi pods quay lại
+    (3) Retry mechanism handle transient failures
+
+  blast_radius:
+    service: payment-service
+    percentage: 50
+    duration: 60s
+    environment: staging
+
+  steady_state_hypothesis:
+    before:
+      - metric: order_success_rate > 99%
+      - metric: p99_latency < 300ms
+    during:
+      - metric: order_success_rate > 95%   # Cho phép degraded
+      - metric: p99_latency < 800ms        # Latency có thể tăng
+    after:
+      - metric: order_success_rate > 99%   # Phải phục hồi
+      - metric: p99_latency < 300ms        # Về baseline
+
+  rollback:
+    automatic: true
+    trigger: order_success_rate < 90%
+```
+
+### 3.3 Abort Conditions
+
+```
+Tự động dừng experiment khi:
+- Error rate > 10% (threshold)
+- p99 latency > 2s
+- Có manual intervention từ on-call engineer
+- Business-critical metric vượt ngưỡng (orders failed > X)
+```
+
+---
+
+## 4. Thực hành: Chaos Experiment End-to-End
+
+### 4.1 Tình huống: Payment Service Degradation
+
+**Bước 1: Xác nhận Baseline**
+
+```bash
+# Kiểm tra steady state trước khi bắt đầu
+kubectl get pods -n services-prod -l app=payment-service
+# NAME                        READY   STATUS    RESTARTS
+# payment-service-abc123-1    1/1     Running   0
+# payment-service-abc123-2    1/1     Running   0
+# payment-service-abc123-3    1/1     Running   0
+
+# Check metrics
+curl -s prometheus:9090/api/v1/query?query=order_success_rate
+```
+
+**Bước 2: Inject Chaos**
+
+```bash
+kubectl apply -f pod-delete-experiment.yaml
+
+# Monitor trong real-time
+watch kubectl get pods -n services-prod -l app=payment-service
+```
+
+**Bước 3: Quan sát**
+
+```
+T+0s: Experiment bắt đầu, 1 pod bị kill
+      → Pod restart (Kubernetes)
+      → Circuit Breaker nhận một số errors
+      → Retry mechanism kick in
+
+T+10s: Pod mới lên, nhưng pod thứ 2 bị kill
+       → Requests đến pod đang restart fail
+       → Error rate: 2.3% (dưới threshold 5%)
+
+T+30s: 2 pods healthy, 1 restarting
+       → System degraded nhưng functional
+
+T+60s: Experiment kết thúc, tất cả pods healthy
+       → Error rate → 0%
+       → Steady state phục hồi trong 15s
+```
+
+**Bước 4: Phân tích kết quả**
+
+```
+Expected vs Actual:
+                    Expected    Actual   Pass?
+Error rate (peak)   < 5%        2.3%     ✅
+Recovery time       < 30s       15s      ✅
+Orders lost         0           0        ✅
+Alert triggered     Yes         Yes      ✅
+
+Kết luận: Payment service resilient trước pod kill scenario
+```
+
+---
+
+## 5. Game Days
+
+**Game Day** là buổi drill có tổ chức — đội engineering cùng nhau test disaster recovery:
+
+```
+Game Day Schedule:
+9:00  - Briefing: scenario được chọn, team assignments
+9:30  - Inject chaos (ví dụ: Database failover)
+9:30-11:00 - Team response, triage, mitigation
+11:00 - Khôi phục hệ thống
+11:30 - Post-mortem: what happened, what worked, what didn't
+12:00 - Action items: fix findings, improve runbooks
+```
+
+### Các kịch bản Game Day phổ biến
+
+```
+Scenario 1: "Primary DB region gone"
+→ Test: Database failover tự động
+→ Verify: Read replicas promote, application reconnect
+
+Scenario 2: "Kafka cluster unavailable"
+→ Test: Event-driven services handle backpressure
+→ Verify: Outbox pattern, dead letter queue, alerts
+
+Scenario 3: "Auth service down"
+→ Test: JWT caching cho validation
+→ Verify: Graceful degradation, what percentage of traffic breaks
+
+Scenario 4: "DDoS-like traffic spike"
+→ Test: Rate limiting, auto-scaling
+→ Verify: System scales, bad traffic rejected, good traffic served
+```
+
+---
+
+## 6. Building Culture of Resilience
+
+### 6.1 Từ reactive sang proactive
+
+```
+Reactive culture:
+"Sự cố xảy ra → Panic → Fix → Forget"
+
+Proactive culture:
+"Chủ động inject failure → Learn → Improve → Verify"
+```
+
+### 6.2 Checklist trước khi chaos
+
+```
+□ Có monitoring/alerting đầy đủ
+□ Team on-call biết về experiment
+□ Runbook sẵn sàng cho rollback
+□ Blast radius được giới hạn rõ ràng
+□ Abort conditions được định nghĩa
+□ Stakeholders đã được thông báo (nếu production)
+□ Experiment có thể dừng ngay bằng một lệnh
+```
+
+### 6.3 Chaos Engineering Maturity Model
+
+```
+Level 1 — Manual (Beginner)
+  Chạy chaos manually, thủ công trên dev/staging
+  Không có automation
+
+Level 2 — Automated experiments trong CI
+  Chaos tests tự động chạy mỗi tuần
+  Kết quả phải pass trước khi release
+
+Level 3 — Continuous Chaos (Advanced)
+  Chaos experiments chạy liên tục 24/7 ở production
+  Netflix Chaos Monkey — kill random instances
+  Luôn test khả năng tự phục hồi
+
+Level 4 — Full Automation + GameDays
+  Tất cả scenarios được automated
+  Quarterly game days cho catastrophic scenarios
+  SRE team chuyên về resilience
+```
+
+---
+
+## Tóm tắt
+
+| Khái niệm | Mục đích |
+|-----------|---------|
+| Steady State Hypothesis | Định nghĩa baseline và expected behavior |
+| Blast Radius | Giới hạn phạm vi ảnh hưởng của experiment |
+| LitmusChaos | Kubernetes-native chaos tool |
+| Pod Kill | Test auto-restart và circuit breaker |
+| Network Latency Injection | Test timeout và retry behavior |
+| Game Day | Tập dượt disaster response theo team |
+| Continuous Chaos | Luôn verify resilience 24/7 (Netflix level) |
+
+**Bài tiếp theo**: CI/CD Pipeline cho Microservices
