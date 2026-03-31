@@ -1,0 +1,242 @@
+---
+id: 019d8b31-bb08-7008-c008-ee0800000008
+title: 'Bài 8: Inpainting, Outpainting & Image Editing với AI'
+slug: bai-8-inpainting-outpainting
+description: >-
+  Inpainting: chỉnh sửa vùng cụ thể trong ảnh. Outpainting: mở rộng
+  ảnh ra ngoài. Instruction-based editing: InstructPix2Pix. Background
+  removal và replacement. Hands-on với Stable Diffusion inpainting pipeline.
+duration_minutes: 120
+is_free: true
+video_url: null
+sort_order: 7
+section_title: "Phần 3: Thực hành Image Generation Nâng cao"
+course:
+  id: 019d8b31-aa01-7001-b001-ff0200000001
+  title: "Generative AI: Tạo Hình ảnh & Video với AI"
+  slug: generative-ai-tao-hinh-anh-video
+---
+
+## Giới thiệu
+
+**Inpainting** cho phép chỉnh sửa vùng cụ thể trong ảnh bằng AI — thay đổi đối tượng, xóa watermark, hoặc thêm chi tiết mới. **Outpainting** mở rộng ảnh ra ngoài khung ban đầu. Đây là foundation cho AI-powered image editing.
+
+---
+
+## 1. Inpainting Pipeline
+
+```python
+from diffusers import StableDiffusionXLInpaintPipeline
+from PIL import Image
+import torch
+
+pipe = StableDiffusionXLInpaintPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-xl-base-1.0",
+    torch_dtype=torch.float16,
+)
+pipe.to("cuda")
+
+# Original image + mask (white = area to edit)
+image = Image.open("photo.png").resize((1024, 1024))
+mask = Image.open("mask.png").resize((1024, 1024))
+
+result = pipe(
+    prompt="a golden retriever puppy",
+    image=image,
+    mask_image=mask,
+    num_inference_steps=30,
+    guidance_scale=7.5,
+    strength=0.99,  # how much to change masked area
+).images[0]
+```
+
+### Tạo Mask programmatically
+
+```python
+from PIL import Image, ImageDraw
+import numpy as np
+
+# Mask thủ công: rectangle vùng cần edit
+mask = Image.new("L", (1024, 1024), 0)  # black = keep
+draw = ImageDraw.Draw(mask)
+draw.rectangle([300, 200, 700, 600], fill=255)  # white = edit
+
+# Mask từ segmentation (SAM)
+from segment_anything import SamPredictor, sam_model_registry
+
+sam = sam_model_registry["vit_h"](checkpoint="sam_vit_h.pth")
+predictor = SamPredictor(sam)
+predictor.set_image(np.array(image))
+masks, _, _ = predictor.predict(point_coords=np.array([[500, 400]]),
+                                  point_labels=np.array([1]))
+mask = Image.fromarray(masks[0].astype(np.uint8) * 255)
+```
+
+---
+
+## 2. Outpainting — Mở rộng ảnh
+
+```python
+def outpaint(pipe, image, direction="right", extend_px=512):
+    """Mở rộng ảnh bằng inpainting"""
+    w, h = image.size
+
+    if direction == "right":
+        canvas = Image.new("RGB", (w + extend_px, h), (0, 0, 0))
+        canvas.paste(image, (0, 0))
+        mask = Image.new("L", (w + extend_px, h), 0)
+        draw = ImageDraw.Draw(mask)
+        draw.rectangle([w - 50, 0, w + extend_px, h], fill=255)  # overlap 50px
+    elif direction == "down":
+        canvas = Image.new("RGB", (w, h + extend_px), (0, 0, 0))
+        canvas.paste(image, (0, 0))
+        mask = Image.new("L", (w, h + extend_px), 0)
+        draw = ImageDraw.Draw(mask)
+        draw.rectangle([0, h - 50, w, h + extend_px], fill=255)
+
+    result = pipe(
+        prompt="continue the scene naturally",
+        image=canvas,
+        mask_image=mask,
+        num_inference_steps=30,
+    ).images[0]
+
+    return result
+```
+
+---
+
+## 3. InstructPix2Pix — Chỉnh sửa bằng Lệnh
+
+```python
+from diffusers import StableDiffusionInstructPix2PixPipeline
+
+pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(
+    "timbrooks/instruct-pix2pix",
+    torch_dtype=torch.float16,
+)
+pipe.to("cuda")
+
+image = Image.open("photo.jpg")
+
+# Chỉnh sửa bằng text instruction
+edited = pipe(
+    prompt="make it a winter scene with snow",
+    image=image,
+    image_guidance_scale=1.5,  # how close to original
+    guidance_scale=7.0,
+    num_inference_steps=20,
+).images[0]
+
+# Ví dụ khác
+# "turn the cat into a tiger"
+# "make it sunset lighting"
+# "add flowers to the garden"
+# "change the shirt color to blue"
+```
+
+---
+
+## 4. Background Removal & Replacement
+
+```python
+from rembg import remove
+from PIL import Image
+
+# Remove background
+input_img = Image.open("person.jpg")
+output = remove(input_img)  # transparent background
+output.save("person_nobg.png")
+
+# Replace background with AI
+def replace_background(person_img, bg_prompt, pipe):
+    # 1. Remove background
+    fg = remove(person_img)
+
+    # 2. Generate new background
+    bg = pipe(
+        prompt=bg_prompt,
+        num_inference_steps=25,
+        width=person_img.width,
+        height=person_img.height,
+    ).images[0]
+
+    # 3. Composite
+    bg.paste(fg, (0, 0), fg)  # paste with alpha mask
+    return bg
+
+result = replace_background(
+    Image.open("person.jpg"),
+    "a tropical beach at sunset, palm trees",
+    pipe
+)
+```
+
+---
+
+## 5. Object Removal
+
+```python
+from diffusers import StableDiffusionXLInpaintPipeline
+from segment_anything import SamPredictor
+
+# 1. Select object to remove (click point)
+predictor.set_image(np.array(image))
+masks, _, _ = predictor.predict(
+    point_coords=np.array([[x, y]]),  # click on object
+    point_labels=np.array([1])
+)
+
+# 2. Dilate mask slightly
+import cv2
+kernel = np.ones((15, 15), np.uint8)
+dilated = cv2.dilate(masks[0].astype(np.uint8), kernel) * 255
+mask = Image.fromarray(dilated)
+
+# 3. Inpaint to remove
+result = pipe(
+    prompt="empty background, natural scenery",
+    image=image,
+    mask_image=mask,
+    num_inference_steps=30,
+).images[0]
+```
+
+---
+
+## 6. Batch Image Editing
+
+```python
+import os
+from pathlib import Path
+
+def batch_edit(input_dir, output_dir, pipe, edit_prompt):
+    """Batch edit images with InstructPix2Pix"""
+    Path(output_dir).mkdir(exist_ok=True)
+
+    for img_file in Path(input_dir).glob("*.{jpg,png}"):
+        image = Image.open(img_file).resize((512, 512))
+        edited = pipe(
+            prompt=edit_prompt,
+            image=image,
+            num_inference_steps=20,
+        ).images[0]
+        edited.save(Path(output_dir) / img_file.name)
+        print(f"✓ {img_file.name}")
+
+batch_edit("photos/", "edited/", pipe, "make it a pencil sketch")
+```
+
+---
+
+## Tổng kết
+
+| Kỹ thuật | Mô tả | Use case |
+|----------|--------|----------|
+| Inpainting | Edit vùng mask | Object replacement |
+| Outpainting | Mở rộng ảnh | Extend composition |
+| InstructPix2Pix | Edit bằng text | Style changes |
+| Background removal | Tách foreground | Product photos |
+| Object removal | Xóa đối tượng | Clean up images |
+
+> 📌 **Bài tiếp theo:** LoRA & Custom Model Training — tạo style riêng.

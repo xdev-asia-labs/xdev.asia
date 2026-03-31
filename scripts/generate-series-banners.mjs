@@ -1,9 +1,11 @@
 import sharp from "sharp";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(__dirname, "..", "public", "storage", "uploads", "2026", "03");
+const logoPath = path.join(__dirname, "..", "public", "images", "brand", "xdev-logo.png");
 
 const banners = [
   {
@@ -190,6 +192,63 @@ const banners = [
     colors: ["#24292E", "#6F42C1"],
     icon: "VC",
   },
+  {
+    filename: "nlp-tu-co-ban-den-nang-cao-cover.png",
+    title: "NLP",
+    subtitle: "Tu Co Ban Den Nang Cao",
+    colors: ["#1A1A2E", "#4A90D9"],
+    icon: "NLP",
+  },
+  // ─── New AI Series ───
+  {
+    filename: "generative-ai-tao-hinh-anh-video-cover.png",
+    title: "Generative AI",
+    subtitle: "Tao Hinh Anh va Video",
+    colors: ["#4A0E4E", "#E040FB"],
+    icon: "Gen",
+  },
+  {
+    filename: "reinforcement-learning-tu-co-ban-den-nang-cao-cover.png",
+    title: "Reinforcement Learning",
+    subtitle: "Tu Co Ban Den Nang Cao",
+    colors: ["#1B5E20", "#66BB6A"],
+    icon: "RL",
+  },
+  {
+    filename: "ai-trong-y-te-healthcare-cover.png",
+    title: "AI trong Y te",
+    subtitle: "Healthcare",
+    colors: ["#0D47A1", "#42A5F5"],
+    icon: "HC",
+  },
+  {
+    filename: "speech-audio-ai-xu-ly-giong-noi-am-thanh-cover.png",
+    title: "Speech va Audio AI",
+    subtitle: "Xu Ly Giong Noi",
+    colors: ["#311B92", "#B388FF"],
+    icon: "SA",
+  },
+  {
+    filename: "multimodal-ai-thi-giac-ngon-ngu-cover.png",
+    title: "Multimodal AI",
+    subtitle: "Thi Giac va Ngon Ngu",
+    colors: ["#BF360C", "#FF8A65"],
+    icon: "MM",
+  },
+  {
+    filename: "he-thong-goi-y-recommendation-systems-cover.png",
+    title: "Recommendation Systems",
+    subtitle: "He Thong Goi Y",
+    colors: ["#E65100", "#FFB74D"],
+    icon: "Rec",
+  },
+  {
+    filename: "time-series-ai-du-doan-chuoi-thoi-gian-cover.png",
+    title: "Time Series AI",
+    subtitle: "Du Doan Chuoi Thoi Gian",
+    colors: ["#004D40", "#4DB6AC"],
+    icon: "TS",
+  },
 ];
 
 function generateSVG({ title, subtitle, colors, icon }) {
@@ -237,19 +296,44 @@ function generateSVG({ title, subtitle, colors, icon }) {
   <!-- Subtitle -->
   <text x="600" y="400" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" fill="white" opacity="0.85" font-weight="500" letter-spacing="2">${subtitle.toUpperCase()}</text>
   
-  <!-- Brand -->
-  <text x="600" y="560" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" fill="white" opacity="0.5" font-weight="600" letter-spacing="3">XDEV.ASIA</text>
+  <!-- Brand logo placeholder (composited as PNG) -->
+  <text x="600" y="564" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="white" opacity="0.35" font-weight="500" letter-spacing="2">.ASIA</text>
   
   <!-- Top accent line -->
   <rect x="450" y="140" width="300" height="4" rx="2" fill="white" opacity="0.6" />
 </svg>`;
 }
 
+// Prepare logo buffer once
+let logoBuffer = null;
+async function getLogoBuffer() {
+  if (logoBuffer) return logoBuffer;
+  const logo = sharp(logoPath).resize({ height: 36 });
+  logoBuffer = await logo.toBuffer();
+  return logoBuffer;
+}
+
 async function generateBanner(banner) {
   const svg = generateSVG(banner);
   const outputPath = path.join(outputDir, banner.filename);
+  const logo = await getLogoBuffer();
+  const logoMeta = await sharp(logo).metadata();
 
-  await sharp(Buffer.from(svg)).png({ quality: 90 }).toFile(outputPath);
+  // Logo centered horizontally, at y=540 (bottom area)
+  const logoLeft = Math.round((1200 - logoMeta.width) / 2) - 16;
+  const logoTop = 540;
+
+  await sharp(Buffer.from(svg))
+    .composite([
+      {
+        input: logo,
+        left: logoLeft,
+        top: logoTop,
+        blend: "over",
+      },
+    ])
+    .png({ quality: 90 })
+    .toFile(outputPath);
 
   console.log(`✓ ${banner.filename}`);
 }
