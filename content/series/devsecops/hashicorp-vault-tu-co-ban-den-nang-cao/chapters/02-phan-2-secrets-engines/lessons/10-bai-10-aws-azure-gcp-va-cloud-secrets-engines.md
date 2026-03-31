@@ -1,0 +1,753 @@
+---
+id: 019d8b30-b210-7001-c002-e0c5f8200110
+title: 'Bài 10: AWS, Azure, GCP và Cloud Secrets Engines'
+slug: bai-10-aws-azure-gcp-va-cloud-secrets-engines
+description: >-
+  AWS Secrets Engine (IAM, STS AssumeRole, Federation Token), Azure Secrets Engine (Service Principal, Static roles 1.21), GCP Secrets Engine (SA keys, OAuth2), multi-cloud best practices.
+duration_minutes: 200
+is_free: true
+video_url: null
+sort_order: 10
+section_title: "Phần 2: Secrets Engines - Quản lý Bí mật"
+course:
+  id: 019d8b30-b200-7001-c002-e0c5f8200001
+  title: HashiCorp Vault từ Cơ bản đến Nâng cao
+  slug: hashicorp-vault-tu-co-ban-den-nang-cao
+---
+
+## Giới thiệu
+
+Cloud Secrets Engines cho phép Vault tạo **dynamic credentials** cho các cloud providers — AWS, Azure, và GCP. Thay vì quản lý long-lived cloud credentials (IAM access keys, service principal secrets, service account keys), Vault sẽ tạo credentials ngắn hạn theo yêu cầu và tự động thu hồi khi hết TTL.
+
+### Lợi ích chính
+
+- **Không còn long-lived credentials**: Giảm rủi ro nếu credentials bị lộ
+- **Least privilege**: Mỗi request nhận đúng permissions cần thiết
+- **Audit trail**: Biết chính xác ai đã request cloud credentials khi nào
+- **Centralized access**: Quản lý multi-cloud access từ một nơi duy nhất
+- **Automated rotation**: Không cần manual key rotation
+
+## PHẦN 1: AWS Secrets Engine
+
+### 1.1. Kiến trúc AWS Secrets Engine
+
+```
+┌──────────────┐   Request AWS creds    ┌───────────┐
+│  Application │ ─────────────────────▶ │   Vault   │
+│              │ ◀───────────────────── │   AWS     │
+│              │   Dynamic IAM creds    │  Engine   │
+└──────────────┘                        └─────┬─────┘
+                                              │
+                                              │ AWS API calls
+                                              ▼
+                                        ┌───────────┐
+                                        │    AWS     │
+                                        │  IAM/STS  │
+                                        └───────────┘
+```
+
+Vault hỗ trợ 3 loại credentials:
+
+| Loại | Mô tả | TTL |
+|---|---|---|
+| **IAM User** | Tạo IAM user + access key | Dài (có key rotation) |
+| **STS AssumeRole** | AssumeRole → temporary credentials | 15 phút - 12 giờ |
+| **STS Federation Token** | GetFederationToken | 15 phút - 36 giờ |
+
+### 1.2. Enable và Configure
+
+```bash
+# Enable AWS secrets engine
+vault secrets enable aws
+
+# Configure root credentials cho Vault
+vault write aws/config/root \
+  access_key="AKIAIOSFODNN7EXAMPLE" \
+  secret_key="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" \
+  region="ap-southeast-1"
+
+# Rotate root credentials ngay (khuyến nghị!)
+vault write -f aws/config/rotate-root
+
+# Cấu hình lease
+vault write aws/config/lease \
+  lease="30m" \
+  lease_max="1h"
+```
+
+> **Bảo mật:** Sau khi rotate root credentials, chỉ Vault mới biết access key mới. Đảm bảo cấu hình đã test xong trước khi rotate.
+
+### 1.3. IAM User Credentials
+
+Vault tạo IAM user với access key khi application yêu cầu.
+
+```bash
+# Tạo role cho IAM user
+vault write aws/roles/s3-readonly \
+  credential_type=iam_user \
+  policy_document=-<<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::my-app-bucket",
+        "arn:aws:s3:::my-app-bucket/*"
+      ]
+    }
+  ]
+}
+EOF
+
+# Hoặc sử dụng existing IAM policy ARN
+vault write aws/roles/ec2-admin \
+  credential_type=iam_user \
+  policy_arns="arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+
+# Request credentials
+vault read aws/creds/s3-readonly
+
+# Output:
+# Key                Value
+# ---                -----
+# lease_id           aws/creds/s3-readonly/abcd1234...
+# lease_duration     30m
+# lease_renewable    true
+# access_key         AKIAI44QH8DHBEXAMPLE
+# secret_key         je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY
+# security_token     <nil>
+```
+
+### 1.4. STS AssumeRole
+
+STS AssumeRole tạo temporary credentials bằng cách assume một IAM role — **không cần tạo IAM user**.
+
+```bash
+# Tạo IAM role trên AWS trước (Trust policy cho phép Vault assume)
+# Trust policy cho Vault's IAM user:
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [{
+#     "Effect": "Allow",
+#     "Principal": {"AWS": "arn:aws:iam::123456789012:user/vault-user"},
+#     "Action": "sts:AssumeRole"
+#   }]
+# }
+
+# Tạo Vault role cho STS AssumeRole
+vault write aws/roles/deploy-role \
+  credential_type=assumed_role \
+  role_arns="arn:aws:iam::123456789012:role/DeployRole" \
+  default_sts_ttl="1h" \
+  max_sts_ttl="4h"
+
+# Request credentials
+vault read aws/creds/deploy-role
+
+# Output:
+# Key                Value
+# ---                -----
+# lease_id           aws/creds/deploy-role/xyz789...
+# lease_duration     1h
+# lease_renewable    false
+# access_key         ASIAJEXAMPLEXEG2JICEA
+# secret_key         9drTJvcXLB89EXAMPLEKEY
+# security_token     AQoDYXdzEBY...  ← STS session token
+
+# STS credentials có security_token — phải sử dụng cả 3 values
+export AWS_ACCESS_KEY_ID="ASIAJEXAMPLEXEG2JICEA"
+export AWS_SECRET_ACCESS_KEY="9drTJvcXLB89EXAMPLEKEY"
+export AWS_SESSION_TOKEN="AQoDYXdzEBY..."
+
+aws s3 ls
+```
+
+### 1.5. STS Federation Token
+
+```bash
+# Tạo role Federation Token
+vault write aws/roles/ci-deploy \
+  credential_type=federation_token \
+  policy_document=-<<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:PutImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload",
+        "ecs:UpdateService",
+        "ecs:DescribeServices"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+
+# Request credentials
+vault read aws/creds/ci-deploy
+```
+
+### 1.6. Script sử dụng AWS dynamic credentials
+
+```bash
+#!/bin/bash
+# aws-deploy.sh — Deploy sử dụng Vault dynamic credentials
+
+set -euo pipefail
+
+ROLE="${1:-deploy-role}"
+
+# Lấy credentials từ Vault
+echo "Requesting AWS credentials from Vault..."
+CREDS=$(vault read -format=json "aws/creds/${ROLE}")
+
+export AWS_ACCESS_KEY_ID=$(echo "$CREDS" | jq -r '.data.access_key')
+export AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r '.data.secret_key')
+
+# STS credentials có security_token
+TOKEN=$(echo "$CREDS" | jq -r '.data.security_token // empty')
+if [ -n "$TOKEN" ]; then
+  export AWS_SESSION_TOKEN="$TOKEN"
+fi
+
+LEASE_ID=$(echo "$CREDS" | jq -r '.lease_id')
+echo "Got credentials. Lease: $LEASE_ID"
+
+# Cleanup khi exit
+cleanup() {
+  echo "Revoking AWS credentials..."
+  vault lease revoke "$LEASE_ID" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+# Thực hiện deploy
+echo "Deploying..."
+aws ecs update-service \
+  --cluster production \
+  --service my-app \
+  --force-new-deployment
+
+echo "Deploy complete!"
+```
+
+## PHẦN 2: Azure Secrets Engine
+
+### 2.1. Enable và Configure
+
+```bash
+# Enable Azure secrets engine
+vault secrets enable azure
+
+# Configure Azure credentials
+vault write azure/config \
+  subscription_id="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" \
+  tenant_id="11111111-2222-3333-4444-555555555555" \
+  client_id="66666666-7777-8888-9999-000000000000" \
+  client_secret="AzureClientSecretValue"
+
+# Rotate root credentials
+vault write -f azure/config/rotate-root
+```
+
+### 2.2. Dynamic Service Principal
+
+Vault tạo Azure Service Principal (SP) tạm thời với role assignments chỉ định.
+
+```bash
+# Tạo role — Dynamic SP với Contributor trên Resource Group
+vault write azure/roles/contributor-rg \
+  ttl=1h \
+  max_ttl=4h \
+  azure_roles=-<<EOF
+[
+  {
+    "role_name": "Contributor",
+    "scope": "/subscriptions/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/resourceGroups/my-app-rg"
+  }
+]
+EOF
+
+# Tạo role với nhiều role assignments
+vault write azure/roles/devops-role \
+  ttl=2h \
+  max_ttl=8h \
+  azure_roles=-<<EOF
+[
+  {
+    "role_name": "Contributor",
+    "scope": "/subscriptions/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/resourceGroups/my-app-rg"
+  },
+  {
+    "role_name": "AcrPush",
+    "scope": "/subscriptions/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/resourceGroups/my-app-rg/providers/Microsoft.ContainerRegistry/registries/myappacr"
+  }
+]
+EOF
+
+# Request credentials
+vault read azure/creds/contributor-rg
+
+# Output:
+# Key                Value
+# ---                -----
+# client_id          zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv
+# client_secret      DynamicGeneratedSecret123!
+# lease_duration     1h
+# lease_id           azure/creds/contributor-rg/abc...
+# lease_renewable    true
+```
+
+### 2.3. Sử dụng Azure dynamic credentials
+
+```bash
+# Lấy credentials từ Vault
+CREDS=$(vault read -format=json azure/creds/contributor-rg)
+
+CLIENT_ID=$(echo "$CREDS" | jq -r '.data.client_id')
+CLIENT_SECRET=$(echo "$CREDS" | jq -r '.data.client_secret')
+
+# Login Azure CLI
+az login --service-principal \
+  --username "$CLIENT_ID" \
+  --password "$CLIENT_SECRET" \
+  --tenant "11111111-2222-3333-4444-555555555555"
+
+# Thực hiện operations
+az vm list --resource-group my-app-rg
+
+# Cleanup
+LEASE_ID=$(echo "$CREDS" | jq -r '.lease_id')
+vault lease revoke "$LEASE_ID"
+az logout
+```
+
+### 2.4. Azure Static Roles (Vault 1.21+)
+
+Static roles cho phép Vault quản lý password rotation cho **existing Service Principals**.
+
+```bash
+# Tạo static role cho existing SP
+vault write azure/static-roles/my-static-sp \
+  application_object_id="app-object-id-here" \
+  rotation_period="86400"
+
+# Đọc current credentials
+vault read azure/static-creds/my-static-sp
+
+# Output:
+# Key                    Value
+# ---                    -----
+# client_id              existing-sp-client-id
+# client_secret          AutoRotatedPassword!
+# last_vault_rotation    2024-01-15T12:00:00Z
+# rotation_period        24h
+# ttl                    23h45m
+
+# Force rotation
+vault write -f azure/rotate-role/my-static-sp
+```
+
+### 2.5. Azure Roles với MS Graph Permissions
+
+```bash
+# Role với Azure AD permissions (MS Graph)
+vault write azure/roles/graph-reader \
+  ttl=1h \
+  max_ttl=4h \
+  azure_groups=-<<EOF
+[
+  {
+    "group_name": "App-Developers",
+    "object_id": "group-object-id-here"
+  }
+]
+EOF
+```
+
+## PHẦN 3: GCP Secrets Engine
+
+### 3.1. Enable và Configure
+
+```bash
+# Enable GCP secrets engine
+vault secrets enable gcp
+
+# Configure với Service Account key
+vault write gcp/config \
+  credentials=@/path/to/vault-sa-key.json \
+  ttl=3600 \
+  max_ttl=86400
+```
+
+### 3.2. Service Account Key (Roleset)
+
+Vault tạo Service Account keys tạm thời.
+
+```bash
+# Tạo roleset cho GCS access
+vault write gcp/roleset/gcs-reader \
+  project="my-gcp-project" \
+  secret_type="service_account_key" \
+  bindings=-<<EOF
+resource "//cloudresourcemanager.googleapis.com/projects/my-gcp-project" {
+  roles = [
+    "roles/storage.objectViewer"
+  ]
+}
+EOF
+
+# Request Service Account key
+vault read gcp/roleset/gcs-reader/key
+
+# Output:
+# Key                 Value
+# ---                 -----
+# lease_duration      1h
+# lease_id            gcp/roleset/gcs-reader/key/abc...
+# lease_renewable     true
+# key_algorithm       KEY_ALG_RSA_2048
+# key_type            TYPE_GOOGLE_CREDENTIALS_FILE
+# private_key_data    ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsC...  ← base64 encoded JSON key
+```
+
+### 3.3. OAuth2 Access Token (Roleset)
+
+Thay vì tạo key, Vault có thể trả về **OAuth2 access token** ngắn hạn.
+
+```bash
+# Tạo roleset cho OAuth2 tokens
+vault write gcp/roleset/compute-viewer \
+  project="my-gcp-project" \
+  secret_type="access_token" \
+  token_scopes="https://www.googleapis.com/auth/compute.readonly" \
+  bindings=-<<EOF
+resource "//cloudresourcemanager.googleapis.com/projects/my-gcp-project" {
+  roles = [
+    "roles/compute.viewer"
+  ]
+}
+EOF
+
+# Request OAuth2 token
+vault read gcp/roleset/compute-viewer/token
+
+# Output:
+# Key                Value
+# ---                -----
+# expires_at_seconds 1705315800
+# token              ya29.a0AfB_byBq...
+# token_ttl          3599
+
+# Sử dụng token
+curl -H "Authorization: Bearer ya29.a0AfB_byBq..." \
+  "https://compute.googleapis.com/compute/v1/projects/my-gcp-project/zones/asia-southeast1-a/instances"
+```
+
+### 3.4. Static Account
+
+Quản lý key rotation cho **existing Service Account**.
+
+```bash
+# Tạo static account
+vault write gcp/static-account/my-app-sa \
+  service_account_email="my-app@my-gcp-project.iam.gserviceaccount.com" \
+  secret_type="service_account_key" \
+  bindings=-<<EOF
+resource "//cloudresourcemanager.googleapis.com/projects/my-gcp-project" {
+  roles = [
+    "roles/cloudsql.client"
+  ]
+}
+EOF
+
+# Đọc key
+vault read gcp/static-account/my-app-sa/key
+
+# OAuth2 token cho static account
+vault write gcp/static-account/my-app-sa \
+  service_account_email="my-app@my-gcp-project.iam.gserviceaccount.com" \
+  secret_type="access_token" \
+  token_scopes="https://www.googleapis.com/auth/cloud-platform"
+
+vault read gcp/static-account/my-app-sa/token
+
+# Rotate key
+vault write -f gcp/static-account/my-app-sa/rotate-key
+```
+
+### 3.5. Sử dụng GCP credentials
+
+```bash
+#!/bin/bash
+# gcp-deploy.sh — Deploy sử dụng Vault GCP credentials
+
+set -euo pipefail
+
+# Lấy Service Account key từ Vault
+KEY_DATA=$(vault read -format=json gcp/roleset/gcs-reader/key | \
+  jq -r '.data.private_key_data' | base64 -d)
+
+# Ghi ra temp file
+KEYFILE=$(mktemp /tmp/gcp-key-XXXXXX.json)
+echo "$KEY_DATA" > "$KEYFILE"
+
+# Cleanup khi exit
+cleanup() {
+  rm -f "$KEYFILE"
+  LEASE_ID=$(vault read -format=json gcp/roleset/gcs-reader/key | jq -r '.lease_id')
+  vault lease revoke "$LEASE_ID" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+# Activate Service Account
+gcloud auth activate-service-account --key-file="$KEYFILE"
+
+# Thực hiện operations
+gsutil ls gs://my-app-bucket/
+
+echo "Done!"
+```
+
+## PHẦN 4: Multi-Cloud Best Practices
+
+### 4.1. Tổ chức Policies
+
+```hcl
+# === AWS Policies ===
+
+# Policy cho CI/CD pipeline
+path "aws/creds/ci-deploy" {
+  capabilities = ["read"]
+}
+
+# Policy cho developer (read-only)
+path "aws/creds/s3-readonly" {
+  capabilities = ["read"]
+}
+
+# === Azure Policies ===
+
+path "azure/creds/contributor-rg" {
+  capabilities = ["read"]
+}
+
+path "azure/static-creds/my-static-sp" {
+  capabilities = ["read"]
+}
+
+# === GCP Policies ===
+
+path "gcp/roleset/gcs-reader/key" {
+  capabilities = ["read"]
+}
+
+path "gcp/roleset/compute-viewer/token" {
+  capabilities = ["read"]
+}
+
+# === Lease Management ===
+
+path "sys/leases/renew" {
+  capabilities = ["update"]
+}
+
+path "sys/leases/revoke" {
+  capabilities = ["update"]
+}
+```
+
+### 4.2. Multi-Cloud Helper Script
+
+```bash
+#!/bin/bash
+# cloud-creds.sh — Unified script cho multi-cloud credentials
+
+set -euo pipefail
+
+PROVIDER="$1"
+ROLE="$2"
+shift 2
+
+case "$PROVIDER" in
+  aws)
+    echo "Getting AWS credentials..."
+    CREDS=$(vault read -format=json "aws/creds/${ROLE}")
+    
+    export AWS_ACCESS_KEY_ID=$(echo "$CREDS" | jq -r '.data.access_key')
+    export AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r '.data.secret_key')
+    
+    TOKEN=$(echo "$CREDS" | jq -r '.data.security_token // empty')
+    [ -n "$TOKEN" ] && export AWS_SESSION_TOKEN="$TOKEN"
+    ;;
+    
+  azure)
+    echo "Getting Azure credentials..."
+    CREDS=$(vault read -format=json "azure/creds/${ROLE}")
+    
+    export AZURE_CLIENT_ID=$(echo "$CREDS" | jq -r '.data.client_id')
+    export AZURE_CLIENT_SECRET=$(echo "$CREDS" | jq -r '.data.client_secret')
+    export AZURE_TENANT_ID="your-tenant-id"
+    ;;
+    
+  gcp)
+    echo "Getting GCP credentials..."
+    KEYFILE=$(mktemp /tmp/gcp-key-XXXXXX.json)
+    
+    vault read -format=json "gcp/roleset/${ROLE}/key" | \
+      jq -r '.data.private_key_data' | base64 -d > "$KEYFILE"
+    
+    export GOOGLE_APPLICATION_CREDENTIALS="$KEYFILE"
+    ;;
+    
+  *)
+    echo "Unknown provider: $PROVIDER"
+    echo "Usage: $0 <aws|azure|gcp> <role> -- <command>"
+    exit 1
+    ;;
+esac
+
+# Lưu lease ID cho cleanup
+LEASE_ID=$(echo "$CREDS" 2>/dev/null | jq -r '.lease_id // empty')
+
+cleanup() {
+  [ -n "${LEASE_ID:-}" ] && vault lease revoke "$LEASE_ID" 2>/dev/null || true
+  [ -n "${KEYFILE:-}" ] && rm -f "$KEYFILE" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+echo "Credentials ready. Executing command..."
+exec "$@"
+```
+
+Sử dụng:
+
+```bash
+# AWS
+./cloud-creds.sh aws deploy-role -- aws s3 ls
+
+# Azure
+./cloud-creds.sh azure contributor-rg -- az vm list -g my-app-rg
+
+# GCP
+./cloud-creds.sh gcp gcs-reader -- gsutil ls gs://my-bucket/
+```
+
+### 4.3. TTL Guidelines cho Cloud Credentials
+
+| Use Case | AWS | Azure | GCP |
+|---|---|---|---|
+| CI/CD Pipeline | STS AssumeRole, 30m | Dynamic SP, 1h | OAuth2 Token, 1h |
+| Developer Access | STS AssumeRole, 1h | Dynamic SP, 2h | OAuth2 Token, 1h |
+| Application Runtime | IAM User + Rotation | Static SP, 24h rotate | Static SA, key rotate |
+| Emergency Access | STS AssumeRole, 15m | Dynamic SP, 30m | OAuth2 Token, 30m |
+
+### 4.4. Monitoring Cloud Credentials
+
+```bash
+# Kiểm tra active leases cho từng provider
+echo "=== AWS Active Leases ==="
+vault list sys/leases/lookup/aws/creds/ 2>/dev/null || echo "None"
+
+echo "=== Azure Active Leases ==="
+vault list sys/leases/lookup/azure/creds/ 2>/dev/null || echo "None"
+
+echo "=== GCP Active Leases ==="
+vault list sys/leases/lookup/gcp/roleset/ 2>/dev/null || echo "None"
+
+# Force revoke tất cả credentials của một provider
+# ⚠️ CẨN THẬN — sẽ ảnh hưởng đến applications đang chạy
+vault lease revoke -prefix aws/creds
+```
+
+### 4.5. Security Checklist cho Cloud Engines
+
+**AWS:**
+
+- ✅ Rotate root credentials ngay sau khi configure
+- ✅ Ưu tiên STS AssumeRole thay vì IAM User
+- ✅ Sử dụng condition keys trong IAM policies
+- ✅ Enable CloudTrail để audit API calls
+- ✅ Least privilege IAM policies cho Vault
+
+**Azure:**
+
+- ✅ Rotate root credentials ngay sau khi configure
+- ✅ Scope role assignments minimal (resource group, không subscription)
+- ✅ Sử dụng Azure Static Roles cho applications cần SP cố định
+- ✅ Monitor SP creation trong Azure AD audit logs
+
+**GCP:**
+
+- ✅ Ưu tiên OAuth2 access tokens thay vì Service Account keys
+- ✅ Vault SA chỉ cần `iam.serviceAccountKeyAdmin` và `iam.serviceAccountAdmin`
+- ✅ Sử dụng Workload Identity Federation khi có thể
+- ✅ Monitor SA key creation trong Cloud Audit Logs
+
+## 5. Troubleshooting
+
+### 5.1. AWS Common Issues
+
+```bash
+# Error: "error assuming role"
+# → Kiểm tra trust policy của IAM role
+aws iam get-role --role-name DeployRole | jq '.Role.AssumeRolePolicyDocument'
+
+# Error: "AccessDenied"
+# → Vault IAM user thiếu permissions
+# → Kiểm tra: sts:AssumeRole, iam:CreateUser, iam:CreateAccessKey, etc.
+
+# Error: "cannot use STS token to call IAM"
+# → STS credentials không thể tạo IAM users
+# → Sử dụng credential_type=assumed_role thay vì iam_user
+```
+
+### 5.2. Azure Common Issues
+
+```bash
+# Error: "insufficient privileges"
+# → Vault SP cần: Application.ReadWrite.OwnedBy hoặc Application.ReadWrite.All
+# → Plus: Role Based Access Control Administrator trên target scope
+
+# Error: "SP not ready"
+# → Azure AD replication delay (vài giây đến vài phút)
+# → Thêm wait/retry logic trong application
+```
+
+### 5.3. GCP Common Issues
+
+```bash
+# Error: "permission denied"
+# → Vault SA cần:
+#    - iam.serviceAccountAdmin
+#    - iam.serviceAccountKeyAdmin
+#    - resourcemanager.projectIamAdmin (cho bindings)
+
+# Error: "quota exceeded"
+# → GCP giới hạn 10 keys per SA
+# → Revoke leases cũ hoặc dùng OAuth2 tokens
+```
+
+## Tổng kết
+
+Trong bài học này, bạn đã nắm vững cách sử dụng Cloud Secrets Engines:
+
+1. **AWS Secrets Engine** — IAM Users, STS AssumeRole, Federation Tokens
+2. **Azure Secrets Engine** — Dynamic Service Principals, Static Roles (1.21+)
+3. **GCP Secrets Engine** — Service Account Keys, OAuth2 Tokens, Static Accounts
+4. **Multi-cloud best practices** — unified tooling, policies, monitoring
+5. **TTL guidelines** — chọn credential type và TTL phù hợp cho từng use case
+6. **Troubleshooting** — xử lý các vấn đề thường gặp
+
+Đây là bài cuối của **Phần 2: Secrets Engines**. Bạn đã có nền tảng vững chắc về tất cả các secrets engines quan trọng nhất trong Vault — từ KV static secrets, database dynamic credentials, PKI certificates, Transit encryption, đến cloud credentials. Phần tiếp theo sẽ đi sâu vào **Authentication Methods** — cách xác thực và quản lý identities trong Vault.

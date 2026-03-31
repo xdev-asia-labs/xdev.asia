@@ -1,0 +1,329 @@
+---
+id: 019d8b30-b213-7001-c002-e0c5f8200113
+title: 'Bài 13: Kubernetes, AWS và Cloud Auth Methods'
+slug: bai-13-kubernetes-aws-va-cloud-auth-methods
+description: >-
+  Kubernetes Auth Method (Service Account token review, bound namespaces,
+  bound service accounts), AWS Auth Method (IAM auth, EC2 auth, cross-account),
+  Azure Auth Method, GCP Auth Method, SPIFFE Auth Method (mới trong 1.21),
+  best practices cho workload identity.
+duration_minutes: 200
+is_free: true
+video_url: null
+sort_order: 13
+section_title: "Phần 3: Auth Methods - Xác thực và Ủy quyền"
+course:
+  id: 019d8b30-b200-7001-c002-e0c5f8200001
+  title: HashiCorp Vault từ Cơ bản đến Nâng cao
+  slug: hashicorp-vault-tu-co-ban-den-nang-cao
+---
+
+<h2 id="1-kubernetes-auth-method"><strong>1. Kubernetes Auth Method</strong></h2>
+
+<p><strong>Kubernetes Auth Method</strong> cho phép Pods trên Kubernetes xác thực với Vault bằng Kubernetes Service Account tokens. Đây là phương pháp xác thực tự nhiên nhất cho workloads chạy trên Kubernetes — không cần quản lý secrets riêng.</p>
+
+<h3 id="kien-truc-k8s-auth"><strong>Kiến trúc</strong></h3>
+
+<pre><code>┌───────────────────┐                    ┌──────────────┐
+│   Pod             │  1. Login với SA   │    Vault     │
+│   (ServiceAccount)│     JWT token      │  K8s Auth    │
+│                   │ ─────────────────▶ │              │
+│                   │                    │              │
+│                   │  4. Vault Token    │              │
+│                   │ ◀───────────────── │              │
+└───────────────────┘                    └──────┬───────┘
+                                                │
+                                       2. TokenReview API
+                                          (verify SA token)
+                                                │
+                                                ▼
+                                         ┌──────────────┐
+                                         │  Kubernetes  │
+                                         │  API Server  │
+                                         └──────────────┘
+</code></pre>
+
+<h3 id="enable-k8s-auth"><strong>Enable và cấu hình</strong></h3>
+
+<pre><code class="language-bash"># Enable Kubernetes auth
+vault auth enable kubernetes
+
+# Cấu hình — Vault chạy trong Kubernetes
+vault write auth/kubernetes/config \
+  kubernetes_host="https://kubernetes.default.svc:443"
+
+# Cấu hình — Vault chạy ngoài Kubernetes
+vault write auth/kubernetes/config \
+  kubernetes_host="https://k8s-api.company.com:6443" \
+  kubernetes_ca_cert=@/etc/vault/k8s-ca.pem \
+  token_reviewer_jwt=@/etc/vault/k8s-reviewer-token
+</code></pre>
+
+<h3 id="tao-role-k8s"><strong>Tạo roles</strong></h3>
+
+<pre><code class="language-bash"># Role cho namespace cụ thể
+vault write auth/kubernetes/role/webapp \
+  bound_service_account_names="webapp-sa" \
+  bound_service_account_namespaces="production" \
+  token_policies="webapp-policy,db-readonly" \
+  token_ttl=1h \
+  token_max_ttl=4h
+
+# Role cho nhiều namespaces
+vault write auth/kubernetes/role/monitoring \
+  bound_service_account_names="prometheus-sa,grafana-sa" \
+  bound_service_account_namespaces="monitoring,observability" \
+  token_policies="monitoring-readonly" \
+  token_ttl=30m
+
+# Role với wildcard (tất cả service accounts trong namespace)
+vault write auth/kubernetes/role/dev-all \
+  bound_service_account_names="*" \
+  bound_service_account_namespaces="development" \
+  token_policies="dev-readonly" \
+  token_ttl=30m
+
+# Alias name source
+vault write auth/kubernetes/role/webapp \
+  bound_service_account_names="webapp-sa" \
+  bound_service_account_namespaces="production" \
+  token_policies="webapp-policy" \
+  alias_name_source="serviceaccount_name"
+</code></pre>
+
+<h3 id="login-tu-pod"><strong>Login từ Pod</strong></h3>
+
+<pre><code class="language-bash"># Service Account token tự động mount tại Pod
+SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+
+# Login
+curl -s --request POST \
+  --data "{\"jwt\": \"${SA_TOKEN}\", \"role\": \"webapp\"}" \
+  ${VAULT_ADDR}/v1/auth/kubernetes/login | jq .
+
+# Hoặc dùng Vault CLI
+vault write auth/kubernetes/login \
+  role=webapp \
+  jwt=@/var/run/secrets/kubernetes.io/serviceaccount/token
+</code></pre>
+
+<h3 id="kubernetes-rbac"><strong>Kubernetes RBAC cho Vault</strong></h3>
+
+<pre><code class="language-yaml"># Vault cần ClusterRole để verify SA tokens
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-token-reviewer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - kind: ServiceAccount
+    name: vault
+    namespace: vault
+</code></pre>
+
+<h2 id="2-aws-auth-method"><strong>2. AWS Auth Method</strong></h2>
+
+<p><strong>AWS Auth Method</strong> cho phép EC2 instances và Lambda functions xác thực với Vault bằng AWS IAM hoặc EC2 metadata — không cần quản lý secrets thủ công.</p>
+
+<h3 id="hai-loai-aws-auth"><strong>Hai loại AWS Auth</strong></h3>
+
+<table>
+<thead>
+<tr><th>Loại</th><th>Cách xác thực</th><th>Use case</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>IAM Auth</strong></td><td>Ký STS GetCallerIdentity</td><td>EC2, Lambda, ECS, EKS, bất kỳ AWS workload</td></tr>
+<tr><td><strong>EC2 Auth</strong></td><td>EC2 instance metadata (PKCS7 document)</td><td>Chỉ EC2 instances</td></tr>
+</tbody>
+</table>
+
+<h3 id="cau-hinh-aws-iam-auth"><strong>AWS IAM Auth</strong></h3>
+
+<pre><code class="language-bash"># Enable AWS auth
+vault auth enable aws
+
+# Cấu hình AWS credentials cho Vault
+vault write auth/aws/config/client \
+  access_key="AKIAIOSFODNN7EXAMPLE" \
+  secret_key="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" \
+  iam_server_id_header_value="vault.company.com"
+
+# Tạo IAM role
+vault write auth/aws/role/webapp \
+  auth_type=iam \
+  bound_iam_principal_arn="arn:aws:iam::123456789012:role/webapp-role" \
+  token_policies="webapp-policy" \
+  token_ttl=1h \
+  token_max_ttl=4h
+
+# Role cho nhiều IAM principals
+vault write auth/aws/role/services \
+  auth_type=iam \
+  bound_iam_principal_arn='["arn:aws:iam::123456789012:role/service-a","arn:aws:iam::123456789012:role/service-b"]' \
+  token_policies="services-policy"
+
+# Cross-account (từ AWS account khác)
+vault write auth/aws/config/sts/987654321098 \
+  sts_role="arn:aws:iam::123456789012:role/vault-sts-assume"
+
+vault write auth/aws/role/cross-account \
+  auth_type=iam \
+  bound_iam_principal_arn="arn:aws:iam::987654321098:role/external-app" \
+  token_policies="cross-account-readonly"
+</code></pre>
+
+<h3 id="login-aws"><strong>Login từ AWS workload</strong></h3>
+
+<pre><code class="language-bash"># Từ EC2/Lambda/ECS — CLI
+vault login -method=aws role=webapp
+
+# API call
+vault write auth/aws/login \
+  role=webapp \
+  iam_http_request_method="POST" \
+  iam_request_url="$(echo -n 'https://sts.amazonaws.com/' | base64)" \
+  iam_request_body="$(echo -n 'Action=GetCallerIdentity&Version=2011-06-15' | base64)" \
+  iam_request_headers="..."
+</code></pre>
+
+<h2 id="3-azure-auth-method"><strong>3. Azure Auth Method</strong></h2>
+
+<pre><code class="language-bash"># Enable Azure auth
+vault auth enable azure
+
+# Cấu hình
+vault write auth/azure/config \
+  tenant_id="&lt;tenant-id&gt;" \
+  resource="https://management.azure.com/" \
+  client_id="&lt;vault-app-id&gt;" \
+  client_secret="&lt;vault-app-secret&gt;"
+
+# Tạo role cho VM với Managed Identity
+vault write auth/azure/role/webapp \
+  bound_subscription_ids="&lt;subscription-id&gt;" \
+  bound_resource_groups="production-rg" \
+  bound_service_principal_ids="&lt;managed-identity-principal-id&gt;" \
+  token_policies="webapp-policy" \
+  token_ttl=1h
+</code></pre>
+
+<h2 id="4-gcp-auth-method"><strong>4. GCP Auth Method</strong></h2>
+
+<pre><code class="language-bash"># Enable GCP auth
+vault auth enable gcp
+
+# Cấu hình
+vault write auth/gcp/config \
+  credentials=@/etc/vault/gcp-credentials.json
+
+# IAM auth (Service Account)
+vault write auth/gcp/role/webapp \
+  type="iam" \
+  bound_service_accounts="webapp-sa@project-id.iam.gserviceaccount.com" \
+  token_policies="webapp-policy" \
+  token_ttl=1h
+
+# GCE auth (Compute Engine instances)
+vault write auth/gcp/role/gce-instances \
+  type="gce" \
+  bound_projects="my-project" \
+  bound_zones="asia-southeast1-a,asia-southeast1-b" \
+  bound_labels="env:production,team:platform" \
+  token_policies="gce-policy"
+</code></pre>
+
+<h2 id="5-spiffe-auth-method"><strong>5. SPIFFE Auth Method (Vault 1.21)</strong></h2>
+
+<p><strong>SPIFFE (Secure Production Identity Framework for Everyone)</strong> Auth Method là tính năng mới trong Vault 1.21, cho phép workloads xác thực bằng SPIFFE SVID (SPIFFE Verifiable Identity Document).</p>
+
+<h3 id="spiffe-concept"><strong>SPIFFE Concepts</strong></h3>
+
+<table>
+<thead>
+<tr><th>Thuật ngữ</th><th>Mô tả</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>SPIFFE ID</strong></td><td>URI dạng <code>spiffe://trust-domain/workload-identifier</code></td></tr>
+<tr><td><strong>SVID</strong></td><td>Document chứng minh identity (X.509 cert hoặc JWT)</td></tr>
+<tr><td><strong>SPIRE</strong></td><td>SPIFFE Runtime Environment — implementation phổ biến nhất</td></tr>
+<tr><td><strong>Trust Domain</strong></td><td>Domain of trust (ví dụ: <code>company.com</code>)</td></tr>
+</tbody>
+</table>
+
+<pre><code class="language-bash"># Enable SPIFFE auth (Vault 1.21+)
+vault auth enable spiffe
+
+# Cấu hình trust domain
+vault write auth/spiffe/config \
+  spiffe_trust_domain="company.com" \
+  spiffe_trust_bundle=@/etc/vault/spire-root-ca.pem
+
+# Tạo role
+vault write auth/spiffe/role/webapp \
+  bound_spiffe_ids="spiffe://company.com/ns/production/sa/webapp" \
+  token_policies="webapp-policy" \
+  token_ttl=1h
+
+# Wildcard matching
+vault write auth/spiffe/role/production-all \
+  bound_spiffe_id_patterns="spiffe://company.com/ns/production/*" \
+  token_policies="production-readonly"
+</code></pre>
+
+<h2 id="6-workload-identity-best-practices"><strong>6. Workload Identity Best Practices</strong></h2>
+
+<h3 id="chon-auth-method-phu-hop"><strong>Chọn Auth Method phù hợp</strong></h3>
+
+<table>
+<thead>
+<tr><th>Platform</th><th>Auth Method</th><th>Ghi chú</th></tr>
+</thead>
+<tbody>
+<tr><td>Kubernetes</td><td>Kubernetes Auth</td><td>Tự nhiên nhất cho K8s workloads</td></tr>
+<tr><td>AWS EC2/Lambda/ECS</td><td>AWS IAM Auth</td><td>Preferred over EC2 auth</td></tr>
+<tr><td>Azure VMs/Functions</td><td>Azure Auth</td><td>Dùng Managed Identity</td></tr>
+<tr><td>GCP GCE/GKE/Functions</td><td>GCP Auth</td><td>IAM hoặc GCE type</td></tr>
+<tr><td>Multi-platform/SPIRE</td><td>SPIFFE Auth</td><td>Platform-agnostic identity</td></tr>
+<tr><td>CI/CD (GitHub/GitLab)</td><td>JWT Auth</td><td>OIDC tokens từ CI platform</td></tr>
+<tr><td>Legacy/On-prem apps</td><td>AppRole</td><td>Fallback cho non-cloud workloads</td></tr>
+</tbody>
+</table>
+
+<h3 id="least-privilege"><strong>Least Privilege</strong></h3>
+
+<ul>
+<li><p>Mỗi service/workload có role riêng — không share roles</p></li>
+<li><p>Bind chặt: specific service account, namespace, project</p></li>
+<li><p>Token TTL ngắn nhất có thể</p></li>
+<li><p>Policies granular theo path cụ thể</p></li>
+</ul>
+
+<h3 id="multi-cluster"><strong>Multi-cluster Kubernetes</strong></h3>
+
+<pre><code class="language-bash"># Mount riêng cho mỗi cluster
+vault auth enable -path=k8s-prod kubernetes
+vault auth enable -path=k8s-staging kubernetes
+
+# Cấu hình riêng biệt
+vault write auth/k8s-prod/config \
+  kubernetes_host="https://prod-k8s-api:6443" \
+  kubernetes_ca_cert=@/etc/vault/prod-ca.pem
+
+vault write auth/k8s-staging/config \
+  kubernetes_host="https://staging-k8s-api:6443" \
+  kubernetes_ca_cert=@/etc/vault/staging-ca.pem
+</code></pre>
+
+<h2 id="7-tong-ket"><strong>7. Tổng kết</strong></h2>
+
+<ul>
+<li><p><strong>Kubernetes Auth</strong> — standard cho K8s workloads, dùng Service Account token</p></li>
+<li><p><strong>AWS IAM Auth</strong> — preferred cho mọi AWS workloads, không cần static credentials</p></li>
+<li><p><strong>Azure/GCP Auth</strong> — tương tự cho Azure Managed Identity và GCP Service Accounts</p></li>
+<li><p><strong>SPIFFE Auth</strong> (1.21) — platform-agnostic, phù hợp multi-cloud/hybrid</p></li>
+</ul>
+
+<p>Bài tiếp theo sẽ đi sâu vào Vault Policies — cơ chế kiểm soát quyền truy cập chi tiết với ACL, Sentinel và RBAC.</p>
