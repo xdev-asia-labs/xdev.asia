@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { SeriesIndex } from "@/lib/types";
 import { getValidImageUrl } from "@/utils/image";
 import { IconBook, IconClock, IconStar } from "./Icons";
+import SkeletonImage from "./SkeletonImage";
 
 export default function SeriesCard({ series, priority = false, basePath }: { series: SeriesIndex; priority?: boolean; basePath?: string }) {
     const seriesPath = basePath ? `${basePath}/${series.slug}/` : `/series/${series.category?.slug || "uncategorized"}/${series.slug}/`;
@@ -25,7 +26,7 @@ export default function SeriesCard({ series, priority = false, basePath }: { ser
         <article className="group flex flex-col h-full post-card rounded-2xl overflow-hidden">
             <Link href={seriesPath}>
                 <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
-                    <Image
+                    <SkeletonImage
                         src={imageUrl}
                         alt={series.title}
                         fill

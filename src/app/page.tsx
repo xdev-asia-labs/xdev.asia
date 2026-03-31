@@ -9,6 +9,7 @@ import { showcaseRepos } from "@/lib/showcase-server";
 import { RepoCard } from "@/components/ShowcaseCard";
 import { getValidImageUrl } from "@/utils/image";
 import { IconArrowRight, IconBrain, IconBook, IconCode, IconRocket, IconGitHub } from "@/components/Icons";
+import SkeletonImage from "@/components/SkeletonImage";
 
 const SITE_URL = "https://xdev.asia";
 
@@ -192,7 +193,7 @@ export default function Home() {
                                     <Link href={`/blog/${featuredPost.slug}/`} className="group block h-full">
                                         <article className="post-card rounded-2xl overflow-hidden h-full flex flex-col">
                                             <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
-                                                <Image
+                                                <SkeletonImage
                                                     src={getValidImageUrl(featuredPost.featured_image, featuredPost.slug)}
                                                     alt={featuredPost.title}
                                                     fill
@@ -265,7 +266,7 @@ export default function Home() {
                                     <Link key={post.id} href={`/blog/${post.slug}/`} className="group block">
                                         <article className="post-card rounded-xl overflow-hidden flex flex-row h-full">
                                             <div className="relative w-28 sm:w-32 shrink-0 bg-surface-100">
-                                                <Image
+                                                <SkeletonImage
                                                     src={getValidImageUrl(post.featured_image, post.slug)}
                                                     alt={post.title}
                                                     fill

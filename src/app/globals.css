@@ -60,6 +60,12 @@ html { scroll-behavior: smooth; }
   animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    NAVIGATION — Glass header
    ═══════════════════════════════════════════════════════════════ */
@@ -524,6 +530,10 @@ html { scroll-behavior: smooth; }
   & .content-image-missing {
     @apply my-6 rounded-2xl px-4 py-3 text-sm font-medium;
     background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb;
+  }
+  & .skeleton-img-overlay {
+    @apply absolute inset-0 rounded-2xl;
+    z-index: 1;
   }
 
   & blockquote {

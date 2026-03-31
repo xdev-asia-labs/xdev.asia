@@ -4,6 +4,7 @@ import { formatDate } from "@/lib/data";
 import type { PostIndex } from "@/lib/types";
 import { getValidImageUrl } from "@/utils/image";
 import { IconClock } from "./Icons";
+import SkeletonImage from "./SkeletonImage";
 
 export default function PostCard({ post, priority = false }: { post: PostIndex; priority?: boolean }) {
     const imageUrl = getValidImageUrl(post.featured_image, post.slug);
@@ -13,7 +14,7 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
         <article className="group post-card rounded-2xl overflow-hidden flex flex-col h-full">
             <Link href={`/blog/${post.slug}/`} className="block">
                 <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
-                    <Image
+                    <SkeletonImage
                         src={imageUrl}
                         alt={post.title}
                         fill

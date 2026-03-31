@@ -33,6 +33,25 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
                     image.setAttribute("src", normalizedSrc);
                 }
 
+                // Lazy load + skeleton shimmer
+                image.loading = "lazy";
+                const parent = image.parentElement;
+                if (parent && !parent.classList.contains("skeleton-img-wrap")) {
+                    parent.style.position = "relative";
+                    const shimmer = document.createElement("div");
+                    shimmer.className = "skeleton-shimmer skeleton-img-overlay";
+                    parent.insertBefore(shimmer, image);
+                    parent.classList.add("skeleton-img-wrap");
+
+                    image.style.opacity = "0";
+                    image.style.transition = "opacity 0.5s ease";
+
+                    image.addEventListener("load", () => {
+                        image.style.opacity = "1";
+                        shimmer.remove();
+                    }, { once: true });
+                }
+
                 image.dataset.repairBound = "true";
 
                 image.addEventListener(
