@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 1: Tổng quan Data Platform - Evolution & Architecture Patterns](/storage/uploads/2026/03/dp-bai-1-diagram.png)
+
 ## Giới thiệu
 
 Evolution: Data Warehouse → Data Lake → Data Lakehouse → Data Mesh. Modern Data Stack. Data Platform architecture patterns và team topology.

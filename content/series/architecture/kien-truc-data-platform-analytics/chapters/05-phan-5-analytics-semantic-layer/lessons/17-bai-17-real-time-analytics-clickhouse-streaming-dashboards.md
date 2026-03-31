@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 17: Real-time Analytics - ClickHouse & Streaming Dashboards](/storage/uploads/2026/03/dp-bai-17-diagram.png)
+
 ## Giới thiệu
 
 Real-time OLAP: ClickHouse, Apache Druid. Streaming aggregations. Real-time dashboards. Approximate query processing. Sampling strategies.

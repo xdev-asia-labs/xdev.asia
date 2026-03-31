@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 8: Edge Computing Architecture - Processing at the Edge](/storage/uploads/2026/03/iot-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Edge computing: why và when. Edge deployment models. Edge runtime (K3s, KubeEdge). Edge AI inference. Data filtering và aggregation at edge.

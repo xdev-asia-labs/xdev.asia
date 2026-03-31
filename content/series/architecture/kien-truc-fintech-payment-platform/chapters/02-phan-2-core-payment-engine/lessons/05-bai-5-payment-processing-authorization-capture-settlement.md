@@ -17,6 +17,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 5: Payment Processing - Authorization, Capture & Settlement](/storage/uploads/2026/03/fintech-bai-5-diagram.png)
+
 ## Giới thiệu
 
 Sau khi hiểu tổng quan Payment Gateway, bài này deep-dive vào quy trình xử lý thanh toán — từ authorization đến settlement. Đây là phần phức tạp nhất và đòi hỏi sự chính xác tuyệt đối vì liên quan trực tiếp đến tiền.

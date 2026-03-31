@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 19: Financial Data Pipeline - Event Streaming & CDC](/storage/uploads/2026/03/fintech-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế data pipeline cho FinTech. Event streaming với Kafka. Change Data Capture cho ledger replication. Data lake architecture cho financial data.

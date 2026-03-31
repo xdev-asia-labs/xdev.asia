@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 18: Smart Building & Energy Management](/storage/uploads/2026/03/iot-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Smart building architecture: BACnet, KNX integration. HVAC optimization. Occupancy detection. Energy monitoring và optimization. Building Management System (BMS).

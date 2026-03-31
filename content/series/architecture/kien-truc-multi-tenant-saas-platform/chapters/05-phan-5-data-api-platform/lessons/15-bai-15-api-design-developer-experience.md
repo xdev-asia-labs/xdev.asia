@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 15: API Design & Developer Experience](/storage/uploads/2026/03/saas-bai-15-diagram.png)
+
 ## Giới thiệu
 
 API-first SaaS: REST/GraphQL API design. API versioning strategy. Developer portal. SDK generation. Rate limiting per API key. Sandbox environment.

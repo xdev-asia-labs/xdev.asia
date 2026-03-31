@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 16: Lending Platform - Loan Origination & Underwriting](/storage/uploads/2026/03/fintech-bai-16-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế Lending Platform end-to-end. Loan origination system (LOS): application, verification, approval workflow. Automated underwriting engine.

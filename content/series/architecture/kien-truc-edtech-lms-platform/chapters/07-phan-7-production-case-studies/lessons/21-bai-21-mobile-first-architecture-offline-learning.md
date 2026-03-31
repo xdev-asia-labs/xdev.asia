@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 21: Mobile-first Architecture & Offline Learning](/storage/uploads/2026/03/edtech-bai-21-diagram.png)
+
 ## Giới thiệu
 
 Mobile LMS architecture. Offline content download. Progress sync. Push notifications. Native vs hybrid app. Responsive video player.

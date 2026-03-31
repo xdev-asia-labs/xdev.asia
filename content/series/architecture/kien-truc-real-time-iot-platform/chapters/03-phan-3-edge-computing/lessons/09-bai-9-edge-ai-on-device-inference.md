@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 9: Edge AI & On-device Inference](/storage/uploads/2026/03/iot-bai-9-diagram.png)
+
 ## Giới thiệu
 
 Edge AI: TensorRT, ONNX Runtime, TFLite. Model optimization: quantization, pruning. On-device inference vs cloud inference trade-offs. Vision at the edge.

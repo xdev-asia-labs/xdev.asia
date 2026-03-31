@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 1: Tổng quan Platform Engineering - Why, What & How](/storage/uploads/2026/03/pe-bai-1-diagram.png)
+
 ## Giới thiệu
 
 Platform Engineering là gì. DevOps vs Platform Engineering. Internal Developer Platform (IDP) concept. Platform as a Product. Team Topologies cho platform teams.

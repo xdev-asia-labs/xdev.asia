@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 5: IoT Security - Device Authentication & Encryption](/storage/uploads/2026/03/iot-bai-5-diagram.png)
+
 ## Giới thiệu
 
 IoT security challenges. X.509 certificates. TLS/DTLS. Device identity. Secure boot. Firmware signing. Network segmentation. Zero Trust cho IoT.

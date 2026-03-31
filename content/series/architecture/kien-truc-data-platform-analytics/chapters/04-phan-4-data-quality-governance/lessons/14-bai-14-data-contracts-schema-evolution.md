@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 14: Data Contracts & Schema Evolution](/storage/uploads/2026/03/dp-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Data contracts: producer-consumer agreements. Schema registry (Confluent, Buf). Schema evolution strategies. Breaking changes management. Versioning.

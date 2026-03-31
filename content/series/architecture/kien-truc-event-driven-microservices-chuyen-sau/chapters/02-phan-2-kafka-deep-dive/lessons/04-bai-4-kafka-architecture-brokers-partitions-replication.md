@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 4: Kafka Architecture - Brokers, Partitions & Replication](/storage/uploads/2026/03/edm-bai-4-diagram.png)
+
 ## Giới thiệu
 
 Kafka internals: broker architecture, topic partitions, replication factor. ISR (In-Sync Replicas). Leader election. Log segments. Controller quorum (KRaft).

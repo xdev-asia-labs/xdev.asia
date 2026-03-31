@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 8: Database per Service & Polyglot Persistence](/storage/uploads/2026/03/cn-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Trong monolith, tất cả module chia sẻ một database. Trong microservices, mỗi service **sở hữu database riêng**. Nguyên tắc này là nền tảng để đạt loose coupling nhưng đồng thời tạo ra nhiều thách thức mới về data consistency.

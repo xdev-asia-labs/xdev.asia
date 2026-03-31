@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 20: Reporting & Business Intelligence - Regulatory Reports](/storage/uploads/2026/03/fintech-bai-20-diagram.png)
+
 ## Giới thiệu
 
 Hệ thống Reporting cho FinTech. Regulatory reporting. Business intelligence dashboards. Merchant analytics. Automated report generation.

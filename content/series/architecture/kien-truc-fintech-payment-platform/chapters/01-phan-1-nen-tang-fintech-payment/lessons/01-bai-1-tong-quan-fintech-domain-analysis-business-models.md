@@ -18,6 +18,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 1: Tổng quan FinTech - Domain Analysis & Business Models](/storage/uploads/2026/03/fintech-bai-1-diagram.png)
+
 ## Giới thiệu
 
 FinTech (Financial Technology) đã thay đổi hoàn toàn cách chúng ta tương tác với dịch vụ tài chính. Từ việc thanh toán bằng QR code tại quán cà phê đến vay tiền online trong 5 phút — tất cả đều được vận hành bởi các hệ thống FinTech phía sau.

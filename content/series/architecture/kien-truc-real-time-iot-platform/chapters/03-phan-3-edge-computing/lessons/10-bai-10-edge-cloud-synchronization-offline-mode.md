@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 10: Edge-Cloud Synchronization & Offline Mode](/storage/uploads/2026/03/iot-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Edge-cloud data sync strategies. Store-and-forward. Conflict resolution. Offline-first architecture. Eventually consistent device state.

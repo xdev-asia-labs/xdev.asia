@@ -17,6 +17,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 8: Digital Wallet Architecture - E-Wallet & Balance Management](/storage/uploads/2026/03/fintech-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Digital Wallet (ví điện tử) là trung tâm của mọi FinTech super app. Tại Việt Nam, MoMo, ZaloPay, ShopeePay đã biến ví điện tử trở thành phương thức thanh toán phổ biến nhất. Bài này sẽ phân tích kiến trúc một Digital Wallet Platform chuyên nghiệp.

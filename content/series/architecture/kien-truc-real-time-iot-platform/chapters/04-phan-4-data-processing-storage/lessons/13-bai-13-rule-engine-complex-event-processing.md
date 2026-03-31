@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 13: Rule Engine & Complex Event Processing](/storage/uploads/2026/03/iot-bai-13-diagram.png)
+
 ## Giới thiệu
 
 IoT Rule Engine: event-condition-action. Complex Event Processing (CEP). Pattern detection. Alerting pipelines. Dynamic rule management.

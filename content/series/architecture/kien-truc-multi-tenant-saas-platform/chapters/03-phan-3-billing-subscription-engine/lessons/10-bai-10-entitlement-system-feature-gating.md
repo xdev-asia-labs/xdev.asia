@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 10: Entitlement System & Feature Gating](/storage/uploads/2026/03/saas-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Entitlement engine: plan-based feature access. Feature flags cho progressive rollout. Rate limiting per plan. Quota management. Overage handling.

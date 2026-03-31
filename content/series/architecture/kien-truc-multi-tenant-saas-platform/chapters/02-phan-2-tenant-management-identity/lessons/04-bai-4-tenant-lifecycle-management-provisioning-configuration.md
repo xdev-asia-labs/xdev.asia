@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 4: Tenant Lifecycle Management - Provisioning & Configuration](/storage/uploads/2026/03/saas-bai-4-diagram.png)
+
 ## Giới thiệu
 
 Tenant provisioning automation: infrastructure setup, database creation, configuration. Tenant-aware routing. Custom domains và branding per tenant.

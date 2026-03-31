@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 12: IoT Data Pipeline - Ingestion, Processing & Storage](/storage/uploads/2026/03/iot-bai-12-diagram.png)
+
 ## Giới thiệu
 
 IoT data pipeline architecture. High-throughput ingestion (millions messages/sec). Stream processing: filtering, enrichment, aggregation. Hot/warm/cold storage.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 22: IoT Platform on Kubernetes](/storage/uploads/2026/03/iot-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Deploying IoT platform on K8s. EMQX operator. TimescaleDB on K8s. Edge K3s clusters. GitOps cho IoT infrastructure. Multi-cluster management.

@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 19: Bulkhead, Rate Limiting & Health Check Patterns](/storage/uploads/2026/03/cn-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Bài trước đã xử lý cascade failure từ downstream service. Bài này bổ sung ba pattern quan trọng khác:

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 9: Infrastructure as Code - Terraform, Crossplane & Pulumi](/storage/uploads/2026/03/pe-bai-9-diagram.png)
+
 ## Giới thiệu
 
 IaC platforms: Terraform modules, Crossplane compositions, Pulumi programs. Platform abstractions over raw IaC. Self-service with guardrails. State management.

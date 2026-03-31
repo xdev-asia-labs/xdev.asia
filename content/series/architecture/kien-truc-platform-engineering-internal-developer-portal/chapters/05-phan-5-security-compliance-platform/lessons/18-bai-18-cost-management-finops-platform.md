@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 18: Cost Management & FinOps Platform](/storage/uploads/2026/03/pe-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Cloud cost management: cost allocation per team/service. FinOps practices. Budget alerts. Resource right-sizing. Spot instance management. Showback/chargeback.

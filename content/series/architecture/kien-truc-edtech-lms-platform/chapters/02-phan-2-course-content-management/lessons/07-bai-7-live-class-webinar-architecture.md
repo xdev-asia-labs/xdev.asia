@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 7: Live Class & Webinar Architecture](/storage/uploads/2026/03/edtech-bai-7-diagram.png)
+
 ## Giới thiệu
 
 Live streaming architecture: WebRTC, SFU/MCU. Virtual classroom features: screen sharing, whiteboard, chat. Recording và playback. Breakout rooms.

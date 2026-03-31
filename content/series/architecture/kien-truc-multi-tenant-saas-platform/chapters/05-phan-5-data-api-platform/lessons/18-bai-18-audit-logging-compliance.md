@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 18: Audit Logging & Compliance](/storage/uploads/2026/03/saas-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Immutable audit logs per tenant. Activity feed. Data retention policies. GDPR compliance: data deletion, export. SOC 2 requirements.

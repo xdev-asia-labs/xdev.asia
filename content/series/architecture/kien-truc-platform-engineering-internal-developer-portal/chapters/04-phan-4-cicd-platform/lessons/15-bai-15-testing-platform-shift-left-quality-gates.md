@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 15: Testing Platform - Shift-left & Quality Gates](/storage/uploads/2026/03/pe-bai-15-diagram.png)
+
 ## Giới thiệu
 
 Testing infrastructure: test environments, test data management. Quality gates: code coverage, security scan, performance test. Flaky test detection.

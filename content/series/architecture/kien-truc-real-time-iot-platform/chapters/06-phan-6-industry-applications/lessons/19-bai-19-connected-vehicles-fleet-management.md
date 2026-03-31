@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 19: Connected Vehicles & Fleet Management](/storage/uploads/2026/03/iot-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Connected vehicle architecture. Telematics data collection. Fleet tracking và route optimization. Driver behavior analysis. Vehicle diagnostics (OBD-II).

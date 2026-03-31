@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 20: Agriculture IoT & Environmental Monitoring](/storage/uploads/2026/03/iot-bai-20-diagram.png)
+
 ## Giới thiệu
 
 AgriTech IoT: soil sensors, weather stations, irrigation control. Precision farming. Environmental monitoring: air quality, water quality. LoRaWAN cho nông nghiệp.

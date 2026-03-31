@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 6: Asynchronous Communication — Message Queue & Event Streaming](/storage/uploads/2026/03/cn-bai-6-diagram.png)
+
 ## Giới thiệu
 
 Giao tiếp bất đồng bộ (asynchronous) cho phép services gửi message mà không cần chờ response. Đây là xương sống của Event-Driven Architecture và là chìa khoá để xây dựng hệ thống loosely coupled, resilient.

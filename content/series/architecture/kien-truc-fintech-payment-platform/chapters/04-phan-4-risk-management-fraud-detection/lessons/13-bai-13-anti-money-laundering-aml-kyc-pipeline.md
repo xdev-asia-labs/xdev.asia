@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 13: Anti-Money Laundering (AML) & KYC Pipeline](/storage/uploads/2026/03/fintech-bai-13-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế KYC pipeline: identity verification, document validation. AML screening: sanctions lists, PEP screening. Suspicious Activity Reports.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 6: Change Data Capture (CDC) - Debezium & Event Sourcing](/storage/uploads/2026/03/dp-bai-6-diagram.png)
+
 ## Giới thiệu
 
 CDC concepts và use cases. Debezium: capture changes from PostgreSQL, MySQL. CDC → Kafka → Lakehouse pipeline. Event Sourcing patterns. Outbox pattern.

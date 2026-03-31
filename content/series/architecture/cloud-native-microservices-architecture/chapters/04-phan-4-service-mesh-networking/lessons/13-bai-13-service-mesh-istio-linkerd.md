@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 13: Service Mesh — Istio & Linkerd](/storage/uploads/2026/03/cn-bai-13-diagram.png)
+
 ## Giới thiệu
 
 Khi số lượng microservices tăng, quản lý giao tiếp service-to-service trở nên phức tạp: mTLS, retry, circuit breaker, tracing, traffic splitting... **Service Mesh** giải quyết bằng cách đưa tất cả logic networking ra khỏi application code vào **infrastructure layer**.

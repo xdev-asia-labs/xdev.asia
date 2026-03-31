@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 21: Logging & Audit Platform](/storage/uploads/2026/03/pe-bai-21-diagram.png)
+
 ## Giới thiệu
 
 Centralized logging: ELK/EFK, Loki. Log aggregation at scale. Audit logging platform. Log-based alerting. Compliance logging requirements.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 8: Self-service Infrastructure - Provisioning & Management](/storage/uploads/2026/03/pe-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Self-service infrastructure: request → approve → provision → manage. Infrastructure abstraction layers. Resource catalog. Cost visibility per request.

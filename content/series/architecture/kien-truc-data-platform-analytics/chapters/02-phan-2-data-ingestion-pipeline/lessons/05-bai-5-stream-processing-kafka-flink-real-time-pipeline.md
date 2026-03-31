@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 5: Stream Processing - Kafka, Flink & Real-time Pipeline](/storage/uploads/2026/03/dp-bai-5-diagram.png)
+
 ## Giới thiệu
 
 Apache Kafka deep-dive: partitions, consumer groups, exactly-once. Apache Flink: stateful stream processing, windowing, watermarks. Kafka Streams vs Flink.

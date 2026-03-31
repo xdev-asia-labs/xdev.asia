@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 16: Predictive Maintenance & Anomaly Detection](/storage/uploads/2026/03/iot-bai-16-diagram.png)
+
 ## Giới thiệu
 
 Predictive maintenance: condition monitoring, failure prediction. Anomaly detection algorithms. ML models cho sensor data. Remaining Useful Life (RUL) estimation.

@@ -18,6 +18,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 25: Secrets Management & Container Security](/storage/uploads/2026/03/cn-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Credentials rò rỉ là một trong những nguyên nhân hàng đầu của data breach — hardcode password trong code, commit secret vào Git, environment variables không được bảo vệ.

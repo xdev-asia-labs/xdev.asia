@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 1: Tổng quan Event-Driven Architecture - Why Events Matter](/storage/uploads/2026/03/edm-bai-1-diagram.png)
+
 ## Giới thiệu
 
 Event-Driven Architecture (EDA) fundamentals. Events vs Commands vs Queries. Temporal coupling vs event decoupling. EDA benefits và trade-offs.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 16: Data Import/Export & Migration Tools](/storage/uploads/2026/03/saas-bai-16-diagram.png)
+
 ## Giới thiệu
 
 Bulk data import với streaming. Export formats (CSV, JSON, Parquet). Data migration từ competitor platforms. ETL pipelines cho tenant data.

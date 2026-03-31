@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 14: Notification & Communication Engine](/storage/uploads/2026/03/saas-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Multi-channel notification: email, push, in-app, SMS, Slack. Template engine. Preference management. Digest/batching. Delivery tracking.

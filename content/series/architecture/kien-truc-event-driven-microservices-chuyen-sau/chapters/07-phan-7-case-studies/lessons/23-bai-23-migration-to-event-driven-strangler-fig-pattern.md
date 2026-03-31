@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 23: Migration to Event-Driven - Strangler Fig Pattern](/storage/uploads/2026/03/edm-bai-23-diagram.png)
+
 ## Giới thiệu
 
 Migrating from monolith to event-driven: strangler fig pattern. Parallel run strategy. Event bridge between old and new. Gradual migration. Risk management.

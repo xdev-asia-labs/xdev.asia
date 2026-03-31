@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 19: Observability Platform - Metrics, Logs & Traces](/storage/uploads/2026/03/pe-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Unified observability: OpenTelemetry, Prometheus, Grafana, Loki, Tempo. Self-service dashboards. Alert routing. On-call management integration.

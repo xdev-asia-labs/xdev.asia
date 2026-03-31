@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 15: Real-time Monitoring Dashboard & Visualization](/storage/uploads/2026/03/iot-bai-15-diagram.png)
+
 ## Giới thiệu
 
 Real-time dashboard architecture. Grafana cho IoT. WebSocket-based live updates. 3D visualization. Geospatial dashboards. Alert management UI.

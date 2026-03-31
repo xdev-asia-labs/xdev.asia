@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 3: Platform Architecture Overview - DDD & Microservices cho SaaS](/storage/uploads/2026/03/saas-bai-3-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế kiến trúc tổng quan SaaS Platform. Bounded Contexts: Tenant, Identity, Billing, Product. Shared services vs tenant-specific services.

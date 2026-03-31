@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 23: Platform Migration & Adoption](/storage/uploads/2026/03/pe-bai-23-diagram.png)
+
 ## Giới thiệu
 
 Migrating to new platform: phased adoption, incentives. Legacy system integration. Measuring platform adoption. Community building. Documentation.

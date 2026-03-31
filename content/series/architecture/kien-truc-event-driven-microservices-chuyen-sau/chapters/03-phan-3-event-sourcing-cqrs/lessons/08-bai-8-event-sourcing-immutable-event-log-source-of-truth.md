@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 8: Event Sourcing - Immutable Event Log as Source of Truth](/storage/uploads/2026/03/edm-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Event Sourcing fundamentals: event store, event replay, snapshots. Aggregate reconstruction. Temporal queries. Audit trail tự nhiên. Event versioning.

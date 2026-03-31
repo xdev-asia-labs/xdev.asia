@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 18: Feature Store - Feature Engineering at Scale](/storage/uploads/2026/03/dp-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Feature Store architecture: Feast, Tecton. Offline vs online feature serving. Feature pipelines. Feature reuse và discovery. Point-in-time correct joins.

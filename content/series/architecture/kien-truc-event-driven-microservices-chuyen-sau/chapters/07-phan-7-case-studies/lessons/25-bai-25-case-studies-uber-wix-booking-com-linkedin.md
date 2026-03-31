@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 25: Case Studies - Uber, Wix, Booking.com & LinkedIn](/storage/uploads/2026/03/edm-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Phân tích event-driven thực tế: Uber (event sourcing ride matching), Wix (event-driven platform), Booking.com (Kafka at scale), LinkedIn (Kafka origin). Lessons learned.

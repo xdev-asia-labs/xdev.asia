@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 23: Security & Privacy cho EdTech](/storage/uploads/2026/03/edtech-bai-23-diagram.png)
+
 ## Giới thiệu
 
 EdTech security: COPPA compliance (children data), FERPA. Content DRM. Anti-piracy. Student data privacy. Proctoring ethics.

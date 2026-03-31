@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 5: Identity & Access Management - Multi-tenant Auth & SSO](/storage/uploads/2026/03/saas-bai-5-diagram.png)
+
 ## Giới thiệu
 
 Multi-tenant authentication: organization-based login. SSO với SAML/OIDC. RBAC per tenant. Invitation flow. Identity provider federation.

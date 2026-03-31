@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 19: Marketplace & Instructor Platform](/storage/uploads/2026/03/edtech-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Course marketplace architecture: instructor onboarding, course review, pricing. Revenue sharing engine. Instructor analytics. Creator tools.

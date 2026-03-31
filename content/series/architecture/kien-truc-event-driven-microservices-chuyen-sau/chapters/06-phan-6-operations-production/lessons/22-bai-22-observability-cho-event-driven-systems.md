@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 22: Observability cho Event-Driven Systems](/storage/uploads/2026/03/edm-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Distributed tracing qua events. Correlation IDs. Event flow visualization. Consumer lag alerting. Dead letter monitoring. Partition skew detection.

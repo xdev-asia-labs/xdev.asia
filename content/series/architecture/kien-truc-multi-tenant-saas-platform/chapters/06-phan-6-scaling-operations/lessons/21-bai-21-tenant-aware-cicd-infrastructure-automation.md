@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 21: Tenant-aware CI/CD & Infrastructure Automation](/storage/uploads/2026/03/saas-bai-21-diagram.png)
+
 ## Giới thiệu
 
 CI/CD cho SaaS: zero-downtime deployments. Canary releases per tenant group. Infrastructure as Code cho tenant provisioning. GitOps workflow.

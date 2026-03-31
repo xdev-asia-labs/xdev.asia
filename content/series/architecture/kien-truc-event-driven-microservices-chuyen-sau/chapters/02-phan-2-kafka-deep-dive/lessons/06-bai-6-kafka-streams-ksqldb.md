@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 6: Kafka Streams & ksqlDB](/storage/uploads/2026/03/edm-bai-6-diagram.png)
+
 ## Giới thiệu
 
 Kafka Streams: KStream, KTable, windowing, joins. State stores. Interactive queries. ksqlDB: SQL over streams. Materialized views. Stream processing topologies.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 22: Data Platform Security & Privacy](/storage/uploads/2026/03/dp-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Data platform security: encryption, access control, audit logging. Privacy engineering: differential privacy, k-anonymity. Data masking pipelines.

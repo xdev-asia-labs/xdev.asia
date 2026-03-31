@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 6: Video Delivery - HLS, DASH & Adaptive Streaming](/storage/uploads/2026/03/edtech-bai-6-diagram.png)
+
 ## Giới thiệu
 
 Video platform architecture: transcoding pipeline, adaptive bitrate streaming (HLS/DASH). CDN distribution. Video player integration. DRM protection. Subtitle management.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 3: Platform Architecture Overview - Layers & Components](/storage/uploads/2026/03/pe-bai-3-diagram.png)
+
 ## Giới thiệu
 
 IDP architecture layers: UI Portal, API, orchestration, integration. Platform capabilities map. Build vs buy decisions. Platform maturity model.

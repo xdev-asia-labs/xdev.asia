@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 20: SRE Platform - SLO, Error Budgets & Incident Management](/storage/uploads/2026/03/pe-bai-20-diagram.png)
+
 ## Giới thiệu
 
 SRE practices: SLI/SLO/SLA definition. Error budget tracking. Incident management platform. Postmortem automation. Chaos engineering integration.

@@ -18,6 +18,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 21: CI/CD Pipeline cho Microservices](/storage/uploads/2026/03/cn-bai-21-diagram.png)
+
 ## Giới thiệu
 
 Microservices chỉ mang lại giá trị khi bạn có thể **deploy nhanh và an toàn**. Không có CI/CD tốt, microservices trở thành gánh nặng hơn monolith — phải deploy hàng chục service thủ công, mỗi lần deploy là một sự kiện rủi ro.

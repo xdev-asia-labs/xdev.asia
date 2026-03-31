@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 20: Kafka Operations - Monitoring, Tuning & Troubleshooting](/storage/uploads/2026/03/edm-bai-20-diagram.png)
+
 ## Giới thiệu
 
 Kafka operations: monitoring (JMX, Prometheus), performance tuning. Consumer lag monitoring. Partition rebalancing. Broker maintenance. Troubleshooting common issues.

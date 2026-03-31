@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 12: Adaptive Learning - Personalized Learning Paths](/storage/uploads/2026/03/edtech-bai-12-diagram.png)
+
 ## Giới thiệu
 
 Adaptive learning algorithms. Knowledge graph modeling. Skill assessment và gap analysis. Personalized content recommendation. Learning path optimization.

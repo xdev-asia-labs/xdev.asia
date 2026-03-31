@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 1: Cloud Native là gì? — Nguyên lý và Twelve-Factor App](/storage/uploads/2026/03/cn-bai-1-diagram.png)
+
 ## Giới thiệu
 
 Cloud computing đã thay đổi hoàn toàn cách chúng ta xây dựng và vận hành phần mềm. Nhưng việc đơn thuần chạy ứng dụng trên cloud không đồng nghĩa với "Cloud Native". Bài học này giúp bạn hiểu rõ Cloud Native thực sự nghĩa là gì, tại sao nó quan trọng, và các nguyên lý nền tảng mà mọi kỹ sư cần nắm vững.

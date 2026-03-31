@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 1: Tổng quan SaaS - Business Models, Metrics & Architecture Patterns](/storage/uploads/2026/03/saas-bai-1-diagram.png)
+
 ## Giới thiệu
 
 SaaS business models (B2B, B2C, PLG, Sales-led). Key metrics: MRR, ARR, Churn, LTV, CAC. SaaS architecture patterns và evolution từ on-premise đến cloud-native.

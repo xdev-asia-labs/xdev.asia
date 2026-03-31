@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 17: Smart Factory - Industrial IoT (IIoT) Architecture](/storage/uploads/2026/03/iot-bai-17-diagram.png)
+
 ## Giới thiệu
 
 IIoT architecture: OPC UA, ISA-95 levels. Manufacturing Execution System (MES). Production monitoring. Quality control với vision AI. OEE tracking.

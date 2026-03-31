@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 15: Core Banking Architecture - Account Management](/storage/uploads/2026/03/fintech-bai-15-diagram.png)
+
 ## Giới thiệu
 
 Kiến trúc Core Banking System hiện đại. Account management: savings, checking, loan accounts. Interest calculation engine. Integration với NAPAS, SWIFT.

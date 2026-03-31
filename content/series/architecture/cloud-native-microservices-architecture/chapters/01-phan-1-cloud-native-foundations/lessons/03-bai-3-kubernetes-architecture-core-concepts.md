@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 3: Kubernetes Architecture & Core Concepts](/storage/uploads/2026/03/cn-bai-3-diagram.png)
+
 ## Giới thiệu
 
 Kubernetes (K8s) là nền tảng orchestration tiêu chuẩn cho container workloads. Hiểu kiến trúc và các khái niệm cốt lõi của Kubernetes là bắt buộc trước khi triển khai bất kỳ hệ thống microservices nào.

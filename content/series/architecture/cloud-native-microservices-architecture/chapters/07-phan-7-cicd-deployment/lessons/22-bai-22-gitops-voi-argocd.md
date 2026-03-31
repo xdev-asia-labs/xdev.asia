@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 22: GitOps với ArgoCD](/storage/uploads/2026/03/cn-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Trong CI/CD truyền thống, script deploy chạy `kubectl apply` trực tiếp lên cluster. Ai đang chạy gì? Cluster hiện tại ở trạng thái nào? Làm sao rollback?

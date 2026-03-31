@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 7: Data Integration & API Ingestion](/storage/uploads/2026/03/dp-bai-7-diagram.png)
+
 ## Giới thiệu
 
 REST API data ingestion patterns. Webhook receivers. File-based ingestion (S3, SFTP). Singer/Meltano cho connector ecosystem. Incremental extraction.

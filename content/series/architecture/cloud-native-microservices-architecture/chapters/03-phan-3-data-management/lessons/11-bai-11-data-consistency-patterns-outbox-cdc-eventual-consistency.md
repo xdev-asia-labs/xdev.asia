@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 11: Data Consistency Patterns — Outbox, CDC & Eventual Consistency](/storage/uploads/2026/03/cn-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Khi mỗi microservice có database riêng, thách thức lớn nhất là đảm bảo **data consistency** giữa các service. Bài học này đi sâu vào các pattern giải quyết vấn đề dual write, reliable event publishing và eventual consistency.

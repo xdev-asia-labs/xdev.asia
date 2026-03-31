@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 5: Content Authoring & Rich Media](/storage/uploads/2026/03/edtech-bai-5-diagram.png)
+
 ## Giới thiệu
 
 Content authoring tools: rich text editor, drag-and-drop builder. Interactive content: H5P, embedded simulations. Content versioning. Multi-format support.

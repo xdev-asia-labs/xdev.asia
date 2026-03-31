@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 17: Credit Scoring Engine - Data Pipeline & ML](/storage/uploads/2026/03/fintech-bai-17-diagram.png)
+
 ## Giới thiệu
 
 Xây dựng Credit Scoring Engine. Alternative data sources. Feature engineering pipeline. ML models cho credit risk assessment. Integration với CIC Việt Nam.

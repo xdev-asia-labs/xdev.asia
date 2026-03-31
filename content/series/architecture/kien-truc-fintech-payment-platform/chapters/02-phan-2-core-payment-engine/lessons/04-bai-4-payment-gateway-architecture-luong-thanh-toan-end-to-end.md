@@ -18,6 +18,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 4: Payment Gateway Architecture - Luồng Thanh Toán End-to-End](/storage/uploads/2026/03/fintech-bai-4-diagram.png)
+
 ## Giới thiệu
 
 Payment Gateway là trái tim của mọi FinTech platform — nơi xử lý luồng tiền từ người mua đến người bán. Trong bài này, chúng ta sẽ thiết kế Payment Gateway architecture hoàn chỉnh, từ checkout flow đến settlement.

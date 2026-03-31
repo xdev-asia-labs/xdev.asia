@@ -125,6 +125,71 @@ const banners = [
     colors: ["#1B365D", "#2E86AB"],
     icon: "OH",
   },
+  // ─── Architecture series missing banners ───
+  {
+    filename: "data-platform-analytics-series-banner-2026.png",
+    title: "Data Platform &amp; Analytics",
+    subtitle: "Kien Truc He Thong",
+    colors: ["#1E3A5F", "#4FC3F7"],
+    icon: "DP",
+  },
+  {
+    filename: "edtech-lms-platform-series-banner-2026.png",
+    title: "EdTech &amp; LMS Platform",
+    subtitle: "Kien Truc He Thong",
+    colors: ["#1A237E", "#7C4DFF"],
+    icon: "LM",
+  },
+  {
+    filename: "event-driven-microservices-series-banner-2026.png",
+    title: "Event-Driven Microservices",
+    subtitle: "Kien Truc Chuyen Sau",
+    colors: ["#1B5E20", "#66BB6A"],
+    icon: "ED",
+  },
+  {
+    filename: "fintech-payment-platform-series-banner-2026.png",
+    title: "FinTech &amp; Payment",
+    subtitle: "Kien Truc Platform",
+    colors: ["#0D47A1", "#42A5F5"],
+    icon: "FT",
+  },
+  {
+    filename: "multi-tenant-saas-series-banner-2026.png",
+    title: "Multi-tenant SaaS",
+    subtitle: "Kien Truc Platform",
+    colors: ["#4A148C", "#CE93D8"],
+    icon: "MT",
+  },
+  {
+    filename: "platform-engineering-series-banner-2026.png",
+    title: "Platform Engineering",
+    subtitle: "Internal Developer Portal",
+    colors: ["#263238", "#78909C"],
+    icon: "PE",
+  },
+  {
+    filename: "realtime-iot-platform-series-banner-2026.png",
+    title: "Real-time &amp; IoT",
+    subtitle: "Kien Truc Platform",
+    colors: ["#BF360C", "#FF7043"],
+    icon: "RT",
+  },
+  // ─── Other missing banners ───
+  {
+    filename: "cloud-native-microservices-series-banner-2026.png",
+    title: "Cloud Native Microservices",
+    subtitle: "Architecture",
+    colors: ["#0D1B2A", "#1B98E0"],
+    icon: "CN",
+  },
+  {
+    filename: "vibe-coding-github-copilot-banner.png",
+    title: "Vibe Coding",
+    subtitle: "voi GitHub Copilot",
+    colors: ["#24292E", "#6F42C1"],
+    icon: "VC",
+  },
 ];
 
 function generateSVG({ title, subtitle, colors, icon }) {

@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 24: Authentication & Authorization — OAuth2, JWT & OIDC](/storage/uploads/2026/03/cn-bai-24-diagram.png)
+
 ## Giới thiệu
 
 Authentication và Authorization trong microservices phức tạp hơn monolith: mỗi service cần biết "ai đang gọi tôi?" và "họ có quyền làm điều này không?" — mà không cần check database mỗi request.

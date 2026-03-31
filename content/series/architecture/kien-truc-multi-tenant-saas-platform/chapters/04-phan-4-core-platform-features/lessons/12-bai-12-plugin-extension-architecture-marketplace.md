@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 12: Plugin & Extension Architecture - Marketplace](/storage/uploads/2026/03/saas-bai-12-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế plugin system: extension points, hooks, sandboxed execution. Plugin marketplace. Third-party integrations. Webhook system. OAuth app platform.

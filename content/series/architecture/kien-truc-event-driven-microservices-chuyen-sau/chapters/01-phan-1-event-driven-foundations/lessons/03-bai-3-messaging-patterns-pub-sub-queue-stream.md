@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 3: Messaging Patterns - Pub/Sub, Queue & Stream](/storage/uploads/2026/03/edm-bai-3-diagram.png)
+
 ## Giới thiệu
 
 Messaging patterns: point-to-point, pub/sub, event streaming. Message brokers vs event streaming platforms. At-most-once, at-least-once, exactly-once delivery.

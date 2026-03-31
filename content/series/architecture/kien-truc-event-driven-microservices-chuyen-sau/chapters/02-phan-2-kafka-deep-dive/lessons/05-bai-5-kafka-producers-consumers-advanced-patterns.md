@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 5: Kafka Producers & Consumers - Advanced Patterns](/storage/uploads/2026/03/edm-bai-5-diagram.png)
+
 ## Giới thiệu
 
 Producer: acks, batching, compression, idempotent producer. Consumer: consumer groups, offset management, rebalancing. Exactly-once semantics (EOS).

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 19: Noisy Neighbor & Resource Isolation](/storage/uploads/2026/03/saas-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Noisy neighbor problem. Resource quotas per tenant. Fair scheduling. Throttling strategies. Tenant tiering: compute, storage, bandwidth limits.

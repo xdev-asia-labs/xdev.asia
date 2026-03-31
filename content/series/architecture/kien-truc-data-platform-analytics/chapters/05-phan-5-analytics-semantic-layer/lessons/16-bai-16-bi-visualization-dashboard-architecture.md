@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 16: BI & Visualization - Dashboard Architecture](/storage/uploads/2026/03/dp-bai-16-diagram.png)
+
 ## Giới thiệu
 
 BI platform architecture: Metabase, Superset, Looker. Embedded analytics. Dashboard performance optimization. Self-service analytics.

@@ -16,6 +16,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 2: Container & Docker — Nền tảng đóng gói ứng dụng](/storage/uploads/2026/03/cn-bai-2-diagram.png)
+
 ## Giới thiệu
 
 Container là nền tảng của Cloud Native. Mọi service trong kiến trúc microservices đều được đóng gói thành container image để đảm bảo tính nhất quán giữa development, staging và production. Bài này đi sâu vào container, Docker, và các best practices cần thiết.

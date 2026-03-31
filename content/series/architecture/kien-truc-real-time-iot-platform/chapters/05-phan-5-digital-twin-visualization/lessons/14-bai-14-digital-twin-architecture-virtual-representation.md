@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 14: Digital Twin Architecture - Virtual Representation](/storage/uploads/2026/03/iot-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Digital Twin concepts. Twin definition language. State synchronization. Simulation engine. Predictive maintenance với digital twins. DTDL (Digital Twin Definition Language).

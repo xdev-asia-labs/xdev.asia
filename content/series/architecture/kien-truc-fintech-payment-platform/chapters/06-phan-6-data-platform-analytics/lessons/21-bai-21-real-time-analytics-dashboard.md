@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 21: Real-time Analytics & Dashboard](/storage/uploads/2026/03/fintech-bai-21-diagram.png)
+
 ## Giới thiệu
 
 Real-time analytics cho payment platform. Transaction monitoring dashboard. KPI tracking: TPV, success rate. Anomaly detection.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 12: CI/CD Platform Architecture - Pipeline as Code](/storage/uploads/2026/03/pe-bai-12-diagram.png)
+
 ## Giới thiệu
 
 CI/CD platform: shared pipelines, reusable workflows. GitHub Actions, GitLab CI, Tekton. Pipeline templates. Build caching. Artifact management.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 19: ML Pipeline Integration - Training & Serving Data](/storage/uploads/2026/03/dp-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Data platform cho ML: training data preparation, labeling pipelines. Model training data versioning (DVC). A/B testing data. Experiment tracking.

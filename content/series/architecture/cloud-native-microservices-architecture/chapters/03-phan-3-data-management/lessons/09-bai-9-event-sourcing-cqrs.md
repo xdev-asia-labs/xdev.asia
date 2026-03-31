@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 9: Event Sourcing & CQRS](/storage/uploads/2026/03/cn-bai-9-diagram.png)
+
 ## Giới thiệu
 
 Event Sourcing và CQRS là hai pattern thường đi đôi, giúp giải quyết các bài toán phức tạp về data consistency, audit trail và performance optimization trong microservices.

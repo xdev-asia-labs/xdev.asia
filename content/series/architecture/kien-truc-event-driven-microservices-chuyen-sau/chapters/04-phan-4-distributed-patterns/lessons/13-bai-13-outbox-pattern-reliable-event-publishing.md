@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 13: Outbox Pattern & Reliable Event Publishing](/storage/uploads/2026/03/edm-bai-13-diagram.png)
+
 ## Giới thiệu
 
 Transactional outbox pattern. Polling publisher vs CDC-based. Debezium outbox connector. Guaranteed event delivery. Ordering guarantees.

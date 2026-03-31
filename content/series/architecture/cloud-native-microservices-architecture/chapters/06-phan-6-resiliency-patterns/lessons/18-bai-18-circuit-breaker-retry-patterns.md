@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 18: Circuit Breaker & Retry Patterns](/storage/uploads/2026/03/cn-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Trong microservices, **failure là chuyện bình thường** — service sẽ timeout, crash, bị overloaded. Câu hỏi không phải là "liệu có failure không?" mà là "failure được xử lý như thế nào?".

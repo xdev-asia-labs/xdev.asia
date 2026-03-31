@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 15: Idempotency & Exactly-once Processing](/storage/uploads/2026/03/edm-bai-15-diagram.png)
+
 ## Giới thiệu
 
 Idempotent consumers: deduplication strategies. Idempotency keys. Exactly-once vs effectively-once. Kafka transactional API. Consumer offset management.

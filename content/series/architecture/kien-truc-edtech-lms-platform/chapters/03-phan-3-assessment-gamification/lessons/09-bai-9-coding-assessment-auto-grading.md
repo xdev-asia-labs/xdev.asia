@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 9: Coding Assessment & Auto-grading](/storage/uploads/2026/03/edtech-bai-9-diagram.png)
+
 ## Giới thiệu
 
 Online code editor (Monaco/CodeMirror). Sandboxed code execution. Test case runner. Plagiarism detection. Code review workflow. Multi-language support.

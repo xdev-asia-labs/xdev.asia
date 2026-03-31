@@ -18,6 +18,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 17: Distributed Tracing — OpenTelemetry & Jaeger](/storage/uploads/2026/03/cn-bai-17-diagram.png)
+
 ## Giới thiệu
 
 Metrics cho bạn biết *có gì đó* đang sai. Logs cho bạn biết *điều gì* đã xảy ra trong mỗi service. **Distributed Tracing** cho bạn biết *tại sao* một request lại chậm hay lỗi khi đi qua nhiều service.

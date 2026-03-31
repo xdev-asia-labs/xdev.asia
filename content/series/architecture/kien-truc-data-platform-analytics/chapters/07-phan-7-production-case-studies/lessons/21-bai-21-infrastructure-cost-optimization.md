@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 21: Infrastructure & Cost Optimization](/storage/uploads/2026/03/dp-bai-21-diagram.png)
+
 ## Giới thiệu
 
 Data platform infrastructure: Kubernetes, Spark on K8s. Cost optimization: spot instances, auto-scaling, storage tiering. FinOps cho data teams.

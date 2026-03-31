@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 24: Admin Portal & Self-service Operations](/storage/uploads/2026/03/saas-bai-24-diagram.png)
+
 ## Giới thiệu
 
 Super admin portal: tenant management, usage monitoring. Tenant admin portal: user management, settings, billing. Self-service troubleshooting.

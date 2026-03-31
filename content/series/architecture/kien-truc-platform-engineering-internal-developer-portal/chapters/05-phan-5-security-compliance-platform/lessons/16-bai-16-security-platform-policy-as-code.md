@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 16: Security Platform - Policy as Code](/storage/uploads/2026/03/pe-bai-16-diagram.png)
+
 ## Giới thiệu
 
 Security platform: OPA/Gatekeeper, Kyverno. Policy as Code. Automated compliance checks. Vulnerability management platform. Secret management (Vault).

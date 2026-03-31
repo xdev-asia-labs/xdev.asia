@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 3: Platform Architecture Overview - Cloud-Edge Hybrid](/storage/uploads/2026/03/iot-bai-3-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế kiến trúc IoT Platform: cloud-edge hybrid. Message broker (EMQX, HiveMQ). Rule engine. Device registry. Data pipeline architecture.

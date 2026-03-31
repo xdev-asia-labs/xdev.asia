@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 24: Observability & Monitoring cho IoT Platform](/storage/uploads/2026/03/iot-bai-24-diagram.png)
+
 ## Giới thiệu
 
 IoT platform monitoring: device health, message throughput, latency. Network monitoring. Alert management. Incident response cho IoT at scale.

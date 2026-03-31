@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 17: Search & Analytics Per Tenant](/storage/uploads/2026/03/saas-bai-17-diagram.png)
+
 ## Giới thiệu
 
 Full-text search cho multi-tenant (Elasticsearch/Meilisearch). Tenant data isolation trong search index. In-app analytics dashboard. Data export.

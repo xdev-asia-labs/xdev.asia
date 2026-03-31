@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 2: IoT Protocols - MQTT, CoAP, AMQP & WebSocket](/storage/uploads/2026/03/iot-bai-2-diagram.png)
+
 ## Giới thiệu
 
 MQTT deep-dive: QoS levels, retained messages, will messages. CoAP cho constrained devices. AMQP cho enterprise. WebSocket cho real-time web. Protocol selection guide.

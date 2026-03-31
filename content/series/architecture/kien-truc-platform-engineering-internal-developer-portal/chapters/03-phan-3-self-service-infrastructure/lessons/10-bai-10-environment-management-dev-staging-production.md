@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 10: Environment Management - Dev, Staging, Production](/storage/uploads/2026/03/pe-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Environment management: ephemeral environments, preview environments. Environment parity. Namespace-based isolation. Cost optimization cho dev/staging.

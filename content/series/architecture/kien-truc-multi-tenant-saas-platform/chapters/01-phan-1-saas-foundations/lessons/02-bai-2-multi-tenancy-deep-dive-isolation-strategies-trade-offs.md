@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 2: Multi-tenancy Deep Dive - Isolation Strategies & Trade-offs](/storage/uploads/2026/03/saas-bai-2-diagram.png)
+
 ## Giới thiệu
 
 Ba chiến lược tenant isolation: Silo (DB per tenant), Pool (shared DB), Bridge (schema per tenant). Trade-offs về cost, security, performance. Decision framework.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 8: Data Modeling - Dimensional Modeling & Activity Schema](/storage/uploads/2026/03/dp-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Star schema, snowflake schema. Kimball vs Inmon. Activity schema. Slowly changing dimensions (SCD). Wide table vs normalized. Modeling for analytics.

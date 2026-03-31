@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 23: DataOps & Platform Engineering](/storage/uploads/2026/03/dp-bai-23-diagram.png)
+
 ## Giới thiệu
 
 DataOps practices: CI/CD cho data pipelines, testing, monitoring. Self-serve data platform. Developer experience. Platform team topology.

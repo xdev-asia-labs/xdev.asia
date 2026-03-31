@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 12: Saga Pattern - Managing Distributed Transactions](/storage/uploads/2026/03/edm-bai-12-diagram.png)
+
 ## Giới thiệu
 
 Saga pattern deep-dive: choreography vs orchestration. Compensating transactions. Saga execution coordinator. Error handling. Saga state machine.

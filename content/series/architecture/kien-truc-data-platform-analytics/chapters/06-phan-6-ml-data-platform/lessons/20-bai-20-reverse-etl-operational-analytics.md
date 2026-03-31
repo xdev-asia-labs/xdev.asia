@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 20: Reverse ETL & Operational Analytics](/storage/uploads/2026/03/dp-bai-20-diagram.png)
+
 ## Giới thiệu
 
 Reverse ETL: push data warehouse insights back to operational tools (CRM, marketing). Census, Hightouch patterns. Operational analytics use cases.

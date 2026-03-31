@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 7: API Gateway Pattern — Kong, APISIX & Envoy](/storage/uploads/2026/03/cn-bai-7-diagram.png)
+
 ## Giới thiệu
 
 Khi hệ thống có 10, 50, hay 100 microservices, client không thể gọi trực tiếp từng service. API Gateway đóng vai trò **entry point duy nhất**, xử lý cross-cutting concerns tập trung.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 18: Learning Analytics - Tracking & Insights](/storage/uploads/2026/03/edtech-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Learning analytics: completion rates, engagement metrics, assessment performance. Student at-risk detection. Instructor dashboard. xAPI analytics.

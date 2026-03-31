@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 15: Semantic Layer - Metrics Store & Business Logic](/storage/uploads/2026/03/dp-bai-15-diagram.png)
+
 ## Giới thiệu
 
 Semantic layer: single source of truth for metrics. Cube.js, MetricFlow (dbt). Metric definitions, dimensions, measures. Headless BI.

@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 4: Microservices Design Principles — SRP, DDD & Bounded Context](/storage/uploads/2026/03/cn-bai-4-diagram.png)
+
 ## Giới thiệu
 
 Microservices không chỉ là "chia nhỏ monolith". Nếu chia sai cách, bạn sẽ có một "distributed monolith" — mang đầy đủ nhược điểm của cả hai kiến trúc. Bài này trang bị nguyên lý thiết kế để chia microservices đúng cách.

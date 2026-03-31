@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 1: Tổng quan EdTech - Domain Analysis & Business Models](/storage/uploads/2026/03/edtech-bai-1-diagram.png)
+
 ## Giới thiệu
 
 EdTech landscape: MOOCs, corporate training, K-12, language learning. Business models: subscription, marketplace, freemium. EdTech market tại Việt Nam.

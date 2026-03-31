@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 22: Platform Team Organization & Operating Model](/storage/uploads/2026/03/pe-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Platform team structure: team topologies, enabling teams. Platform product management. User research cho internal tools. Platform adoption strategy.

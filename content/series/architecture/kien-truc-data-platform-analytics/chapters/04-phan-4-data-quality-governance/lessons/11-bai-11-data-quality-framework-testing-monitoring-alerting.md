@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 11: Data Quality Framework - Testing, Monitoring & Alerting](/storage/uploads/2026/03/dp-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Data quality dimensions: accuracy, completeness, timeliness. Great Expectations, dbt tests, Soda. Data anomaly detection. SLA monitoring.

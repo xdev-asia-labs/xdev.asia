@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 14: Dead Letter Queue & Error Handling](/storage/uploads/2026/03/edm-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Dead Letter Queue (DLQ) patterns. Retry strategies: exponential backoff, circuit breaker. Poison pill handling. Error classification. DLQ reprocessing.

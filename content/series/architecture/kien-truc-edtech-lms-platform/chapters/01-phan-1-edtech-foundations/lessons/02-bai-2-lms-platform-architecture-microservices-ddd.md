@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 2: LMS Platform Architecture - Microservices & DDD](/storage/uploads/2026/03/edtech-bai-2-diagram.png)
+
 ## Giới thiệu
 
 Kiến trúc tổng quan LMS Platform. Bounded Contexts: Course, User, Assessment, Content, Analytics. Service topology và communication patterns.

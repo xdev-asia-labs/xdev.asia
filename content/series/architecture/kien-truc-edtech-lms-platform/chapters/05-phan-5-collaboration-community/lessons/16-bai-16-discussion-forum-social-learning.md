@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 16: Discussion Forum & Social Learning](/storage/uploads/2026/03/edtech-bai-16-diagram.png)
+
 ## Giới thiệu
 
 Forum architecture: threads, replies, voting. Q&A system (Stack Overflow-style). Course-scoped discussions. Moderation tools. Notification system.

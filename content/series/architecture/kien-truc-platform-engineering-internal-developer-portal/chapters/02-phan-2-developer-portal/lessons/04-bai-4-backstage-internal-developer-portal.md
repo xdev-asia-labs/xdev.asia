@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 4: Backstage - Internal Developer Portal](/storage/uploads/2026/03/pe-bai-4-diagram.png)
+
 ## Giới thiệu
 
 Spotify Backstage: architecture, plugins, catalog. Software catalog: components, APIs, resources. TechDocs integration. Customization và plugin development.

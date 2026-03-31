@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 5: Service Catalog & Software Templates](/storage/uploads/2026/03/pe-bai-5-diagram.png)
+
 ## Giới thiệu
 
 Service catalog: register, discover, manage services. Software templates (scaffolder): golden paths cho new services. Template customization. API documentation.

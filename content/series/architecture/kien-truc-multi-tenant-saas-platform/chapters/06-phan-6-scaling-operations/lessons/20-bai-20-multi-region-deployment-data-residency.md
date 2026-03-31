@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 20: Multi-region Deployment & Data Residency](/storage/uploads/2026/03/saas-bai-20-diagram.png)
+
 ## Giới thiệu
 
 Multi-region SaaS deployment. Data residency requirements (GDPR, local laws). Tenant routing to nearest region. Cross-region replication strategies.

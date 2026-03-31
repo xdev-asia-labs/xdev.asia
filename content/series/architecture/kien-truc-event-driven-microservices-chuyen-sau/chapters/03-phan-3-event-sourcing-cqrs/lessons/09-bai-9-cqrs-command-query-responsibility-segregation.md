@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 9: CQRS - Command Query Responsibility Segregation](/storage/uploads/2026/03/edm-bai-9-diagram.png)
+
 ## Giới thiệu
 
 CQRS pattern: separate read/write models. Command handlers và domain logic. Read model projections. Eventual consistency. When to use CQRS.

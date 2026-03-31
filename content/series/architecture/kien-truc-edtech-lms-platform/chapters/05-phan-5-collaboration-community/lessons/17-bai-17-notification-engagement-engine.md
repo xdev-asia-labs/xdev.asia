@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 17: Notification & Engagement Engine](/storage/uploads/2026/03/edtech-bai-17-diagram.png)
+
 ## Giới thiệu
 
 Multi-channel notifications: email, push, in-app. Learning reminders. Streak notifications. Re-engagement campaigns. A/B testing cho engagement.

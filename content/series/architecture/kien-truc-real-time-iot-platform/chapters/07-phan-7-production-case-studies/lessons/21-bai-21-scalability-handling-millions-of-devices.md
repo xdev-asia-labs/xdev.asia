@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 21: Scalability - Handling Millions of Devices](/storage/uploads/2026/03/iot-bai-21-diagram.png)
+
 ## Giới thiệu
 
 Scaling IoT platform: connection management, message routing at scale. MQTT broker clustering. Partitioning strategies. Auto-scaling device connections.

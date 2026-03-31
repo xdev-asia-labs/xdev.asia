@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 7: Schema Registry & Data Serialization](/storage/uploads/2026/03/edm-bai-7-diagram.png)
+
 ## Giới thiệu
 
 Schema Registry: Avro, Protobuf, JSON Schema. Schema evolution rules. Compatibility modes. Schema validation. Confluent Schema Registry vs Apicurio.

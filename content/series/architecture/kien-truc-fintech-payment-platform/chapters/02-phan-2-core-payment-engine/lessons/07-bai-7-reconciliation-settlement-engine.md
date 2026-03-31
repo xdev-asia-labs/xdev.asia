@@ -17,6 +17,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 7: Reconciliation & Settlement Engine](/storage/uploads/2026/03/fintech-bai-7-diagram.png)
+
 ## Giới thiệu
 
 Reconciliation (đối soát) là quy trình so khớp giao dịch giữa hệ thống nội bộ và PSP/bank để đảm bảo tính chính xác của dữ liệu tài chính. Đây là chức năng critical nhưng thường bị overlooked trong payment systems.

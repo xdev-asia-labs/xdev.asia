@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 12: Service Discovery & Registry](/storage/uploads/2026/03/cn-bai-12-diagram.png)
+
 ## Giới thiệu
 
 Trong microservices, các service instances có thể **scale up/down dynamically**, IP thay đổi liên tục. Hardcode địa chỉ không khả thi. **Service Discovery** là cơ chế cho phép services tự động tìm thấy nhau.

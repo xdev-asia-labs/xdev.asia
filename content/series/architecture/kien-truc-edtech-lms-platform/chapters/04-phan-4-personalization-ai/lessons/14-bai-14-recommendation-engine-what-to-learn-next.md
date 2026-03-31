@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 14: Recommendation Engine - What to Learn Next](/storage/uploads/2026/03/edtech-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Course recommendation: collaborative filtering, content-based, hybrid. Skill-based recommendations. Learning goal matching. Cold start problem.

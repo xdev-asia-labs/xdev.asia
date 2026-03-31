@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 26: Production Readiness Checklist & Lộ trình triển khai](/storage/uploads/2026/03/cn-bai-26-diagram.png)
+
 ## Giới thiệu
 
 Chuẩn bị production không phải là bước cuối cùng — đó là tiêu chí phải đạt từ ngày đầu. Bài cuối của khóa học tổng hợp toàn bộ kiến thức thành checklist thực tế, technology stack khuyến nghị, và lộ trình 4 giai đoạn để triển khai hệ thống microservices từ zero đến production.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 11: Currency & Exchange Rate Engine - Multi-currency Support](/storage/uploads/2026/03/fintech-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế multi-currency system. Currency conversion engine và exchange rate management. Cross-border payment flows. Handling rounding và precision.

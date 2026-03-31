@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 7: Golden Paths & Paved Roads](/storage/uploads/2026/03/pe-bai-7-diagram.png)
+
 ## Giới thiệu
 
 Golden paths: opinionated default workflows. Paved roads vs guardrails. Service creation golden path. Deployment golden path. Incident response golden path.

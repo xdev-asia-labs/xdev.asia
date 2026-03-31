@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 6: Onboarding Engine - Self-service Signup & Guided Setup](/storage/uploads/2026/03/saas-bai-6-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế onboarding flow: signup, verification, workspace creation, guided setup. Product-Led Growth patterns. Trial management. Activation metrics tracking.

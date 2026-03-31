@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 15: Metrics — Prometheus & Grafana](/storage/uploads/2026/03/cn-bai-15-diagram.png)
+
 ## Giới thiệu
 
 Trong hệ thống microservices, bạn không thể "nhìn vào bên trong" một service đang chạy như debug truyền thống. **Metrics** là nền tảng đầu tiên của Observability — cung cấp dữ liệu số đo lường tình trạng và hiệu năng hệ thống theo thời gian.

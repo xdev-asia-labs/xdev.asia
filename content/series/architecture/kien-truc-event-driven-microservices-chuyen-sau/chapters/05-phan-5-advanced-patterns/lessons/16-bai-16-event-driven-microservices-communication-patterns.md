@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 16: Event-Driven Microservices Communication Patterns](/storage/uploads/2026/03/edm-bai-16-diagram.png)
+
 ## Giới thiệu
 
 Communication patterns: request-reply over events, event notification, event-carried state transfer. Hybrid sync+async patterns. API composition.

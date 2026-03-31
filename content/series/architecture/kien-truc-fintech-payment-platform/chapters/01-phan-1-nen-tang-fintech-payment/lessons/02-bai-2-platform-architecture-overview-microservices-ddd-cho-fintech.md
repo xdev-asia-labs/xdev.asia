@@ -18,6 +18,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 2: Platform Architecture Overview - Microservices & DDD cho FinTech](/storage/uploads/2026/03/fintech-bai-2-diagram.png)
+
 ## Giới thiệu
 
 Một FinTech Platform không phải là một ứng dụng monolithic đơn giản — nó là một hệ thống phức tạp với nhiều domain khác nhau cần được tách biệt rõ ràng. Trong bài này, chúng ta sẽ thiết kế kiến trúc tổng quan sử dụng **Microservices** và **Domain-Driven Design (DDD)**.

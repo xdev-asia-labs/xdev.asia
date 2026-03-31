@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 10: Gamification Engine - Points, Badges & Leaderboards](/storage/uploads/2026/03/edtech-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Gamification architecture: XP system, achievement badges, streaks. Leaderboard (global, friends, class). Progress tracking. Spaced repetition integration.

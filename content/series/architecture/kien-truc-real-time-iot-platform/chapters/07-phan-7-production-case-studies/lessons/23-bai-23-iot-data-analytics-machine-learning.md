@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 23: IoT Data Analytics & Machine Learning](/storage/uploads/2026/03/iot-bai-23-diagram.png)
+
 ## Giới thiệu
 
 IoT analytics architecture. Batch analytics trên sensor data. ML pipeline cho IoT: feature engineering from time-series. AutoML cho predictive models.

@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 16: Logging — Structured Logging, Loki & ELK Stack](/storage/uploads/2026/03/cn-bai-16-diagram.png)
+
 ## Giới thiệu
 
 Trong monolith, bạn có thể `ssh` vào server và `tail -f` log file. Trong microservices với hàng chục service chạy trên hàng trăm pod động, cách đó không còn khả thi. **Centralized logging** là yêu cầu bắt buộc.

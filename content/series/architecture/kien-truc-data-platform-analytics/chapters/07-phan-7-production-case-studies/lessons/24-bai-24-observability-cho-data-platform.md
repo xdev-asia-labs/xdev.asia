@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 24: Observability cho Data Platform](/storage/uploads/2026/03/dp-bai-24-diagram.png)
+
 ## Giới thiệu
 
 Data observability: pipeline monitoring, data freshness, volume anomalies. SLA tracking. Incident response cho data issues. Monte Carlo patterns.

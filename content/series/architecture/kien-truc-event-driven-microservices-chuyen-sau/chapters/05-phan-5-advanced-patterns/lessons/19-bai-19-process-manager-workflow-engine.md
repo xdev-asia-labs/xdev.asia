@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 19: Process Manager & Workflow Engine](/storage/uploads/2026/03/edm-bai-19-diagram.png)
+
 ## Giới thiệu
 
 Process Manager pattern: long-running business processes as state machines. Temporal.io workflow engine. Durable execution. Compensations.

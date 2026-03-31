@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 25: Case Studies - Coursera, Udemy, Duolingo & Khan Academy](/storage/uploads/2026/03/edtech-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Phân tích EdTech platform thực tế: Coursera (degree programs), Udemy (marketplace), Duolingo (gamification), Khan Academy (free education). Lessons learned.

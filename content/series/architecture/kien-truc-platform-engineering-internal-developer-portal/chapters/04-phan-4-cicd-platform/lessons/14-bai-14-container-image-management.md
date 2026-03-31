@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 14: Container & Image Management](/storage/uploads/2026/03/pe-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Container registry (Harbor). Image scanning & signing (Cosign). Base image management. Multi-arch builds. Image promotion pipeline. SBOM generation.

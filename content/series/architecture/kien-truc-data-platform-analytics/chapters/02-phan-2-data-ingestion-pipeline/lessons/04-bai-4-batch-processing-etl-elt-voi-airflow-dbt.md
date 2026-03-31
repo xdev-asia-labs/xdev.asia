@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 4: Batch Processing - ETL/ELT với Airflow & dbt](/storage/uploads/2026/03/dp-bai-4-diagram.png)
+
 ## Giới thiệu
 
 ETL vs ELT patterns. Apache Airflow: DAGs, operators, scheduling. dbt (data build tool): models, tests, documentation. Data transformation best practices.

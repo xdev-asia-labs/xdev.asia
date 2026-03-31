@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 3: Data Mesh - Domain-Oriented Data Architecture](/storage/uploads/2026/03/dp-bai-3-diagram.png)
+
 ## Giới thiệu
 
 Data Mesh principles: domain ownership, data as product, self-serve platform, federated governance. Implementation patterns. Data contracts.

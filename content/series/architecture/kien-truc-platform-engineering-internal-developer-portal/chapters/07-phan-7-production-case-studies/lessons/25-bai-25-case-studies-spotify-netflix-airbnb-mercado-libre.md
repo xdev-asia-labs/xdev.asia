@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 25: Case Studies - Spotify, Netflix, Airbnb & Mercado Libre](/storage/uploads/2026/03/pe-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Phân tích platform engineering thực tế: Spotify (Backstage origin), Netflix (full cycle dev), Airbnb (service mesh), Mercado Libre (platform at scale). Lessons learned.

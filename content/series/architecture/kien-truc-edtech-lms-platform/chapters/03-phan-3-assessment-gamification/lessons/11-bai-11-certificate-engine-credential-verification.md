@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 11: Certificate Engine & Credential Verification](/storage/uploads/2026/03/edtech-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Digital certificate generation (PDF, blockchain-verified). Certificate templates. Credential verification API. Integration với LinkedIn. Digital badges (Open Badges).

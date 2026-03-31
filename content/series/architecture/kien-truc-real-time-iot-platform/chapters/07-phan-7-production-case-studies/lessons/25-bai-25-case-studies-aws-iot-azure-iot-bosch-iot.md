@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 25: Case Studies - AWS IoT, Azure IoT & Bosch IoT](/storage/uploads/2026/03/iot-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Phân tích IoT platform thực tế: AWS IoT Core (serverless), Azure IoT Hub (enterprise), Bosch IoT Suite (industrial). Open-source alternatives. Lessons learned.

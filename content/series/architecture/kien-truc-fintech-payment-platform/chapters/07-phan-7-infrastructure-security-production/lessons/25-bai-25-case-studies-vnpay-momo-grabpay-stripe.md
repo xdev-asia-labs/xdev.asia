@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 25: Case Studies - VNPay, MoMo, GrabPay & Stripe](/storage/uploads/2026/03/fintech-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Phân tích kiến trúc thực tế: VNPay, MoMo super app, GrabPay, Stripe. Lessons learned và best practices từ production systems.

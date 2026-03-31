@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 14: Zero Trust Security & mTLS](/storage/uploads/2026/03/cn-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Trong mô hình truyền thống, bảo mật dựa vào **perimeter defense** — tin tưởng mọi thứ bên trong network. Trong cloud native, ranh giới network mờ nhạt, services có thể chạy ở nhiều nơi. **Zero Trust** đảo ngược: **never trust, always verify** — mọi request đều phải được xác thực và ủy quyền.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 20: Payment & Subscription cho EdTech](/storage/uploads/2026/03/edtech-bai-20-diagram.png)
+
 ## Giới thiệu
 
 EdTech billing: course purchase, subscription, team licenses. Coupon/discount engine. Refund policy. Tax handling. Revenue recognition.

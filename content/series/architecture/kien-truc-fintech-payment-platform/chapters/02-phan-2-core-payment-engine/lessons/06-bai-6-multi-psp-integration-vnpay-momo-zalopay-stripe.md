@@ -17,6 +17,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 6: Multi-PSP Integration - VNPay, MoMo, ZaloPay, Stripe](/storage/uploads/2026/03/fintech-bai-6-diagram.png)
+
 ## Giới thiệu
 
 Một payment platform thực tế luôn cần tích hợp nhiều PSP (Payment Service Provider) để tối ưu success rate, chi phí, và coverage. Bài này hướng dẫn thiết kế abstraction layer cho multi-PSP integration với smart routing.

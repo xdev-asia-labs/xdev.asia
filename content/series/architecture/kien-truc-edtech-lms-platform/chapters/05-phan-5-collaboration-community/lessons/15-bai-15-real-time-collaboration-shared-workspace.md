@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 15: Real-time Collaboration - Shared Workspace](/storage/uploads/2026/03/edtech-bai-15-diagram.png)
+
 ## Giới thiệu
 
 Real-time collaborative editing (CRDT/OT). Shared code editors. Collaborative whiteboard. Group projects. Peer programming sessions.

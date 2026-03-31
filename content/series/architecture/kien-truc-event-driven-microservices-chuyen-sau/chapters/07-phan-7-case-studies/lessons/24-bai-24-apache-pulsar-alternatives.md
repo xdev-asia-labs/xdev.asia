@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 24: Apache Pulsar & Alternatives](/storage/uploads/2026/03/edm-bai-24-diagram.png)
+
 ## Giới thiệu
 
 Apache Pulsar: multi-tenancy, tiered storage, geo-replication. Pulsar vs Kafka comparison. NATS JetStream. Redpanda. Amazon EventBridge. Choosing the right platform.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 12: Fraud Detection System - Rule Engine & ML Models](/storage/uploads/2026/03/fintech-bai-12-diagram.png)
+
 ## Giới thiệu
 
 Kiến trúc hệ thống phát hiện gian lận. Rule-based engine với dynamic rules. Machine Learning models cho fraud detection. Real-time scoring pipeline.

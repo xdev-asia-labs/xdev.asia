@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 6: API Portal & Documentation](/storage/uploads/2026/03/pe-bai-6-diagram.png)
+
 ## Giới thiệu
 
 API catalog: discovery, documentation, versioning. OpenAPI/AsyncAPI/GraphQL specs. API governance. Automated API docs generation. API health monitoring.

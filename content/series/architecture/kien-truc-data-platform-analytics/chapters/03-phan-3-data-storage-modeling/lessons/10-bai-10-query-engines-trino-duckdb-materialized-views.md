@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 10: Query Engines - Trino, DuckDB & Materialized Views](/storage/uploads/2026/03/dp-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Federated query với Trino/Presto. DuckDB cho embedded analytics. Materialized views và incremental computation. Query optimization.

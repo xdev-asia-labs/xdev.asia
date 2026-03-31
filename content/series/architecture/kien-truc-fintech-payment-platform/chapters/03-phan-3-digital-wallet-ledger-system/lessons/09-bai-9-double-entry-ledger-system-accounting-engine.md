@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 9: Double-Entry Ledger System - Accounting Engine](/storage/uploads/2026/03/fintech-bai-9-diagram.png)
+
 ## Giới thiệu
 
 Nguyên lý kế toán kép trong FinTech. Thiết kế ledger schema: accounts, journal entries, postings. Immutable append-only ledger. Chart of Accounts design cho payment platform.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 18: Event Versioning & Schema Evolution](/storage/uploads/2026/03/edm-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Event versioning strategies: weak schema, upcasting, event adapters. Breaking changes management. Multi-version consumers. Schema migration patterns.

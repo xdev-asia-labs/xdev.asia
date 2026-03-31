@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 9: Storage Layer - Object Storage, Columnar Formats & Partitioning](/storage/uploads/2026/03/dp-bai-9-diagram.png)
+
 ## Giới thiệu
 
 Object storage (S3/MinIO). Columnar formats: Parquet, ORC, Avro. Partitioning strategies. Compaction. Z-ordering. Storage tiering và lifecycle policies.

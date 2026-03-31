@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 25: Case Studies - Slack, Notion, Atlassian & Linear](/storage/uploads/2026/03/saas-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Phân tích kiến trúc SaaS thực tế: Slack (enterprise-grade), Notion (collaborative), Atlassian (marketplace), Linear (performance-first). Lessons learned.

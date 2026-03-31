@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 4: Course Management System - Curriculum & Enrollment](/storage/uploads/2026/03/edtech-bai-4-diagram.png)
+
 ## Giới thiệu
 
 Course modeling: courses, modules, lessons, resources. Curriculum planning. Enrollment engine. Prerequisites và learning paths. Course versioning.

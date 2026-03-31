@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 13: GitOps & Deployment Automation](/storage/uploads/2026/03/pe-bai-13-diagram.png)
+
 ## Giới thiệu
 
 GitOps: ArgoCD, Flux. Deployment strategies: blue-green, canary, progressive. Rollback automation. Environment promotion. Drift detection.

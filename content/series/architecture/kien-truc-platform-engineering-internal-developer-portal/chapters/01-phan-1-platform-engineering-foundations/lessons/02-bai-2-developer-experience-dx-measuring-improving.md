@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 2: Developer Experience (DX) - Measuring & Improving](/storage/uploads/2026/03/pe-bai-2-diagram.png)
+
 ## Giới thiệu
 
 Developer Experience: cognitive load, flow state, feedback loops. DORA metrics, SPACE framework. Developer surveys. Onboarding time. Time-to-first-deploy.

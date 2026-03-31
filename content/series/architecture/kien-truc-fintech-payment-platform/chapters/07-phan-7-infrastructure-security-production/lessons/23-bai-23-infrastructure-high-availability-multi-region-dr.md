@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 23: Infrastructure & High Availability - Multi-region & DR](/storage/uploads/2026/03/fintech-bai-23-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế infrastructure cho payment systems. Multi-region deployment. Active-active DR. Database replication. Zero-downtime deployment. 99.99%+ SLA.

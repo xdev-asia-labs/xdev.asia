@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 4: Device Management - Provisioning, Registry & Lifecycle](/storage/uploads/2026/03/iot-bai-4-diagram.png)
+
 ## Giới thiệu
 
 Device provisioning: zero-touch, certificate-based. Device registry và metadata. Device lifecycle: onboard, active, maintenance, decommission. Fleet management.

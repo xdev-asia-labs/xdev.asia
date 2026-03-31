@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 13: White-labeling & Custom Branding](/storage/uploads/2026/03/saas-bai-13-diagram.png)
+
 ## Giới thiệu
 
 White-label architecture: custom domains, logo, colors, email templates. CSS theming engine. Reseller/partner program support. Custom login pages.

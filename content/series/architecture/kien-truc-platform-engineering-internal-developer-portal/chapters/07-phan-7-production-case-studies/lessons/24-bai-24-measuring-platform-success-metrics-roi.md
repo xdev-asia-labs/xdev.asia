@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 24: Measuring Platform Success - Metrics & ROI](/storage/uploads/2026/03/pe-bai-24-diagram.png)
+
 ## Giới thiệu
 
 Platform success metrics: developer satisfaction, deployment frequency, lead time. ROI calculation. Platform maturity assessment. Continuous improvement.

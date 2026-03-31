@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 22: Scalability & Performance cho EdTech](/storage/uploads/2026/03/edtech-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Handling live class peaks. Video CDN optimization. Database sharding cho user data. Caching strategies. Load testing for exam periods.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 11: Feature Flags & Configuration Management](/storage/uploads/2026/03/saas-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Feature flag architecture: LaunchDarkly patterns. Tenant-specific configurations. A/B testing infrastructure. Dark launches. Kill switches.

@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 8: Assessment Engine - Question Bank & Quiz System](/storage/uploads/2026/03/edtech-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Question types: MCQ, coding, essay, matching. Question bank management. Quiz generation algorithms. Anti-cheating: proctoring, randomization, time limits.

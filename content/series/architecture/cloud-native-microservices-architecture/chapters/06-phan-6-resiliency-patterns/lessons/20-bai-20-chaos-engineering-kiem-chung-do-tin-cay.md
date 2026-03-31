@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 20: Chaos Engineering — Kiểm chứng độ tin cậy hệ thống](/storage/uploads/2026/03/cn-bai-20-diagram.png)
+
 ## Giới thiệu
 
 Bạn đã implement Circuit Breaker, Retry, Bulkhead... Nhưng làm sao chứng minh chúng thực sự hoạt động khi production có sự cố?

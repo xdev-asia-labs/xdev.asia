@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 6: OTA Updates & Remote Configuration](/storage/uploads/2026/03/iot-bai-6-diagram.png)
+
 ## Giới thiệu
 
 Over-the-Air firmware updates: A/B partition, rollback. Delta updates. Configuration management. Remote diagnostics. Device shadow/twin state.

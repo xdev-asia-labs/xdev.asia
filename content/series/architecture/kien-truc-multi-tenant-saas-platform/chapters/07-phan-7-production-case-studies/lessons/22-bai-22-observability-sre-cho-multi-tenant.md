@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 22: Observability & SRE cho Multi-tenant](/storage/uploads/2026/03/saas-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Tenant-aware monitoring: metrics, logs, traces per tenant. SLI/SLO per tier. Cost attribution. Tenant health dashboard. Incident management.

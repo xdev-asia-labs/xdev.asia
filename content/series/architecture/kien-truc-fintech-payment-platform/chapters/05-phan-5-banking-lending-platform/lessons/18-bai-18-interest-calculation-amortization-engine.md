@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 18: Interest Calculation & Amortization Engine](/storage/uploads/2026/03/fintech-bai-18-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế Interest Calculation Engine: simple/compound interest, day-count conventions. Amortization schedule. Prepayment, penalty, grace periods.

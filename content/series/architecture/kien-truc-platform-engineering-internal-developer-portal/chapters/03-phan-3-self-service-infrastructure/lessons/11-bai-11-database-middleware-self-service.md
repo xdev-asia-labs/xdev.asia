@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 11: Database & Middleware Self-service](/storage/uploads/2026/03/pe-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Database provisioning: PostgreSQL, Redis, Kafka as self-service. Operators pattern. Backup automation. Schema migration. Connection management.

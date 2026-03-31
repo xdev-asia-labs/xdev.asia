@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 12: Data Catalog & Discovery - Metadata Management](/storage/uploads/2026/03/dp-bai-12-diagram.png)
+
 ## Giới thiệu
 
 Data catalog: DataHub, OpenMetadata, Amundsen. Metadata management. Data lineage tracking. Data discovery và search. Business glossary.

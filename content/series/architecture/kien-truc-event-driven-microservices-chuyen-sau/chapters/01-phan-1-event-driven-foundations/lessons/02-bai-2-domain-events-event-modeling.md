@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 2: Domain Events & Event Modeling](/storage/uploads/2026/03/edm-bai-2-diagram.png)
+
 ## Giới thiệu
 
 Domain Events trong DDD. Event Storming workshop. Event Modeling technique. Identifying events, commands, aggregates. Event naming conventions.

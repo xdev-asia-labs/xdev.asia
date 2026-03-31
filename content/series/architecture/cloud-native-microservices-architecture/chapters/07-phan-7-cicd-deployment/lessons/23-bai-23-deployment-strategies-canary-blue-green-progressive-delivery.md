@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 23: Deployment Strategies — Canary, Blue/Green & Progressive Delivery](/storage/uploads/2026/03/cn-bai-23-diagram.png)
+
 ## Giới thiệu
 
 Deploy một version mới lên production luôn tiềm ẩn rủi ro. Câu hỏi là: **Deploy như thế nào để minimize risk?**

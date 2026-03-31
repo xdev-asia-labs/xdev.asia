@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 11: Projections & Read Model Patterns](/storage/uploads/2026/03/edm-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Building read models from events. Projection patterns: inline, catch-up, live. Multi-model projections. Rebuilding projections. Handling projection failures.

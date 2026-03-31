@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 14: Risk Scoring & Real-time Transaction Monitoring](/storage/uploads/2026/03/fintech-bai-14-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế Risk Scoring system. Real-time transaction monitoring với stream processing. Velocity checks, pattern detection. Risk-based authentication.

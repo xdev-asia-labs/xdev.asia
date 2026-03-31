@@ -15,6 +15,8 @@ course:
   slug: kien-truc-platform-engineering-internal-developer-portal
 ---
 
+![Bài 17: Supply Chain Security - SBOM & SLSA](/storage/uploads/2026/03/pe-bai-17-diagram.png)
+
 ## Giới thiệu
 
 Software supply chain security. SBOM (Software Bill of Materials). SLSA framework. Dependency scanning. Signed builds. Provenance verification.

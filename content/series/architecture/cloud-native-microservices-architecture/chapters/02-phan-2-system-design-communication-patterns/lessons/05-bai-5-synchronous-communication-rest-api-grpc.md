@@ -16,6 +16,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 5: Synchronous Communication — REST API & gRPC](/storage/uploads/2026/03/cn-bai-5-diagram.png)
+
 ## Giới thiệu
 
 Giao tiếp đồng bộ (synchronous) là mô hình request-response: client gửi request, chờ server trả response. REST và gRPC là hai lựa chọn phổ biến nhất cho internal service-to-service communication.

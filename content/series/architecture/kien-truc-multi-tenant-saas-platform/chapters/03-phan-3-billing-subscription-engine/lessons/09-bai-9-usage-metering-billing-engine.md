@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 9: Usage Metering & Billing Engine](/storage/uploads/2026/03/saas-bai-9-diagram.png)
+
 ## Giới thiệu
 
 Usage-based billing: metering infrastructure, aggregation pipelines. Invoice generation. Proration cho upgrades/downgrades. Tax calculation. Stripe/Paddle integration.

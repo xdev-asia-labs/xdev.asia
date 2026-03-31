@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 1: Tổng quan IoT Platform - Architecture & Ecosystem](/storage/uploads/2026/03/iot-bai-1-diagram.png)
+
 ## Giới thiệu
 
 IoT ecosystem overview. IoT architecture layers: device, gateway, cloud, application. IoT protocols comparison. Industry 4.0 và digital transformation.

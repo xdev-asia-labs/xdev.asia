@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 10: Event Store Implementation - PostgreSQL & EventStoreDB](/storage/uploads/2026/03/edm-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Implementing event store: PostgreSQL-based (outbox), EventStoreDB, Axon Server. Event serialization. Subscription models. Projections engine.

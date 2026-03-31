@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 13: Data Governance & Access Control](/storage/uploads/2026/03/dp-bai-13-diagram.png)
+
 ## Giới thiệu
 
 Data governance framework. Column-level access control. Data masking và anonymization. PII detection. Compliance (GDPR, PDPA). Data classification.

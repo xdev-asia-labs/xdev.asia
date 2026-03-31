@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 21: Testing Event-Driven Systems](/storage/uploads/2026/03/edm-bai-21-diagram.png)
+
 ## Giới thiệu
 
 Testing strategies: unit testing event handlers, integration testing with embedded Kafka. Contract testing cho events. End-to-end testing. Testcontainers.

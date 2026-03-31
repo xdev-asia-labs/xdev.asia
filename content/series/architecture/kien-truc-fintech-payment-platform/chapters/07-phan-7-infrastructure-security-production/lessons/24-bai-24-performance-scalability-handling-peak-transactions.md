@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 24: Performance & Scalability - Handling Peak Transactions](/storage/uploads/2026/03/fintech-bai-24-diagram.png)
+
 ## Giới thiệu
 
 Performance optimization cho payment platform. Handling peak loads. Database optimization. Caching strategies. Load testing và capacity planning.

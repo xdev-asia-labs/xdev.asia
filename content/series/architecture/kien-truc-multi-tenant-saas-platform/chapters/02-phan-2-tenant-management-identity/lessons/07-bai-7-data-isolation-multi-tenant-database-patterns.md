@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 7: Data Isolation & Multi-tenant Database Patterns](/storage/uploads/2026/03/saas-bai-7-diagram.png)
+
 ## Giới thiệu
 
 Row-level security (RLS) với PostgreSQL. Tenant context propagation. Query filtering patterns. Cross-tenant data protection. Tenant-aware migrations.

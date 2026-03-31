@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 2: Data Lakehouse Architecture - Iceberg, Delta Lake & Hudi](/storage/uploads/2026/03/dp-bai-2-diagram.png)
+
 ## Giới thiệu
 
 Data Lakehouse: kết hợp tốt nhất của DW và Data Lake. Apache Iceberg, Delta Lake, Apache Hudi. Table formats, ACID transactions trên object storage.

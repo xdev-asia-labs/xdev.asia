@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 7: Gateway Architecture & Protocol Translation](/storage/uploads/2026/03/iot-bai-7-diagram.png)
+
 ## Giới thiệu
 
 IoT Gateway: protocol translation, local processing, store-and-forward. Edge gateway vs cloud gateway. Modbus/BACnet → MQTT translation. Gateway clustering.

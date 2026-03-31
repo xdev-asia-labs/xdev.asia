@@ -17,6 +17,8 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+![Bài 10: Saga Pattern — Distributed Transactions](/storage/uploads/2026/03/cn-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Trong monolith, một business transaction có thể bao gồm nhiều database operations trong cùng một ACID transaction. Trong microservices, mỗi service có database riêng — **không thể dùng distributed transaction truyền thống (2PC)** vì nó tạo tight coupling và ảnh hưởng performance. Saga Pattern là giải pháp thay thế.

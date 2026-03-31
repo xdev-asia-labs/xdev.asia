@@ -15,6 +15,8 @@ course:
   slug: kien-truc-event-driven-microservices-chuyen-sau
 ---
 
+![Bài 17: Event-Driven Data Consistency & Conflict Resolution](/storage/uploads/2026/03/edm-bai-17-diagram.png)
+
 ## Giới thiệu
 
 Eventual consistency deep-dive. Conflict detection và resolution. Last-writer-wins vs merge. Vector clocks. CRDTs cho event-driven systems.

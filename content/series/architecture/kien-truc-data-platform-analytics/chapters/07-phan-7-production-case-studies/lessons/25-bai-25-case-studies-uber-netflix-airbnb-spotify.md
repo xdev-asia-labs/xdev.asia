@@ -15,6 +15,8 @@ course:
   slug: kien-truc-data-platform-analytics
 ---
 
+![Bài 25: Case Studies - Uber, Netflix, Airbnb & Spotify](/storage/uploads/2026/03/dp-bai-25-diagram.png)
+
 ## Giới thiệu
 
 Phân tích data platform thực tế: Uber (unified data platform), Netflix (data mesh), Airbnb (Minerva metrics), Spotify (event delivery). Lessons learned.

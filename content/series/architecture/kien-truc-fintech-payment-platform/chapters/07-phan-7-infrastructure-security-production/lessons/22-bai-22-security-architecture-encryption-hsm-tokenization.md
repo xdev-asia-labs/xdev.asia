@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 22: Security Architecture - Encryption, HSM & Tokenization](/storage/uploads/2026/03/fintech-bai-22-diagram.png)
+
 ## Giới thiệu
 
 Security architecture cho FinTech. End-to-end encryption. Hardware Security Module (HSM). Tokenization cho PAN data. PCI-DSS network segmentation.

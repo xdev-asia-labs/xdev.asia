@@ -8,7 +8,7 @@ description: >-
   giao tiếp (REST, gRPC, Event-Driven), đến Data Management (CQRS, Saga, Event Sourcing),
   Service Mesh, Observability, Resiliency Patterns, CI/CD GitOps và Security.
   Kết hợp lý thuyết vững chắc với kiến trúc thực tế cho hệ thống production.
-featured_image: null
+featured_image: uploads/2026/03/cloud-native-microservices-series-banner-2026.png
 level: intermediate
 duration_hours: 70
 lesson_count: 26

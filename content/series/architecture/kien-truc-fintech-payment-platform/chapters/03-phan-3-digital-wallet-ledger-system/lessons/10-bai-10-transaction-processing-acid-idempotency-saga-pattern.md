@@ -15,6 +15,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 10: Transaction Processing - ACID, Idempotency & Saga Pattern](/storage/uploads/2026/03/fintech-bai-10-diagram.png)
+
 ## Giới thiệu
 
 Đảm bảo consistency trong financial transactions. ACID properties, Saga pattern cho distributed transactions. Idempotency keys và deduplication. Compensating transactions.

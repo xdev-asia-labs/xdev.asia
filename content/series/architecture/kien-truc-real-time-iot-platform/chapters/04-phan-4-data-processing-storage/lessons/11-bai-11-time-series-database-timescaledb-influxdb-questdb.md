@@ -15,6 +15,8 @@ course:
   slug: kien-truc-real-time-iot-platform
 ---
 
+![Bài 11: Time-Series Database - TimescaleDB, InfluxDB & QuestDB](/storage/uploads/2026/03/iot-bai-11-diagram.png)
+
 ## Giới thiệu
 
 Time-series data patterns. TimescaleDB: hypertables, continuous aggregates. InfluxDB: Flux query language. QuestDB: SQL for time-series. Comparison và selection.

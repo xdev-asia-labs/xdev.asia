@@ -18,6 +18,8 @@ course:
   slug: kien-truc-fintech-payment-platform
 ---
 
+![Bài 3: Regulatory Compliance - PCI-DSS, PSD2 & Quy định NHNN Việt Nam](/storage/uploads/2026/03/fintech-bai-3-diagram.png)
+
 ## Giới thiệu
 
 Trong FinTech, compliance không phải là "nice-to-have" — nó là **bắt buộc**. Một payment platform phải tuân thủ hàng loạt quy định về bảo mật, quyền riêng tư, và reporting. Vi phạm có thể dẫn đến phạt hàng triệu đô, mất license, và mất niềm tin khách hàng.

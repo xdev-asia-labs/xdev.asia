@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 24: Accessibility & Internationalization](/storage/uploads/2026/03/edtech-bai-24-diagram.png)
+
 ## Giới thiệu
 
 WCAG 2.1 compliance. Screen reader support. Keyboard navigation. Multi-language platform (i18n). RTL support. Auto-translation. Localized content.

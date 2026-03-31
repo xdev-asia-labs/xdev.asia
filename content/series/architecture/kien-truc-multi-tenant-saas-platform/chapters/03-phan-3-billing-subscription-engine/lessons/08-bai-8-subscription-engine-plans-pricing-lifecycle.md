@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 8: Subscription Engine - Plans, Pricing & Lifecycle](/storage/uploads/2026/03/saas-bai-8-diagram.png)
+
 ## Giới thiệu
 
 Thiết kế subscription system: plan management, pricing tiers, trial periods. Subscription lifecycle: create, upgrade, downgrade, cancel, pause. Grandfathering.

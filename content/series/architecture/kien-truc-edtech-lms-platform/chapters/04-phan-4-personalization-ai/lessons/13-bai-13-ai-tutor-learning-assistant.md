@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 13: AI Tutor & Learning Assistant](/storage/uploads/2026/03/edtech-bai-13-diagram.png)
+
 ## Giới thiệu
 
 AI-powered tutoring: RAG over course content. Socratic method prompting. Code explanation và debugging assistant. Q&A bot. Content summarization.

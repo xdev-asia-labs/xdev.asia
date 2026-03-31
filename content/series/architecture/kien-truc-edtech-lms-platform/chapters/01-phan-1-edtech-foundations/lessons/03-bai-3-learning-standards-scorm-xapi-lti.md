@@ -15,6 +15,8 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+![Bài 3: Learning Standards - SCORM, xAPI & LTI](/storage/uploads/2026/03/edtech-bai-3-diagram.png)
+
 ## Giới thiệu
 
 SCORM 1.2/2004: course packaging, runtime communication. xAPI (Experience API): learning statements, LRS. LTI (Learning Tools Interoperability). Compliance implementation.

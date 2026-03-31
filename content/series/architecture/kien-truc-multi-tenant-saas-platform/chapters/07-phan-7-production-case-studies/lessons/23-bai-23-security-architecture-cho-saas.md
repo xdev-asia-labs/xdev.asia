@@ -15,6 +15,8 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+![Bài 23: Security Architecture cho SaaS](/storage/uploads/2026/03/saas-bai-23-diagram.png)
+
 ## Giới thiệu
 
 SaaS security: tenant data encryption, key management per tenant. Vulnerability management. Penetration testing. SOC 2, ISO 27001 compliance.
