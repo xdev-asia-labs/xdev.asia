@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 6: ETL Pipeline — Source to OMOP CDM](/storage/uploads/2026/03/ohdsi-bai-6-etl-pipeline.png)
+
 ## Giới thiệu
 
 Sau khi đã scan dữ liệu (WhiteRabbit), thiết kế mapping (Rabbit-in-a-Hat), và mapping source codes (Usagi) — bước tiếp theo là implement ETL pipeline thực tế để chuyển đổi dữ liệu từ nguồn sang OMOP CDM.

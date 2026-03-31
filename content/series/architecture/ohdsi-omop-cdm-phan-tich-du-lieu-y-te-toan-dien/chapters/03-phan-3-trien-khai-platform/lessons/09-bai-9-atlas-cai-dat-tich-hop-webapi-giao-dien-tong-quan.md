@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 9: ATLAS — Giao diện tổng quan](/storage/uploads/2026/03/ohdsi-bai-9-atlas-overview.png)
+
 ## Giới thiệu
 
 **ATLAS** là web application chính của hệ sinh thái OHDSI — giao diện trực quan để khám phá dữ liệu, tạo cohort definitions, chạy phân tích characterization, incidence rates, estimation, và prediction. ATLAS demo public: https://atlas-demo.ohdsi.org

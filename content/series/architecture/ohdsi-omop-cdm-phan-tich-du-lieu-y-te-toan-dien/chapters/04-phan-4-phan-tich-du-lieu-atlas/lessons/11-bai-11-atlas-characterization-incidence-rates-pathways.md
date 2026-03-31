@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 11: Characterization, Incidence Rates & Pathways](/storage/uploads/2026/03/ohdsi-bai-11-characterization-ir-pathways.png)
+
 ## Giới thiệu
 
 Sau khi đã tạo Cohort Definitions, bước tiếp theo là **phân tích cohort** — mô tả đặc điểm (Characterization), tính tỷ lệ mới mắc (Incidence Rates), và phân tích lộ trình điều trị (Pathways).

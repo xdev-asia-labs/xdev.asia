@@ -17,6 +17,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 17: Network Studies — Nghiên cứu đa trung tâm](/storage/uploads/2026/03/ohdsi-bai-17-network-studies.png)
+
 ## Giới thiệu
 
 Sức mạnh thực sự của OHDSI nằm ở **nghiên cứu đa trung tâm (network studies)** — cùng một câu hỏi nghiên cứu được trả lời đồng thời trên hàng chục databases từ nhiều quốc gia, **mà không cần chia sẻ dữ liệu bệnh nhân**.

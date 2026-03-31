@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 4: WhiteRabbit & Rabbit-in-a-Hat](/storage/uploads/2026/03/ohdsi-bai-4-whiterabbit-rabbit-in-a-hat.png)
+
 ## Giới thiệu
 
 Trước khi viết bất kỳ dòng ETL code nào, bạn cần **hiểu rõ dữ liệu nguồn** và **thiết kế mapping** sang OMOP CDM. Hai công cụ OHDSI giúp việc này:

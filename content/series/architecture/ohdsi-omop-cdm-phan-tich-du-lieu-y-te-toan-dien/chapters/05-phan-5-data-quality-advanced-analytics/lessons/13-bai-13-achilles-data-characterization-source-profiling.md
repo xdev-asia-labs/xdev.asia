@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 13: ACHILLES — Data Characterization & Source Profiling](/storage/uploads/2026/03/ohdsi-bai-13-achilles.png)
+
 ## Giới thiệu
 
 **ACHILLES** (Automated Characterization of Health Information at Large-scale Longitudinal Evidence Systems) là công cụ tạo **descriptive statistics** cho CDM database. Kết quả ACHILLES được hiển thị trong ATLAS Data Sources, giúp hiểu dữ liệu trước khi phân tích.

@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 10: ATLAS — Concept Sets & Cohort Definitions](/storage/uploads/2026/03/ohdsi-bai-10-concept-sets-cohorts.png)
+
 ## Giới thiệu
 
 **Cohort Definition** là trung tâm của mọi phân tích trong ATLAS. Một "cohort" (đoàn hệ) là tập hợp bệnh nhân thỏa mãn các tiêu chí lâm sàng cụ thể trong một khoảng thời gian xác định.

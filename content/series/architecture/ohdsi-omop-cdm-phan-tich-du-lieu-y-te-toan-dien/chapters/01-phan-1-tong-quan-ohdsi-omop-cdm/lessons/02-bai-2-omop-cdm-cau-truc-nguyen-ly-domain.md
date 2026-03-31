@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 2: OMOP CDM — Cấu trúc & Domain](/storage/uploads/2026/03/ohdsi-bai-2-omop-cdm-structure.png)
+
 ## Giới thiệu
 
 OMOP CDM (Common Data Model) là nền tảng cốt lõi của toàn bộ hệ sinh thái OHDSI. Mọi công cụ — ATLAS, WebAPI, ACHILLES, HADES — đều hoạt động trên dữ liệu được chuẩn hóa theo mô hình này.

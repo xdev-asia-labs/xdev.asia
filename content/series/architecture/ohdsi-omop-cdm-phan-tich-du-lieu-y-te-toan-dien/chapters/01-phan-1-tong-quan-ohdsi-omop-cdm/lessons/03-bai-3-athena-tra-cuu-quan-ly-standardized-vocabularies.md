@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 3: Athena — Standardized Vocabularies](/storage/uploads/2026/03/ohdsi-bai-3-athena-vocabularies.png)
+
 ## Giới thiệu
 
 **Athena** (https://athena.ohdsi.org) là cổng tra cứu và tải Standardized Vocabularies — bộ từ vựng chuẩn quốc tế cho toàn bộ hệ sinh thái OHDSI. Mọi concept trong OMOP CDM đều xuất phát từ đây.

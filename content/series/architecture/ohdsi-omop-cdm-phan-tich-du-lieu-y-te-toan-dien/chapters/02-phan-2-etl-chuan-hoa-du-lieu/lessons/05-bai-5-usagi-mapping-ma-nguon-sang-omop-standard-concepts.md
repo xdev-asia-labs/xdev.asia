@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 5: Usagi — Mapping Source Codes](/storage/uploads/2026/03/ohdsi-bai-5-usagi-mapping.png)
+
 ## Giới thiệu
 
 Trong quá trình ETL, bước quan trọng nhất là **mapping source codes → Standard Concepts**. Nhiều mã nguồn (ICD-10, mã thuốc nội bộ, mã xét nghiệm bệnh viện) không có sẵn mapping trong Athena.

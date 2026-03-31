@@ -12,7 +12,7 @@ description: >-
   Prediction), đánh giá chất lượng dữ liệu (ACHILLES, Data Quality Dashboard),
   HADES R packages cho nghiên cứu quan sát, và triển khai OHDSI stack trên
   Docker/Kubernetes cho Network Studies đa trung tâm.
-featured_image: null
+featured_image: uploads/2026/03/ohdsi-omop-cdm-series-banner.png
 level: intermediate
 duration_hours: 50
 lesson_count: 17

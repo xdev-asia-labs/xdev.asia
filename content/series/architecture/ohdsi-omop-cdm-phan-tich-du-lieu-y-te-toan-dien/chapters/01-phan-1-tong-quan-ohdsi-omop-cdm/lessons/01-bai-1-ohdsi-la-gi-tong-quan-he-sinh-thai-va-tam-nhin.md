@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 1: OHDSI — Tổng quan hệ sinh thái](/storage/uploads/2026/03/ohdsi-bai-1-ecosystem-overview.png)
+
 ## Giới thiệu
 
 Dữ liệu y tế toàn cầu là một kho báu khổng lồ — hàng tỷ bản ghi từ bệnh viện, phòng khám, bảo hiểm y tế. Nhưng mỗi hệ thống lưu trữ dưới dạng riêng biệt: HIS (Hospital Information System) của bệnh viện A khác hoàn toàn bệnh viện B, mã bệnh ICD-10 không đồng nhất với SNOMED CT, đơn thuốc lưu theo tên thương mại thay vì hoạt chất quốc tế.

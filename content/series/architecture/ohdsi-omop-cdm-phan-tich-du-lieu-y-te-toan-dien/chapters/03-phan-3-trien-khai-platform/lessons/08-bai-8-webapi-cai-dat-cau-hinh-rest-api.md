@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 8: WebAPI — REST API Architecture](/storage/uploads/2026/03/ohdsi-bai-8-webapi-architecture.png)
+
 ## Giới thiệu
 
 **WebAPI** là backend REST API của ATLAS — viết bằng Java/Spring Boot, cung cấp toàn bộ analysis services cho hệ sinh thái OHDSI. ATLAS (frontend) giao tiếp với CDM database hoàn toàn thông qua WebAPI.

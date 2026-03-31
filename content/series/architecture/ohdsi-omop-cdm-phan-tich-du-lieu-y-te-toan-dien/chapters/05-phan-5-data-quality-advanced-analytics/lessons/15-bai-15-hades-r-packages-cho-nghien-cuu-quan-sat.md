@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 15: HADES — R Packages cho nghiên cứu quan sát](/storage/uploads/2026/03/ohdsi-bai-15-hades-packages.png)
+
 ## Giới thiệu
 
 **HADES** (Health Analytics Data-to-Evidence Suite) là bộ **20+ R packages** mã nguồn mở của OHDSI, cung cấp toàn bộ pipeline phân tích từ tạo cohort đến estimation/prediction. ATLAS là GUI — HADES là engine phía sau.

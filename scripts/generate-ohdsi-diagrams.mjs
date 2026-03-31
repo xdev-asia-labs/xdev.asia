@@ -164,7 +164,7 @@ function bai1() {
     ${text(200, 555, "Core Platform", { size: 14, opacity: 0.5 })}
     ${text(1000, 555, "Analysis Tools", { size: 14, opacity: 0.5 })}
   `;
-  return wrapSVG(content, "Bai 1: OHDSI — Tong quan He sinh thai", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 1: OHDSI — Tong quan He sinh thai", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -221,7 +221,7 @@ function bai2() {
     ${roundedRect(480, 535, 240, 35, 8, COLORS.teal, 0.3)}
     ${text(600, 558, "OMOP CDM v5.4", { size: 15, weight: "700", opacity: 0.9 })}
   `;
-  return wrapSVG(content, "Bai 2: OMOP CDM — Cau truc &amp; Domain", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 2: OMOP CDM — Cau truc & Domain", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -282,11 +282,11 @@ function bai3() {
     ${roundedRect(250, 500, 700, 50, 12, "white", 0.1)}
     ${text(600, 531, "CONCEPT table: concept_id | concept_name | vocabulary_id | standard_concept", { size: 14, opacity: 0.7 })}
   `;
-  return wrapSVG(content, "Bai 3: Athena — Standardized Vocabularies", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 3: Athena — Standardized Vocabularies", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
-// BÀI 4: WhiteRabbit &amp; Rabbit-in-a-Hat
+// BÀI 4: WhiteRabbit & Rabbit-in-a-Hat
 // ═══════════════════════════════════════════
 function bai4() {
   const content = `
@@ -305,7 +305,7 @@ function bai4() {
     <!-- WhiteRabbit -->
     ${roundedRect(380, 160, 240, 110, 14, COLORS.orange)}
     ${text(500, 200, "WhiteRabbit", { size: 22, weight: "800" })}
-    ${text(500, 230, "Scan &amp; Profile", { size: 15, opacity: 0.8 })}
+    ${text(500, 230, "Scan & Profile", { size: 15, opacity: 0.8 })}
     ${text(500, 255, "Data Source", { size: 15, opacity: 0.8 })}
     ${arrow(282, 300, 378, 220)}
     
@@ -344,7 +344,7 @@ function bai4() {
     ${dashedLine(260, 327, 740, 327)}
     ${dashedLine(260, 372, 740, 372)}
   `;
-  return wrapSVG(content, "Bai 4: WhiteRabbit &amp; Rabbit-in-a-Hat", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 4: WhiteRabbit & Rabbit-in-a-Hat", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -406,7 +406,7 @@ function bai5() {
     
     ${text(600, 520, "Mapping File → ETL Pipeline → OMOP CDM", { size: 16, opacity: 0.6 })}
   `;
-  return wrapSVG(content, "Bai 5: Usagi — Mapping Source Codes to Standard Concepts", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 5: Usagi — Mapping Source Codes to Standard Concepts", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -424,7 +424,7 @@ function bai6() {
     <!-- Extract -->
     ${roundedRect(320, 140, 160, 140, 12, COLORS.orange)}
     ${text(400, 175, "EXTRACT", { size: 18, weight: "800" })}
-    ${text(400, 200, "Scan &amp;", { size: 14, opacity: 0.8 })}
+    ${text(400, 200, "Scan &", { size: 14, opacity: 0.8 })}
     ${text(400, 220, "Profile", { size: 14, opacity: 0.8 })}
     ${text(400, 255, "WhiteRabbit", { size: 13, opacity: 0.6 })}
     ${arrow(262, 210, 318, 210)}
@@ -432,7 +432,7 @@ function bai6() {
     <!-- Transform -->
     ${roundedRect(540, 140, 160, 140, 12, COLORS.purple)}
     ${text(620, 175, "TRANSFORM", { size: 18, weight: "800" })}
-    ${text(620, 200, "Map &amp;", { size: 14, opacity: 0.8 })}
+    ${text(620, 200, "Map &", { size: 14, opacity: 0.8 })}
     ${text(620, 220, "Convert", { size: 14, opacity: 0.8 })}
     ${text(620, 255, "Usagi + Python", { size: 13, opacity: 0.6 })}
     ${arrow(482, 210, 538, 210)}
@@ -467,7 +467,7 @@ function bai6() {
     ${roundedRect(920, 460, 220, 55, 10, "#334155")}
     ${text(1030, 488, "Incremental Updates", { size: 14 })}
   `;
-  return wrapSVG(content, "Bai 6: ETL Pipeline — Source to OMOP CDM", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 6: ETL Pipeline — Source to OMOP CDM", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -508,7 +508,7 @@ function bai7() {
     ${roundedRect(200, 510, 800, 55, 12, "white", 0.1)}
     ${text(600, 544, "Indexes + ANALYZE + shared_buffers=4GB + work_mem=256MB + parallel queries", { size: 15, opacity: 0.7 })}
   `;
-  return wrapSVG(content, "Bai 7: OMOP CDM Database tren PostgreSQL", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 7: OMOP CDM Database tren PostgreSQL", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -563,7 +563,7 @@ function bai8() {
     ${roundedRect(900, 480, 220, 40, 10, "white", 0.08)}
     ${text(1010, 505, "Port :5432", { size: 14, opacity: 0.6 })}
   `;
-  return wrapSVG(content, "Bai 8: WebAPI — REST API Architecture", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 8: WebAPI — REST API Architecture", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -640,11 +640,11 @@ function bai9() {
     ${roundedRect(755, 490, 70, 20, 4, COLORS.red, 0.8)}
     ${text(765, 504, "IHD", { size: 11, anchor: "start" })}
   `;
-  return wrapSVG(content, "Bai 9: ATLAS — Giao dien Tong quan", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 9: ATLAS — Giao dien Tong quan", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
-// BÀI 10: Concept Sets &amp; Cohort Definitions
+// BÀI 10: Concept Sets & Cohort Definitions
 // ═══════════════════════════════════════════
 function bai10() {
   const content = `
@@ -698,7 +698,7 @@ function bai10() {
     ${text(300, 410, "Concept Sets feed", { size: 14, fill: COLORS.gray, opacity: 0.5 })}
     ${text(300, 430, "into Cohort Definitions", { size: 14, fill: COLORS.gray, opacity: 0.5 })}
   `;
-  return wrapSVG(content, "Bai 10: ATLAS — Concept Sets &amp; Cohort Definitions", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 10: ATLAS — Concept Sets & Cohort Definitions", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -785,13 +785,13 @@ function bai11() {
 
     ${roundedRect(910, 400, 200, 55, 12, COLORS.orange)}
     ${text(1010, 420, "Export", { size: 16, weight: "700" })}
-    ${text(1010, 442, "&amp; Share", { size: 14, opacity: 0.8 })}
+    ${text(1010, 442, "& Share", { size: 14, opacity: 0.8 })}
   `;
-  return wrapSVG(content, "Bai 11: Characterization, Incidence Rates &amp; Pathways", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 11: Characterization, Incidence Rates & Pathways", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
-// BÀI 12: Estimation &amp; Prediction
+// BÀI 12: Estimation & Prediction
 // ═══════════════════════════════════════════
 function bai12() {
   const content = `
@@ -856,7 +856,7 @@ function bai12() {
     ${text(980, 504, "PatientLevelPrediction", { size: 14, opacity: 0.7 })}
     ${text(980, 526, "→ Execute on any CDM site", { size: 14, fill: COLORS.teal })}
   `;
-  return wrapSVG(content, "Bai 12: Estimation &amp; Prediction", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 12: Estimation & Prediction", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -873,7 +873,7 @@ function bai13() {
     ${roundedRect(360, 110, 280, 110, 16, COLORS.teal)}
     ${text(500, 150, "ACHILLES", { size: 28, weight: "800" })}
     ${text(500, 180, "Data Characterization", { size: 15, opacity: 0.8 })}
-    ${text(500, 200, "&amp; Profiling", { size: 15, opacity: 0.8 })}
+    ${text(500, 200, "& Profiling", { size: 15, opacity: 0.8 })}
     
     ${arrow(642, 165, 718, 165)}
     
@@ -932,7 +932,7 @@ function bai13() {
     ${roundedRect(970, 420, 150, 35, 8, COLORS.red, 0.3)}
     ${text(1045, 442, "Fix before analysis", { size: 12 })}
   `;
-  return wrapSVG(content, "Bai 13: ACHILLES — Data Characterization", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 13: ACHILLES — Data Characterization", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -948,7 +948,7 @@ function bai14() {
     <!-- Three pillars -->
     ${roundedRect(60, 240, 340, 200, 14, "#1E293B")}
     ${text(230, 275, "Conformance", { size: 22, weight: "700", fill: COLORS.teal })}
-    ${text(230, 305, "Value format &amp; range", { size: 14, opacity: 0.7 })}
+    ${text(230, 305, "Value format & range", { size: 14, opacity: 0.7 })}
     ${text(230, 330, "FK relationships", { size: 14, opacity: 0.7 })}
     ${text(230, 355, "Computation logic", { size: 14, opacity: 0.7 })}
     
@@ -982,7 +982,7 @@ function bai14() {
     ${text(600, 520, "Overall: 89.8% PASS", { size: 28, weight: "800", fill: COLORS.green })}
     ${text(600, 545, "1,389 / 1,547 checks passed — Kahn Framework", { size: 14, opacity: 0.6 })}
   `;
-  return wrapSVG(content, "Bai 14: Data Quality Dashboard (DQD)", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 14: Data Quality Dashboard (DQD)", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -1028,11 +1028,11 @@ function bai15() {
     ${iconBox(420, 570, 220, 35, "ResultModelManager", COLORS.orange)}
     ${iconBox(660, 570, 200, 35, "ShinyAppBuilder", COLORS.orange)}
   `;
-  return wrapSVG(content, "Bai 15: HADES — R Packages", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 15: HADES — R Packages", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
-// BÀI 16: Docker &amp; Kubernetes
+// BÀI 16: Docker & Kubernetes
 // ═══════════════════════════════════════════
 function bai16() {
   const content = `
@@ -1072,7 +1072,7 @@ function bai16() {
     
     <!-- Bottom: Operations -->
     ${roundedRect(60, 415, 350, 140, 14, "white", 0.06)}
-    ${text(235, 448, "Backup &amp; Restore", { size: 20, weight: "700", fill: COLORS.blue })}
+    ${text(235, 448, "Backup & Restore", { size: 20, weight: "700", fill: COLORS.blue })}
     ${text(235, 478, "pg_dump (nightly cron)", { size: 14, opacity: 0.7 })}
     ${text(235, 500, "30-day retention policy", { size: 14, opacity: 0.7 })}
     ${text(235, 522, "Point-in-time recovery", { size: 14, opacity: 0.7 })}
@@ -1089,7 +1089,7 @@ function bai16() {
     ${text(980, 500, "Parallel queries (8 workers)", { size: 14, opacity: 0.7 })}
     ${text(980, 522, "CDM indexes + ANALYZE", { size: 14, opacity: 0.7 })}
   `;
-  return wrapSVG(content, "Bai 16: OHDSI Stack — Docker &amp; Kubernetes", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 16: OHDSI Stack — Docker & Kubernetes", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════
@@ -1149,9 +1149,9 @@ function bai17() {
     
     <!-- Key principle -->
     ${roundedRect(250, 560, 700, 35, 10, COLORS.red, 0.2)}
-    ${text(600, 582, "Patient data NEVER leaves the site — Only code &amp; aggregate results are shared", { size: 14, fill: "#F87171" })}
+    ${text(600, 582, "Patient data NEVER leaves the site — Only code & aggregate results are shared", { size: 14, fill: "#F87171" })}
   `;
-  return wrapSVG(content, "Bai 17: Network Studies — Nghien cuu Da trung tam", "OHDSI &amp; OMOP CDM Series • xdev.asia");
+  return wrapSVG(content, "Bai 17: Network Studies — Nghien cuu Da trung tam", "OHDSI & OMOP CDM Series • xdev.asia");
 }
 
 // ═══════════════════════════════════════════

@@ -17,6 +17,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 16: Triển khai OHDSI Stack trên Docker & Kubernetes](/storage/uploads/2026/03/ohdsi-bai-16-docker-kubernetes.png)
+
 ## Giới thiệu
 
 Bài này hướng dẫn triển khai **toàn bộ OHDSI stack** (PostgreSQL + WebAPI + ATLAS + ACHILLES) cho môi trường production, bao gồm Docker Compose cho single-node và Kubernetes Helm cho cluster.

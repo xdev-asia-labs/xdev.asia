@@ -17,6 +17,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 14: Data Quality Dashboard (DQD)](/storage/uploads/2026/03/ohdsi-bai-14-dqd.png)
+
 ## Giới thiệu
 
 **Data Quality Dashboard (DQD)** là công cụ OHDSI đánh giá chất lượng dữ liệu CDM một cách có hệ thống. DQD chạy **hơn 1,500 checks** tự động và đưa ra báo cáo PASS/FAIL giúp phát hiện vấn đề dữ liệu trước khi phân tích.

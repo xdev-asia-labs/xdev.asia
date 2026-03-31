@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 12: Population-Level Estimation & Patient-Level Prediction](/storage/uploads/2026/03/ohdsi-bai-12-estimation-prediction.png)
+
 ## Giới thiệu
 
 Bài này tập trung vào hai tính năng phân tích nâng cao nhất của ATLAS:

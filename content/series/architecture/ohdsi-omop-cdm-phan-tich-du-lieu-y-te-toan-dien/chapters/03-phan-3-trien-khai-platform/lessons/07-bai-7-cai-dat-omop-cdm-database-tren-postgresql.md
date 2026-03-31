@@ -18,6 +18,8 @@ course:
   slug: ohdsi-omop-cdm-phan-tich-du-lieu-y-te-toan-dien
 ---
 
+![Bài 7: OMOP CDM Database trên PostgreSQL](/storage/uploads/2026/03/ohdsi-bai-7-postgresql-cdm-setup.png)
+
 ## Giới thiệu
 
 OMOP CDM database là nền tảng lưu trữ toàn bộ dữ liệu y tế đã chuẩn hóa. PostgreSQL là lựa chọn phổ biến nhất trong cộng đồng OHDSI nhờ miễn phí, hiệu năng cao, và hỗ trợ tốt từ các công cụ OHDSI.
