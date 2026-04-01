@@ -99,10 +99,75 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
         // Initialize Mermaid diagrams
         const initMermaid = async () => {
             const mermaid = (await import("mermaid")).default;
+            const isDark = document.documentElement.classList.contains("dark");
+
             mermaid.initialize({
                 startOnLoad: false,
-                theme: document.documentElement.classList.contains("dark") ? "dark" : "default",
-                fontFamily: "inherit",
+                theme: "base",
+                fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+                themeVariables: isDark
+                    ? {
+                        primaryColor: "#1e293b",
+                        primaryTextColor: "#e2e8f0",
+                        primaryBorderColor: "#3b82f6",
+                        lineColor: "#60a5fa",
+                        secondaryColor: "#0f172a",
+                        tertiaryColor: "#111827",
+                        background: "#0b1220",
+                        mainBkg: "#0f172a",
+                        secondBkg: "#111827",
+                        tertiaryBkg: "#0b1220",
+                        textColor: "#e2e8f0",
+                        nodeBorder: "#3b82f6",
+                        clusterBkg: "#0b1220",
+                        clusterBorder: "#334155",
+                        edgeLabelBackground: "#111827",
+                        fontSize: "16px",
+                    }
+                    : {
+                        primaryColor: "#eff6ff",
+                        primaryTextColor: "#0f172a",
+                        primaryBorderColor: "#2563eb",
+                        lineColor: "#3b82f6",
+                        secondaryColor: "#dbeafe",
+                        tertiaryColor: "#f8fafc",
+                        background: "#ffffff",
+                        mainBkg: "#eff6ff",
+                        secondBkg: "#dbeafe",
+                        tertiaryBkg: "#f8fafc",
+                        textColor: "#0f172a",
+                        nodeBorder: "#2563eb",
+                        clusterBkg: "#f8fafc",
+                        clusterBorder: "#93c5fd",
+                        edgeLabelBackground: "#ffffff",
+                        fontSize: "16px",
+                    },
+                flowchart: {
+                    htmlLabels: true,
+                    curve: "basis",
+                    nodeSpacing: 60,
+                    rankSpacing: 70,
+                    padding: 14,
+                },
+                sequence: {
+                    useMaxWidth: false,
+                    diagramMarginX: 36,
+                    diagramMarginY: 28,
+                    actorMargin: 70,
+                    width: 180,
+                    height: 68,
+                    boxMargin: 12,
+                    boxTextMargin: 8,
+                    noteMargin: 14,
+                    messageMargin: 42,
+                },
+                gantt: {
+                    leftPadding: 110,
+                    rightPadding: 48,
+                    topPadding: 42,
+                    gridLineStartPadding: 36,
+                    fontSize: 14,
+                },
                 securityLevel: "loose",
             });
 
@@ -121,7 +186,7 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
                     const id = `mermaid-${Date.now()}-${i}`;
                     const { svg } = await mermaid.render(id, graphDefinition);
                     const wrapper = document.createElement("div");
-                    wrapper.className = "mermaid-diagram my-8 flex justify-center overflow-x-auto rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6";
+                    wrapper.className = "mermaid-diagram my-10 flex justify-center overflow-x-auto rounded-2xl border border-brand-100 bg-gradient-to-b from-brand-50/50 to-white p-4 md:p-7 shadow-[0_8px_28px_rgba(37,99,235,0.08)] dark:border-zinc-700 dark:from-zinc-900 dark:to-zinc-950";
                     wrapper.innerHTML = svg;
                     preEl.replaceWith(wrapper);
                 } catch {

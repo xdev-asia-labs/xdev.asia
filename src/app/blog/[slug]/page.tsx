@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             siteName: "xDev Asia",
             locale: "vi_VN",
             type: "article",
-            publishedTime: post.published_at,
+            ...(post.published_at ? { publishedTime: post.published_at } : {}),
             authors: [post.author.name],
             images: [
                 {
