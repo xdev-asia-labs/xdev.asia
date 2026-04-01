@@ -15,89 +15,286 @@ course:
   slug: ai-trong-y-te-healthcare
 ---
 
-## Giới thiệu
-
-Graph Neural Networks cho molecular property prediction. SMILES representation. Molecular generation. Virtual screening. ADMET prediction.
+> AlphaFold2 took 50 years to solve protein folding. GNN có thể tìm ra drug candidate trong vài ngày thay vì 10-15 năm thử nghiệm truyền thống.
 
 ---
 
-## 1. Tổng quan
+## 1. Drug Discovery Pipeline và Điểm can thiệp của AI
 
-### Khái niệm chính
+```
+Target ID → Hit Finding → Lead Optimization → ADMET → Clinical Trials
+ (protein)   (molecules)   (synthesis)       (toxicity)  (human)
+   ↑                ↑              ↑               ↑
+ AlphaFold2    Virtual        GNN Property    ML-ADMET
+ Genomics      Screening      Prediction      prediction
+```
 
-Drug Discovery với AI — GNN & Molecular Generation là một chủ đề quan trọng trong lĩnh vực AI hiện đại.
+**Vấn đề traditional approach:**
+- 10-15 năm, tốn $1-2 tỷ USD per drug
+- 90% fail ở clinical trials
+- Phần lớn thất bại do ADMET (absorption, distribution, metabolism, excretion, toxicity)
 
 ---
 
-## 2. Kiến trúc & Nguyên lý
-
-### Core Architecture
+## 2. Biểu diễn Phân tử với SMILES và Graph
 
 ```python
-# Example implementation
+from rdkit import Chem
+from rdkit.Chem import Draw, Descriptors, AllChem
+import numpy as np
+
+# SMILES: Simplified Molecular Input Line Entry System
+# Aspirin: CC(=O)Oc1ccccc1C(=O)O
+aspirin_smiles = "CC(=O)Oc1ccccc1C(=O)O"
+mol = Chem.MolFromSmiles(aspirin_smiles)
+
+# Molecular fingerprint (Morgan/ECFP): fixed-size binary vector
+def smiles_to_fingerprint(smiles: str, radius: int = 2, n_bits: int = 2048) -> np.ndarray:
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return np.zeros(n_bits)
+    fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=n_bits)
+    return np.array(fp)
+
+# RDKit descriptors: 200 physicochemical properties
+def smiles_to_descriptors(smiles: str) -> dict:
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return {}
+    return {
+        "MolWt": Descriptors.MolWt(mol),
+        "LogP": Descriptors.MolLogP(mol),        # Lipophilicity
+        "NumHDonors": Descriptors.NumHDonors(mol),
+        "NumHAcceptors": Descriptors.NumHAcceptors(mol),
+        "TPSA": Descriptors.TPSA(mol),            # Topological polar surface area
+        "NumRotatableBonds": Descriptors.NumRotatableBonds(mol),
+        "AromaticRings": Descriptors.NumAromaticRings(mol),
+    }
+
+# Lipinski Rule of Five: oral bioavailability predictor
+def lipinski_rule_of_five(smiles: str) -> dict:
+    desc = smiles_to_descriptors(smiles)
+    mw = desc.get("MolWt", 999)
+    logp = desc.get("LogP", 999)
+    hbd = desc.get("NumHDonors", 999)
+    hba = desc.get("NumHAcceptors", 999)
+    
+    violations = sum([mw > 500, logp > 5, hbd > 5, hba > 10])
+    return {
+        **desc,
+        "lipinski_violations": violations,
+        "drug_like": violations <= 1  # <= 1 violation = drug-like
+    }
+```
+
+---
+
+## 3. Graph Neural Network cho Molecular Property Prediction
+
+```python
 import torch
 import torch.nn as nn
+from torch_geometric.data import Data, DataLoader
+from torch_geometric.nn import GCNConv, GATConv, global_mean_pool
 
-class ExampleModel(nn.Module):
-    def __init__(self, input_dim, output_dim):
+# Atom features: one-hot encode atomic properties
+ATOM_TYPES = ['C', 'N', 'O', 'F', 'P', 'S', 'Cl', 'Br', 'I', 'Other']
+HYBRIDIZATION = ['SP', 'SP2', 'SP3', 'Other']
+
+def mol_to_graph(smiles: str, label: float = None) -> Data:
+    """Convert SMILES → PyTorch Geometric Graph."""
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    
+    # Node features: atom properties
+    node_features = []
+    for atom in mol.GetAtoms():
+        symbol = atom.GetSymbol()
+        atom_type_onehot = [int(symbol == t) for t in ATOM_TYPES[:-1]] + [int(symbol not in ATOM_TYPES[:-1])]
+        
+        hyb = str(atom.GetHybridization()).split('.')[-1]
+        hyb_onehot = [int(hyb == h) for h in HYBRIDIZATION[:-1]] + [int(hyb not in HYBRIDIZATION[:-1])]
+        
+        features = atom_type_onehot + hyb_onehot + [
+            atom.GetFormalCharge(),
+            atom.GetNumRadicalElectrons(),
+            int(atom.GetIsAromatic()),
+            int(atom.IsInRing()),
+            atom.GetDegree() / 6.0,   # Normalized
+        ]
+        node_features.append(features)
+    
+    x = torch.tensor(node_features, dtype=torch.float)
+    
+    # Edge index: bonds (undirected)
+    edge_index = []
+    for bond in mol.GetBonds():
+        i, j = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+        edge_index.extend([[i, j], [j, i]])
+    
+    edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+    
+    data = Data(x=x, edge_index=edge_index)
+    if label is not None:
+        data.y = torch.tensor([label], dtype=torch.float)
+    return data
+
+
+class MolecularGNN(nn.Module):
+    """
+    GNN cho molecular property prediction (QSAR: Quantitative Structure-Activity Relationship).
+    
+    Dùng cho:
+    - Predict binding affinity (IC50, Ki)
+    - Predict solubility, logP, BBB penetration
+    - Toxicity prediction (hERG channel blocker, etc.)
+    """
+    def __init__(self, in_features: int = 24, hidden: int = 128, out_features: int = 1):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(input_dim, 256),
+        
+        # Message passing layers (Graph Attention Networks)
+        self.conv1 = GATConv(in_features, hidden, heads=4, concat=True)
+        self.conv2 = GATConv(hidden * 4, hidden, heads=4, concat=True)
+        self.conv3 = GATConv(hidden * 4, hidden, heads=1, concat=False)
+        
+        self.norm1 = nn.LayerNorm(hidden * 4)
+        self.norm2 = nn.LayerNorm(hidden * 4)
+        self.norm3 = nn.LayerNorm(hidden)
+        
+        # Readout: aggregate node features → graph-level
+        # global_mean_pool (in forward)
+        
+        # Prediction head
+        self.mlp = nn.Sequential(
+            nn.Linear(hidden, hidden // 2),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(256, 128),
-            nn.ReLU(),
-            nn.Linear(128, output_dim),
+            nn.Linear(hidden // 2, out_features)
         )
     
-    def forward(self, x):
-        return self.net(x)
+    def forward(self, data):
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+        
+        x = self.norm1(torch.relu(self.conv1(x, edge_index)))
+        x = self.norm2(torch.relu(self.conv2(x, edge_index)))
+        x = self.norm3(torch.relu(self.conv3(x, edge_index)))
+        
+        # Global pooling: aggregate atoms → molecule representation
+        x = global_mean_pool(x, batch)  # (batch_size, hidden)
+        
+        return self.mlp(x).squeeze(-1)
 ```
 
 ---
 
-## 3. Thực hành
-
-### Setup
-
-```bash
-pip install torch transformers datasets
-```
-
-### Training Pipeline
+## 4. ADMET Prediction
 
 ```python
-# Training loop
-model = ExampleModel(input_dim=768, output_dim=10)
-optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
-criterion = nn.CrossEntropyLoss()
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingRegressor
 
-for epoch in range(10):
-    for batch in train_loader:
-        optimizer.zero_grad()
-        outputs = model(batch["input"])
-        loss = criterion(outputs, batch["label"])
-        loss.backward()
-        optimizer.step()
+class ADMETPredictor:
+    """
+    Predict ADMET properties từ molecular fingerprints.
+    Dataset: Tox21, ESOL, HIV, BACE, BBBP, ClinTox (MoleculeNet benchmark)
+    """
+    def __init__(self):
+        self.models = {
+            # Absorption
+            "oral_bioavailability": RandomForestClassifier(n_estimators=200),
+            "solubility": GradientBoostingRegressor(n_estimators=200),
+            # Distribution
+            "bbb_penetration": RandomForestClassifier(n_estimators=200),
+            # Metabolism  
+            "cyp450_inhibition": RandomForestClassifier(n_estimators=200),
+            # Excretion
+            "half_life": GradientBoostingRegressor(n_estimators=200),
+            # Toxicity
+            "herg_inhibition": RandomForestClassifier(n_estimators=200),
+            "hepatotoxicity": RandomForestClassifier(n_estimators=200),
+        }
+    
+    def predict(self, smiles: str) -> dict:
+        fp = smiles_to_fingerprint(smiles)
+        results = {}
+        for prop, model in self.models.items():
+            # Check if model is fitted
+            try:
+                pred = model.predict(fp.reshape(1, -1))[0]
+                if hasattr(model, "predict_proba"):
+                    prob = model.predict_proba(fp.reshape(1, -1))[0]
+                    results[prop] = {
+                        "label": int(pred),
+                        "probability": round(float(prob.max()), 3)
+                    }
+                else:
+                    results[prop] = round(float(pred), 4)
+            except Exception:
+                results[prop] = None
+        return results
 ```
 
 ---
 
-## 4. Best Practices
+## 5. Virtual Screening Pipeline
 
-| Aspect | Recommendation |
-|--------|---------------|
-| Data | Quality over quantity |
-| Model | Start simple, scale up |
-| Training | Monitor loss curves |
-| Evaluation | Use appropriate metrics |
+```python
+def virtual_screening(
+    target_smiles_or_pdb: str,
+    candidate_library: list[str],
+    gnn_model: MolecularGNN,
+    admet_predictor: ADMETPredictor,
+    top_k: int = 20
+) -> list[dict]:
+    """
+    1. Filter drug-like molecules (Lipinski RO5)
+    2. Predict binding affinity với GNN
+    3. Filter by ADMET (remove toxic, BBB-unsuitable candidates)
+    4. Rank và return top-K
+    """
+    results = []
+    
+    for smiles in candidate_library:
+        # Step 1: Drug-likeness filter
+        lipinski = lipinski_rule_of_five(smiles)
+        if not lipinski["drug_like"]:
+            continue
+        
+        # Step 2: Binding affinity prediction
+        graph = mol_to_graph(smiles)
+        if graph is None:
+            continue
+        
+        with torch.no_grad():
+            score = gnn_model(graph).item()
+        
+        # Step 3: ADMET
+        admet = admet_predictor.predict(smiles)
+        if admet.get("herg_inhibition", {}).get("probability", 0) > 0.8:
+            continue  # High cardiac toxicity risk → skip
+        if admet.get("hepatotoxicity", {}).get("probability", 0) > 0.7:
+            continue  # Liver toxicity risk → skip
+        
+        results.append({
+            "smiles": smiles,
+            "predicted_affinity": round(score, 4),
+            "lipinski": lipinski,
+            "admet": admet
+        })
+    
+    # Rank by binding affinity
+    results.sort(key=lambda x: x["predicted_affinity"])
+    return results[:top_k]
+```
 
 ---
 
-## Tổng kết
+## 6. Bài tập
 
-| Concept | Key Takeaway |
-|---------|-------------|
-| Architecture | Phù hợp với bài toán |
-| Training | Careful hyperparameter tuning |
-| Evaluation | Multiple metrics |
+1. Download BBBP (Blood-Brain Barrier Penetration) dataset từ MoleculeNet. Train GNN vs Random Forest + Morgan fingerprint. So sánh ROC-AUC.
+
+2. Implement Lipinski filter và report tỷ lệ drug-like molecules trong ZINC database sample (10,000 molecules).
+
+3. Visualize attention weights của GATConv: highlight atoms quan trọng cho binding. Overlap với known binding sites nếu có crystal structure.
+
+**Bài 10**: Genomics & Protein Structure AI.

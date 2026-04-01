@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { getPost, getPostSlugs, formatDate, getAllPosts, getAuthorById } from "@/lib/data";
-import { getValidImageUrl } from "@/utils/image";
 import ContentRenderer from "@/components/ContentRenderer";
-import TableOfContents from "@/components/TableOfContents";
-import PostCard from "@/components/PostCard";
 import { IconChevronRight, IconClock } from "@/components/Icons";
+import PostCard from "@/components/PostCard";
+import TableOfContents from "@/components/TableOfContents";
+import { formatDate, getAllPosts, getAuthorById, getPost, getPostSlugs } from "@/lib/data";
+import { getValidImageUrl } from "@/utils/image";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export const dynamicParams = false;
 
@@ -15,13 +15,54 @@ export function generateStaticParams() {
     return getPostSlugs().map((slug) => ({ slug }));
 }
 
+const SITE_URL = "https://xdev.asia";
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const post = getPost(slug);
     if (!post) return {};
+
+    const canonicalUrl = `${SITE_URL}/blog/${slug}/`;
+    const imageUrl = post.featured_image
+        ? `${SITE_URL}${getValidImageUrl(post.featured_image, slug)}`
+        : `${SITE_URL}${getValidImageUrl(null, slug)}`;
+
     return {
         title: post.title,
         description: post.excerpt || post.title,
+        alternates: {
+            canonical: canonicalUrl,
+        },
+        openGraph: {
+            title: post.title,
+            description: post.excerpt || post.title,
+            url: canonicalUrl,
+            siteName: "xDev Asia",
+            locale: "vi_VN",
+            type: "article",
+            publishedTime: post.published_at,
+            authors: [post.author.name],
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: post.title,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: post.title,
+            description: post.excerpt || post.title,
+            images: [imageUrl],
+        },
+        robots: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
     };
 }
 

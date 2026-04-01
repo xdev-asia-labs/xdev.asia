@@ -15,89 +15,288 @@ course:
   slug: ai-trong-y-te-healthcare
 ---
 
-## Giới thiệu
-
-DNA sequence analysis. Variant calling. AlphaFold overview. Protein structure prediction basics. Genomics data pipeline.
+> DNA của bạn chứa 3 tỷ chữ cái. Biến thể ở 1 chữ cái có thể gây ung thư hoặc vô hiệu hóa một loại thuốc. AI bây giờ có thể đọc toàn bộ genome trong vài giờ.
 
 ---
 
-## 1. Tổng quan
+## 1. Genomics AI — Tổng quan
 
-### Khái niệm chính
+```
+Sequencing data (FASTQ)
+    ↓
+Alignment (BWA, STAR)
+    ↓
+Variant Calling (GATK, DeepVariant)
+    ↓
+Annotation (ANNOVAR, VEP)
+    ↓
+Interpretation (AI + clinical knowledge)
+    ↓
+Clinical Decision (pharmacogenomics, cancer typing)
+```
 
-Genomics & Protein Structure Prediction là một chủ đề quan trọng trong lĩnh vực AI hiện đại.
+**3 ứng dụng chính AI trong Genomics:**
+1. **Variant calling**: DeepVariant (Google) — CNN-based, outperforms GATK
+2. **Functional annotation**: predict impact của variants trên protein function
+3. **Cancer genomics**: tumor mutation burden, MSI, HRD scoring
 
 ---
 
-## 2. Kiến trúc & Nguyên lý
-
-### Core Architecture
+## 2. Xử lý DNA Sequences với Deep Learning
 
 ```python
-# Example implementation
 import torch
 import torch.nn as nn
+import numpy as np
 
-class ExampleModel(nn.Module):
-    def __init__(self, input_dim, output_dim):
+# One-hot encode DNA sequences
+DNA_VOCAB = {'A': 0, 'T': 1, 'G': 2, 'C': 3, 'N': 4}  # N = unknown
+
+def encode_dna(sequence: str, max_len: int = 1000) -> torch.Tensor:
+    """
+    One-hot encode DNA sequence.
+    'ATGC' → (4, L) tensor (4 nucleotides × sequence length)
+    """
+    seq = sequence.upper()[:max_len]
+    # Pad if shorter
+    seq = seq.ljust(max_len, 'N')
+    
+    encoding = torch.zeros(5, max_len, dtype=torch.float32)
+    for i, base in enumerate(seq):
+        idx = DNA_VOCAB.get(base, 4)  # N for unknown
+        encoding[idx, i] = 1.0
+    return encoding[:4]  # Remove N channel (model handles it as 0)
+
+
+class DNAConvNet(nn.Module):
+    """
+    CNN cho DNA sequence classification.
+    Ứng dụng: promoter region prediction, splice site detection,
+    transcription factor binding site prediction.
+    
+    ENCODE project: annotate 80% của human genome với regulatory elements.
+    """
+    def __init__(self, n_classes: int = 2, seq_len: int = 1000):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(input_dim, 256),
+        
+        # First conv: detect short motifs (k-mers ~6-10 bp)
+        self.conv1 = nn.Conv1d(4, 320, kernel_size=8, padding=4)
+        self.pool1 = nn.MaxPool1d(4)
+        
+        # Second conv: combine motifs → patterns
+        self.conv2 = nn.Conv1d(320, 480, kernel_size=8, padding=4)
+        self.pool2 = nn.MaxPool1d(4)
+        
+        # Third conv: higher-order structure
+        self.conv3 = nn.Conv1d(480, 960, kernel_size=8, padding=4)
+        
+        self.dropout1 = nn.Dropout(0.2)
+        self.dropout2 = nn.Dropout(0.5)
+        
+        self.global_pool = nn.AdaptiveAvgPool1d(1)
+        
+        self.classifier = nn.Sequential(
+            nn.Linear(960, 925),
             nn.ReLU(),
-            nn.Dropout(0.2),
-            nn.Linear(256, 128),
-            nn.ReLU(),
-            nn.Linear(128, output_dim),
+            nn.Dropout(0.5),
+            nn.Linear(925, n_classes)
         )
     
-    def forward(self, x):
-        return self.net(x)
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """x: (batch, 4, seq_len)"""
+        x = torch.relu(self.conv1(x))
+        x = self.pool1(x)
+        x = self.dropout1(x)
+        
+        x = torch.relu(self.conv2(x))
+        x = self.pool2(x)
+        x = self.dropout1(x)
+        
+        x = torch.relu(self.conv3(x))
+        x = self.dropout2(x)
+        
+        x = self.global_pool(x).squeeze(-1)
+        return self.classifier(x)
 ```
 
 ---
 
-## 3. Thực hành
-
-### Setup
-
-```bash
-pip install torch transformers datasets
-```
-
-### Training Pipeline
+## 3. Variant Effect Prediction
 
 ```python
-# Training loop
-model = ExampleModel(input_dim=768, output_dim=10)
-optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
-criterion = nn.CrossEntropyLoss()
-
-for epoch in range(10):
-    for batch in train_loader:
-        optimizer.zero_grad()
-        outputs = model(batch["input"])
-        loss = criterion(outputs, batch["label"])
-        loss.backward()
-        optimizer.step()
+def predict_variant_effect(
+    wild_type_seq: str,
+    mutant_seq: str,
+    model: DNAConvNet,
+    context_window: int = 500
+) -> dict:
+    """
+    Predict functional effect của SNP/indel.
+    So sánh model score của wild-type vs mutant sequence.
+    
+    Inspired by: DeepSEA, Enformer (DeepMind)
+    """
+    wt_encoded = encode_dna(wild_type_seq, max_len=context_window).unsqueeze(0)
+    mt_encoded = encode_dna(mutant_seq, max_len=context_window).unsqueeze(0)
+    
+    model.eval()
+    with torch.no_grad():
+        wt_score = torch.softmax(model(wt_encoded), dim=-1)
+        mt_score = torch.softmax(model(mt_encoded), dim=-1)
+    
+    # Delta score: ΔTF-binding = model(mutant) - model(WT)
+    delta = (mt_score - wt_score).squeeze()
+    
+    return {
+        "wt_score": wt_score.squeeze().tolist(),
+        "mt_score": mt_score.squeeze().tolist(),
+        "delta_score": delta.tolist(),
+        "predicted_impact": "HIGH" if abs(delta.max().item()) > 0.2 else "LOW"
+    }
 ```
 
 ---
 
-## 4. Best Practices
+## 4. AlphaFold2 — Protein Structure Prediction
 
-| Aspect | Recommendation |
-|--------|---------------|
-| Data | Quality over quantity |
-| Model | Start simple, scale up |
-| Training | Monitor loss curves |
-| Evaluation | Use appropriate metrics |
+```python
+# AlphaFold2 predict 3D structure từ amino acid sequence
+# Không cần viết lại model — dùng ColabFold API hoặc LocalColabFold
+
+import subprocess
+import json
+from pathlib import Path
+
+def predict_protein_structure(
+    sequence: str,
+    output_dir: str,
+    model_type: str = "alphafold2_multimer_v3"
+) -> dict:
+    """
+    Wrapper cho ColabFold (AlphaFold2-based, nhanh hơn original 40-60x).
+    
+    Cài đặt: pip install colabfold[alphafold]
+    Hoặc dùng ColabFold notebook: https://colab.research.google.com/...
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Tạo FASTA file
+    fasta_path = os.path.join(output_dir, "query.fasta")
+    with open(fasta_path, 'w') as f:
+        f.write(f">protein\n{sequence}\n")
+    
+    # Run ColabFold (command line)
+    cmd = [
+        "colabfold_batch",
+        fasta_path,
+        output_dir,
+        "--model-type", model_type,
+        "--num-recycle", "3",
+        "--use-gpu-relax",
+    ]
+    
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"ColabFold failed: {result.stderr}")
+    
+    # Parse pLDDT scores (per-residue confidence, 0-100)
+    pdb_files = list(Path(output_dir).glob("*.pdb"))
+    plddts = parse_plddt_from_pdb(str(pdb_files[0])) if pdb_files else None
+    
+    return {
+        "pdb_file": str(pdb_files[0]) if pdb_files else None,
+        "mean_plddt": float(np.mean(plddts)) if plddts else None,
+        "output_dir": output_dir
+    }
+
+def parse_plddt_from_pdb(pdb_path: str) -> list[float]:
+    """Extract pLDDT scores từ B-factor column của PDB file."""
+    plddts = []
+    with open(pdb_path) as f:
+        for line in f:
+            if line.startswith("ATOM"):
+                try:
+                    plddt = float(line[60:66].strip())
+                    plddts.append(plddt)
+                except ValueError:
+                    pass
+    return plddts
+
+def interpret_plddt(mean_plddt: float) -> str:
+    """
+    pLDDT confidence categories theo AlphaFold documentation:
+    > 90: Very high confidence (correct within experimental error)
+    70-90: High confidence
+    50-70: Low confidence (backbone might be correct, side chains unreliable)
+    < 50: Disordered region (intrinsically disordered proteins)
+    """
+    if mean_plddt > 90:
+        return "Very high confidence — suitable for drug docking"
+    elif mean_plddt > 70:
+        return "High confidence — backbone reliable"
+    elif mean_plddt > 50:
+        return "Low confidence — use with caution"
+    else:
+        return "Likely intrinsically disordered region"
+```
 
 ---
 
-## Tổng kết
+## 5. Cancer Genomics: Mutation Signature Analysis
 
-| Concept | Key Takeaway |
-|---------|-------------|
-| Architecture | Phù hợp với bài toán |
-| Training | Careful hyperparameter tuning |
-| Evaluation | Multiple metrics |
+```python
+def analyze_mutation_signatures(somatic_variants: list[dict]) -> dict:
+    """
+    Mutational signatures: pattern của DNA mutations đặc trưng cho từng mutagenic process.
+    
+    SBS1: Age (clock-like) — C>T at CpG
+    SBS4: Tobacco smoking — C>A transversions
+    SBS6/15: Mismatch repair deficiency (MSI) — many small indels
+    SBS3: BRCA1/2 deficiency (HRD) — deletions at microhomologies
+    
+    Dataset: COSMIC v3.4 mutational signatures
+    """
+    from collections import defaultdict
+    
+    # Count mutation types (96 trinucleotide contexts)
+    mutation_counts = defaultdict(int)
+    
+    for variant in somatic_variants:
+        chrom = variant["chrom"]
+        pos = variant["pos"]
+        ref = variant["ref"]
+        alt = variant["alt"]
+        
+        if len(ref) == 1 and len(alt) == 1:  # SNV only
+            # Get trinucleotide context from reference genome
+            # context = get_trinucleotide_context(chrom, pos)
+            mutation_type = f"{ref}>{alt}"
+            mutation_counts[mutation_type] += 1
+    
+    # Classify by Tumor Mutation Burden (TMB)
+    tmb = len(somatic_variants) / 38.0  # mutations per Mb (38 Mb exome)
+    
+    tmb_category = (
+        "TMB-High (≥10 mut/Mb)" if tmb >= 10 else
+        "TMB-Low (<10 mut/Mb)"
+    )
+    
+    return {
+        "total_somatic_mutations": len(somatic_variants),
+        "tmb_per_mb": round(tmb, 2),
+        "tmb_category": tmb_category,
+        "mutation_counts": dict(mutation_counts),
+    }
+```
+
+---
+
+## 6. Bài tập
+
+1. Download ClinVar database. Train binary classifier (benign vs pathogenic) từ variant annotations + protein features. Target AUC > 0.85.
+
+2. Visualize AlphaFold2 structure của 3 proteins từ UniProt (1 disordered protein, 1 enzyme, 1 membrane protein). So sánh pLDDT distributions.
+
+3. Implement mutation signature deconvolution: download TCGA lung adenocarcinoma MAF file, extract trinucleotide counts, fit COSMIC signatures với NMF.
+
+**Bài 11**: Federated Learning — AI đa bệnh viện, bảo mật tuyệt đối.
