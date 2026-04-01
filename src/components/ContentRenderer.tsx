@@ -10,6 +10,14 @@ interface ContentRendererProps {
 export default function ContentRenderer({ html, className = "" }: ContentRendererProps) {
     const ref = useRef<HTMLDivElement>(null);
 
+    const normalizeMermaidSource = (source: string): string => {
+        return source
+            .replace(/\r\n?/g, "\n")
+            .replace(/\u00A0/g, " ")
+            .replace(/[\u200B-\u200D\uFEFF]/g, "")
+            .trim();
+    };
+
     useEffect(() => {
         if (!ref.current) return;
 
@@ -121,6 +129,7 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
 
             mermaid.initialize({
                 startOnLoad: false,
+                suppressErrorRendering: true,
                 theme: "base",
                 fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
                 themeVariables: isDark
@@ -201,8 +210,20 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
                 if (!graphDefinition) continue;
 
                 try {
+                    const normalizedGraphDefinition = normalizeMermaidSource(graphDefinition);
+                    const parseResult = await mermaid.parse(normalizedGraphDefinition, { suppressErrors: true });
+
+                    if (parseResult === false) {
+                        continue;
+                    }
+
                     const id = `mermaid-${Date.now()}-${i}`;
-                    const { svg } = await mermaid.render(id, graphDefinition);
+                    const { svg } = await mermaid.render(id, normalizedGraphDefinition);
+
+                    if (svg.includes("Syntax error in text")) {
+                        continue;
+                    }
+
                     const wrapper = document.createElement("div");
                     wrapper.className = "mermaid-diagram my-10 flex justify-center overflow-x-auto rounded-2xl border border-brand-100 bg-gradient-to-b from-brand-50/50 to-white p-4 md:p-7 shadow-[0_8px_28px_rgba(37,99,235,0.08)] dark:border-zinc-700 dark:from-zinc-900 dark:to-zinc-950";
                     wrapper.innerHTML = svg;

@@ -83,19 +83,6 @@ export default function Footer() {
                                 GitHub / {settings.github_url.split("/").pop()}
                             </a>
                         )}
-                        <h4 className="footer-heading mt-6">Pháp lý</h4>
-                        <ul className="space-y-2.5">
-                            <li>
-                                <Link href="/chinh-sach-quyen-rieng-tu/" className="text-sm transition-colors">
-                                    Chính sách riêng tư
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/dieu-khoan-su-dung/" className="text-sm transition-colors">
-                                    Điều khoản sử dụng
-                                </Link>
-                            </li>
-                        </ul>
                     </div>
                 </div>
 
@@ -113,9 +100,6 @@ export default function Footer() {
                 <div className="mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                     <p className="text-xs" style={{ color: "rgba(148, 163, 184, 0.6)" }}>
                         &copy; {new Date().getFullYear()} {siteName}. All rights reserved.
-                    </p>
-                    <p className="text-xs" style={{ color: "rgba(148, 163, 184, 0.6)" }}>
-                        Built with <span className="text-blue-400">♥</span> and Next.js
                     </p>
                 </div>
             </div>
