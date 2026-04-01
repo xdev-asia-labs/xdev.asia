@@ -294,12 +294,13 @@ sections:
         sort_order: 19
         video_url: null
       - id: 019d5b01-bb21-7021-c021-bb2100000021
-        title: 'Bài 21: Chạy AI Local với Ollama trên Apple Silicon'
+        title: 'Bài 21: Chạy AI Local với Ollama trên Apple Silicon — Deep Dive'
         slug: bai-21-ollama-apple-silicon
         description: >-
-          Hướng dẫn thực chiến chạy LLM local trên Mac M-series với Ollama:
-          cài đặt, chọn model theo RAM, benchmark và tối ưu hiệu năng.
-        duration_minutes: 120
+          Deep dive chạy LLM local trên Apple Silicon: kiến trúc Unified Memory & Metal GPU,
+          quantization GGUF, Modelfile tuning, benchmark tokens/s M1→M4, MLX framework,
+          multi-model serving, xây dựng local AI dev stack hoàn chỉnh.
+        duration_minutes: 180
         is_free: true
         sort_order: 20
         video_url: null
@@ -352,7 +353,7 @@ Bạn sẽ không chỉ học lý thuyết mà còn **code thực hành** mỗi 
 ### Phần 6: Production & Nâng cao
 
 - **Bài 20:** Deploying LLMs: Ollama, vLLM, TGI & Evaluation
-- **Bài 21:** Chạy AI Local với Ollama trên Apple Silicon
+- **Bài 21:** Chạy AI Local với Ollama trên Apple Silicon — Deep Dive
 
 ## Yêu cầu đầu vào
 
