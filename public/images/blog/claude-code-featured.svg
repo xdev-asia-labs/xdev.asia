@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#da7756"/>
+      <stop offset="100%" style="stop-color:#cc785c"/>
+    </linearGradient>
+    <linearGradient id="terminal-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1c2128"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g opacity="0.04" stroke="#58a6ff" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="150" y1="0" x2="150" y2="630"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="450" y1="0" x2="450" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="750" y1="0" x2="750" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+    <line x1="1050" y1="0" x2="1050" y2="630"/>
+  </g>
+
+  <!-- Left side accent bar -->
+  <rect x="0" y="0" width="5" height="630" fill="url(#accent)"/>
+
+  <!-- Terminal window - main -->
+  <g filter="url(#shadow)">
+    <rect x="60" y="70" width="740" height="490" rx="10" fill="url(#terminal-bg)" stroke="#30363d" stroke-width="1.5"/>
+    <!-- title bar -->
+    <rect x="60" y="70" width="740" height="36" rx="10" fill="#21262d"/>
+    <rect x="60" y="93" width="740" height="13" fill="#21262d"/>
+    <!-- traffic lights -->
+    <circle cx="88" cy="88" r="6" fill="#ff5f57"/>
+    <circle cx="108" cy="88" r="6" fill="#ffbd2e"/>
+    <circle cx="128" cy="88" r="6" fill="#28c840"/>
+    <!-- title bar text -->
+    <text x="400" y="93" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" fill="#8b949e" text-anchor="middle">claude — ~/project — zsh</text>
+  </g>
+
+  <!-- Terminal content -->
+  <!-- Prompt line 1 -->
+  <text x="84" y="140" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#58a6ff">~/project</text>
+  <text x="168" y="140" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#3fb950"> ❯ </text>
+  <text x="196" y="140" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#e6edf3">claude</text>
+
+  <!-- Claude Code response text -->
+  <text x="84" y="165" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#7d8590">  ╭─────────────────────────────────────────────────────╮</text>
+  <text x="84" y="180" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#7d8590">  │ </text>
+  <text x="108" y="180" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#e6edf3">✻ Claude Code v2.1.89 ready</text>
+  <text x="84" y="195" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#7d8590">  │ </text>
+  <text x="108" y="195" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#8b949e">  codebase: 47 files indexed</text>
+  <text x="84" y="210" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#7d8590">  ╰─────────────────────────────────────────────────────╯</text>
+
+  <!-- Rainbow /buddy teaser -->
+  <text x="84" y="235" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" fill="#7d8590">  </text>
+  <text x="100" y="235" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13">
+    <tspan fill="#ff6e6e">/</tspan><tspan fill="#ffaa6e">b</tspan><tspan fill="#ffe06e">u</tspan><tspan fill="#6eff8a">d</tspan><tspan fill="#6eaaff">d</tspan><tspan fill="#c06eff">y</tspan>
+  </text>
+
+  <!-- Companion duck ASCII -->
+  <g font-family="ui-monospace,SFMono-Regular,monospace" font-size="12.5" fill="#58a6ff" filter="url(#glow)">
+    <text x="84" y="270">      __</text>
+    <text x="84" y="285">    &lt;(· )___</text>
+    <text x="84" y="300">     (  ._&gt;</text>
+    <text x="84" y="315">      `--´</text>
+  </g>
+
+  <!-- Speech bubble -->
+  <rect x="165" y="255" width="280" height="52" rx="8" fill="#1f6feb" fill-opacity="0.15" stroke="#1f6feb" stroke-width="1"/>
+  <text x="175" y="273" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#79c0ff" font-style="italic">Hello! New feature today :3</text>
+  <text x="175" y="291" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#79c0ff" font-style="italic">Try /buddy to meet me!</text>
+  <!-- bubble tail -->
+  <polygon points="165,275 153,281 165,287" fill="#1f6feb" fill-opacity="0.15"/>
+
+  <!-- Prompt line 2 -->
+  <text x="84" y="345" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#58a6ff">~/project</text>
+  <text x="168" y="345" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#3fb950"> ❯ </text>
+  <text x="196" y="345" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#e6edf3">/ultraplan refactor auth module</text>
+
+  <text x="84" y="368" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#e3b341">  ⚡ Launching UltraPlan (claude-opus-4.6)...</text>
+  <text x="84" y="383" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#7d8590">  Teleporting to Cloud Code REPL ↗</text>
+  <text x="84" y="398" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#7d8590">  Spawning 3 parallel agents (max 30 min)...</text>
+
+  <!-- Progress bar style -->
+  <rect x="84" y="413" width="500" height="6" rx="3" fill="#21262d"/>
+  <rect x="84" y="413" width="185" height="6" rx="3" fill="#1f6feb"/>
+  <text x="596" y="421" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#8b949e">37%</text>
+
+  <!-- Cursor blinking -->
+  <text x="84" y="450" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#58a6ff">~/project</text>
+  <text x="168" y="450" font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#3fb950"> ❯ </text>
+  <rect x="196" y="438" width="8" height="16" fill="#e6edf3" opacity="0.8"/>
+
+  <!-- Tool verbs status -->
+  <rect x="84" y="475" width="700" height="1" fill="#30363d"/>
+  <text x="84" y="497" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">  Agent 1: </text>
+  <text x="152" y="497" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#58a6ff">Reading src/auth/jwt.ts</text>
+  <text x="370" y="497" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">  Agent 2: </text>
+  <text x="438" y="497" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#3fb950">Searching security patterns</text>
+  <text x="84" y="513" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">  Agent 3: </text>
+  <text x="152" y="513" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#bc8cff">Editing tests/auth.test.ts</text>
+
+  <!-- Right panel - info cards -->
+  <g>
+    <!-- Card 1: npm stats -->
+    <rect x="830" y="70" width="310" height="110" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <rect x="830" y="70" width="310" height="32" rx="8" fill="#21262d"/>
+    <rect x="830" y="89" width="310" height="13" fill="#21262d"/>
+    <text x="985" y="91" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e" text-anchor="middle" font-weight="600">npm package stats</text>
+    <text x="850" y="120" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e">Version</text>
+    <text x="1125" y="120" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" fill="#58a6ff" text-anchor="end">v2.1.89</text>
+    <text x="850" y="140" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e">Weekly downloads</text>
+    <text x="1125" y="140" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" fill="#3fb950" text-anchor="end">9,102,174</text>
+    <text x="850" y="160" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e">Unpacked size</text>
+    <text x="1125" y="160" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" fill="#e3b341" text-anchor="end">43 MB</text>
+
+    <!-- Card 2: Hidden features -->
+    <rect x="830" y="200" width="310" height="145" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <rect x="830" y="200" width="310" height="32" rx="8" fill="#21262d"/>
+    <rect x="830" y="219" width="310" height="13" fill="#21262d"/>
+    <text x="985" y="221" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e" text-anchor="middle" font-weight="600">hidden features found</text>
+    <text x="850" y="252" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12">
+      <tspan fill="#58a6ff">🐾</tspan><tspan fill="#e6edf3"> Buddy virtual pet system</tspan>
+    </text>
+    <text x="850" y="272" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12">
+      <tspan fill="#e3b341">⚡</tspan><tspan fill="#e6edf3"> UltraPlan multi-agent</tspan>
+    </text>
+    <text x="850" y="292" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12">
+      <tspan fill="#3fb950">🔗</tspan><tspan fill="#e6edf3"> Bridge remote sessions</tspan>
+    </text>
+    <text x="850" y="312" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12">
+      <tspan fill="#bc8cff">🎨</tspan><tspan fill="#e6edf3"> Anti-canary obfuscation</tspan>
+    </text>
+    <text x="850" y="332" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12">
+      <tspan fill="#ff7b72">🔍</tspan><tspan fill="#e6edf3"> 35+ undocumented commands</tspan>
+    </text>
+
+    <!-- Card 3: Tech stack -->
+    <rect x="830" y="365" width="310" height="130" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <rect x="830" y="365" width="310" height="32" rx="8" fill="#21262d"/>
+    <rect x="830" y="384" width="310" height="13" fill="#21262d"/>
+    <text x="985" y="386" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e" text-anchor="middle" font-weight="600">tech stack</text>
+    <text x="850" y="415" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#f0883e">⚡ Bun</text>
+    <text x="920" y="415" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#61dafb">⚛ React + Ink</text>
+    <text x="1060" y="415" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#3178c6">TS strict</text>
+    <text x="850" y="437" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#8b949e">🧪 GrowthBook</text>
+    <text x="970" y="437" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#8b949e">📊 Datadog</text>
+    <text x="850" y="459" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#8b949e">🔷 Zod v4</text>
+    <text x="940" y="459" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11.5" fill="#8b949e">🏗 React Compiler</text>
+
+    <!-- Card 4: Buddy live banner -->
+    <rect x="830" y="515" width="310" height="45" rx="8" fill="#1f6feb" fill-opacity="0.15" stroke="#1f6feb" stroke-width="1"/>
+    <text x="985" y="535" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#79c0ff" text-anchor="middle" font-weight="600">🐾 /buddy LIVE today — Apr 1, 2026</text>
+    <text x="985" y="550" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#58a6ff" text-anchor="middle">SALT: 'friend-2026-401'</text>
+  </g>
+
+  <!-- Bottom bar: title area -->
+  <rect x="0" y="575" width="1200" height="55" fill="#0d1117" fill-opacity="0.95"/>
+  <text x="60" y="608" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="21" fill="#e6edf3" font-weight="700">Đào sâu vào source code Claude Code</text>
+  <text x="714" y="608" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13" fill="#8b949e">xdev.asia · Apr 1, 2026</text>
+</svg>

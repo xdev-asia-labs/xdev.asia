@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <!-- rarity gradients -->
+    <linearGradient id="common-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6e7681;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#6e7681;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="uncommon-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3fb950;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#3fb950;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="rare-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#58a6ff;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#58a6ff;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="epic-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#bc8cff;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#bc8cff;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="legendary-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f0883e;stop-opacity:0.4"/>
+      <stop offset="100%" style="stop-color:#f0883e;stop-opacity:0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="520" fill="url(#bg)"/>
+
+  <!-- Header -->
+  <text x="480" y="45" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="20" fill="#e6edf3" text-anchor="middle" font-weight="700">Buddy Species Catalog</text>
+  <text x="480" y="65" font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" fill="#8b949e" text-anchor="middle">18 species · seeded by username hash · Mulberry32 PRNG</text>
+  <line x1="60" y1="80" x2="900" y2="80" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Species cards: 3 columns x 2 rows -->
+  <!-- Row 1 col 1: duck (common) -->
+  <g transform="translate(60,95)">
+    <rect width="255" height="155" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <rect width="255" height="155" rx="8" fill="url(#common-grad)"/>
+    <rect width="255" height="32" rx="8" fill="#21262d"/>
+    <rect y="19" width="255" height="13" fill="#21262d"/>
+    <text x="10" y="21" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e" font-weight="600">🎲 common</text>
+    <text x="245" y="21" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#6e7681" text-anchor="end">weight: 100</text>
+    <g font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#58a6ff">
+      <text x="20" y="55">  __</text>
+      <text x="20" y="70">&lt;(· )___</text>
+      <text x="20" y="85"> (  ._&gt;</text>
+      <text x="20" y="100">  `--´</text>
+    </g>
+    <text x="140" y="65" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="16" fill="#e6edf3" font-weight="700">Duck</text>
+    <text x="140" y="82" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">speed: 5–25</text>
+    <text x="140" y="96" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">wisdom: 5–25</text>
+    <text x="140" y="110" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">charisma: 5–25</text>
+    <rect x="10" y="118" width="235" height="1" fill="#30363d"/>
+    <text x="128" y="138" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#6e7681" text-anchor="middle">hex: 6475636b · ASCII sprite: 5 lines</text>
+  </g>
+
+  <!-- Row 1 col 2: cat (common) -->
+  <g transform="translate(352,95)">
+    <rect width="255" height="155" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+    <rect width="255" height="155" rx="8" fill="url(#common-grad)"/>
+    <rect width="255" height="32" rx="8" fill="#21262d"/>
+    <rect y="19" width="255" height="13" fill="#21262d"/>
+    <text x="10" y="21" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#8b949e" font-weight="600">🎲 common</text>
+    <text x="245" y="21" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#6e7681" text-anchor="end">weight: 100</text>
+    <g font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#e6edf3">
+      <text x="20" y="55"> /\_/\ </text>
+      <text x="20" y="70">( o.o )</text>
+      <text x="20" y="85"> > ^ &lt;</text>
+      <text x="20" y="100"> |   |</text>
+    </g>
+    <text x="140" y="65" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="16" fill="#e6edf3" font-weight="700">Cat</text>
+    <text x="140" y="82" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">speed: 5–25</text>
+    <text x="140" y="96" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">wisdom: 5–25</text>
+    <text x="140" y="110" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#8b949e">charisma: 5–25</text>
+    <rect x="10" y="118" width="235" height="1" fill="#30363d"/>
+    <text x="128" y="138" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#6e7681" text-anchor="middle">hex: 636174 · ASCII sprite: 5 lines</text>
+  </g>
+
+  <!-- Row 1 col 3: dragon (epic) -->
+  <g transform="translate(644,95)">
+    <rect width="255" height="155" rx="8" fill="#161b22" stroke="#bc8cff" stroke-width="1.5"/>
+    <rect width="255" height="155" rx="8" fill="url(#epic-grad)"/>
+    <rect width="255" height="32" rx="8" fill="#21262d"/>
+    <rect y="19" width="255" height="13" fill="#21262d"/>
+    <text x="10" y="21" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#bc8cff" font-weight="700">💎 epic</text>
+    <text x="245" y="21" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#bc8cff" text-anchor="end">weight: 5</text>
+    <g font-family="ui-monospace,SFMono-Regular,monospace" font-size="12.5" fill="#bc8cff">
+      <text x="20" y="55">  /\   /\</text>
+      <text x="20" y="70"> ( o\_/o )</text>
+      <text x="20" y="85">  \ --- /</text>
+      <text x="20" y="100"> /|___|\ </text>
+    </g>
+    <text x="140" y="62" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="16" fill="#e6edf3" font-weight="700">Dragon</text>
+    <text x="140" y="79" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#bc8cff">speed: 35–90</text>
+    <text x="140" y="93" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#bc8cff">wisdom: 35–90</text>
+    <text x="140" y="107" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#bc8cff">charisma: 35–90</text>
+    <rect x="10" y="118" width="235" height="1" fill="#30363d"/>
+    <text x="128" y="138" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#bc8cff" text-anchor="middle">floor: 35 · rarity_floor threshold</text>
+  </g>
+
+  <!-- Row 2 col 1: penguin (uncommon) -->
+  <g transform="translate(60,268)">
+    <rect width="255" height="155" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+    <rect width="255" height="155" rx="8" fill="url(#uncommon-grad)"/>
+    <rect width="255" height="32" rx="8" fill="#21262d"/>
+    <rect y="19" width="255" height="13" fill="#21262d"/>
+    <text x="10" y="21" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#3fb950" font-weight="600">✦ uncommon</text>
+    <text x="245" y="21" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#3fb950" text-anchor="end">weight: 40</text>
+    <g font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#e6edf3">
+      <text x="20" y="55"> _____</text>
+      <text x="20" y="70">(o   o)</text>
+      <text x="20" y="85">( --- )</text>
+      <text x="20" y="100"> |===|</text>
+    </g>
+    <text x="140" y="65" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="16" fill="#e6edf3" font-weight="700">Penguin</text>
+    <text x="140" y="82" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#3fb950">speed: 15–60</text>
+    <text x="140" y="96" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#3fb950">wisdom: 15–60</text>
+    <text x="140" y="110" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#3fb950">charisma: 15–60</text>
+    <rect x="10" y="118" width="235" height="1" fill="#30363d"/>
+    <text x="128" y="138" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#3fb950" text-anchor="middle">floor: 15 · hex: 70656e6775696e</text>
+  </g>
+
+  <!-- Row 2 col 2: capybara (rare) -->
+  <g transform="translate(352,268)">
+    <rect width="255" height="155" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+    <rect width="255" height="155" rx="8" fill="url(#rare-grad)"/>
+    <rect width="255" height="32" rx="8" fill="#21262d"/>
+    <rect y="19" width="255" height="13" fill="#21262d"/>
+    <text x="10" y="21" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#58a6ff" font-weight="600">★ rare</text>
+    <text x="245" y="21" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#58a6ff" text-anchor="end">weight: 15</text>
+    <g font-family="ui-monospace,SFMono-Regular,monospace" font-size="12" fill="#58a6ff">
+      <text x="20" y="55">  ____</text>
+      <text x="20" y="70"> ( oo )</text>
+      <text x="20" y="85">/|____|\ </text>
+      <text x="20" y="100">  |  |</text>
+    </g>
+    <text x="140" y="65" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15" fill="#e6edf3" font-weight="700">Capybara</text>
+    <text x="140" y="82" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#58a6ff">speed: 25–70</text>
+    <text x="140" y="96" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#58a6ff">wisdom: 25–70</text>
+    <text x="140" y="110" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#58a6ff">charisma: 25–70</text>
+    <rect x="10" y="118" width="235" height="1" fill="#30363d"/>
+    <text x="128" y="138" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#58a6ff" text-anchor="middle">floor: 25 · hex: 636170796261726</text>
+  </g>
+
+  <!-- Row 2 col 3: legendary ghost -->
+  <g transform="translate(644,268)">
+    <rect width="255" height="155" rx="8" fill="#161b22" stroke="#f0883e" stroke-width="2"/>
+    <rect width="255" height="155" rx="8" fill="url(#legendary-grad)"/>
+    <rect width="255" height="32" rx="8" fill="#21262d"/>
+    <rect y="19" width="255" height="13" fill="#21262d"/>
+    <text x="10" y="21" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12" fill="#f0883e" font-weight="700">✦✦ legendary</text>
+    <text x="245" y="21" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#f0883e" text-anchor="end">weight: 2</text>
+    <g font-family="ui-monospace,SFMono-Regular,monospace" font-size="13" fill="#f0883e">
+      <text x="20" y="55">  (   )</text>
+      <text x="20" y="70"> ( o o )</text>
+      <text x="20" y="85"> ( --- )</text>
+      <text x="20" y="100"> /\/\/\</text>
+    </g>
+    <text x="140" y="62" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="16" fill="#e6edf3" font-weight="700">Ghost</text>
+    <text x="140" y="79" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#f0883e">speed: 50–100</text>
+    <text x="140" y="93" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#f0883e">wisdom: 50–100</text>
+    <text x="140" y="107" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10.5" fill="#f0883e">charisma: 50–100</text>
+    <rect x="10" y="118" width="235" height="1" fill="#30363d"/>
+    <text x="128" y="138" font-family="ui-monospace,SFMono-Regular,monospace" font-size="10" fill="#f0883e" text-anchor="middle">floor: 50 · rarest: 1 in ~157 rolls</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="60" y1="443" x2="900" y2="443" stroke="#30363d" stroke-width="1"/>
+  <text x="60" y="462" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#8b949e">PRNG seed:</text>
+  <text x="138" y="462" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#58a6ff">Mulberry32(djb2(username + SALT))</text>
+  <text x="430" y="462" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#8b949e">  |  SALT:</text>
+  <text x="505" y="462" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#3fb950">'friend-2026-401'</text>
+  <text x="677" y="462" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#8b949e">  |  18 total species</text>
+
+  <text x="60" y="480" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#8b949e">Species stored as hex digits in types.ts, decoded at runtime by companion.ts roll()</text>
+</svg>
