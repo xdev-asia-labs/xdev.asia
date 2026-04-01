@@ -9,7 +9,7 @@ description: >-
 featured_image: uploads/2026/03/ai-llm-series-cover.png
 level: beginner
 duration_hours: 60
-lesson_count: 20
+lesson_count: 21
 price: '0.00'
 is_free: true
 view_count: 0
@@ -293,6 +293,16 @@ sections:
         is_free: true
         sort_order: 19
         video_url: null
+      - id: 019d5b01-bb21-7021-c021-bb2100000021
+        title: 'Bài 21: Chạy AI Local với Ollama trên Apple Silicon'
+        slug: bai-21-ollama-apple-silicon
+        description: >-
+          Hướng dẫn thực chiến chạy LLM local trên Mac M-series với Ollama:
+          cài đặt, chọn model theo RAM, benchmark và tối ưu hiệu năng.
+        duration_minutes: 120
+        is_free: true
+        sort_order: 20
+        video_url: null
 reviews: []
 quizzes: []
 ---
@@ -342,6 +352,7 @@ Bạn sẽ không chỉ học lý thuyết mà còn **code thực hành** mỗi 
 ### Phần 6: Production & Nâng cao
 
 - **Bài 20:** Deploying LLMs: Ollama, vLLM, TGI & Evaluation
+- **Bài 21:** Chạy AI Local với Ollama trên Apple Silicon
 
 ## Yêu cầu đầu vào
 

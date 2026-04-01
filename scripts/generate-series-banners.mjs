@@ -177,6 +177,13 @@ const banners = [
     colors: ["#BF360C", "#FF7043"],
     icon: "RT",
   },
+  {
+    filename: "notification-email-system-series-banner-2026.png",
+    title: "Notification System",
+    subtitle: "Gui Hang Trieu Email",
+    colors: ["#0F172A", "#0EA5E9"],
+    icon: "NT",
+  },
   // ─── Other missing banners ───
   {
     filename: "cloud-native-microservices-series-banner-2026.png",
