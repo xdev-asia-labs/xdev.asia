@@ -12,7 +12,6 @@ interface HeroBannerProps {
 }
 
 export default function HeroBanner3D({
-    siteName,
     tagline,
     postCount,
     seriesCount,
@@ -25,67 +24,63 @@ export default function HeroBanner3D({
     ];
 
     return (
-        <section className="hero-section">
-            {/* Decorative background */}
+        <section className="hero-2026">
+            {/* Background grid */}
+            <div className="hero-2026-grid" aria-hidden="true" />
+            {/* Noise grain */}
+            <div className="noise-overlay" aria-hidden="true" />
+            {/* Soft orbs */}
             <div className="hero-bg-decoration" aria-hidden="true">
                 <div className="hero-gradient-orb hero-gradient-orb-1" />
                 <div className="hero-gradient-orb hero-gradient-orb-2" />
-                <div className="hero-grid-dots" />
             </div>
 
             <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 lg:py-28">
                 <div className="max-w-3xl">
-                    {/* Greeting */}
-                    <div className="flex items-center gap-3 mb-6">
-                        <span className="text-3xl md:text-4xl">👋</span>
-                        <span className="hero-badge">
-                            Personal Tech Blog
+                    {/* Status badge */}
+                    <div className="mb-7">
+                        <span className="hero-status-badge">
+                            <span className="hero-status-dot" />
+                            Personal Tech Blog · 2026
                         </span>
                     </div>
 
-                    {/* Main heading */}
-                    <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight leading-[1.12] text-zinc-900">
+                    {/* Editorial headline */}
+                    <h1 className="text-[2.75rem] sm:text-5xl lg:text-[3.75rem] font-black leading-[1.06] tracking-[-0.04em] text-zinc-900">
                         Xin chào, mình là{" "}
                         <span className="gradient-text">Duy</span>
                     </h1>
 
-                    {/* Subtitle */}
-                    <p className="mt-4 text-lg md:text-xl text-zinc-500 leading-relaxed max-w-2xl">
+                    <p className="mt-5 text-base md:text-lg text-zinc-500 leading-relaxed max-w-xl">
                         {tagline}
                     </p>
 
                     {/* CTA Buttons */}
                     <div className="mt-8 flex flex-wrap gap-3">
-                        <Link
-                            href="/series/"
-                            className="btn-primary"
-                        >
+                        <Link href="/series/" className="btn-primary">
                             <IconBook size={16} />
                             Khám phá Series
                             <IconArrowRight size={14} />
                         </Link>
-                        <Link
-                            href="/blog/"
-                            className="btn-secondary"
-                        >
+                        <Link href="/blog/" className="btn-secondary">
                             <IconCode size={16} />
                             Đọc Blog
                         </Link>
                     </div>
                 </div>
 
-                {/* Stats Strip */}
-                <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl">
+                {/* Stats strip — horizontal, 2026 style */}
+                <div className="mt-12 stats-strip">
                     {stats.map((stat, idx) => {
                         const StatIcon = stat.icon;
                         return (
-                            <div key={idx} className="stat-card">
-                                <div className="stat-card-icon">
-                                    <StatIcon size={16} />
+                            <div key={idx} className="stats-strip-item">
+                                <div className="stat-card-icon shrink-0">
+                                    <StatIcon size={15} />
                                 </div>
                                 <div>
-                                    <div className="text-2xl font-extrabold text-zinc-900">{stat.value}+</div>
-                                    <div className="text-xs font-medium text-zinc-400">{stat.label}</div>
+                                    <div className="text-xl font-extrabold text-zinc-900 leading-none">{stat.value}+</div>
+                                    <div className="text-[11px] font-medium text-zinc-400 mt-0.5">{stat.label}</div>
                                 </div>
                             </div>
                         );
@@ -95,3 +90,4 @@ export default function HeroBanner3D({
         </section>
     );
 }
+

@@ -1,6 +1,9 @@
+import BackToTop from "@/components/BackToTop";
 import ContentRenderer from "@/components/ContentRenderer";
 import { IconChevronRight, IconClock } from "@/components/Icons";
 import PostCard from "@/components/PostCard";
+import ReadingProgress from "@/components/ReadingProgress";
+import ShareButtons from "@/components/ShareButtons";
 import TableOfContents from "@/components/TableOfContents";
 import { formatDate, getAllPosts, getAuthorById, getPost, getPostSlugs } from "@/lib/data";
 import { getValidImageUrl } from "@/utils/image";
@@ -80,7 +83,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     return (
         <div>
-            {/* Hero Header */}
+            {/* Reading progress bar */}
+            <ReadingProgress />
             <div className="relative overflow-hidden hero-gradient border-b border-zinc-100">
                 <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12">
                     {/* Breadcrumb */}
@@ -178,7 +182,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <div className="relative flex gap-16">
                     {/* Main Content */}
                     <article className="min-w-0 flex-1 max-w-4xl mx-auto">
+                        {/* Mobile TOC — collapsible, above content */}
+                        <TableOfContents html={post.content} mobileOnly />
+
                         <ContentRenderer html={post.content} />
+
+                        {/* Share buttons */}
+                        <div className="mt-10 pt-8 border-t border-zinc-100">
+                            <ShareButtons title={post.title} url={`${SITE_URL}/blog/${slug}/`} />
+                        </div>
 
                         {/* Author Profile Card */}
                         {fullAuthor && (
@@ -298,7 +310,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         )}
                     </article>
 
-                    {/* Sidebar TOC */}
+                    {/* Sidebar TOC — desktop only */}
                     <aside className="hidden xl:block w-72 shrink-0">
                         <div className="sticky top-24">
                             <TableOfContents html={post.content} />
@@ -306,6 +318,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     </aside>
                 </div>
             </div>
+
+            {/* Back to top */}
+            <BackToTop />
 
             {/* Related Posts */}
             {relatedPosts.length > 0 && (

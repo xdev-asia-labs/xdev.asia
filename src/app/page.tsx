@@ -1,5 +1,6 @@
 import HeroBanner3D from "@/components/HeroBanner3D";
 import { IconArrowRight, IconBook, IconBrain, IconCode, IconRocket } from "@/components/Icons";
+import PostCard from "@/components/PostCard";
 import SeriesCard from "@/components/SeriesCard";
 import { RepoCard } from "@/components/ShowcaseCard";
 import SkeletonImage from "@/components/SkeletonImage";
@@ -102,10 +103,14 @@ export default function Home() {
                 projectCount={showcaseApps.length + showcaseRepos.length}
             />
 
-            {/* ─── AI & Machine Learning — Highlighted ─── */}
+            {/* ─── AI & Machine Learning — Dark accent section ─── */}
             {aiSeries.length > 0 && (
-                <section className="ai-section-bg py-14 lg:py-18">
-                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <section className="ai-section-dark py-14 lg:py-20">
+                    <div className="ai-dark-grid" aria-hidden="true" />
+                    <div className="ai-dark-glow ai-dark-glow-1" aria-hidden="true" />
+                    <div className="ai-dark-glow ai-dark-glow-2" aria-hidden="true" />
+                    <div className="noise-overlay" aria-hidden="true" />
+                    <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                             <div>
                                 <div className="ai-section-badge mb-3">
@@ -164,7 +169,7 @@ export default function Home() {
                 </section>
             )}
 
-            {/* ─── Blog — Featured + Side ─── */}
+            {/* ─── Blog — Bento Grid 2026 ─── */}
             {posts.length > 0 && (
                 <section className="section-alt py-14 lg:py-18">
                     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -185,117 +190,99 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-                            {/* Featured post — large */}
+                        {/* Bento grid */}
+                        <div className="bento-grid">
+                            {/* Featured — large, spans 2 rows on lg */}
                             {featuredPost && (
-                                <div className="lg:col-span-3">
-                                    <Link href={`/blog/${featuredPost.slug}/`} className="group block h-full">
-                                        <article className="post-card rounded-2xl overflow-hidden h-full flex flex-col">
-                                            <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
-                                                <SkeletonImage
-                                                    src={getValidImageUrl(featuredPost.featured_image, featuredPost.slug)}
-                                                    alt={featuredPost.title}
-                                                    fill
-                                                    sizes="(max-width: 1024px) 100vw, 60vw"
-                                                    priority
-                                                    className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-                                                />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                                {featuredPost.category && (
-                                                    <span className="absolute top-4 left-4 inline-flex items-center px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider text-white bg-brand-600/90 backdrop-blur-sm shadow-sm">
-                                                        {featuredPost.category.name}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <div className="p-5 flex flex-col flex-1">
-                                                <h3 className="text-lg lg:text-xl font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 leading-snug mb-2">
-                                                    {featuredPost.title}
-                                                </h3>
-                                                {featuredPost.excerpt && (
-                                                    <p className="text-sm text-zinc-500 line-clamp-2 leading-relaxed mb-3 flex-1">
-                                                        {featuredPost.excerpt}
-                                                    </p>
-                                                )}
-                                                {/* Tags */}
-                                                {featuredPost.tags?.length > 0 && (
-                                                    <div className="flex flex-wrap gap-1.5 mb-3">
-                                                        {featuredPost.tags.slice(0, 3).map((tag) => (
-                                                            <span key={tag.slug} className="tag-pill text-[10px] px-2 py-0.5">
-                                                                {tag.name}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                                <div className="pt-3 border-t border-zinc-100 flex items-center gap-2.5 text-xs text-zinc-400">
-                                                    {featuredPost.author?.avatar ? (
-                                                        <Image
-                                                            src={getValidImageUrl(featuredPost.author.avatar, featuredPost.author.name)}
-                                                            alt={featuredPost.author.name}
-                                                            width={22}
-                                                            height={22}
-                                                            style={{ height: "auto" }}
-                                                            className="rounded-full ring-1 ring-zinc-200 object-cover"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-5.5 h-5.5 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-1 ring-zinc-200 text-[10px] font-bold">
-                                                            {featuredPost.author.name.charAt(0)}
-                                                        </div>
-                                                    )}
-                                                    <span className="font-medium text-zinc-600">{featuredPost.author.name}</span>
-                                                    <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
-                                                    <time dateTime={featuredPost.published_at ?? undefined}>
-                                                        {formatDate(featuredPost.published_at)}
-                                                    </time>
-                                                    {featuredPost.reading_time && (
-                                                        <>
-                                                            <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
-                                                            <span>{featuredPost.reading_time} phút đọc</span>
-                                                        </>
-                                                    )}
+                                <Link href={`/blog/${featuredPost.slug}/`} className="bento-featured group block">
+                                    <article className="post-card rounded-2xl overflow-hidden h-full flex flex-col">
+                                        <div className="relative aspect-[4/3] lg:aspect-auto lg:flex-1 overflow-hidden bg-surface-100 min-h-48">
+                                            <SkeletonImage
+                                                src={getValidImageUrl(featuredPost.featured_image, featuredPost.slug)}
+                                                alt={featuredPost.title}
+                                                fill
+                                                sizes="(max-width: 1024px) 100vw, 58vw"
+                                                priority
+                                                className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+                                            {featuredPost.category && (
+                                                <span className="absolute top-4 left-4 inline-flex items-center px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider text-white bg-brand-600/90 backdrop-blur-sm shadow-sm">
+                                                    {featuredPost.category.name}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="p-5 flex flex-col">
+                                            <h3 className="text-lg lg:text-xl font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 leading-snug mb-2">
+                                                {featuredPost.title}
+                                            </h3>
+                                            {featuredPost.excerpt && (
+                                                <p className="text-sm text-zinc-500 line-clamp-2 leading-relaxed mb-3">
+                                                    {featuredPost.excerpt}
+                                                </p>
+                                            )}
+                                            {featuredPost.tags?.length > 0 && (
+                                                <div className="flex flex-wrap gap-1.5 mb-3">
+                                                    {featuredPost.tags.slice(0, 3).map((tag) => (
+                                                        <span key={tag.slug} className="tag-pill text-[10px] px-2 py-0.5">{tag.name}</span>
+                                                    ))}
                                                 </div>
+                                            )}
+                                            <div className="pt-3 border-t border-zinc-100 flex items-center gap-2.5 text-xs text-zinc-400">
+                                                {featuredPost.author?.avatar ? (
+                                                    <Image src={getValidImageUrl(featuredPost.author.avatar, featuredPost.author.name)} alt={featuredPost.author.name} width={20} height={20} style={{ height: "auto" }} className="rounded-full ring-1 ring-zinc-200 object-cover" />
+                                                ) : (
+                                                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-1 ring-zinc-200 text-[9px] font-bold">{featuredPost.author.name.charAt(0)}</div>
+                                                )}
+                                                <span className="font-medium text-zinc-600">{featuredPost.author.name}</span>
+                                                <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
+                                                <time dateTime={featuredPost.published_at ?? undefined}>{formatDate(featuredPost.published_at)}</time>
+                                                {featuredPost.reading_time && (
+                                                    <><span className="w-0.5 h-0.5 rounded-full bg-zinc-300" /><span>{featuredPost.reading_time} phút đọc</span></>
+                                                )}
                                             </div>
-                                        </article>
-                                    </Link>
-                                </div>
+                                        </div>
+                                    </article>
+                                </Link>
                             )}
 
-                            {/* Side posts — stacked */}
-                            <div className="lg:col-span-2 flex flex-col gap-3">
-                                {sidePosts.map((post) => (
-                                    <Link key={post.id} href={`/blog/${post.slug}/`} className="group block">
-                                        <article className="post-card rounded-xl overflow-hidden flex flex-row h-full">
-                                            <div className="relative w-28 sm:w-32 shrink-0 bg-surface-100">
-                                                <SkeletonImage
-                                                    src={getValidImageUrl(post.featured_image, post.slug)}
-                                                    alt={post.title}
-                                                    fill
-                                                    sizes="128px"
-                                                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                                                />
-                                            </div>
-                                            <div className="p-3.5 flex flex-col justify-center min-w-0 flex-1">
-                                                {post.category && (
-                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 mb-1">
-                                                        {post.category.name}
-                                                    </span>
+                            {/* Side posts (2) — stack next to featured on lg */}
+                            {sidePosts.slice(0, 2).map((post) => (
+                                <Link key={post.id} href={`/blog/${post.slug}/`} className="bento-side group block">
+                                    <article className="post-card rounded-xl overflow-hidden flex flex-row h-full">
+                                        <div className="relative w-28 sm:w-32 shrink-0 bg-surface-100">
+                                            <SkeletonImage
+                                                src={getValidImageUrl(post.featured_image, post.slug)}
+                                                alt={post.title}
+                                                fill
+                                                sizes="128px"
+                                                className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+                                            />
+                                        </div>
+                                        <div className="p-3.5 flex flex-col justify-center min-w-0 flex-1">
+                                            {post.category && (
+                                                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 mb-1">{post.category.name}</span>
+                                            )}
+                                            <h3 className="text-sm font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 line-clamp-2 leading-snug mb-1.5">
+                                                {post.title}
+                                            </h3>
+                                            <div className="flex items-center gap-2 text-[11px] text-zinc-400">
+                                                <span className="font-medium text-zinc-500">{post.author.name}</span>
+                                                {post.reading_time && (
+                                                    <><span className="w-0.5 h-0.5 rounded-full bg-zinc-300" /><span>{post.reading_time} phút</span></>
                                                 )}
-                                                <h3 className="text-sm font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 line-clamp-2 leading-snug mb-1.5">
-                                                    {post.title}
-                                                </h3>
-                                                <div className="flex items-center gap-2 text-[11px] text-zinc-400">
-                                                    <span className="font-medium text-zinc-500">{post.author.name}</span>
-                                                    {post.reading_time && (
-                                                        <>
-                                                            <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
-                                                            <span>{post.reading_time} phút</span>
-                                                        </>
-                                                    )}
-                                                </div>
                                             </div>
-                                        </article>
-                                    </Link>
-                                ))}
-                            </div>
+                                        </div>
+                                    </article>
+                                </Link>
+                            ))}
+
+                            {/* Bottom small posts (3) */}
+                            {sidePosts.slice(2, 5).map((post) => (
+                                <div key={post.id} className="bento-small">
+                                    <PostCard post={post} />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>

@@ -13,10 +13,12 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
     useEffect(() => {
         if (!ref.current) return;
 
+        const root = ref.current;
+
         const productionAssetHost = "https://xdev.asia";
 
         const repairContentImages = () => {
-            const images = ref.current?.querySelectorAll("img");
+            const images = root.querySelectorAll("img");
             if (!images?.length) return;
 
             images.forEach((image) => {
@@ -46,10 +48,21 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
                     image.style.opacity = "0";
                     image.style.transition = "opacity 0.5s ease";
 
-                    image.addEventListener("load", () => {
+                    const revealImage = () => {
                         image.style.opacity = "1";
                         shimmer.remove();
-                    }, { once: true });
+                    };
+
+                    const clearBrokenState = () => {
+                        shimmer.remove();
+                    };
+
+                    if (image.complete && image.naturalWidth > 0) {
+                        revealImage();
+                    } else {
+                        image.addEventListener("load", revealImage, { once: true });
+                        image.addEventListener("error", clearBrokenState, { once: true });
+                    }
                 }
 
                 image.dataset.repairBound = "true";
@@ -72,6 +85,7 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
 
                         image.dataset.missingNoticeShown = "true";
                         image.classList.add("content-image-hidden");
+                        image.parentElement?.querySelector(".skeleton-img-overlay")?.remove();
 
                         const notice = document.createElement("div");
                         notice.className = "content-image-missing";
@@ -87,10 +101,14 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
         // Syntax highlighting with highlight.js
         const highlightCode = async () => {
             const hljs = (await import("highlight.js")).default;
-            const codeBlocks = ref.current?.querySelectorAll("pre code");
+            const codeBlocks = root.querySelectorAll("pre code");
             if (!codeBlocks) return;
             codeBlocks.forEach((block) => {
-                if (!block.classList.contains("hljs")) {
+                const isMermaidBlock =
+                    block.classList.contains("language-mermaid") ||
+                    block.classList.contains("language-mmd");
+
+                if (!block.classList.contains("hljs") && !isMermaidBlock) {
                     hljs.highlightElement(block as HTMLElement);
                 }
             });
@@ -171,7 +189,7 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
                 securityLevel: "loose",
             });
 
-            const codeBlocks = ref.current?.querySelectorAll("pre code.language-mermaid, pre code.language-mmd");
+            const codeBlocks = root.querySelectorAll("pre code.language-mermaid, pre code.language-mmd");
             if (!codeBlocks?.length) return;
 
             for (let i = 0; i < codeBlocks.length; i++) {
@@ -197,7 +215,7 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
 
         // Add a header bar to each code block with lang label + copy button
         const addCodeHeaders = () => {
-            const pres = ref.current?.querySelectorAll("pre");
+            const pres = root.querySelectorAll("pre");
             if (!pres) return;
 
             pres.forEach((pre) => {
@@ -235,10 +253,12 @@ export default function ContentRenderer({ html, className = "" }: ContentRendere
             });
         };
 
-        highlightCode();
-        initMermaid();
-        addCodeHeaders();
-        repairContentImages();
+        void (async () => {
+            await initMermaid();
+            await highlightCode();
+            addCodeHeaders();
+            repairContentImages();
+        })();
     }, [html]);
 
     return (
