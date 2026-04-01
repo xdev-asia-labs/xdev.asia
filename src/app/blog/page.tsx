@@ -1,4 +1,5 @@
 import { IconClock, IconCode } from "@/components/Icons";
+import Pagination from "@/components/Pagination";
 import PostCard from "@/components/PostCard";
 import SkeletonImage from "@/components/SkeletonImage";
 import { formatDate, getAllPosts, getAvailableTopics } from "@/lib/data";
@@ -6,6 +7,8 @@ import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+const POSTS_PER_PAGE = 12;
 
 export const metadata: Metadata = {
     title: "Blog",
@@ -17,6 +20,8 @@ export default function BlogPage() {
     const topics = getAvailableTopics();
     const featuredPost = posts[0];
     const restPosts = posts.slice(1);
+    const paginatedPosts = restPosts.slice(0, POSTS_PER_PAGE);
+    const totalPages = Math.ceil(restPosts.length / POSTS_PER_PAGE);
 
     return (
         <div>
@@ -39,10 +44,10 @@ export default function BlogPage() {
                     {/* Topic filter tabs */}
                     {topics.length > 0 && (
                         <div className="mt-6 flex flex-wrap gap-2">
-                            <span className="topic-tab topic-tab-active">
+                            <Link href="/blog/" className="topic-tab topic-tab-active">
                                 Tất cả
                                 <span className="topic-tab-count">{posts.length}</span>
-                            </span>
+                            </Link>
                             {topics.map((topic) => (
                                 <Link key={topic.slug} href={`/${topic.slug}/`} className="topic-tab">
                                     {topic.name}
@@ -126,7 +131,7 @@ export default function BlogPage() {
 
                 {/* Posts Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {restPosts.map((post, index) => (
+                    {paginatedPosts.map((post, index) => (
                         <PostCard key={post.id} post={post} priority={index < 3} />
                     ))}
                 </div>
@@ -136,6 +141,7 @@ export default function BlogPage() {
                         <p className="text-zinc-500">Chưa có bài viết nào.</p>
                     </div>
                 )}
+                <Pagination currentPage={1} totalPages={totalPages} basePath="/blog/" />
             </div>
         </div>
     );

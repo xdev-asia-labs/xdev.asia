@@ -1,5 +1,6 @@
 import HeroBanner3D from "@/components/HeroBanner3D";
 import { IconArrowRight, IconBook, IconBrain, IconCode, IconRocket } from "@/components/Icons";
+import NewsletterForm from "@/components/NewsletterForm";
 import PostCard from "@/components/PostCard";
 import SeriesCard from "@/components/SeriesCard";
 import { RepoCard } from "@/components/ShowcaseCard";
@@ -317,6 +318,23 @@ export default function Home() {
                 </section>
             )}
 
+            {/* ─── Newsletter ─── */}
+            <section className="py-14 lg:py-18 border-t border-zinc-100 dark:border-zinc-800">
+                <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <div className="section-label justify-center">
+                        <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                        Newsletter
+                    </div>
+                    <h2 className="section-title">Nhận bài viết mới nhất</h2>
+                    <p className="section-subtitle mb-6">
+                        Đăng ký để nhận thông báo khi có bài viết mới về lập trình, AI, DevOps và công nghệ.
+                    </p>
+                    <div className="max-w-md mx-auto">
+                        <NewsletterForm />
+                    </div>
+                </div>
+            </section>
+
             {/* ─── CTA — Blue gradient ─── */}
             <section className="py-10 lg:py-14">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -341,10 +359,10 @@ export default function Home() {
                                     Xem Series
                                 </Link>
                                 <Link
-                                    href="/series/"
+                                    href="/blog/"
                                     className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white/90 border border-white/25 hover:bg-white/10 transition-all duration-200"
                                 >
-                                    Khám phá Series
+                                    Đọc Blog
                                     <IconArrowRight size={14} />
                                 </Link>
                             </div>

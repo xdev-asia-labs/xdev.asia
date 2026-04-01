@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getSettings } from "@/lib/data";
 import { IconGitHub, IconFacebook, IconYouTube, IconTikTok, IconLinkedIn } from "./Icons";
+import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
     const settings = getSettings();
@@ -78,10 +79,34 @@ export default function Footer() {
                             </a>
                         )}
                         {settings.github_url && (
-                            <a href={settings.github_url} target="_blank" rel="noopener noreferrer" className="text-sm block transition-colors">
+                            <a href={settings.github_url} target="_blank" rel="noopener noreferrer" className="text-sm block mb-2.5 transition-colors">
                                 GitHub / {settings.github_url.split("/").pop()}
                             </a>
                         )}
+                        <h4 className="footer-heading mt-6">Pháp lý</h4>
+                        <ul className="space-y-2.5">
+                            <li>
+                                <Link href="/chinh-sach-quyen-rieng-tu/" className="text-sm transition-colors">
+                                    Chính sách riêng tư
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/dieu-khoan-su-dung/" className="text-sm transition-colors">
+                                    Điều khoản sử dụng
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Newsletter */}
+                <div className="mt-10 pt-8" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                    <div className="max-w-md">
+                        <h4 className="footer-heading">Nhận bài viết mới</h4>
+                        <p className="text-sm mb-4" style={{ color: "rgba(147, 197, 253, 0.6)" }}>
+                            Đăng ký newsletter để cập nhật bài viết mới nhất.
+                        </p>
+                        <NewsletterForm variant="footer" />
                     </div>
                 </div>
 

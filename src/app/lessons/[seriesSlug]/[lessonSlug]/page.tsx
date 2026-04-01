@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getLesson, getSeriesLessonSlugs, getSeries, formatDuration } from "@/lib/data";
 import ContentRenderer from "@/components/ContentRenderer";
 import { IconChevronRight, IconClock } from "@/components/Icons";
+import { LessonCheckbox, SeriesProgressBar } from "@/components/SeriesProgress";
 
 export const dynamicParams = false;
 
@@ -154,6 +155,9 @@ export default async function LessonPage({
                                         ← {lesson.course.title}
                                     </Link>
                                     <h2 className="text-sm font-bold text-zinc-900 mt-1">Nội dung series</h2>
+                                    <div className="mt-2">
+                                        <SeriesProgressBar seriesSlug={seriesSlug} totalLessons={allLessons.length} />
+                                    </div>
                                 </div>
                                 <div className="max-h-[70vh] overflow-y-auto">
                                     {series.sections.map((section) => (
@@ -166,23 +170,20 @@ export default async function LessonPage({
                                                     const isActive = l.slug === lessonSlug;
                                                     return (
                                                         <li key={l.id} className="border-b border-zinc-50">
-                                                            <Link
-                                                                href={`/lessons/${seriesSlug}/${l.slug}/`}
-                                                                className={`flex items-start gap-3 px-5 py-3 text-[13px] transition-colors ${isActive
+                                                            <div className={`flex items-start gap-3 px-5 py-3 text-[13px] transition-colors ${isActive
                                                                     ? "bg-brand-50 text-brand-600 font-semibold"
                                                                     : "text-zinc-500 hover:bg-brand-50/50 hover:text-zinc-800"
-                                                                    }`}
-                                                            >
-                                                                <span className={`mt-0.5 w-5 h-5 rounded-full shrink-0 flex items-center justify-center text-[10px] font-bold ${isActive
-                                                                    ? "bg-brand-400 text-white"
-                                                                    : "text-zinc-600"
-                                                                    }`}
-                                                                    style={!isActive ? { border: "1px solid #e2e8f0" } : undefined}
+                                                                    }`}>
+                                                                <div className="mt-0.5">
+                                                                    <LessonCheckbox seriesSlug={seriesSlug} lessonSlug={l.slug} />
+                                                                </div>
+                                                                <Link
+                                                                    href={`/lessons/${seriesSlug}/${l.slug}/`}
+                                                                    className="flex-1 leading-snug"
                                                                 >
-                                                                    {l.sort_order + 1}
-                                                                </span>
-                                                                <span className="flex-1 leading-snug">{l.title}</span>
-                                                            </Link>
+                                                                    {l.title}
+                                                                </Link>
+                                                            </div>
                                                         </li>
                                                     );
                                                 })}

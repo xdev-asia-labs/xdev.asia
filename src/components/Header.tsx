@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket } from "./Icons";
+import DarkModeToggle from "./DarkModeToggle";
 
 /* ────────────────────────────────────────
    Icon map – maps category.icon string → component
@@ -159,18 +160,20 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                         {/* Search */}
                         <Link
                             href="/search/"
-                            className="ml-1.5 p-2 rounded-lg text-zinc-400 hover:text-brand-600 hover:bg-zinc-50 transition-colors"
+                            className="ml-1.5 p-2 rounded-lg text-zinc-400 hover:text-brand-600 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                             aria-label="Tìm kiếm"
                         >
                             <IconSearch size={18} />
                         </Link>
+                        <DarkModeToggle />
                     </div>
 
                     {/* Mobile */}
                     <div className="md:hidden flex items-center gap-0.5">
+                        <DarkModeToggle />
                         <Link
                             href="/search/"
-                            className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 transition-colors"
+                            className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                             aria-label="Tìm kiếm"
                         >
                             <IconSearch size={20} />

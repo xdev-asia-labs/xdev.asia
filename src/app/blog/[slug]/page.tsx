@@ -1,5 +1,6 @@
 import BackToTop from "@/components/BackToTop";
 import ContentRenderer from "@/components/ContentRenderer";
+import GiscusComments from "@/components/GiscusComments";
 import { IconChevronRight, IconClock } from "@/components/Icons";
 import PostCard from "@/components/PostCard";
 import ReadingProgress from "@/components/ReadingProgress";
@@ -81,8 +82,52 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     const fullAuthor = getAuthorById(post.author.id);
 
+    const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
+    const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
+
+    const articleJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: post.title,
+        description: post.excerpt || post.title,
+        image: imageUrl,
+        datePublished: post.published_at || post.created_at,
+        author: {
+            "@type": "Person",
+            name: post.author.name,
+            url: `${SITE_URL}/gioi-thieu/`,
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "xDev Asia",
+            url: SITE_URL,
+        },
+        mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `${SITE_URL}/blog/${slug}/`,
+        },
+    };
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Trang chủ", item: SITE_URL },
+            { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog/` },
+            { "@type": "ListItem", position: 3, name: post.title, item: `${SITE_URL}/blog/${slug}/` },
+        ],
+    };
+
     return (
         <div>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+            />
             {/* Reading progress bar */}
             <ReadingProgress />
             <div className="relative overflow-hidden hero-gradient border-b border-zinc-100">
@@ -308,6 +353,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                 </div>
                             </section>
                         )}
+
+                        {/* Giscus Comments */}
+                        <GiscusComments term={slug} />
                     </article>
 
                     {/* Sidebar TOC — desktop only */}

@@ -1,5 +1,6 @@
 import ContentRenderer from "@/components/ContentRenderer";
 import { IconBook, IconChevronRight, IconClock, IconEye, IconStar } from "@/components/Icons";
+import { SeriesProgressBar, LessonCheckbox } from "@/components/SeriesProgress";
 import TableOfContents from "@/components/TableOfContents";
 import { getAuthorById, getSeries, getSeriesCategories, getSeriesSlugsWithCategory } from "@/lib/data";
 import { getValidImageUrl } from "@/utils/image";
@@ -198,9 +199,12 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                                     <span className="w-1 h-6 rounded-full bg-brand-500" />
                                     Nội dung series
                                 </h2>
-                                <p className="text-sm text-zinc-600 mb-6 ml-4">
+                                <p className="text-sm text-zinc-600 mb-4 ml-4">
                                     {series.sections.length} phần &middot; {totalLessons} bài học
                                 </p>
+                                <div className="mb-6 ml-4">
+                                    <SeriesProgressBar seriesSlug={series.slug} totalLessons={totalLessons} />
+                                </div>
                                 <div className="space-y-3">
                                     {series.sections.map((section, sIdx) => (
                                         <div key={section.id} className="rounded-xl overflow-hidden glass-card" style={{ transform: "none" }}>
@@ -214,15 +218,15 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                                             <ul>
                                                 {section.lessons.map((lesson, lIdx) => (
                                                     <li key={lesson.id} className={lIdx < section.lessons.length - 1 ? "border-b border-zinc-50" : ""}>
-                                                        <Link href={`/lessons/${series.slug}/${lesson.slug}/`} className="flex items-center gap-3 px-5 py-3 text-sm hover:bg-brand-50 transition-colors group">
-                                                            <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-zinc-500 shrink-0 bg-brand-50 border border-brand-100">
-                                                                {lesson.sort_order + 1}
-                                                            </span>
-                                                            <span className="flex-1 text-zinc-600 group-hover:text-brand-600 transition-colors">{lesson.title}</span>
+                                                        <div className="flex items-center gap-3 px-5 py-3 text-sm hover:bg-brand-50 dark:hover:bg-brand-950/20 transition-colors group">
+                                                            <LessonCheckbox seriesSlug={series.slug} lessonSlug={lesson.slug} />
+                                                            <Link href={`/lessons/${series.slug}/${lesson.slug}/`} className="flex-1 text-zinc-600 group-hover:text-brand-600 transition-colors">
+                                                                {lesson.title}
+                                                            </Link>
                                                             {lesson.duration_minutes && (
                                                                 <span className="text-xs text-zinc-400 shrink-0">{lesson.duration_minutes} phút</span>
                                                             )}
-                                                        </Link>
+                                                        </div>
                                                     </li>
                                                 ))}
                                             </ul>

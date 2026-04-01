@@ -1,0 +1,44 @@
+{
+  "xclaw": {
+    "description": "Open-source AI Agent platform with Gateway architecture, multi-channel support (Telegram, Discord), drag-and-drop Workflow Builder, and CLI interface",
+    "stars": 1,
+    "forks": 0,
+    "language": "TypeScript",
+    "languageColor": "#3178C6",
+    "topics": [],
+    "homepage": "http://xclaw.xdev.asia/",
+    "archived": false,
+    "default_branch": "main",
+    "html_url": "https://github.com/xdev-asia-labs/xClaw",
+    "updated_at": "2026-04-01T07:08:46Z",
+    "fetched_at": "2026-04-01T17:15:49.110Z"
+  },
+  "xdev-asia": {
+    "description": "",
+    "stars": 0,
+    "forks": 0,
+    "language": "JavaScript",
+    "languageColor": "#F1E05A",
+    "topics": [],
+    "homepage": "http://xdev.asia/",
+    "archived": false,
+    "default_branch": "main",
+    "html_url": "https://github.com/xdev-asia-labs/xdev.asia",
+    "updated_at": "2026-04-01T15:29:04Z",
+    "fetched_at": "2026-04-01T17:15:50.130Z"
+  },
+  "autox": {
+    "description": "Open-source AI Agent platform with Gateway architecture, multi-channel support (Telegram, Discord), drag-and-drop Workflow Builder, and CLI interface",
+    "stars": 1,
+    "forks": 0,
+    "language": "TypeScript",
+    "languageColor": "#3178C6",
+    "topics": [],
+    "homepage": "http://xclaw.xdev.asia/",
+    "archived": false,
+    "default_branch": "main",
+    "html_url": "https://github.com/xdev-asia-labs/xClaw",
+    "updated_at": "2026-04-01T07:08:46Z",
+    "fetched_at": "2026-04-01T17:15:50.497Z"
+  }
+}
