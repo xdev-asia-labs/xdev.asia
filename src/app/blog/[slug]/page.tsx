@@ -23,9 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     if (!post) return {};
 
     const canonicalUrl = `${SITE_URL}/blog/${slug}/`;
-    const imageUrl = post.featured_image
-        ? `${SITE_URL}${getValidImageUrl(post.featured_image, slug)}`
-        : `${SITE_URL}${getValidImageUrl(null, slug)}`;
+    const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
+    const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
 
     return {
         title: post.title,

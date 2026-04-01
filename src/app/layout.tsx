@@ -16,6 +16,7 @@ const settings = getSettings();
 const navTopics: NavTopic[] = getAvailableTopics().map(({ slug, name, icon }) => ({ slug, name, icon }));
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://xdev.asia"),
   title: {
     default: settings.site_name || "xDev",
     template: `%s | ${settings.site_name || "xDev"}`,
