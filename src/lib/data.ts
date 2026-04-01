@@ -1,20 +1,20 @@
 import fs from "fs";
 import path from "path";
-import { listMdxRelativePaths, listMdxSlugs, readMdxDocument, readMdxDocumentByRelativePath, renderMdxBodyToHtml } from "./content";
+import { listMdxRelativePaths, readMdxDocument, readMdxDocumentByRelativePath, renderMdxBodyToHtml } from "./content";
 import type {
-  PostIndex,
-  Post,
-  SeriesIndex,
-  Series,
-  Lesson,
-  LessonSummary,
-  Section,
-  Category,
-  Tag,
-  Author,
-  Settings,
-  Review,
-  Comment,
+    Author,
+    Category,
+    Comment,
+    Lesson,
+    LessonSummary,
+    Post,
+    PostIndex,
+    Review,
+    Section,
+    Series,
+    SeriesIndex,
+    Settings,
+    Tag,
 } from "./types";
 
 const dataDir = path.join(process.cwd(), "data");
@@ -529,6 +529,88 @@ export function getAvailableTopics(): Topic[] {
 
 export function getPostsByTopic(topicSlug: string): PostIndex[] {
   return getAllPosts().filter((p) => p.category?.slug === topicSlug);
+}
+
+export interface TagStats extends Tag {
+  postCount: number;
+  seriesCount: number;
+  totalCount: number;
+}
+
+function normalizeTagNameFromSlug(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+export function getTagStats(): TagStats[] {
+  const tagsFromData = getTags();
+  const map = new Map<string, TagStats>();
+
+  for (const tag of tagsFromData) {
+    map.set(tag.slug, {
+      name: tag.name,
+      slug: tag.slug,
+      postCount: 0,
+      seriesCount: 0,
+      totalCount: 0,
+    });
+  }
+
+  for (const post of getAllPosts()) {
+    for (const tag of post.tags) {
+      const current = map.get(tag.slug) ?? {
+        name: tag.name || normalizeTagNameFromSlug(tag.slug),
+        slug: tag.slug,
+        postCount: 0,
+        seriesCount: 0,
+        totalCount: 0,
+      };
+      current.postCount += 1;
+      current.totalCount += 1;
+      map.set(tag.slug, current);
+    }
+  }
+
+  for (const series of getAllSeries()) {
+    for (const tag of series.tags) {
+      const current = map.get(tag.slug) ?? {
+        name: tag.name || normalizeTagNameFromSlug(tag.slug),
+        slug: tag.slug,
+        postCount: 0,
+        seriesCount: 0,
+        totalCount: 0,
+      };
+      current.seriesCount += 1;
+      current.totalCount += 1;
+      map.set(tag.slug, current);
+    }
+  }
+
+  return Array.from(map.values()).sort((a, b) => {
+    if (b.totalCount !== a.totalCount) return b.totalCount - a.totalCount;
+    return a.name.localeCompare(b.name, "vi");
+  });
+}
+
+export function getTagBySlug(slug: string): TagStats | null {
+  return getTagStats().find((tag) => tag.slug === slug) ?? null;
+}
+
+export function getPostsByTag(tagSlug: string): PostIndex[] {
+  return getAllPosts().filter((post) => post.tags.some((tag) => tag.slug === tagSlug));
+}
+
+export function getSeriesByTag(tagSlug: string): SeriesIndex[] {
+  return getAllSeries().filter((series) => series.tags.some((tag) => tag.slug === tagSlug));
+}
+
+export function getActiveTagSlugs(): string[] {
+  return getTagStats()
+    .filter((tag) => tag.totalCount > 0)
+    .map((tag) => tag.slug);
 }
 
 // Search index

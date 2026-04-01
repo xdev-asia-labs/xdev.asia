@@ -1,7 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
 import type { SeriesIndex } from "@/lib/types";
 import { getValidImageUrl } from "@/utils/image";
+import Link from "next/link";
 import { IconBook, IconClock, IconStar } from "./Icons";
 import SkeletonImage from "./SkeletonImage";
 
@@ -64,9 +63,9 @@ export default function SeriesCard({ series, priority = false, basePath }: { ser
                 {visibleTags.length > 0 && (
                     <div className="mt-2.5 flex flex-wrap gap-1.5">
                         {visibleTags.map((tag) => (
-                            <span key={tag.slug} className="tag-pill text-[10px] px-2 py-0.5">
+                            <Link key={tag.slug} href={`/tags/${tag.slug}/`} className="tag-pill text-[10px] px-2 py-0.5">
                                 {tag.name}
-                            </span>
+                            </Link>
                         ))}
                     </div>
                 )}

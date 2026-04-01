@@ -158,9 +158,9 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                             {series.tags.length > 0 && (
                                 <div className="flex flex-wrap gap-2">
                                     {series.tags.map((tag) => (
-                                        <span key={tag.slug} className="tag-pill">
+                                        <Link key={tag.slug} href={`/tags/${tag.slug}/`} className="tag-pill">
                                             {tag.name}
-                                        </span>
+                                        </Link>
                                     ))}
                                 </div>
                             )}

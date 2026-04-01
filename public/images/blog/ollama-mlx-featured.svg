@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+    <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#0d1117" />
+            <stop offset="100%" style="stop-color:#130820" />
+        </linearGradient>
+        <linearGradient id="speedbar" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#22c55e" />
+            <stop offset="100%" style="stop-color:#16a34a" />
+        </linearGradient>
+        <linearGradient id="oldbar" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#374151" />
+            <stop offset="100%" style="stop-color:#1f2937" />
+        </linearGradient>
+        <linearGradient id="purplebar" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#a855f7" />
+            <stop offset="100%" style="stop-color:#7c3aed" />
+        </linearGradient>
+        <filter id="blur">
+            <feGaussianBlur stdDeviation="50" />
+        </filter>
+        <filter id="blur2">
+            <feGaussianBlur stdDeviation="25" />
+        </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect width="1200" height="630" fill="url(#bg)" />
+
+    <!-- Glow orbs -->
+    <ellipse cx="160" cy="160" rx="280" ry="280" fill="#7c3aed" opacity="0.12" filter="url(#blur)" />
+    <ellipse cx="350" cy="500" rx="200" ry="200" fill="#6366f1" opacity="0.08" filter="url(#blur)" />
+    <ellipse cx="950" cy="350" rx="220" ry="220" fill="#4f46e5" opacity="0.09" filter="url(#blur)" />
+
+    <!-- Subtle grid lines -->
+    <g opacity="0.05" stroke="#9ca3af" stroke-width="0.5">
+        <line x1="0" y1="210" x2="590" y2="210" />
+        <line x1="0" y1="420" x2="590" y2="420" />
+        <line x1="150" y1="0" x2="150" y2="630" />
+        <line x1="350" y1="0" x2="350" y2="630" />
+        <line x1="550" y1="0" x2="550" y2="630" />
+    </g>
+
+    <!-- ===== LEFT PANEL: BRANDING ===== -->
+
+    <!-- Ollama logo pill -->
+    <rect x="60" y="72" width="42" height="42" rx="12" fill="#1a1a2e" stroke="#7c3aed"
+        stroke-width="1.5" />
+    <circle cx="81" cy="93" r="12" fill="#a855f7" />
+    <circle cx="81" cy="93" r="6" fill="#0d1117" />
+
+    <!-- MLX badge -->
+    <rect x="116" y="72" width="74" height="42" rx="12" fill="#1a1a2e" stroke="#6366f1"
+        stroke-width="1.5" />
+    <text x="153" y="99" font-family="DejaVu Sans" font-size="18" fill="#818cf8"
+        text-anchor="middle" font-weight="bold">MLX</text>
+
+    <!-- "+" connector -->
+    <text x="104" y="100" font-family="DejaVu Sans" font-size="20" fill="#4b5563"
+        text-anchor="middle">+</text>
+
+    <!-- Ollama — big headline -->
+    <text x="60" y="210" font-family="DejaVu Sans" font-size="96" fill="white"
+        font-weight="bold">Ollama</text>
+
+    <!-- + MLX — second line -->
+    <text x="60" y="298" font-family="DejaVu Sans" font-size="80" fill="#a855f7"
+        font-weight="bold">+ MLX</text>
+
+    <!-- Divider accent line -->
+    <rect x="60" y="318" width="220" height="3" rx="2" fill="#7c3aed" opacity="0.6" />
+
+    <!-- Subtitle -->
+    <text x="60" y="358" font-family="DejaVu Sans" font-size="22" fill="#9ca3af">Apple Silicon — 3x
+        Faster on Mac</text>
+
+    <!-- Stat badges row -->
+    <!-- Badge 1: Decode +93% -->
+    <rect x="60" y="390" width="128" height="34" rx="10" fill="#052e16" stroke="#16a34a"
+        stroke-width="1" />
+    <text x="124" y="412" font-family="DejaVu Sans" font-size="14" fill="#4ade80"
+        text-anchor="middle" font-weight="bold">Decode +93%</text>
+
+    <!-- Badge 2: Prefill +57% -->
+    <rect x="202" y="390" width="118" height="34" rx="10" fill="#172554" stroke="#3b82f6"
+        stroke-width="1" />
+    <text x="261" y="412" font-family="DejaVu Sans" font-size="14" fill="#60a5fa"
+        text-anchor="middle" font-weight="bold">Prefill +57%</text>
+
+    <!-- Badge 3: MoE 3x -->
+    <rect x="334" y="390" width="118" height="34" rx="10" fill="#2e1065" stroke="#7c3aed"
+        stroke-width="1" />
+    <text x="393" y="412" font-family="DejaVu Sans" font-size="14" fill="#c084fc"
+        text-anchor="middle" font-weight="bold">MoE 3x faster</text>
+
+    <!-- Version tag -->
+    <rect x="60" y="444" width="155" height="26" rx="8" fill="#1f2937" />
+    <text x="138" y="462" font-family="DejaVu Sans Mono" font-size="12" fill="#6b7280"
+        text-anchor="middle">v0.19 — Apr 2026</text>
+
+    <!-- Site brand -->
+    <text x="60" y="590" font-family="DejaVu Sans" font-size="17" fill="#4b5563"
+        font-weight="bold">xdev.asia</text>
+
+    <!-- Vertical separator -->
+    <line x1="610" y1="40" x2="610" y2="590" stroke="#1f2937" stroke-width="1.5" />
+
+    <!-- ===== RIGHT PANEL: BENCHMARK ===== -->
+    <rect x="632" y="40" width="528" height="550" rx="18" fill="#0f1520" />
+    <rect x="632" y="40" width="528" height="550" rx="18" fill="none" stroke="#1e293b"
+        stroke-width="1.5" />
+
+    <!-- Panel header -->
+    <text x="896" y="82" font-family="DejaVu Sans Mono" font-size="13" fill="#475569"
+        text-anchor="middle" font-weight="bold">BENCHMARK — Qwen3.5-35B-A3B</text>
+    <line x1="655" y1="96" x2="1137" y2="96" stroke="#1e293b" stroke-width="1" />
+
+    <!-- Section label: Community -->
+    <text x="655" y="122" font-family="DejaVu Sans Mono" font-size="10" fill="#475569">COMMUNITY
+        RESULTS</text>
+
+    <!-- M4 Max MLX row -->
+    <text x="655" y="148" font-family="DejaVu Sans Mono" font-size="12" fill="#94a3b8">M4 Max — MLX
+        (new)</text>
+    <rect x="655" y="155" width="390" height="22" rx="4" fill="url(#speedbar)" />
+    <text x="1110" y="172" font-family="DejaVu Sans Mono" font-size="13" fill="#4ade80"
+        text-anchor="end" font-weight="bold">130 tok/s</text>
+
+    <!-- M4 Max old row -->
+    <text x="655" y="196" font-family="DejaVu Sans Mono" font-size="12" fill="#94a3b8">M4 Max —
+        Ollama 0.18</text>
+    <rect x="655" y="203" width="130" height="22" rx="4" fill="url(#oldbar)" />
+    <text x="1110" y="220" font-family="DejaVu Sans Mono" font-size="13" fill="#64748b"
+        text-anchor="end" font-weight="bold">43.5 tok/s</text>
+
+    <line x1="655" y1="242" x2="1137" y2="242" stroke="#1e293b" stroke-width="1" />
+
+    <!-- M4 Pro int4 -->
+    <text x="655" y="266" font-family="DejaVu Sans Mono" font-size="12" fill="#94a3b8">M4 Pro 48GB —
+        int4</text>
+    <rect x="655" y="273" width="325" height="22" rx="4" fill="url(#speedbar)" />
+    <text x="1110" y="290" font-family="DejaVu Sans Mono" font-size="13" fill="#4ade80"
+        text-anchor="end" font-weight="bold">84.4 tok/s</text>
+
+    <!-- M4 Pro nvfp4 -->
+    <text x="655" y="314" font-family="DejaVu Sans Mono" font-size="12" fill="#94a3b8">M4 Pro 48GB —
+        nvfp4</text>
+    <rect x="655" y="321" width="205" height="22" rx="4" fill="url(#purplebar)" opacity="0.8" />
+    <text x="1110" y="338" font-family="DejaVu Sans Mono" font-size="13" fill="#c084fc"
+        text-anchor="end" font-weight="bold">66.5 tok/s</text>
+
+    <line x1="655" y1="362" x2="1137" y2="362" stroke="#1e293b" stroke-width="1" />
+
+    <!-- Section label: Official -->
+    <text x="655" y="384" font-family="DejaVu Sans Mono" font-size="10" fill="#475569">OFFICIAL — M5
+        MAX (Ollama 0.19)</text>
+
+    <!-- M5 Prefill -->
+    <text x="655" y="410" font-family="DejaVu Sans Mono" font-size="12" fill="#94a3b8">Prefill</text>
+    <rect x="710" y="398" width="310" height="20" rx="4" fill="url(#speedbar)" opacity="0.85" />
+    <text x="1110" y="415" font-family="DejaVu Sans Mono" font-size="13" fill="#4ade80"
+        text-anchor="end" font-weight="bold">1,810 tok/s (+57%)</text>
+
+    <!-- M5 Decode -->
+    <text x="655" y="446" font-family="DejaVu Sans Mono" font-size="12" fill="#94a3b8">Decode</text>
+    <rect x="710" y="434" width="185" height="20" rx="4" fill="url(#speedbar)" opacity="0.85" />
+    <text x="1110" y="451" font-family="DejaVu Sans Mono" font-size="13" fill="#4ade80"
+        text-anchor="end" font-weight="bold">112 tok/s (+93%)</text>
+
+    <line x1="655" y1="474" x2="1137" y2="474" stroke="#1e293b" stroke-width="1" />
+
+    <!-- Big stat: 3x -->
+    <text x="896" y="534" font-family="DejaVu Sans" font-size="64" fill="#7c3aed"
+        text-anchor="middle" font-weight="bold">3x</text>
+    <text x="896" y="560" font-family="DejaVu Sans" font-size="14" fill="#475569"
+        text-anchor="middle">faster than Ollama 0.18 on M4 Max</text>
+</svg>

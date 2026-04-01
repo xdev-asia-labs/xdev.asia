@@ -147,9 +147,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     {post.tags.length > 0 && (
                         <div className="mt-6 flex flex-wrap gap-2">
                             {post.tags.map((tag) => (
-                                <span key={tag.slug} className="tag-pill">
+                                <Link key={tag.slug} href={`/tags/${tag.slug}/`} className="tag-pill">
                                     #{tag.name}
-                                </span>
+                                </Link>
                             ))}
                         </div>
                     )}

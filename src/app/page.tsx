@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
-import PostCard from "@/components/PostCard";
-import SeriesCard from "@/components/SeriesCard";
 import HeroBanner3D from "@/components/HeroBanner3D";
-import { getAllPosts, getAllSeries, getSettings, formatDate, getSeriesByCategory } from "@/lib/data";
-import { showcaseRepos } from "@/lib/showcase-server";
+import { IconArrowRight, IconBook, IconBrain, IconCode, IconRocket } from "@/components/Icons";
+import SeriesCard from "@/components/SeriesCard";
 import { RepoCard } from "@/components/ShowcaseCard";
-import { getValidImageUrl } from "@/utils/image";
-import { IconArrowRight, IconBrain, IconBook, IconCode, IconRocket, IconGitHub } from "@/components/Icons";
 import SkeletonImage from "@/components/SkeletonImage";
+import { formatDate, getAllPosts, getAllSeries, getSeriesByCategory, getSettings } from "@/lib/data";
+import { showcaseApps, showcaseRepos } from "@/lib/showcase-server";
+import { getValidImageUrl } from "@/utils/image";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
 const SITE_URL = "https://xdev.asia";
 
@@ -100,7 +99,7 @@ export default function Home() {
                 tagline={settings.site_tagline || settings.site_description || "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế"}
                 postCount={allPosts.length}
                 seriesCount={allSeriesItems.length}
-                projectCount={showcaseRepos.length}
+                projectCount={showcaseApps.length + showcaseRepos.length}
             />
 
             {/* ─── AI & Machine Learning — Highlighted ─── */}
