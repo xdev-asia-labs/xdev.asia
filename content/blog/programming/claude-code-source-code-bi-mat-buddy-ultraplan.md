@@ -3,7 +3,7 @@ id: 01961234-b2c3-7d4e-a5f6-78901abcdef2
 title: 'Đào sâu vào source code Claude Code: Buddy Virtual Pet, UltraPlan Multi-Agent và Kiến trúc ẩn'
 slug: claude-code-source-code-bi-mat-buddy-ultraplan
 excerpt: Phân tích chi tiết source code TypeScript được trích xuất từ npm bundle của Claude Code v2.1.89 --- hé lộ hệ thống thú cưng ảo Buddy với rarity RPG ra mắt ngày 1/4/2026, kiến trúc UltraPlan multi-agent, Bridge remote session system, anti-canary obfuscation và hàng chục tính năng ẩn chưa được document.
-featured_image: /images/blog/claude-code-featured.svg
+featured_image: /images/blog/claude-code-featured.png
 type: blog
 reading_time: 25
 view_count: 0
@@ -168,7 +168,7 @@ Kết quả: **~175ms tiết kiệm** mỗi lần khởi động. Với develope
 
 ### 3.1. Buddy trông như thế nào?
 
-![Buddy Species Catalog — 18 loài được mã hóa hex, mỗi loài có ASCII sprite 5 dòng và hệ thống rarity riêng](/images/blog/claude-code-buddy-species.svg)
+![Buddy Species Catalog --- 18 loài được mã hóa hex, mỗi loài có ASCII sprite 5 dòng và hệ thống rarity riêng](/images/blog/claude-code-buddy-species.svg)
 
 Companion ngồi cạnh input box và đôi khi xuất hiện speech bubble. Toàn bộ UI được render bằng **ASCII art** qua Ink (React terminal):
 
@@ -295,7 +295,7 @@ Với `Math.random()`, mỗi lần restart Claude Code bạn sẽ ra companion k
 
 ### 3.5. Hệ thống Rarity --- Giải mã xác suất
 
-![Rarity System — stat floor tăng theo tier, legendary có floor 50/100](/images/blog/claude-code-rarity-system.svg)
+![Rarity System --- stat floor tăng theo tier, legendary có floor 50/100](/images/blog/claude-code-rarity-system.svg)
 
 Source code không công khai RARITY_WEIGHTS trực tiếp, nhưng từ floor values và rollRarity logic, ta có thể suy ra phân phối:
 
@@ -404,7 +404,7 @@ Lý do dùng **local time** thay vì UTC: nếu dùng UTC, tất cả user trên
 
 ### 4.1. UltraPlan là gì?
 
-![UltraPlan Architecture — từ local CLI → CCR Cloud → parallel agents → coordinator → plan](/images/blog/claude-code-ultraplan-flow.svg)
+![UltraPlan Architecture --- từ local CLI → CCR Cloud → parallel agents → coordinator → plan](/images/blog/claude-code-ultraplan-flow.svg)
 
 `/ultraplan` là slash command mạnh nhất của Claude Code, nhưng ẩn kỹ nhất. Thay vì Claude Code tự lên kế hoạch, nó **teleport task lên cloud**, nơi **nhiều agent chạy song song** trong tối đa 30 phút để tạo kế hoạch toàn diện.
 

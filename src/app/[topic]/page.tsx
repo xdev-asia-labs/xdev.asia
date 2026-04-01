@@ -1,8 +1,8 @@
+import { IconArrowRight, IconChevronRight, IconCode } from "@/components/Icons";
+import PostCard from "@/components/PostCard";
+import { getAllPosts, getAvailableTopics, getPostsByTopic } from "@/lib/data";
 import type { Metadata } from "next";
 import Link from "next/link";
-import PostCard from "@/components/PostCard";
-import { getPostsByTopic, getAvailableTopics, getAllPosts } from "@/lib/data";
-import { IconCode, IconChevronRight, IconArrowRight } from "@/components/Icons";
 
 export const dynamicParams = false;
 
@@ -10,14 +10,33 @@ export function generateStaticParams() {
     return getAvailableTopics().map((topic) => ({ topic: topic.slug }));
 }
 
+const SITE_URL = "https://xdev.asia";
+
 export async function generateMetadata({ params }: { params: Promise<{ topic: string }> }): Promise<Metadata> {
     const { topic: topicSlug } = await params;
     const topics = getAvailableTopics();
     const topic = topics.find((t) => t.slug === topicSlug);
     const name = topic?.name || topicSlug;
+    const description = topic?.description || `Bài viết về ${name}`;
+    const canonicalUrl = `${SITE_URL}/${topicSlug}/`;
+
     return {
         title: `${name} — xDev`,
-        description: topic?.description || `Bài viết về ${name}`,
+        description,
+        alternates: { canonical: canonicalUrl },
+        openGraph: {
+            title: `${name} — xDev Asia`,
+            description,
+            url: canonicalUrl,
+            siteName: "xDev Asia",
+            locale: "vi_VN",
+            type: "website",
+        },
+        twitter: {
+            card: "summary",
+            title: `${name} — xDev Asia`,
+            description,
+        },
     };
 }
 

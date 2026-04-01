@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { getSeries, getSeriesSlugsWithCategory, getSeriesCategories, getAuthorById } from "@/lib/data";
-import { getValidImageUrl } from "@/utils/image";
 import ContentRenderer from "@/components/ContentRenderer";
+import { IconBook, IconChevronRight, IconClock, IconEye, IconStar } from "@/components/Icons";
 import TableOfContents from "@/components/TableOfContents";
-import { IconChevronRight, IconBook, IconClock, IconEye, IconStar } from "@/components/Icons";
+import { getAuthorById, getSeries, getSeriesCategories, getSeriesSlugsWithCategory } from "@/lib/data";
+import { getValidImageUrl } from "@/utils/image";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export const dynamicParams = false;
 
@@ -14,13 +14,36 @@ export function generateStaticParams() {
     return getSeriesSlugsWithCategory().map(({ category, slug }) => ({ category, slug }));
 }
 
+const SITE_URL = "https://xdev.asia";
+
 export async function generateMetadata({ params }: { params: Promise<{ category: string; slug: string }> }): Promise<Metadata> {
-    const { slug } = await params;
+    const { category, slug } = await params;
     const series = getSeries(slug);
     if (!series) return {};
+
+    const canonicalUrl = `${SITE_URL}/series/${category}/${slug}/`;
+    const rawImageUrl = getValidImageUrl(series.featured_image ?? null, slug);
+    const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
+
     return {
         title: series.title,
         description: series.description || series.title,
+        alternates: { canonical: canonicalUrl },
+        openGraph: {
+            title: series.title,
+            description: series.description || series.title,
+            url: canonicalUrl,
+            siteName: "xDev Asia",
+            locale: "vi_VN",
+            type: "article",
+            images: [{ url: imageUrl, width: 1200, height: 630, alt: series.title }],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: series.title,
+            description: series.description || series.title,
+            images: [imageUrl],
+        },
     };
 }
 
