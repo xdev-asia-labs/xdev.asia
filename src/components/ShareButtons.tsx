@@ -19,7 +19,12 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            // fallback: select text
+            // fallback: allow user to copy manually if clipboard API fails
+            try {
+                window.prompt("Không thể tự động copy. Hãy copy link bài viết thủ công:", url);
+            } catch {
+                // If even the prompt fails, silently ignore as a last resort
+            }
         }
     };
 

@@ -11,7 +11,7 @@ interface HeroBannerProps {
     projectCount: number;
 }
 
-export default function HeroBanner3D({
+export default function HeroBanner2026({
     tagline,
     postCount,
     seriesCount,
