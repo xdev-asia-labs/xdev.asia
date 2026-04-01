@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     if (!project) return {};
 
     const canonicalUrl = `${SITE_URL}/showcase/${slug}/`;
-    const rawImageUrl = getValidImageUrl(project.image ?? null, slug);
+    const rawImageUrl = getValidImageUrl(project.featured_image ?? null, slug);
     const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
 
     return {
