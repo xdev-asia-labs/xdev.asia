@@ -1,7 +1,6 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAI, getGenerativeModel, GoogleAIBackend, type GenerativeModel } from "firebase/ai";
 
 const firebaseConfig = {
@@ -23,17 +22,7 @@ const app: FirebaseApp = isClient
   ? (getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0])
   : (null as any);
 
-// Initialize App Check only in production to avoid dev-time reCAPTCHA runtime errors.
-if (isClient && process.env.NODE_ENV === "production") {
-  try {
-    initializeAppCheck(app, {
-      provider: new ReCaptchaEnterpriseProvider("6LdnUKIsAAAAALVreZcYlvh36eDpNKBkaJDJKGhq"),
-      isTokenAutoRefreshEnabled: true,
-    });
-  } catch (error) {
-    console.warn("Firebase App Check init skipped:", error);
-  }
-}
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const auth: Auth = isClient ? getAuth(app) : (null as any);

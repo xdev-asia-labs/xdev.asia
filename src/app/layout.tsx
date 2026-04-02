@@ -66,10 +66,7 @@ export default function RootLayout({
             gtag('config', 'G-5Q4MQ1GJP7');
           `}
         </Script>
-        <Script
-          src="https://www.google.com/recaptcha/enterprise.js?render=6LdnUKIsAAAAALVreZcYlvh36eDpNKBkaJDJKGhq"
-          strategy="afterInteractive"
-        />
+
       </body>
     </html>
   );

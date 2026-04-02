@@ -17,7 +17,7 @@ import {
     type User,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useRecaptcha } from "@/lib/useRecaptcha";
+
 
 interface AuthContextValue {
     user: User | null;
@@ -25,7 +25,7 @@ interface AuthContextValue {
     signInWithGoogle: () => Promise<void>;
     signInWithGitHub: () => Promise<void>;
     signOut: () => Promise<void>;
-    executeRecaptcha: (action: string) => Promise<string | null>;
+
     showLoginModal: boolean;
     openLoginModal: () => void;
     closeLoginModal: () => void;
@@ -37,7 +37,7 @@ const AuthContext = createContext<AuthContextValue>({
     signInWithGoogle: async () => { },
     signInWithGitHub: async () => { },
     signOut: async () => { },
-    executeRecaptcha: async () => null,
+
     showLoginModal: false,
     openLoginModal: () => { },
     closeLoginModal: () => { },
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const { executeRecaptcha } = useRecaptcha();
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const closeLoginModal = useCallback(() => setShowLoginModal(false), []);
 
     return (
-        <AuthContext value={{ user, loading, signInWithGoogle, signInWithGitHub, signOut, executeRecaptcha, showLoginModal, openLoginModal, closeLoginModal }}>
+        <AuthContext value={{ user, loading, signInWithGoogle, signInWithGitHub, signOut, showLoginModal, openLoginModal, closeLoginModal }}>
             {children}
         </AuthContext>
     );
