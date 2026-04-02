@@ -2,6 +2,7 @@ import { AuthProvider } from "@/components/AuthProvider";
 import Footer from "@/components/Footer";
 import type { NavTopic } from "@/components/Header";
 import Header from "@/components/Header";
+import ReadingProgressBar from "@/components/ReadingProgressBar";
 import SupportButton from "@/components/SupportButton";
 import LoginModal from "@/components/LoginModal";
 import { getAvailableTopics, getSettings } from "@/lib/data";
@@ -43,6 +44,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans bg-white text-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 transition-colors duration-200">
         <AuthProvider>
+          <ReadingProgressBar />
           <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-semibold">
             Chuyển đến nội dung chính
           </a>

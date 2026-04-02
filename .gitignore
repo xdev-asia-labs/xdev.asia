@@ -43,3 +43,4 @@ claude-code-code
 .venv-*
 scripts/generate-ai-banners.py
 scripts/generate-remaining-banners.py
+scripts/*.py

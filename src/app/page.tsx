@@ -1,7 +1,8 @@
-import HeroBanner3D from "@/components/HeroBanner3D";
+import HeroBanner2026 from "@/components/HeroBanner2026";
 import { IconArrowRight, IconBook, IconBrain, IconCode, IconRocket } from "@/components/Icons";
 import NewsletterForm from "@/components/NewsletterForm";
 import PostCard from "@/components/PostCard";
+import ScrollReveal from "@/components/ScrollReveal";
 import SeriesCard from "@/components/SeriesCard";
 import { RepoCard } from "@/components/ShowcaseCard";
 import SkeletonImage from "@/components/SkeletonImage";
@@ -70,7 +71,7 @@ export default function Home() {
     const featuredRepos = showcaseRepos.slice(0, 3);
 
     const featuredPost = posts[0];
-    const sidePosts = posts.slice(1, 5);
+    const sidePosts = posts.slice(1);
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -98,7 +99,7 @@ export default function Home() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             {/* ─── Hero ─── */}
-            <HeroBanner3D
+            <HeroBanner2026
                 siteName={settings.site_name || "xDev"}
                 tagline={settings.site_tagline || settings.site_description || "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế"}
                 profileName={settings.profile_name || "Duy Tran"}
@@ -111,34 +112,39 @@ export default function Home() {
             {/* ─── AI & Machine Learning — Dark accent section ─── */}
             {aiSeries.length > 0 && (
                 <section className="ai-section-dark py-14 lg:py-20">
+                    <div className="aurora-effect" aria-hidden="true" />
                     <div className="ai-dark-grid" aria-hidden="true" />
                     <div className="ai-dark-glow ai-dark-glow-1" aria-hidden="true" />
                     <div className="ai-dark-glow ai-dark-glow-2" aria-hidden="true" />
                     <div className="noise-overlay" aria-hidden="true" />
                     <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                            <div>
-                                <div className="ai-section-badge mb-3">
-                                    <IconBrain size={14} />
-                                    AI & Machine Learning
+                        <ScrollReveal>
+                            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                                <div>
+                                    <div className="ai-section-badge mb-3">
+                                        <IconBrain size={14} />
+                                        AI & Machine Learning
+                                    </div>
+                                    <h2 className="section-title">
+                                        Chuỗi bài học AI
+                                    </h2>
+                                    <p className="section-subtitle">
+                                        Từ Machine Learning, Deep Learning đến LLM, Fine-tuning, RAG và MLOps — tất cả đều hands-on.
+                                    </p>
                                 </div>
-                                <h2 className="section-title">
-                                    Chuỗi bài học AI
-                                </h2>
-                                <p className="section-subtitle">
-                                    Từ Machine Learning, Deep Learning đến LLM, Fine-tuning, RAG và MLOps — tất cả đều hands-on.
-                                </p>
+                                <Link href="/series/ai-machine-learning/" className="link-brand shrink-0 self-start md:self-auto">
+                                    <IconBrain size={15} />
+                                    Xem tất cả AI Series
+                                    <IconArrowRight size={14} />
+                                </Link>
                             </div>
-                            <Link href="/series/ai-machine-learning/" className="link-brand shrink-0 self-start md:self-auto">
-                                <IconBrain size={15} />
-                                Xem tất cả AI Series
-                                <IconArrowRight size={14} />
-                            </Link>
-                        </div>
+                        </ScrollReveal>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {aiSeries.slice(0, 8).map((series, index) => (
-                                <SeriesCard key={series.id} series={series} priority={index < 2} />
+                                <ScrollReveal key={series.id} delay={index * 80}>
+                                    <SeriesCard series={series} priority={index < 2} />
+                                </ScrollReveal>
                             ))}
                         </div>
                     </div>
@@ -149,25 +155,29 @@ export default function Home() {
             {otherSeries.length > 0 && (
                 <section className="py-14 lg:py-18">
                     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                            <div>
-                                <div className="section-label">
-                                    <IconBook size={14} />
-                                    Series
+                        <ScrollReveal>
+                            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                                <div>
+                                    <div className="section-label">
+                                        <IconBook size={14} />
+                                        Series
+                                    </div>
+                                    <h2 className="section-title">Series nổi bật</h2>
+                                    <p className="section-subtitle">
+                                        Kubernetes, Nginx, PostgreSQL, Spring Boot — phát triển kỹ năng từ cơ bản đến nâng cao.
+                                    </p>
                                 </div>
-                                <h2 className="section-title">Series nổi bật</h2>
-                                <p className="section-subtitle">
-                                    Kubernetes, Nginx, PostgreSQL, Spring Boot — phát triển kỹ năng từ cơ bản đến nâng cao.
-                                </p>
+                                <Link href="/series/" className="link-brand shrink-0 self-start md:self-auto">
+                                    Xem tất cả
+                                    <IconArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                </Link>
                             </div>
-                            <Link href="/series/" className="link-brand shrink-0 self-start md:self-auto">
-                                Xem tất cả
-                                <IconArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                        </div>
+                        </ScrollReveal>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {otherSeries.map((series, index) => (
-                                <SeriesCard key={series.id} series={series} priority={index === 0} />
+                                <ScrollReveal key={series.id} delay={index * 80}>
+                                    <SeriesCard series={series} priority={index === 0} />
+                                </ScrollReveal>
                             ))}
                         </div>
                     </div>
@@ -178,22 +188,24 @@ export default function Home() {
             {posts.length > 0 && (
                 <section className="section-alt py-14 lg:py-18">
                     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                            <div>
-                                <div className="section-label">
-                                    <IconCode size={14} />
-                                    Blog
+                        <ScrollReveal>
+                            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                                <div>
+                                    <div className="section-label">
+                                        <IconCode size={14} />
+                                        Blog
+                                    </div>
+                                    <h2 className="section-title">Bài viết mới nhất</h2>
+                                    <p className="section-subtitle">
+                                        Cập nhật tin tức, kiến thức công nghệ mới nhất.
+                                    </p>
                                 </div>
-                                <h2 className="section-title">Bài viết mới nhất</h2>
-                                <p className="section-subtitle">
-                                    Cập nhật tin tức, kiến thức công nghệ mới nhất.
-                                </p>
+                                <Link href="/blog/" className="link-brand shrink-0 self-start md:self-auto">
+                                    Xem tất cả
+                                    <IconArrowRight size={14} />
+                                </Link>
                             </div>
-                            <Link href="/blog/" className="link-brand shrink-0 self-start md:self-auto">
-                                Xem tất cả
-                                <IconArrowRight size={14} />
-                            </Link>
-                        </div>
+                        </ScrollReveal>
 
                         {/* Bento grid */}
                         <div className="bento-grid">
@@ -255,12 +267,12 @@ export default function Home() {
                             {sidePosts.slice(0, 2).map((post) => (
                                 <Link key={post.id} href={`/blog/${post.slug}/`} className="bento-side group block">
                                     <article className="post-card rounded-xl overflow-hidden flex flex-row h-full">
-                                        <div className="relative w-28 sm:w-32 shrink-0 bg-surface-100">
+                                        <div className="relative w-28 sm:w-32 lg:w-36 shrink-0 bg-surface-100">
                                             <SkeletonImage
                                                 src={getValidImageUrl(post.featured_image, post.slug)}
                                                 alt={post.title}
                                                 fill
-                                                sizes="128px"
+                                                sizes="(max-width: 1024px) 128px, 144px"
                                                 className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
                                             />
                                         </div>
@@ -297,25 +309,29 @@ export default function Home() {
             {featuredRepos.length > 0 && (
                 <section className="py-14 lg:py-18">
                     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                            <div>
-                                <div className="section-label">
-                                    <IconRocket size={14} />
-                                    Open Source
+                        <ScrollReveal>
+                            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                                <div>
+                                    <div className="section-label">
+                                        <IconRocket size={14} />
+                                        Open Source
+                                    </div>
+                                    <h2 className="section-title">Open Source Projects</h2>
+                                    <p className="section-subtitle">
+                                        Các dự án mã nguồn mở mình đã xây dựng.
+                                    </p>
                                 </div>
-                                <h2 className="section-title">Open Source Projects</h2>
-                                <p className="section-subtitle">
-                                    Các dự án mã nguồn mở mình đã xây dựng.
-                                </p>
+                                <Link href="/showcase/" className="link-brand shrink-0 self-start md:self-auto">
+                                    Xem tất cả
+                                    <IconArrowRight size={14} />
+                                </Link>
                             </div>
-                            <Link href="/showcase/" className="link-brand shrink-0 self-start md:self-auto">
-                                Xem tất cả
-                                <IconArrowRight size={14} />
-                            </Link>
-                        </div>
+                        </ScrollReveal>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {featuredRepos.map((repo) => (
-                                <RepoCard key={repo.id} repo={repo} />
+                            {featuredRepos.map((repo, index) => (
+                                <ScrollReveal key={repo.id} delay={index * 100}>
+                                    <RepoCard repo={repo} />
+                                </ScrollReveal>
                             ))}
                         </div>
                     </div>
@@ -323,55 +339,60 @@ export default function Home() {
             )}
 
             {/* ─── Newsletter ─── */}
-            <section className="py-14 lg:py-18 border-t border-zinc-100 dark:border-zinc-800">
+            <section className="newsletter-2026 py-14 lg:py-18">
                 <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="section-label justify-center">
-                        <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                        Newsletter
-                    </div>
-                    <h2 className="section-title">Nhận bài viết mới nhất</h2>
-                    <p className="section-subtitle mb-6">
-                        Đăng ký để nhận thông báo khi có bài viết mới về lập trình, AI, DevOps và công nghệ.
-                    </p>
-                    <div className="max-w-md mx-auto">
-                        <NewsletterForm />
-                    </div>
+                    <ScrollReveal>
+                        <div className="section-label justify-center">
+                            <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                            Newsletter
+                        </div>
+                        <h2 className="section-title">Nhận bài viết mới nhất</h2>
+                        <p className="section-subtitle mb-6">
+                            Đăng ký để nhận thông báo khi có bài viết mới về lập trình, AI, DevOps và công nghệ.
+                        </p>
+                        <div className="max-w-md mx-auto">
+                            <NewsletterForm />
+                        </div>
+                    </ScrollReveal>
                 </div>
             </section>
 
-            {/* ─── CTA — Blue gradient ─── */}
+            {/* ─── CTA — Gradient 2026 ─── */}
             <section className="py-10 lg:py-14">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="cta-blue p-8 md:p-12 text-center">
-                        <div className="cta-blue-orb cta-blue-orb-1" />
-                        <div className="cta-blue-orb cta-blue-orb-2" />
+                    <ScrollReveal>
+                        <div className="cta-2026 p-8 md:p-12 text-center">
+                            <div className="cta-blue-orb cta-blue-orb-1" />
+                            <div className="cta-blue-orb cta-blue-orb-2" />
+                            <div className="noise-overlay" aria-hidden="true" />
 
-                        <div className="relative z-10">
-                            <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
-                                Cùng nhau học hỏi tại{" "}
-                                <span className="text-blue-200">xDev</span>
-                            </h2>
-                            <p className="text-blue-200/80 mb-6 max-w-xl mx-auto text-sm md:text-base">
-                                Blog, series, và dự án open source — tất cả đều miễn phí. Mình viết từ kinh nghiệm thực tế hàng ngày.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                                <Link
-                                    href="/series/"
-                                    className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm bg-white text-blue-700 shadow-lg shadow-blue-900/20 hover:shadow-blue-900/30 transition-all duration-300 hover:-translate-y-0.5"
-                                >
-                                    <IconBook size={16} />
-                                    Xem Series
-                                </Link>
-                                <Link
-                                    href="/blog/"
-                                    className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white/90 border border-white/25 hover:bg-white/10 transition-all duration-200"
-                                >
-                                    Đọc Blog
-                                    <IconArrowRight size={14} />
-                                </Link>
+                            <div className="relative z-10">
+                                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
+                                    Cùng nhau học hỏi tại{" "}
+                                    <span className="text-blue-200">xDev</span>
+                                </h2>
+                                <p className="text-blue-200/80 mb-6 max-w-xl mx-auto text-sm md:text-base">
+                                    Blog, series, và dự án open source — tất cả đều miễn phí. Mình viết từ kinh nghiệm thực tế hàng ngày.
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                                    <Link
+                                        href="/series/"
+                                        className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm bg-white text-blue-700 shadow-lg shadow-blue-900/20 hover:shadow-blue-900/30 transition-all duration-300 hover:-translate-y-0.5"
+                                    >
+                                        <IconBook size={16} />
+                                        Xem Series
+                                    </Link>
+                                    <Link
+                                        href="/blog/"
+                                        className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white/90 border border-white/25 hover:bg-white/10 transition-all duration-200"
+                                    >
+                                        Đọc Blog
+                                        <IconArrowRight size={14} />
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </ScrollReveal>
                 </div>
             </section>
         </>

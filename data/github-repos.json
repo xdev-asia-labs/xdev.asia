@@ -11,7 +11,7 @@
     "default_branch": "main",
     "html_url": "https://github.com/xdev-asia-labs/xClaw",
     "updated_at": "2026-04-01T07:08:46Z",
-    "fetched_at": "2026-04-01T17:15:49.110Z"
+    "fetched_at": "2026-04-02T12:14:47.145Z"
   },
   "xdev-asia": {
     "description": "",
@@ -24,8 +24,8 @@
     "archived": false,
     "default_branch": "main",
     "html_url": "https://github.com/xdev-asia-labs/xdev.asia",
-    "updated_at": "2026-04-01T15:29:04Z",
-    "fetched_at": "2026-04-01T17:15:50.130Z"
+    "updated_at": "2026-04-02T08:40:28Z",
+    "fetched_at": "2026-04-02T12:14:48.099Z"
   },
   "autox": {
     "description": "Open-source AI Agent platform with Gateway architecture, multi-channel support (Telegram, Discord), drag-and-drop Workflow Builder, and CLI interface",
@@ -39,6 +39,6 @@
     "default_branch": "main",
     "html_url": "https://github.com/xdev-asia-labs/xClaw",
     "updated_at": "2026-04-01T07:08:46Z",
-    "fetched_at": "2026-04-01T17:15:50.497Z"
+    "fetched_at": "2026-04-02T12:14:48.468Z"
   }
 }
