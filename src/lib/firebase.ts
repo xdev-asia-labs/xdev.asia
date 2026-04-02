@@ -2,6 +2,7 @@ import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 import { getAI, getGenerativeModel, GoogleAIBackend, type GenerativeModel } from "firebase/ai";
+import { getPerformance, type FirebasePerformance } from "firebase/performance";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCXPcFu9GTx_8RR4ece2d2rGB1m5Q3ou00",
@@ -29,10 +30,15 @@ export const auth: Auth = isClient ? getAuth(app) : (null as any);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const db: Firestore = isClient ? getFirestore(app) : (null as any);
 
-// Firebase AI Logic — Gemini (Google AI backend, free tier)
+// Firebase AI Logic — Gemini 2.5 Flash (Google AI backend, free tier)
+// Note: gemini-2.0-flash shuts down June 1, 2026 — using gemini-2.5-flash (stable)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const gemini: GenerativeModel = isClient
-  ? getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), { model: "gemini-2.0-flash" })
+  ? getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), { model: "gemini-2.5-flash" })
   : (null as any);
+
+// Firebase Performance Monitoring
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const perf: FirebasePerformance = isClient ? getPerformance(app) : (null as any);
 
 export default app;

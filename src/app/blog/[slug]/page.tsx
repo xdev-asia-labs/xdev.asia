@@ -1,6 +1,9 @@
 import { InArticleAd, SidebarAd, BannerAd } from "@/components/AdUnit";
+import AIChatWidget from "@/components/AIChatWidget";
+import AISummary from "@/components/AISummary";
 import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
+import CodeExplainer from "@/components/CodeExplainer";
 import ContentGate from "@/components/ContentGate";
 import ContentRenderer from "@/components/ContentRenderer";
 import GiscusComments from "@/components/GiscusComments";
@@ -9,6 +12,8 @@ import PostCard from "@/components/PostCard";
 import ReadingProgress from "@/components/ReadingProgress";
 import ShareButtons from "@/components/ShareButtons";
 import TableOfContents from "@/components/TableOfContents";
+import TextToSpeech from "@/components/TextToSpeech";
+import TranslateButton from "@/components/TranslateButton";
 import { formatDate, getAllPosts, getAuthorById, getPost, getPostSlugs } from "@/lib/data";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
@@ -240,23 +245,35 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         {/* Mobile TOC — collapsible, above content */}
                         <TableOfContents html={post.content} mobileOnly />
 
+                        {/* AI Tools Bar */}
+                        <div className="mb-8 flex flex-wrap items-center gap-2">
+                            <AISummary html={post.content} title={post.title} />
+                            <TextToSpeech html={post.content} />
+                        </div>
+
                         <ContentGate>
                             <ContentRenderer html={post.content} />
                         </ContentGate>
 
+                        {/* Code Explainer (injects into code blocks) */}
+                        <CodeExplainer />
+
                         {/* In-article Ad */}
                         <InArticleAd />
 
-                        {/* Share & Bookmark */}
+                        {/* Share, Bookmark & Translate */}
                         <div className="mt-10 pt-8 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-4">
                             <ShareButtons title={post.title} url={`${SITE_URL}/blog/${slug}/`} />
-                            <BookmarkButton
-                                slug={post.slug}
-                                title={post.title}
-                                excerpt={post.excerpt}
-                                featured_image={post.featured_image}
-                                category={post.category?.name || null}
-                            />
+                            <div className="flex items-center gap-2">
+                                <TranslateButton html={post.content} />
+                                <BookmarkButton
+                                    slug={post.slug}
+                                    title={post.title}
+                                    excerpt={post.excerpt}
+                                    featured_image={post.featured_image}
+                                    category={post.category?.name || null}
+                                />
+                            </div>
                         </div>
 
                         {/* Author Profile Card */}
@@ -389,6 +406,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     </aside>
                 </div>
             </div>
+
+            {/* AI Chat Widget */}
+            <AIChatWidget html={post.content} title={post.title} />
 
             {/* Back to top */}
             <BackToTop />
