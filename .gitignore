@@ -44,4 +44,4 @@ claude-code-code
 scripts/generate-ai-banners.py
 scripts/generate-remaining-banners.py
 scripts/*.py
-mobile-app/*
+mobile-app/

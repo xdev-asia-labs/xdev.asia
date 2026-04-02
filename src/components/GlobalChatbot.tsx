@@ -151,11 +151,10 @@ ${conversationHistory ? `Lịch sử hội thoại:\n${conversationHistory}\n\n`
 
             {/* Chat panel */}
             {open && (
-                <div className={`fixed z-50 shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden transition-all duration-300 ${
-                    expanded
+                <div className={`fixed z-50 shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden transition-all duration-300 ${expanded
                         ? "inset-4 rounded-3xl"
                         : "bottom-22 right-6 w-96 max-w-[calc(100vw-2rem)] rounded-2xl"
-                }`} style={expanded ? undefined : { height: "520px" }}>
+                    }`} style={expanded ? undefined : { height: "520px" }}>
                     {/* Header */}
                     <div className="px-4 py-3 bg-linear-to-r from-brand-600 to-brand-700 text-white flex items-center gap-3 shrink-0">
                         <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
