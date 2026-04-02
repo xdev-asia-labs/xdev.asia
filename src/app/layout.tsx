@@ -41,6 +41,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()` }} />
         <meta name="news_keywords" content="lập trình, AI, DevOps, công nghệ, machine learning, web development" />
         <meta name="article:publisher" content="xDev Asia" />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6342139522924885" crossOrigin="anonymous" />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-white text-zinc-800 dark:bg-zinc-950 dark:text-zinc-200 transition-colors duration-200">
         <AuthProvider>
@@ -66,12 +67,7 @@ export default function RootLayout({
             gtag('config', 'G-5Q4MQ1GJP7');
           `}
         </Script>
-        {/* Google AdSense */}
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6342139522924885"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+
 
       </body>
     </html>
