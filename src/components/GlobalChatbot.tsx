@@ -25,6 +25,7 @@ const SUGGESTED_QUESTIONS = [
 export default function GlobalChatbot({ siteContext }: GlobalChatbotProps) {
     const { user, openLoginModal } = useAuth();
     const [open, setOpen] = useState(false);
+    const [expanded, setExpanded] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
@@ -150,7 +151,11 @@ ${conversationHistory ? `Lịch sử hội thoại:\n${conversationHistory}\n\n`
 
             {/* Chat panel */}
             {open && (
-                <div className="fixed bottom-22 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden" style={{ height: "520px" }}>
+                <div className={`fixed z-50 shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden transition-all duration-300 ${
+                    expanded
+                        ? "inset-4 rounded-3xl"
+                        : "bottom-22 right-6 w-96 max-w-[calc(100vw-2rem)] rounded-2xl"
+                }`} style={expanded ? undefined : { height: "520px" }}>
                     {/* Header */}
                     <div className="px-4 py-3 bg-linear-to-r from-brand-600 to-brand-700 text-white flex items-center gap-3 shrink-0">
                         <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
@@ -175,6 +180,27 @@ ${conversationHistory ? `Lịch sử hội thoại:\n${conversationHistory}\n\n`
                                     </svg>
                                 </button>
                             )}
+                            <button
+                                onClick={() => setExpanded((v) => !v)}
+                                className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
+                                title={expanded ? "Thu nhỏ" : "Phóng to"}
+                            >
+                                {expanded ? (
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="4 14 10 14 10 20" />
+                                        <polyline points="20 10 14 10 14 4" />
+                                        <line x1="14" y1="10" x2="21" y2="3" />
+                                        <line x1="3" y1="21" x2="10" y2="14" />
+                                    </svg>
+                                ) : (
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="15 3 21 3 21 9" />
+                                        <polyline points="9 21 3 21 3 15" />
+                                        <line x1="21" y1="3" x2="14" y2="10" />
+                                        <line x1="3" y1="21" x2="10" y2="14" />
+                                    </svg>
+                                )}
+                            </button>
                         </div>
                     </div>
 

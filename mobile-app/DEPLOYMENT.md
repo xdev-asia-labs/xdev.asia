@@ -17,17 +17,19 @@
 ### iOS Submission
 
 1. **Build for TestFlight:**
+
 ```bash
 eas build --platform ios --profile production
 ```
 
-2. **Submit to App Store:**
+1. **Submit to App Store:**
+
 ```bash
 eas submit --platform ios
 ```
 
-3. **App Store Connect Setup:**
-   - Login: https://appstoreconnect.apple.com
+1. **App Store Connect Setup:**
+   - Login: <https://appstoreconnect.apple.com>
    - Create new app
    - Fill in app information
    - Upload screenshots (minimum 3)
@@ -35,29 +37,31 @@ eas submit --platform ios
    - Add privacy policy URL
    - Submit for review
 
-4. **Review Process:**
+2. **Review Process:**
    - Usually takes 1-3 days
    - Be ready to respond to review feedback
    - Common rejection reasons:
-     * Missing privacy policy
-     * Incomplete functionality
-     * Crashes or bugs
-     * Misleading content
+     - Missing privacy policy
+     - Incomplete functionality
+     - Crashes or bugs
+     - Misleading content
 
 ### Android Submission
 
 1. **Build for Play Store:**
+
 ```bash
 eas build --platform android --profile production
 ```
 
-2. **Submit to Play Store:**
+1. **Submit to Play Store:**
+
 ```bash
 eas submit --platform android
 ```
 
-3. **Google Play Console Setup:**
-   - Login: https://play.google.com/console
+1. **Google Play Console Setup:**
+   - Login: <https://play.google.com/console>
    - Create new app
    - Fill in app details
    - Upload screenshots (minimum 2)
@@ -65,19 +69,20 @@ eas submit --platform android
    - Set up pricing & distribution
    - Submit for review
 
-4. **Review Process:**
+2. **Review Process:**
    - Usually takes 1-7 days
    - May need to go through testing tracks first:
-     * Internal testing (instant)
-     * Closed testing (hours)
-     * Open testing (1-3 days)
-     * Production (1-7 days)
+     - Internal testing (instant)
+     - Closed testing (hours)
+     - Open testing (1-3 days)
+     - Production (1-7 days)
 
 ## Version Management
 
-### Updating App Version:
+### Updating App Version
 
 In `app.json`:
+
 ```json
 {
   "expo": {
@@ -93,48 +98,55 @@ In `app.json`:
 ```
 
 **Rules:**
+
 - Increment `version` for feature updates (1.0.0 → 1.1.0)
 - Increment `buildNumber`/`versionCode` for every submission
 - Can't submit same build number twice
 
 ## App Store Optimization (ASO)
 
-### App Name & Description:
+### App Name & Description
 
 **iOS (App Store):**
+
 - App Name: "xDev Asia" (max 30 chars)
 - Subtitle: "Blog Công Nghệ & Lập Trình" (max 30 chars)
 - Keywords: "lap trinh,AI,DevOps,tech blog,hoc lap trinh"
 
 **Android (Play Store):**
+
 - App Name: "xDev Asia - Blog Công Nghệ"
 - Short description: "Blog về lập trình, AI, DevOps và công nghệ"
 - Full description: (Use Vietnamese, highlight features)
 
-### Categories:
+### Categories
 
 - **iOS:** Education or News
 - **Android:** Education or News & Magazines
 
 ## Monitoring & Analytics
 
-### Setup Crash Reporting:
+### Setup Crash Reporting
 
 Using expo-updates:
+
 ```bash
 npm install expo-updates
 ```
 
-### Firebase Analytics (Optional):
+### Firebase Analytics (Optional)
+
 Already configured in `lib/firebase.ts`. Track:
+
 - Screen views
 - Post reads
 - Bookmarks
 - Searches
 
-### App Store Metrics:
+### App Store Metrics
 
 Monitor in respective consoles:
+
 - Downloads
 - Ratings & Reviews
 - Crashes
@@ -142,30 +154,34 @@ Monitor in respective consoles:
 
 ## Post-Launch
 
-### Responding to Reviews:
+### Responding to Reviews
 
 **iOS:**
+
 - Can respond to reviews in App Store Connect
 - Be professional and helpful
 - Ask users to update rating if issue fixed
 
 **Android:**
+
 - Can respond to reviews in Play Console
 - Encourage positive users to rate
 - Address negative feedback quickly
 
-### Push Notifications (Future):
+### Push Notifications (Future)
 
 To add push notifications:
+
 1. Install: `expo install expo-notifications`
 2. Configure FCM (Firebase) for Android
 3. Configure APNs for iOS
 4. Request permissions in app
 5. Handle notification events
 
-### Over-The-Air (OTA) Updates:
+### Over-The-Air (OTA) Updates
 
 For non-native code changes:
+
 ```bash
 eas update --branch production --message "Bug fixes"
 ```
@@ -173,12 +189,13 @@ eas update --branch production --message "Bug fixes"
 Users get updates without App Store approval!
 
 **Limitations:**
+
 - Can't change native code
 - Can't update JS bundle structure significantly
 
 ## Troubleshooting
 
-### iOS Build Fails:
+### iOS Build Fails
 
 ```bash
 # Clear EAS cache
@@ -188,7 +205,7 @@ eas build --platform ios --clear-cache
 eas credentials
 ```
 
-### Android Build Fails:
+### Android Build Fails
 
 ```bash
 # Check logs
@@ -199,7 +216,7 @@ eas build:view
 # - Gradle timeout: Retry build
 ```
 
-### App Crashes on Launch:
+### App Crashes on Launch
 
 1. Check Error Logs:
    - iOS: Xcode → Window → Devices and Simulators
@@ -210,9 +227,10 @@ eas build:view
    - Firebase misconfiguration
    - Network errors on API calls
 
-### Rejected by App Store:
+### Rejected by App Store
 
 Common fixes:
+
 1. **2.1 - Performance: App Completeness**
    - Ensure all features work
    - Provide test account if needed
@@ -227,23 +245,25 @@ Common fixes:
 
 ## Scaling & Growth
 
-### Performance Optimization:
+### Performance Optimization
 
 - Use Hermes engine (enabled by default)
 - Lazy load screens
 - Cache images
 - Optimize bundle size
 
-### Internationalization (i18n):
+### Internationalization (i18n)
 
 For multi-language support:
+
 ```bash
 npm install i18next react-i18next
 ```
 
-### Backend Scaling:
+### Backend Scaling
 
 As users grow:
+
 - Use CDN for images
 - Cache API responses
 - Implement pagination
@@ -251,20 +271,23 @@ As users grow:
 
 ## Costs
 
-### Development:
+### Development
+
 - Free: Expo Free plan
-  * 30 builds/month
-  * Basic support
+  - 30 builds/month
+  - Basic support
 
 - $29/month: Expo Production plan
-  * Unlimited builds
-  * Priority support
+  - Unlimited builds
+  - Priority support
 
-### App Stores:
+### App Stores
+
 - iOS: $99/year (Apple Developer)
 - Android: $25 one-time (Google Play)
 
-### Infrastructure:
+### Infrastructure
+
 - Firebase: Free tier (good for start)
 - Backend hosting: (your existing setup)
 

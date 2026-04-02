@@ -24,21 +24,24 @@ Mobile application cho blog công nghệ xDev Asia, được xây dựng với R
 ## Cài đặt
 
 1. Navigate to mobile-app directory:
+
 ```bash
 cd mobile-app
 ```
 
-2. Cài đặt dependencies:
+1. Cài đặt dependencies:
+
 ```bash
 npm install
 ```
 
-3. Copy file môi trường:
+1. Copy file môi trường:
+
 ```bash
 cp .env.example .env
 ```
 
-4. Cấu hình environment variables trong file `.env` với Firebase credentials của bạn.
+1. Cấu hình environment variables trong file `.env` với Firebase credentials của bạn.
 
 ## Development
 
@@ -72,25 +75,30 @@ npm start
 
 Mobile app kết nối với backend API tại `https://xdev.asia/api`. Bạn cần implement các API endpoints sau:
 
-### Required Endpoints:
+### Required Endpoints
 
 **Blog Posts:**
+
 - `GET /api/posts` - List blog posts (với pagination và filters)
 - `GET /api/posts/:slug` - Get single post detail
 
 **Series:**
+
 - `GET /api/series` - List series
 - `GET /api/series/:slug` - Get series detail
 
 **Showcase:**
+
 - `GET /api/showcase` - List showcase projects
 - `GET /api/showcase/:slug` - Get showcase detail
 
 **Categories & Tags:**
+
 - `GET /api/categories` - List categories
 - `GET /api/tags` - List tags
 
 **Search:**
+
 - `GET /api/search?q=keyword` - Search posts and series
 
 Xem file `src/app/api/` trong Next.js project để implement các endpoints này.
@@ -130,6 +138,7 @@ eas build --platform ios --profile production
 ```
 
 **Lưu ý iOS:**
+
 - Cần Apple Developer Account ($99/year)
 - Cấu hình Bundle Identifier trong `app.json`
 - Setup App Store Connect
@@ -137,6 +146,7 @@ eas build --platform ios --profile production
 ### 4. Submit lên Stores
 
 **Android (Google Play):**
+
 ```bash
 # Submit to Play Store
 eas submit --platform android
@@ -146,6 +156,7 @@ eas submit --platform android
 ```
 
 **iOS (App Store):**
+
 ```bash
 # Submit to App Store
 eas submit --platform ios
@@ -155,7 +166,7 @@ eas submit --platform ios
 
 ## App Store Requirements
 
-### iOS App Store Checklist:
+### iOS App Store Checklist
 
 1. **App Icons:**
    - icon.png (1024x1024)
@@ -178,7 +189,7 @@ eas submit --platform ios
    - Privacy Policy (bắt buộc)
    - Data collection disclosure
 
-### Android Play Store Checklist:
+### Android Play Store Checklist
 
 1. **App Icons:**
    - adaptive-icon.png (512x512)
@@ -205,9 +216,10 @@ eas submit --platform ios
 
 ## App Configuration
 
-### Update App Info:
+### Update App Info
 
 Sửa file `app.json`:
+
 - `expo.name`: Tên app hiển thị
 - `expo.slug`: URL slug
 - `expo.version`: Version number
@@ -216,36 +228,42 @@ Sửa file `app.json`:
 - `expo.android.package`: Android package name
 - `expo.android.versionCode`: Android version code
 
-### App Icons:
+### App Icons
 
 Đặt icons vào:
+
 - `assets/icon.png` (1024x1024) - Universal icon
 - `assets/adaptive-icon.png` (1024x1024) - Android adaptive icon
 - `assets/splash.png` - Splash screen
 
 Hoặc sử dụng online tools để generate:
-- https://www.appicon.co/
-- https://easyappicon.com/
+
+- <https://www.appicon.co/>
+- <https://easyappicon.com/>
 
 ## Testing
 
-### TestFlight (iOS):
+### TestFlight (iOS)
+
 ```bash
 eas build --platform ios --profile preview
 eas submit --platform ios
 ```
+
 Mời testers qua App Store Connect → TestFlight.
 
-### Google Play Internal Testing (Android):
+### Google Play Internal Testing (Android)
+
 ```bash
 eas build --platform android --profile production
 eas submit --platform android
 ```
+
 Tạo internal testing track và mời testers qua email.
 
 ## Troubleshooting
 
-### Common iOS Issues:
+### Common iOS Issues
 
 1. **Bundle identifier already exists:**
    - Change `expo.ios.bundleIdentifier` in app.json
@@ -258,7 +276,7 @@ Tạo internal testing track và mời testers qua email.
    - Add required permissions in Info.plist
    - Provide test account if needed
 
-### Common Android Issues:
+### Common Android Issues
 
 1. **Package name already exists:**
    - Change `expo.android.package` in app.json
@@ -284,5 +302,5 @@ MIT
 
 ## Support
 
-- Website: https://xdev.asia
-- GitHub: https://github.com/xdev-asia-labs
+- Website: <https://xdev.asia>
+- GitHub: <https://github.com/xdev-asia-labs>
