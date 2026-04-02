@@ -4,15 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
-import { useSubscription } from "@/lib/useUserData";
-import { IconBell, IconBellOff } from "./Icons";
 
 export default function UserMenu() {
     const { user, loading, signOut, openLoginModal } = useAuth();
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
-    const { subscribed, toggleSubscription } = useSubscription();
-
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
             if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -79,13 +75,6 @@ export default function UserMenu() {
                         </svg>
                         Bài viết đã lưu
                     </Link>
-                    <button
-                        onClick={toggleSubscription}
-                        className="w-full text-left px-4 py-2.5 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors flex items-center gap-2"
-                    >
-                        {subscribed ? <IconBellOff size={16} /> : <IconBell size={16} />}
-                        {subscribed ? "Tắt nhận thông báo" : "Bật nhận thông báo"}
-                    </button>
                     <div className="border-t border-zinc-100 dark:border-zinc-800 mt-1 pt-1">
                         <button
                             onClick={() => { signOut(); setOpen(false); }}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { doc, getDoc, setDoc, deleteDoc, collection, getDocs, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -80,61 +80,4 @@ export function useBookmarks() {
     );
 
     return { bookmarks, loading, isBookmarked, toggleBookmark };
-}
-
-/**
- * Hook to subscribe/unsubscribe to email notifications for new posts.
- * Stores subscription in Firestore `subscribers` collection.
- */
-export function useSubscription() {
-    const { user } = useAuth();
-    const [subscribed, setSubscribed] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!user?.email) {
-            setSubscribed(false);
-            setLoading(false);
-            return;
-        }
-
-        async function checkSubscription() {
-            try {
-                const docRef = doc(db, "subscribers", user!.uid);
-                const snap = await getDoc(docRef);
-                setSubscribed(snap.exists() && snap.data()?.active === true);
-            } catch {
-                // ignore
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        checkSubscription();
-    }, [user]);
-
-    const toggleSubscription = useCallback(async () => {
-        if (!user?.email) return;
-
-        const docRef = doc(db, "subscribers", user.uid);
-
-        try {
-            if (subscribed) {
-                await setDoc(docRef, { active: false }, { merge: true });
-                setSubscribed(false);
-            } else {
-                await setDoc(docRef, {
-                    email: user.email,
-                    displayName: user.displayName || "",
-                    active: true,
-                    subscribedAt: serverTimestamp(),
-                }, { merge: true });
-                setSubscribed(true);
-            }
-        } catch {
-            // ignore
-        }
-    }, [user, subscribed]);
-
-    return { subscribed, loading, toggleSubscription };
 }

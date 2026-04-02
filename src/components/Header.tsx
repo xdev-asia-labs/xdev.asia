@@ -6,7 +6,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket } from "./Icons";
 import DarkModeToggle from "./DarkModeToggle";
-import NotificationBell from "./NotificationBell";
 import UserMenu from "./UserMenu";
 
 /* ────────────────────────────────────────
@@ -165,14 +164,12 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                             <IconSearch size={18} />
                         </Link>
                         <DarkModeToggle />
-                        <NotificationBell />
                         <UserMenu />
                     </div>
 
                     {/* Mobile */}
                     <div className="flex md:hidden items-center gap-0.5">
                         <DarkModeToggle />
-                        <NotificationBell />
                         <Link
                             href="/search/"
                             className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"

@@ -1,5 +1,7 @@
+import { InArticleAd, SidebarAd, BannerAd } from "@/components/AdUnit";
 import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
+import ContentGate from "@/components/ContentGate";
 import ContentRenderer from "@/components/ContentRenderer";
 import GiscusComments from "@/components/GiscusComments";
 import { IconChevronRight, IconClock } from "@/components/Icons";
@@ -238,7 +240,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         {/* Mobile TOC — collapsible, above content */}
                         <TableOfContents html={post.content} mobileOnly />
 
-                        <ContentRenderer html={post.content} />
+                        <ContentGate>
+                            <ContentRenderer html={post.content} />
+                        </ContentGate>
+
+                        {/* In-article Ad */}
+                        <InArticleAd />
 
                         {/* Share & Bookmark */}
                         <div className="mt-10 pt-8 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-4">
@@ -377,6 +384,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     <aside className="hidden xl:block w-72 shrink-0">
                         <div className="sticky top-24">
                             <TableOfContents html={post.content} />
+                            <SidebarAd className="mt-8" />
                         </div>
                     </aside>
                 </div>
@@ -384,6 +392,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             {/* Back to top */}
             <BackToTop />
+
+            {/* Banner Ad */}
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <BannerAd />
+            </div>
 
             {/* Related Posts */}
             {relatedPosts.length > 0 && (

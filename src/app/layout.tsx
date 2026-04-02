@@ -66,6 +66,12 @@ export default function RootLayout({
             gtag('config', 'G-5Q4MQ1GJP7');
           `}
         </Script>
+        {/* Google AdSense */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6342139522924885"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
 
       </body>
     </html>
