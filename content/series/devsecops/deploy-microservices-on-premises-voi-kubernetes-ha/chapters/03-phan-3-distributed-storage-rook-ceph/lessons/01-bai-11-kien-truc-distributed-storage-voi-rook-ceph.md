@@ -32,33 +32,43 @@ course:
 <h2 id="phan-1-ceph-architecture">PHẦN 1: CEPH ARCHITECTURE OVERVIEW</h2>
 
 <h3 id="11-cac-thanh-phan-ceph">1.1. Các thành phần Ceph</h3>
-<pre><code>
-CEPH ARCHITECTURE:
-┌─────────────────────────────────────────────────────────────┐
-│                      CLIENT ACCESS                          │
-│  ┌──────────┐  ┌──────────────┐  ┌──────────────────────┐  │
-│  │   RBD    │  │   CephFS     │  │    RADOS Gateway     │  │
-│  │  (Block) │  │ (Filesystem) │  │  (Object/S3-compat)  │  │
-│  └────┬─────┘  └──────┬───────┘  └──────────┬───────────┘  │
-│       │               │                     │               │
-│  ─────┴───────────────┴─────────────────────┴────────────  │
-│                        LIBRADOS                             │
-│  ──────────────────────────────────────────────────────────  │
-│                        RADOS LAYER                          │
-│                                                             │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐      │
-│  │  MON    │  │  MGR    │  │  MDS    │  │  OSD    │      │
-│  │ Monitor │  │ Manager │  │Metadata │  │ Object  │      │
-│  │(3 nodes)│  │(2 nodes)│  │ Server  │  │ Storage │      │
-│  │         │  │         │  │(CephFS) │  │ Daemon  │      │
-│  └─────────┘  └─────────┘  └─────────┘  └─────────┘      │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                    CRUSH MAP                        │    │
-│  │  (Data placement algorithm — no lookup table!)      │    │
-│  └─────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-</code></pre>
+```mermaid
+graph TB
+    subgraph CLIENT["🖥️ CLIENT ACCESS"]
+        RBD["💿 RBD<br/>Block Storage"]
+        CephFS["📁 CephFS<br/>Filesystem"]
+        RGW["🌐 RADOS Gateway<br/>Object / S3-compat"]
+    end
+
+    subgraph LIB["📚 LIBRADOS API"]
+        librados["Unified Storage API"]
+    end
+
+    subgraph RADOS["⚙️ RADOS LAYER"]
+        MON["🔍 MON<br/>Monitor<br/>3 nodes"]
+        MGR["📊 MGR<br/>Manager<br/>2 nodes"]
+        MDS["📂 MDS<br/>Metadata Server<br/>CephFS only"]
+        OSD["💾 OSD<br/>Object Storage<br/>Daemon"]
+    end
+
+    subgraph CRUSH["🗺️ CRUSH MAP"]
+        crush_algo["Data placement algorithm — no lookup table!"]
+    end
+
+    RBD --> librados
+    CephFS --> librados
+    RGW --> librados
+    librados --> MON
+    librados --> MGR
+    librados --> MDS
+    librados --> OSD
+    OSD --> crush_algo
+
+    style CLIENT fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style LIB fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style RADOS fill:#1e293b,stroke:#3b82f6,color:#e2e8f0
+    style CRUSH fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+```
 
 <!--kg-card-begin: html-->
 <table>
@@ -100,61 +110,78 @@ CEPH ARCHITECTURE:
 <!--kg-card-end: html-->
 
 <h3 id="12-crush-algorithm">1.2. CRUSH Algorithm</h3>
-<pre><code>
-CRUSH (Controlled Replication Under Scalable Hashing):
+```mermaid
+graph TD
+    subgraph STEP1["1️⃣ Object → Pool → PG"]
+        OBJ["📄 photo.jpg"] -->|"hash() mod num_PGs"| PG["PG 3.1a"]
+    end
 
-Client muốn lưu trữ Object "photo.jpg":
-1. Object → Pool → PG (Placement Group)
-   hash("photo.jpg") mod num_PGs → PG 3.1a
-   
-2. PG → OSD set (CRUSH map quyết định):
-   CRUSH(PG 3.1a) → [osd.5, osd.12, osd.8]
-   
-3. Data được replicate tới 3 OSDs:
-   
-   ┌────────┐     ┌────────┐     ┌────────┐
-   │ osd.5  │     │ osd.12 │     │ osd.8  │
-   │ PRIMARY│     │ REPLICA│     │ REPLICA│
-   │worker1 │     │worker2 │     │worker3 │
-   └────────┘     └────────┘     └────────┘
-   
-✅ Không cần lookup table → Scale tới exabytes
-✅ Failure domain aware (rack, host, datacenter)
-✅ Client tính toán trực tiếp vị trí data
-</code></pre>
+    subgraph STEP2["2️⃣ CRUSH Map quyết định OSD set"]
+        PG2["PG 3.1a"] -->|"CRUSH()"| OSDSET["OSD Set"]
+    end
+
+    subgraph STEP3["3️⃣ Replicate tới 3 OSDs"]
+        OSD5["💾 osd.5<br/>PRIMARY<br/>worker1"]
+        OSD12["💾 osd.12<br/>REPLICA<br/>worker2"]
+        OSD8["💾 osd.8<br/>REPLICA<br/>worker3"]
+    end
+
+    PG --> PG2
+    OSDSET --> OSD5
+    OSDSET --> OSD12
+    OSDSET --> OSD8
+
+    style STEP1 fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style STEP2 fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style STEP3 fill:#15803d,stroke:#4ade80,color:#e2e8f0
+    style OSD5 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style OSD12 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style OSD8 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+```
+
+> ✅ Không cần lookup table → Scale tới exabytes
+> ✅ Failure domain aware (rack, host, datacenter)
+> ✅ Client tính toán trực tiếp vị trí data
 
 <hr>
 
 <h2 id="phan-2-rook-la-gi">PHẦN 2: ROOK — CEPH OPERATOR CHO KUBERNETES</h2>
 
 <h3 id="21-rook-architecture">2.1. Rook Architecture</h3>
-<pre><code>
-Rook = Kubernetes Operator cho Ceph
+```mermaid
+graph TB
+    subgraph K8S["☸ Kubernetes Cluster"]
+        subgraph OPERATOR["🔧 Rook Operator"]
+            op["Deployment<br/>• Watches CephCluster CRD<br/>• Manages Ceph daemons as K8s pods<br/>• Auto-healing, scaling"]
+        end
 
-┌──────────────────────────────────────────────────────┐
-│  Kubernetes Cluster                                   │
-│                                                       │
-│  ┌──────────────────────────────────────────────┐     │
-│  │  Rook Operator (Deployment)                   │     │
-│  │  - Watches CephCluster CRD                    │     │
-│  │  - Manages Ceph daemons as K8s pods           │     │
-│  │  - Auto-healing, scaling                      │     │
-│  └──────────────────────────────────────────────┘     │
-│                                                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────┐    │
-│  │ ceph-mon Pod │  │ ceph-mgr Pod │  │ ceph-osd │    │
-│  │ (3 replicas) │  │ (2 replicas) │  │ Pods     │    │
-│  │              │  │ + Dashboard  │  │ (per disk)│    │
-│  └──────────────┘  └──────────────┘  └──────────┘    │
-│                                                       │
-│  CRDs:                                                │
-│  - CephCluster        (cluster definition)            │
-│  - CephBlockPool      (RBD pool)                     │
-│  - CephFilesystem     (CephFS)                       │
-│  - CephObjectStore    (RGW/S3)                       │
-│  - CephBlockPoolRados (RADOS namespace)              │
-└──────────────────────────────────────────────────────┘
-</code></pre>
+        subgraph DAEMONS["Ceph Daemons as Pods"]
+            MON["🔍 ceph-mon<br/>3 replicas"]
+            MGR["📊 ceph-mgr<br/>2 replicas<br/>+ Dashboard"]
+            OSD["💾 ceph-osd<br/>1 per disk"]
+        end
+
+        subgraph CRDS["📋 Custom Resource Definitions"]
+            CR1["CephCluster"]
+            CR2["CephBlockPool"]
+            CR3["CephFilesystem"]
+            CR4["CephObjectStore"]
+        end
+    end
+
+    op -->|manages| MON
+    op -->|manages| MGR
+    op -->|manages| OSD
+    op -->|watches| CR1
+    CR2 -.-> OSD
+    CR3 -.-> OSD
+    CR4 -.-> OSD
+
+    style K8S fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style OPERATOR fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style DAEMONS fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style CRDS fill:#1e293b,stroke:#475569,color:#e2e8f0
+```
 
 <h3 id="22-so-sanh-storage">2.2. So sánh Storage Solutions</h3>
 
@@ -244,22 +271,26 @@ Rook = Kubernetes Operator cho Ceph
 <h2 id="phan-3-planning-ceph">PHẦN 3: PLANNING HARDWARE CHO CEPH</h2>
 
 <h3 id="31-osd-node-sizing">3.1. OSD Node Sizing</h3>
-<pre><code>
-Mỗi OSD = 1 disk (HDD hoặc SSD)
+```mermaid
+graph LR
+    subgraph OSD_REQ["💾 Per-OSD Requirements"]
+        CPU["🔧 CPU: 1-2 cores"]
+        RAM["🧠 RAM: 5GB bluestore"]
+        NVME["⚡ NVMe: WAL + DB"]
+        NET["🌐 Network: 10Gbps"]
+    end
 
-Per-OSD resource requirements:
-┌──────────────────────────────────────┐
-│  CPU: 1-2 cores per OSD             │
-│  RAM: 5GB per OSD (bluestore)       │
-│  NVMe: WAL + DB (optional)          │
-│  Network: 10Gbps recommended        │
-└──────────────────────────────────────┘
+    subgraph EXAMPLE["📋 worker1: 4 data SSDs"]
+        E1["4 OSDs × 5GB = 20GB RAM"]
+        E2["4 OSDs × 2 cores = 8 CPU"]
+        E3["+ workload riêng"]
+    end
 
-Ví dụ: worker1 có 4 data SSDs (mỗi SSD = 1 OSD):
-→ 4 OSDs × 5GB = 20GB RAM cho Ceph
-→ 4 OSDs × 2 cores = 8 CPU cores cho Ceph
-→ Tổng worker1: 8 cores + 20GB cho Ceph + workload riêng
-</code></pre>
+    OSD_REQ --> EXAMPLE
+
+    style OSD_REQ fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style EXAMPLE fill:#0f172a,stroke:#f59e0b,color:#e2e8f0
+```
 
 <h3 id="32-capacity-planning">3.2. Capacity Planning</h3>
 <pre><code class="language-bash"># Ceph usable capacity formula:
@@ -276,77 +307,88 @@ Ví dụ: worker1 có 4 data SSDs (mỗi SSD = 1 OSD):
 </code></pre>
 
 <h3 id="33-network-planning">3.3. Network Planning</h3>
-<pre><code>
-Ceph sử dụng 2 networks (đã thiết kế ở Bài 2):
+```mermaid
+graph LR
+    subgraph NODE1["💻 OSD Node 1"]
+        P1["🌐 Public Net<br/>10.10.20.x<br/>client I/O"]
+        C1["🔄 Cluster Net<br/>10.10.30.x<br/>replication"]
+    end
 
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   OSD Node 1 │     │   OSD Node 2 │     │   OSD Node 3 │
-│              │     │              │     │              │
-│  Public Net  │◄───►│  Public Net  │◄───►│  Public Net  │
-│  10.10.20.x  │     │  10.10.20.x  │     │  10.10.20.x  │
-│  (client I/O)│     │              │     │              │
-│              │     │              │     │              │
-│  Cluster Net │◄───►│  Cluster Net │◄───►│  Cluster Net │
-│  10.10.30.x  │     │  10.10.30.x  │     │  10.10.30.x  │
-│  (replication)│     │              │     │              │
-└──────────────┘     └──────────────┘     └──────────────┘
+    subgraph NODE2["💻 OSD Node 2"]
+        P2["🌐 Public Net<br/>10.10.20.x"]
+        C2["🔄 Cluster Net<br/>10.10.30.x"]
+    end
 
-Public Network:  Client → OSD (read/write)
-Cluster Network: OSD ↔ OSD (replication, recovery, scrubbing)
+    subgraph NODE3["💻 OSD Node 3"]
+        P3["🌐 Public Net<br/>10.10.20.x"]
+        C3["🔄 Cluster Net<br/>10.10.30.x"]
+    end
 
-⚠️ Cluster network: 10Gbps minimum để recovery không impact client I/O
-</code></pre>
+    P1 <-->|"Client I/O"| P2
+    P2 <-->|"Client I/O"| P3
+    C1 <-->|"Replication"| C2
+    C2 <-->|"Replication"| C3
+
+    style NODE1 fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style NODE2 fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style NODE3 fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style P1 fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style P2 fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style P3 fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style C1 fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style C2 fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style C3 fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+```
+
+> ⚠️ Cluster network: 10Gbps minimum để recovery không impact client I/O
 
 <hr>
 
 <h2 id="phan-4-storage-types">PHẦN 4: 3 LOẠI STORAGE</h2>
 
 <h3 id="41-block-rbd">4.1. Block Storage (RBD)</h3>
-<pre><code>
-RBD (RADOS Block Device):
-┌──────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  Pod     │────►│  PVC             │────►│  Ceph RBD Volume │
-│          │     │  ReadWriteOnce   │     │  (thin provisioned)│
-│          │     │  (1 pod duy nhất)│     │                   │
-└──────────┘     └──────────────────┘     └──────────────────┘
+```mermaid
+graph LR
+    POD["🟢 Pod"] -->|mount| PVC["📋 PVC<br/>ReadWriteOnce"]
+    PVC -->|provision| RBD["💿 Ceph RBD<br/>thin provisioned"]
 
-Use cases:
-✅ Database (PostgreSQL, MySQL)
-✅ Stateful applications
-✅ High IOPS workloads
-⚠️ ReadWriteOnce — chỉ 1 pod mount cùng lúc
-</code></pre>
+    style POD fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style PVC fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style RBD fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+```
+
+> ✅ Database (PostgreSQL, MySQL) · ✅ Stateful applications · ✅ High IOPS
+> ⚠️ ReadWriteOnce — chỉ 1 pod mount cùng lúc
 
 <h3 id="42-filesystem-cephfs">4.2. Filesystem Storage (CephFS)</h3>
-<pre><code>
-CephFS:
-┌──────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  Pod 1   │────►│                  │     │                   │
-│  Pod 2   │────►│  PVC             │────►│  CephFS Volume   │
-│  Pod 3   │────►│  ReadWriteMany   │     │  (POSIX filesystem)│
-│          │     │  (nhiều pod)     │     │                   │
-└──────────┘     └──────────────────┘     └──────────────────┘
+```mermaid
+graph LR
+    P1["🟢 Pod 1"] --> PVC["📋 PVC<br/>ReadWriteMany"]
+    P2["🟢 Pod 2"] --> PVC
+    P3["🟢 Pod 3"] --> PVC
+    PVC -->|mount| CEPHFS["📁 CephFS<br/>POSIX filesystem"]
 
-Use cases:
-✅ Shared file storage (nhiều pods cùng đọc/ghi)
-✅ Content management, media files
-✅ AI/ML training data
-</code></pre>
+    style P1 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style P2 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style P3 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style PVC fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style CEPHFS fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+```
+
+> ✅ Shared file storage (nhiều pods cùng đọc/ghi) · ✅ Content management · ✅ AI/ML training data
 
 <h3 id="43-object-rgw">4.3. Object Storage (RGW)</h3>
-<pre><code>
-RADOS Gateway (S3-compatible):
-┌──────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  App     │────►│  S3 API          │────►│  Ceph Object     │
-│          │     │  s3://bucket/key │     │  Store (RGW)     │
-│          │     │  PUT/GET/DELETE  │     │                   │
-└──────────┘     └──────────────────┘     └──────────────────┘
+```mermaid
+graph LR
+    APP["🟢 App"] -->|"PUT/GET/DELETE"| S3["🌐 S3 API<br/>s3://bucket/key"]
+    S3 --> RGW["☁️ Ceph Object Store<br/>RADOS Gateway"]
 
-Use cases:
-✅ Backup storage
-✅ Log archives
-✅ Thay thế MinIO/AWS S3
-</code></pre>
+    style APP fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style S3 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style RGW fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+```
+
+> ✅ Backup storage · ✅ Log archives · ✅ Thay thế MinIO/AWS S3
 
 <hr>
 

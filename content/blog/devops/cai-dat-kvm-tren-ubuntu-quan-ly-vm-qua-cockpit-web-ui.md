@@ -5,7 +5,7 @@ slug: cai-dat-kvm-tren-ubuntu-quan-ly-vm-qua-cockpit-web-ui
 excerpt: >-
   Hướng dẫn cài đặt KVM trên Ubuntu và quản lý VM qua Cockpit Web UI. Cấu hình
   network bridge, mạng ảo NAT, storage pool cho homelab 2 node.
-featured_image: /images/blog/kvm-cockpit-featured.svg
+featured_image: /images/blog/kvm-cockpit-featured.png
 type: blog
 reading_time: 27
 view_count: 2

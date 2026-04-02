@@ -30,19 +30,41 @@ course:
 
 <h2 id="phan-1-strategies">PHẦN 1: DEPLOYMENT STRATEGIES</h2>
 
-<pre><code>
-Rolling Update (default K8s):
-v1 ████████  →  v1 ██████ v2 ██  →  v1 ████ v2 ████  →  v2 ████████
-                 (gradually replace)
+<pre><code class="language-mermaid">
+graph LR
+    subgraph ROLLING["🔄 Rolling Update — default K8s"]
+        direction LR
+        R1["v1 ████████"] -->|"gradually replace"| R2["v1 ██ v2 ██████"] --> R3["v2 ████████"]
+    end
 
-Blue-Green:
-Blue (v1) ████████  [active]    Blue (v1) ████████  [standby]
-Green(v2)                  →    Green(v2) ████████  [active]
-                                (instant switch)
+    subgraph BLUEGREEN["🔵🟢 Blue-Green"]
+        direction LR
+        BG1["🔵 Blue v1 ACTIVE<br/>🟢 Green v2 standby"] -->|"instant switch"| BG2["🔵 Blue v1 standby<br/>🟢 Green v2 ACTIVE"]
+    end
 
-Canary:
-v1 ████████  →  v1 ███████ v2 █(5%)  →  v1 █████ v2 ███(30%)  →  v2 ████████
-                 (gradual traffic shift with validation)
+    subgraph CANARY["🐤 Canary"]
+        direction LR
+        C1["v1 100%"] -->|"5%"| C2["v1 95%<br/>v2 5%"] -->|"validate"| C3["v1 70%<br/>v2 30%"] -->|"promote"| C4["v2 100%"]
+    end
+
+    style ROLLING fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style BLUEGREEN fill:#1e3a5f,stroke:#10b981,color:#e2e8f0
+    style CANARY fill:#1e3a5f,stroke:#f59e0b,color:#e2e8f0
+</code></pre>
+
+<pre><code class="language-mermaid">
+stateDiagram-v2
+    [*] --> Deploy_v2: New version
+    Deploy_v2 --> Canary_5: Shift 5% traffic
+    Canary_5 --> Analysis_1: Run analysis
+    Analysis_1 --> Canary_30: ✅ Pass → Shift 30%
+    Analysis_1 --> Rollback: ❌ Fail
+    Canary_30 --> Analysis_2: Run analysis
+    Analysis_2 --> Canary_70: ✅ Pass → Shift 70%
+    Analysis_2 --> Rollback: ❌ Fail
+    Canary_70 --> Full_v2: ✅ Promote 100%
+    Full_v2 --> [*]: Done
+    Rollback --> [*]: Reverted to v1
 </code></pre>
 
 <!--kg-card-begin: html-->

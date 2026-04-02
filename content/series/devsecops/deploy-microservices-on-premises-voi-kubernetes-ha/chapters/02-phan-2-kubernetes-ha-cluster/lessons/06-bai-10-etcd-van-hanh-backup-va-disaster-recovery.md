@@ -32,31 +32,59 @@ course:
 <h2 id="phan-1-etcd-internals">PHẦN 1: ETCD INTERNALS</h2>
 
 <h3 id="11-raft-consensus">1.1. Raft Consensus Algorithm</h3>
-<pre><code>
-Raft — Bầu cử Leader:
-┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│   etcd-1     │    │   etcd-2     │    │   etcd-3     │
-│   LEADER     │    │   FOLLOWER   │    │   FOLLOWER   │
-│              │    │              │    │              │
-│  WAL ──────► │───►│  WAL         │    │  WAL         │
-│  Log         │    │  Log         │    │  Log         │
-│  Snapshot    │    │  Snapshot    │    │  Snapshot    │
-└──────┬───────┘    └──────┬───────┘    └──────┬───────┘
-       │                   │                   │
-       └────── Replicate ──┴────── Replicate ──┘
 
-Write Flow (Raft consensus):
-1. Client gửi write request → Leader
-2. Leader ghi vào WAL (Write-Ahead Log)
-3. Leader replicate entry tới Followers
-4. Khi MAJORITY (2/3) confirm → COMMIT
-5. Leader apply entry vào state machine
-6. Response client: success
+<pre><code class="language-mermaid">
+graph TB
+    subgraph CLUSTER["etcd 3-Node Cluster"]
+        subgraph N1["etcd-1 — LEADER"]
+            WAL1["WAL<br/>Write-Ahead Log"]
+            SNAP1["Snapshot"]
+        end
+        subgraph N2["etcd-2 — FOLLOWER"]
+            WAL2["WAL"]
+            SNAP2["Snapshot"]
+        end
+        subgraph N3["etcd-3 — FOLLOWER"]
+            WAL3["WAL"]
+            SNAP3["Snapshot"]
+        end
+    end
 
-⚠️ etcd tolerates (N-1)/2 failures:
-• 3 nodes → tolerate 1 failure  (quorum = 2)
-• 5 nodes → tolerate 2 failures (quorum = 3)
+    N1 -->|"Replicate"| N2
+    N1 -->|"Replicate"| N3
+
+    style N1 fill:#15803d,stroke:#22c55e,color:#fff
+    style N2 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style N3 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
 </code></pre>
+
+<pre><code class="language-mermaid">
+sequenceDiagram
+    participant C as Client
+    participant L as Leader (etcd-1)
+    participant F1 as Follower (etcd-2)
+    participant F2 as Follower (etcd-3)
+
+    Note over C,F2: Write Flow — Raft Consensus
+
+    C->>L: 1. Write request
+    L->>L: 2. Ghi vào WAL
+    par Replicate
+        L->>F1: 3. Replicate entry
+        L->>F2: 3. Replicate entry
+    end
+    F1-->>L: ACK ✅
+    F2-->>L: ACK ✅
+    Note over L: 4. MAJORITY (2/3) confirm → COMMIT
+    L->>L: 5. Apply vào state machine
+    L-->>C: 6. Response: success ✅
+</code></pre>
+
+<p>⚠️ etcd tolerates <strong>(N-1)/2</strong> failures:</p>
+<ul>
+<li>3 nodes → tolerate 1 failure (quorum = 2)</li>
+<li>5 nodes → tolerate 2 failures (quorum = 3)</li>
+</ul>
 
 <h3 id="12-data-model">1.2. Data Model</h3>
 <pre><code class="language-bash"># etcd lưu trữ key-value pairs trong B+ Tree
@@ -289,19 +317,24 @@ spec:
 <h2 id="phan-4-restore">PHẦN 4: DISASTER RECOVERY — RESTORE</h2>
 
 <h3 id="41-restore-scenario">4.1. Restore Scenario</h3>
-<pre><code>
-🔴 DISASTER: etcd data bị corrupt trên tất cả 3 nodes
-                hoặc cần rollback cluster state
 
-Restore Process:
-1. Stop kube-apiserver + etcd trên TẤT CẢ masters
-2. Restore snapshot trên MỖI master (different initial-cluster settings)
-3. Restart etcd → form new cluster
-4. Restart kube-apiserver
-5. Verify cluster
+<pre><code class="language-mermaid">
+graph TD
+    DISASTER["🔴 DISASTER<br/>etcd data bị corrupt<br/>trên tất cả 3 nodes"]
+    S1["1️⃣ Stop kube-apiserver + etcd<br/>trên TẤT CẢ masters"]
+    S2["2️⃣ Restore snapshot trên MỖI master<br/>different initial-cluster settings"]
+    S3["3️⃣ Restart etcd<br/>→ form new cluster"]
+    S4["4️⃣ Restart kube-apiserver"]
+    S5["5️⃣ Verify cluster"]
+    OK["✅ Cluster restored"]
+    WARN["⚠️ Tất cả resources sau<br/>thời điểm snapshot sẽ BỊ MẤT"]
 
-⚠️ RESTORE = TẠO CLUSTER MỚI từ snapshot
-   Tất cả resources sau thời điểm snapshot sẽ BỊ MẤT
+    DISASTER --> S1 --> S2 --> S3 --> S4 --> S5 --> OK
+    S2 --> WARN
+
+    style DISASTER fill:#dc2626,stroke:#fca5a5,color:#fff
+    style OK fill:#15803d,stroke:#22c55e,color:#fff
+    style WARN fill:#92400e,stroke:#f59e0b,color:#fef3c7
 </code></pre>
 
 <h3 id="42-restore-step-by-step">4.2. Restore Step-by-Step</h3>

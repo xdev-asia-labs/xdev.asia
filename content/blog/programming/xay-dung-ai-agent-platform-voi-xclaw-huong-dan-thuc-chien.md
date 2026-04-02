@@ -7,7 +7,7 @@ excerpt: >-
   TypeScript hỗ trợ Multi-LLM, RAG Pipeline, Workflow Engine, 13 Domain Packs,
   Multi-tenant RBAC, MCP Protocol và 8 Chat Channels. Từ kiến trúc Dual-Database
   đến deploy Docker production.
-featured_image: /images/blog/xclaw-ai-agent-featured.svg
+featured_image: /images/blog/xclaw-ai-agent-featured.png
 type: blog
 reading_time: 45
 view_count: 0

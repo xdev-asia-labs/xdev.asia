@@ -30,34 +30,28 @@ course:
 
 <h2 id="phan-1-gitops">PHẦN 1: GITOPS PRINCIPLES</h2>
 
-<pre><code>
-GitOps Workflow:
+```mermaid
+graph LR
+    DEV["👨‍💻 Developer"] -->|"git push"| GIT["📦 Git Repository"]
+    GIT -->|"webhook / poll"| ARGO["🔄 ArgoCD"]
 
-Developer → Git Push → Git Repository ← ArgoCD watches
-                                              │
-                                              ▼
-                                        ┌──────────┐
-                                        │ Compare  │
-                                        │ Desired  │
-                                        │ vs Live  │
-                                        └────┬─────┘
-                                             │
-                                    ┌────────▼────────┐
-                                    │ Out of Sync?    │
-                                    │ Auto-sync / PR  │
-                                    └────────┬────────┘
-                                             │
-                                    ┌────────▼────────┐
-                                    │ Apply to K8s    │
-                                    │ kubectl apply   │
-                                    └─────────────────┘
+    ARGO --> COMPARE["🔍 Compare<br/>Desired vs Live"]
+    COMPARE -->|"Out of Sync?"| SYNC["⚡ Auto-sync"]
+    SYNC --> K8S["☸ Apply to K8s"]
 
-GitOps Core Principles:
-1. Declarative: Desired state described in Git
-2. Versioned: Git history = deployment history
-3. Automated: Changes auto-applied (or approved)
-4. Self-healing: Drift detection + auto-correction
-</code></pre>
+    style DEV fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style GIT fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style ARGO fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style COMPARE fill:#0f172a,stroke:#f59e0b,color:#e2e8f0
+    style SYNC fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style K8S fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+```
+
+> **GitOps Core Principles:**
+> 1. **Declarative**: Desired state described in Git
+> 2. **Versioned**: Git history = deployment history
+> 3. **Automated**: Changes auto-applied (or approved)
+> 4. **Self-healing**: Drift detection + auto-correction
 
 <!--kg-card-begin: html-->
 <table>
@@ -81,34 +75,29 @@ GitOps Core Principles:
 
 <h2 id="phan-2-architecture">PHẦN 2: KIẾN TRÚC ARGOCD</h2>
 
-<pre><code>
-ArgoCD Components:
+```mermaid
+graph TB
+    subgraph ARGO["🔧 ArgoCD Server"]
+        API["🌐 API Server<br/>REST/gRPC + Web UI"]
+        REPO["📦 Repo Server<br/>Git clone + render"]
+        CTRL["🔄 Application Controller<br/>Reconciliation loop"]
 
-┌─────────────────────────────────────────────────┐
-│                  ArgoCD Server                   │
-│                                                  │
-│  ┌──────────┐  ┌──────────┐  ┌───────────────┐ │
-│  │ API      │  │ Repo     │  │ Application   │ │
-│  │ Server   │  │ Server   │  │ Controller    │ │
-│  │(REST/gRPC│  │(Git clone│  │(Reconciliation│ │
-│  │ + Web UI)│  │ + render)│  │ loop)         │ │
-│  └──────────┘  └──────────┘  └───────────────┘ │
-│        │              │              │           │
-│  ┌─────▼──────────────▼──────────────▼────────┐ │
-│  │              Redis (Cache)                  │ │
-│  └─────────────────────────────────────────────┘ │
-│                                                  │
-│  ┌─────────────────────────────────────────────┐ │
-│  │         ApplicationSet Controller           │ │
-│  │    (Generate Apps from templates)            │ │
-│  └─────────────────────────────────────────────┘ │
-│                                                  │
-│  ┌─────────────────────────────────────────────┐ │
-│  │     Notifications Controller                │ │
-│  │    (Slack, Email, Webhook alerts)           │ │
-│  └─────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────┘
-</code></pre>
+        API --> REDIS["⚡ Redis Cache"]
+        REPO --> REDIS
+        CTRL --> REDIS
+
+        APPSET["📋 ApplicationSet Controller<br/>Generate Apps from templates"]
+        NOTIF["🔔 Notifications Controller<br/>Slack, Email, Webhook"]
+    end
+
+    style ARGO fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style API fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style REPO fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style CTRL fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style REDIS fill:#dc2626,stroke:#ef4444,color:#e2e8f0
+    style APPSET fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style NOTIF fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+```
 
 <hr>
 

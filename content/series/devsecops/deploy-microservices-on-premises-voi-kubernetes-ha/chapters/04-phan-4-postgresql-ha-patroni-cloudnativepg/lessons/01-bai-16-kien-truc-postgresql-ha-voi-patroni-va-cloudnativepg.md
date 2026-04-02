@@ -32,40 +32,27 @@ course:
 <h2 id="phan-1-postgresql-replication">PHẦN 1: POSTGRESQL REPLICATION</h2>
 
 <h3 id="11-streaming-replication">1.1. Streaming Replication</h3>
-<pre><code>
-PostgreSQL HA Architecture:
-┌──────────────────────────────────────────────────────────┐
-│                    APPLICATION                            │
-│                         │                                 │
-│              ┌──────────┴──────────┐                     │
-│              │    PgBouncer        │  Connection Pool     │
-│              │    (port 6432)      │                     │
-│              └──────────┬──────────┘                     │
-│                         │                                 │
-│         ┌───────────────┼───────────────┐                │
-│         │ write (rw)    │               │ read (ro)      │
-│         ▼               │               ▼                │
-│  ┌──────────────┐       │        ┌──────────────┐        │
-│  │  PRIMARY     │       │        │  STANDBY     │        │
-│  │  (read/write)│───────┼───────►│  (read-only) │        │
-│  │  pg1         │  WAL  │  WAL   │  pg2         │        │
-│  │              │streaming│      │              │        │
-│  └──────────────┘       │        └──────────────┘        │
-│         │               │               │                │
-│         │          WAL streaming         │                │
-│         │               │               │                │
-│         │               ▼               │                │
-│         │        ┌──────────────┐       │                │
-│         │        │  STANDBY     │       │                │
-│         └───────►│  (read-only) │◄──────┘                │
-│           WAL    │  pg3         │                        │
-│                  └──────────────┘                        │
-└──────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    APP["🖥️ APPLICATION"] --> PGB["🔀 PgBouncer<br/>port 6432<br/>Connection Pool"]
+    
+    PGB -->|"write (rw)"| PRI["🟢 PRIMARY<br/>read/write<br/>pg1"]
+    PGB -->|"read (ro)"| STB1["🔵 STANDBY<br/>read-only<br/>pg2"]
+    PGB -->|"read (ro)"| STB2["🔵 STANDBY<br/>read-only<br/>pg3"]
+    
+    PRI -->|"WAL streaming"| STB1
+    PRI -->|"WAL streaming"| STB2
 
-✅ Primary: nhận writes, stream WAL tới standbys
-✅ Standby: replay WAL, serve read queries
-✅ Failover: promote standby thành primary
-</code></pre>
+    style APP fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style PGB fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style PRI fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style STB1 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style STB2 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+```
+
+> ✅ Primary: nhận writes, stream WAL tới standbys
+> ✅ Standby: replay WAL, serve read queries
+> ✅ Failover: promote standby thành primary
 
 <h3 id="12-sync-vs-async">1.2. Synchronous vs Asynchronous</h3>
 
@@ -181,67 +168,66 @@ PostgreSQL HA Architecture:
 
 <h2 id="phan-3-cloudnativepg-architecture">PHẦN 3: CLOUDNATIVEPG ARCHITECTURE</h2>
 
-<pre><code>
-CloudNativePG Architecture:
-┌──────────────────────────────────────────────────────────┐
-│  Kubernetes Cluster                                       │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐    │
-│  │  CloudNativePG Operator (Deployment)              │    │
-│  │  - Watches Cluster CRD                            │    │
-│  │  - Manages PG instances as pods                   │    │
-│  │  - Handles failover, backup, recovery             │    │
-│  └──────────────────────────────────────────────────┘    │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐    │
-│  │  Cluster CRD: "production-pg"                     │    │
-│  │                                                    │    │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐        │    │
-│  │  │ Pod pg-1 │  │ Pod pg-2 │  │ Pod pg-3 │        │    │
-│  │  │ PRIMARY  │  │ STANDBY  │  │ STANDBY  │        │    │
-│  │  │ rw svc ──┤  │ ro svc ──┤  │ ro svc ──┤        │    │
-│  │  │          │  │          │  │          │        │    │
-│  │  │ PVC 50Gi │  │ PVC 50Gi │  │ PVC 50Gi │        │    │
-│  │  │ ceph-blk │  │ ceph-blk │  │ ceph-blk │        │    │
-│  │  └──────────┘  └──────────┘  └──────────┘        │    │
-│  │                                                    │    │
-│  │  Services:                                         │    │
-│  │  - production-pg-rw  → Primary (read-write)       │    │
-│  │  - production-pg-ro  → Standbys (read-only)       │    │
-│  │  - production-pg-r   → Any instance (read)        │    │
-│  └──────────────────────────────────────────────────┘    │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐    │
-│  │  Backup (ScheduledBackup CRD)                     │    │
-│  │  → Barman → S3/Ceph Object Store                 │    │
-│  └──────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────┘
-</code></pre>
+```mermaid
+graph TB
+    subgraph K8S["☸ Kubernetes Cluster"]
+        CNPG["🔧 CloudNativePG Operator<br/>Watches Cluster CRD<br/>Handles failover, backup, recovery"]
+
+        subgraph CLUSTER["📦 Cluster CRD: production-pg"]
+            PG1["🟢 Pod pg-1<br/>PRIMARY<br/>rw svc<br/>PVC 50Gi ceph-blk"]
+            PG2["🔵 Pod pg-2<br/>STANDBY<br/>ro svc<br/>PVC 50Gi ceph-blk"]
+            PG3["🔵 Pod pg-3<br/>STANDBY<br/>ro svc<br/>PVC 50Gi ceph-blk"]
+        end
+
+        subgraph SVC["🌐 Services"]
+            RW["production-pg-rw → Primary"]
+            RO["production-pg-ro → Standbys"]
+            R["production-pg-r → Any instance"]
+        end
+
+        subgraph BACKUP["💾 Backup"]
+            BK["ScheduledBackup CRD<br/>→ Barman → S3/Ceph"]
+        end
+    end
+
+    CNPG -->|manages| CLUSTER
+    RW --> PG1
+    RO --> PG2
+    RO --> PG3
+    PG1 -.->|WAL| PG2
+    PG1 -.->|WAL| PG3
+
+    style K8S fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style CNPG fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style CLUSTER fill:#1e293b,stroke:#3b82f6,color:#e2e8f0
+    style SVC fill:#1e3a5f,stroke:#60a5fa,color:#e2e8f0
+    style BACKUP fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style PG1 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style PG2 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style PG3 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+```
 
 <h3 id="31-failover-flow">3.1. Failover Flow</h3>
-<pre><code>
-Failover khi Primary gặp sự cố:
+```mermaid
+sequenceDiagram
+    participant PG1 as pg-1 (PRIMARY)
+    participant OP as CloudNativePG Operator
+    participant PG2 as pg-2 (STANDBY)
+    participant PG3 as pg-3 (STANDBY)
+    participant SVC as Service rw
 
-1. Primary pod pg-1 crashes
-   ┌──────────┐
-   │ pg-1 ❌  │  DOWN!
-   └──────────┘
-
-2. Operator detects failure (health check fails)
-   → Chọn standby có LSN cao nhất (least data loss)
-
-3. Promote pg-2 thành Primary:
-   ┌──────────┐  ┌──────────┐
-   │ pg-2     │  │ pg-3     │
-   │ PRIMARY ↑│  │ STANDBY  │
-   │ (promoted)│  │ repoint→pg-2│
-   └──────────┘  └──────────┘
-
-4. Service rw endpoint tự động trỏ tới pg-2
-5. pg-1 restart → join lại cluster as standby
-
-⚡ Failover time: 5-30 giây (tùy detection + promotion)
-</code></pre>
+    PG1->>PG1: ❌ CRASH!
+    OP->>OP: Health check fails
+    OP->>OP: Select standby with<br/>highest LSN
+    OP->>PG2: 🔼 PROMOTE to PRIMARY
+    PG2->>PG2: pg_promote()
+    OP->>PG3: Repoint replication → pg-2
+    PG3->>PG2: WAL streaming resumed
+    OP->>SVC: Update endpoint → pg-2
+    Note over PG1,SVC: ⚡ Failover: 5-30 giây
+    PG1->>PG1: Restart
+    PG1->>PG2: Join as STANDBY
+```
 
 <hr>
 

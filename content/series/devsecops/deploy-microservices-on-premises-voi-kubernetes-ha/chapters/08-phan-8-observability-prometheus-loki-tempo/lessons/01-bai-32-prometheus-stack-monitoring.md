@@ -31,27 +31,27 @@ course:
 
 <h2 id="phan-1-architecture">PHẦN 1: OBSERVABILITY ARCHITECTURE</h2>
 
-<pre><code>
-Observability Stack:
+```mermaid
+graph TD
+    subgraph PILLARS["📊 THREE PILLARS OF OBSERVABILITY"]
+        METRICS["📈 METRICS<br/>Prometheus<br/>Bài 32"]
+        LOGS["📝 LOGS<br/>Loki<br/>Bài 33"]
+        TRACES["🔗 TRACES<br/>Tempo<br/>Bài 34"]
+    end
 
-┌─────────────────────────────────────────────────────┐
-│                 THREE PILLARS                        │
-│                                                      │
-│  ┌──────────┐    ┌──────────┐    ┌──────────┐       │
-│  │ METRICS  │    │   LOGS   │    │  TRACES  │       │
-│  │Prometheus│    │   Loki   │    │  Tempo   │       │
-│  │ (Bài 32) │    │ (Bài 33) │    │ (Bài 34) │       │
-│  └────┬─────┘    └────┬─────┘    └────┬─────┘       │
-│       │               │               │              │
-│       └───────────┬───┴───────┬───────┘              │
-│                   │           │                      │
-│            ┌──────▼──┐   ┌────▼─────┐               │
-│            │ Grafana │   │Alertmgr  │               │
-│            │Dashboard│   │(PagerDuty│               │
-│            │         │   │ Slack)   │               │
-│            └─────────┘   └──────────┘               │
-└─────────────────────────────────────────────────────┘
-</code></pre>
+    METRICS --> GRAFANA["📊 Grafana<br/>Dashboards"]
+    LOGS --> GRAFANA
+    TRACES --> GRAFANA
+
+    METRICS --> ALERT["🔔 Alertmanager<br/>PagerDuty / Slack"]
+
+    style PILLARS fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style METRICS fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style LOGS fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style TRACES fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style GRAFANA fill:#f59e0b,stroke:#fbbf24,color:#0f172a
+    style ALERT fill:#dc2626,stroke:#ef4444,color:#e2e8f0
+```
 
 <hr>
 

@@ -30,47 +30,47 @@ course:
 
 <h2 id="phan-1-architecture">PHẦN 1: SYSTEM ARCHITECTURE</h2>
 
-<pre><code>
-E-Commerce Microservices Architecture:
+<pre><code class="language-mermaid">
+graph TB
+    GW["🌐 Istio Gateway<br/>TLS + CORS"]
 
-                    ┌─────────────────┐
-                    │   Istio Gateway  │
-                    │   (TLS + CORS)   │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-        ┌─────▼─────┐ ┌─────▼─────┐ ┌──────▼────┐
-        │   User    │ │  Product  │ │   Order   │
-        │  Service  │ │  Service  │ │  Service  │
-        └─────┬─────┘ └─────┬─────┘ └─────┬────┘
-              │              │              │
-              │         ┌────▼────┐    ┌────▼──────┐
-              │         │Inventory│    │  Payment  │
-              │         │ Service │    │  Service  │
-              │         └─────────┘    └────┬──────┘
-              │                             │
-         ┌────▼────────────────────────┐    │
-         │     Notification Service    │◄───┘
-         │  (email, SMS, push)         │
-         └─────────────────────────────┘
+    GW --> US["👤 User Service<br/>Go"]
+    GW --> PS["📦 Product Service<br/>Go"]
+    GW --> OS["🛒 Order Service<br/>Go"]
 
-Data Stores:
-┌──────────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐
-│ PostgreSQL   │ │  Redis   │ │ RabbitMQ │ │ Kafka  │
-│ (HA Cluster) │ │(Sentinel)│ │(Quorum Q)│ │(Events)│
-└──────────────┘ └──────────┘ └──────────┘ └────────┘
+    OS --> IS["📊 Inventory Service<br/>Go"]
+    OS --> PAY["💳 Payment Service<br/>Go"]
+    PAY --> NS["📧 Notification Service<br/>Node.js<br/>email · SMS · push"]
+    OS --> NS
 
-Platform:
-┌──────────────────────────────────────────────────────┐
-│  K8s HA (3 masters + 4 workers)                      │
-│  Rook-Ceph (distributed storage)                     │
-│  Istio (service mesh + mTLS)                         │
-│  ArgoCD (GitOps deployment)                          │
-│  Prometheus + Loki + Tempo (observability)            │
-│  Kyverno + Falco (security)                          │
-│  Velero (backup/DR)                                  │
-└──────────────────────────────────────────────────────┘
+    subgraph DATA["💾 Data Stores"]
+        PG["🐘 PostgreSQL<br/>HA Cluster"]
+        RD["⚡ Redis<br/>Sentinel"]
+        RMQ["🐰 RabbitMQ<br/>Quorum Queues"]
+        KF["📡 Kafka<br/>Events"]
+    end
+
+    US & PS & OS & IS & PAY --> PG
+    US & PS & OS --> RD
+    OS & PAY --> RMQ
+    OS & PAY --> KF
+    NS --> RMQ
+
+    subgraph PLATFORM["🏗️ Platform Layer"]
+        direction LR
+        K8S["☸ K8s HA<br/>3 masters + 4 workers"]
+        CEPH["💿 Rook-Ceph"]
+        ISTIO["🔗 Istio Mesh"]
+        ARGO["🔄 ArgoCD GitOps"]
+        OBS["📊 Prometheus + Loki + Tempo"]
+        SEC["🛡️ Kyverno + Falco"]
+        VEL["💼 Velero Backup/DR"]
+    end
+
+    style GW fill:#1d4ed8,stroke:#60a5fa,color:#fff
+    style DATA fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style PLATFORM fill:#1e293b,stroke:#475569,color:#e2e8f0
+    style NS fill:#7c3aed,stroke:#a78bfa,color:#fff
 </code></pre>
 
 <hr>

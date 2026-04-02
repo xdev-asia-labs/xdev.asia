@@ -33,49 +33,47 @@ course:
 <h2 id="phan-1-tai-sao-can-lb">PHẦN 1: TẠI SAO CẦN LOAD BALANCER CHO API SERVER?</h2>
 
 <h3 id="11-van-de-voi-single-api-endpoint">1.1. Vấn đề với single API endpoint</h3>
-<pre><code>
-Kubernetes HA Cluster — 3 Control Plane nodes:
 
-  master1 (kube-apiserver :6443)
-  master2 (kube-apiserver :6443)
-  master3 (kube-apiserver :6443)
+<pre><code class="language-mermaid">
+graph LR
+    subgraph PROBLEM["❌ Hardcode master1"]
+        kubectl1["kubectl"] -->|":6443"| master1a["master1<br/>kube-apiserver"]
+        master1a -.->|"DOWN!"| X["❌ Toàn bộ cluster<br/>mất quản lý"]
+    end
 
-Vấn đề: kubelet, kubectl, các controllers kết nối tới API server nào?
+    subgraph SOLUTION["✅ Virtual IP"]
+        kubectl2["kubectl"] -->|":6443"| VIP["🔷 VIP<br/>10.10.20.100"]
+        VIP --> m1["master1"] & m2["master2"] & m3["master3"]
+        m1 -.->|"DOWN"| VIP
+    end
 
-❌ Hardcode master1:
-   kubectl --server=https://master1:6443
-   → master1 down → TOÀN BỘ cluster mất quản lý!
-
-✅ Virtual IP (VIP):
-   kubectl --server=https://10.10.20.100:6443
-   → VIP luôn trỏ tới 1 master đang healthy
-   → Transparent failover khi master down
+    style PROBLEM fill:#450a0a,stroke:#dc2626,color:#fca5a5
+    style SOLUTION fill:#052e16,stroke:#22c55e,color:#bbf7d0
+    style X fill:#dc2626,stroke:#fca5a5,color:#fff
+    style VIP fill:#1d4ed8,stroke:#60a5fa,color:#fff
 </code></pre>
 
 <h3 id="12-architecture">1.2. Kiến trúc Load Balancer</h3>
-<pre><code>
-                    ┌───────────────────────────────┐
-                    │     VIP: 10.10.20.100:6443    │
-                    │     (keepalived floating IP)   │
-                    └──────────────┬────────────────┘
-                                   │
-                    ┌──────────────┴────────────────┐
-                    │     HAProxy (L4 TCP proxy)     │
-                    │     Listen :6443               │
-                    │     Health check: /healthz     │
-                    └──────────────┬────────────────┘
-                                   │
-              ┌────────────────────┼────────────────────┐
-              │                    │                     │
-     ┌────────┴────────┐ ┌────────┴────────┐ ┌─────────┴────────┐
-     │  master1:6443   │ │  master2:6443   │ │  master3:6443    │
-     │  kube-apiserver │ │  kube-apiserver │ │  kube-apiserver  │
-     └─────────────────┘ └─────────────────┘ └──────────────────┘
 
-Failover scenario:
-  lb1 (keepalived MASTER, holds VIP)
-  lb2 (keepalived BACKUP)
-  → lb1 down → lb2 takes VIP trong &lt; 3 giây
+<pre><code class="language-mermaid">
+graph TD
+    VIP["🔷 VIP: 10.10.20.100:6443<br/>keepalived floating IP"]
+    HAProxy["⚡ HAProxy<br/>L4 TCP proxy · Listen :6443<br/>Health check: /healthz"]
+
+    VIP --> HAProxy
+
+    HAProxy --> m1["master1:6443<br/>kube-apiserver"] & m2["master2:6443<br/>kube-apiserver"] & m3["master3:6443<br/>kube-apiserver"]
+
+    subgraph FAILOVER["🔄 Failover"]
+        lb1["lb1<br/>keepalived MASTER<br/>holds VIP"]
+        lb2["lb2<br/>keepalived BACKUP"]
+        lb1 -.->|"lb1 down → lb2 takes VIP<br/>trong < 3 giây"| lb2
+    end
+
+    style VIP fill:#1d4ed8,stroke:#60a5fa,color:#fff
+    style HAProxy fill:#7c3aed,stroke:#a78bfa,color:#fff
+    style lb1 fill:#15803d,stroke:#22c55e,color:#fff
+    style lb2 fill:#78716c,stroke:#a8a29e,color:#fff
 </code></pre>
 
 <h3 id="13-lua-chon-architecture">1.3. Lựa chọn Architecture</h3>
@@ -275,26 +273,33 @@ curl http://localhost:9000/stats
 <h3 id="31-keepalived-la-gi">3.1. keepalived là gì?</h3>
 <p>keepalived sử dụng <strong>VRRP (Virtual Router Redundancy Protocol)</strong> để quản lý một Virtual IP giữa 2+ servers:</p>
 
-<pre><code>
-VRRP hoạt động:
+<pre><code class="language-mermaid">
+sequenceDiagram
+    participant lb1 as lb1 (MASTER, priority 101)
+    participant VIP as VIP 10.10.20.100
+    participant lb2 as lb2 (BACKUP, priority 100)
 
-1. Ban đầu:
-   lb1 (MASTER, priority 101) → Giữ VIP 10.10.20.100
-   lb2 (BACKUP, priority 100) → Standby
+    Note over lb1,lb2: 1. Ban đầu — lb1 giữ VIP
 
-2. lb1 sends VRRP advertisements mỗi 1 giây
-   lb2 nhận và xác nhận lb1 vẫn alive
+    lb1->>VIP: Giữ VIP
+    loop Mỗi 1 giây
+        lb1->>lb2: VRRP Advertisement
+        lb2-->>lb1: Xác nhận alive
+    end
 
-3. lb1 crash:
-   lb2 không nhận VRRP advert trong 3+ giây
-   lb2 promote → MASTER, gửi Gratuitous ARP
-   VIP 10.10.20.100 chuyển sang lb2
-   Failover time: ~3 giây
+    Note over lb1: 2. lb1 crash!
+    lb1--xlb2: ❌ Không gửi VRRP
 
-4. lb1 recover:
-   lb1 lên lại, thấy lb2 đang MASTER
-   lb1 trở thành BACKUP (nếu nopreempt) hoặc
-   lb1 preempt lại MASTER (nếu preempt)
+    Note over lb2: 3+ giây không nhận VRRP
+    lb2->>lb2: Promote → MASTER
+    lb2->>VIP: Gửi Gratuitous ARP
+    lb2->>VIP: Nhận VIP
+
+    Note over lb1,lb2: Failover hoàn tất ~3 giây
+
+    Note over lb1: 4. lb1 recover
+    lb1->>lb2: Lên lại, thấy lb2 MASTER
+    lb1->>lb1: Trở thành BACKUP (nopreempt)
 </code></pre>
 
 <h3 id="32-cai-dat-keepalived">3.2. Cài đặt keepalived</h3>

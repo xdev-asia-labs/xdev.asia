@@ -33,31 +33,71 @@ course:
 
 <h3 id="11-stacked-etcd-vs-external-etcd">1.1. Stacked etcd vs External etcd</h3>
 
-<pre><code>
-Option A: Stacked etcd (Recommended cho hầu hết cases)
-┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│   master1        │  │   master2        │  │   master3        │
-│  ┌─────────────┐│  │  ┌─────────────┐│  │  ┌─────────────┐│
-│  │ API Server  ││  │  │ API Server  ││  │  │ API Server  ││
-│  │ Scheduler   ││  │  │ Scheduler   ││  │  │ Scheduler   ││
-│  │ Controller  ││  │  │ Controller  ││  │  │ Controller  ││
-│  │ etcd ◄──────┼┼──┼─►│ etcd ◄──────┼┼──┼─►│ etcd        ││
-│  └─────────────┘│  │  └─────────────┘│  │  └─────────────┘│
-└─────────────────┘  └─────────────────┘  └─────────────────┘
-  ✅ Ít servers      ✅ Đơn giản          ❌ etcd + API coupled
+**Option A: Stacked etcd** (Recommended cho hầu hết cases)
 
-Option B: External etcd
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│  API Server  │ │  API Server  │ │  API Server  │  (3 masters)
-│  Scheduler   │ │  Scheduler   │ │  Scheduler   │
-│  Controller  │ │  Controller  │ │  Controller  │
-└──────┬───────┘ └──────┬───────┘ └──────┬───────┘
-       │                │                │
-┌──────▼───────┐ ┌──────▼───────┐ ┌──────▼───────┐
-│   etcd       │ │   etcd       │ │   etcd       │  (3 etcd nodes)
-└──────────────┘ └──────────────┘ └──────────────┘
-  ✅ Isolation     ✅ Independent scaling  ❌ Cần 6 servers
-</code></pre>
+```mermaid
+graph LR
+    subgraph M1["🖥️ master1"]
+        A1["API Server<br/>Scheduler<br/>Controller"]
+        E1["etcd"]
+        A1 --- E1
+    end
+
+    subgraph M2["🖥️ master2"]
+        A2["API Server<br/>Scheduler<br/>Controller"]
+        E2["etcd"]
+        A2 --- E2
+    end
+
+    subgraph M3["🖥️ master3"]
+        A3["API Server<br/>Scheduler<br/>Controller"]
+        E3["etcd"]
+        A3 --- E3
+    end
+
+    E1 <-->|"Raft"| E2
+    E2 <-->|"Raft"| E3
+
+    style M1 fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style M2 fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style M3 fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style E1 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style E2 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style E3 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+```
+
+> ✅ Ít servers · ✅ Đơn giản · ❌ etcd + API coupled
+
+**Option B: External etcd**
+
+```mermaid
+graph TD
+    subgraph MASTERS["Control Plane — 3 masters"]
+        MA["API Server<br/>Scheduler<br/>Controller"]
+        MB["API Server<br/>Scheduler<br/>Controller"]
+        MC["API Server<br/>Scheduler<br/>Controller"]
+    end
+
+    subgraph ETCDS["etcd Cluster — 3 dedicated nodes"]
+        EA["etcd"]
+        EB["etcd"]
+        EC["etcd"]
+        EA <-->|"Raft"| EB
+        EB <-->|"Raft"| EC
+    end
+
+    MA --> EA
+    MB --> EB
+    MC --> EC
+
+    style MASTERS fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style ETCDS fill:#1e293b,stroke:#15803d,color:#e2e8f0
+    style EA fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style EB fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style EC fill:#15803d,stroke:#22c55e,color:#e2e8f0
+```
+
+> ✅ Isolation · ✅ Independent scaling · ❌ Cần 6 servers
 
 <p>👉 <strong>Chọn Stacked etcd</strong> cho khóa học này — đơn giản, đủ tốt cho hầu hết production workloads. External etcd chỉ cần cho clusters rất lớn (100+ nodes).</p>
 

@@ -31,29 +31,24 @@ course:
 
 <h2 id="phan-1-service-mesh">PHẦN 1: SERVICE MESH LÀ GÌ?</h2>
 
-<pre><code>
-Microservices WITHOUT Service Mesh:
-┌─────────┐    Direct call     ┌─────────┐
-│Service A │──────────────────►│Service B │
-│          │  (no encryption)  │          │
-│ Retry?   │  (no retry)       │ No auth? │
-│ Timeout? │  (no tracing)     │ No limit?│
-└─────────┘                    └─────────┘
-⚠️ Mỗi service tự implement: retry, circuit breaker, TLS, auth, tracing
+<pre><code class="language-mermaid">
+graph LR
+    subgraph WITHOUT["❌ WITHOUT Service Mesh"]
+        A1["Service A<br/>Retry? Timeout?"] -->|"Direct call<br/>no encryption<br/>no retry<br/>no tracing"| B1["Service B<br/>No auth? No limit?"]
+    end
 
-Microservices WITH Service Mesh (Istio):
-┌─────────┐ ┌───────┐    mTLS    ┌───────┐ ┌─────────┐
-│Service A │►│ Envoy │───────────►│ Envoy │►│Service B │
-│(business │ │Sidecar│  (auto)   │Sidecar│ │(business │
-│ logic)   │ │       │           │       │ │  logic)  │
-└─────────┘ │• Retry │           │• Auth  │ └─────────┘
-            │• Timeout│          │• RateLimit│
-            │• Tracing│          │• Metrics │
-            └───────┘            └───────┘
-                    ▲                ▲
-                    │    Control     │
-                    └──── Plane ─────┘
-                         (istiod)
+    subgraph WITH["✅ WITH Service Mesh — Istio"]
+        A2["Service A<br/>business logic"] --> EA["🔷 Envoy Sidecar<br/>• Retry<br/>• Timeout<br/>• Tracing"]
+        EA -->|"mTLS auto"| EB["🔷 Envoy Sidecar<br/>• Auth<br/>• RateLimit<br/>• Metrics"]
+        EB --> B2["Service B<br/>business logic"]
+        CP["istiod<br/>Control Plane"] -.->|"Config push"| EA & EB
+    end
+
+    style WITHOUT fill:#450a0a,stroke:#dc2626,color:#fca5a5
+    style WITH fill:#052e16,stroke:#22c55e,color:#bbf7d0
+    style EA fill:#1d4ed8,stroke:#60a5fa,color:#fff
+    style EB fill:#1d4ed8,stroke:#60a5fa,color:#fff
+    style CP fill:#7c3aed,stroke:#a78bfa,color:#fff
 </code></pre>
 
 <h3 id="11-why-mesh">1.1. Khi nào cần Service Mesh?</h3>
@@ -70,38 +65,44 @@ Microservices WITH Service Mesh (Istio):
 
 <h2 id="phan-2-kien-truc-istio">PHẦN 2: KIẾN TRÚC ISTIO</h2>
 
-<pre><code>
-Istio Architecture (v1.22+):
+<pre><code class="language-mermaid">
+graph TB
+    subgraph CONTROL["🧠 CONTROL PLANE"]
+        subgraph ISTIOD["istiod — Unified Binary"]
+            Pilot["Pilot<br/>Traffic config"]
+            Citadel["Citadel<br/>mTLS certs"]
+            Galley["Galley<br/>Config validation"]
+        end
+    end
 
-┌────────────────────────────────────────────────────┐
-│                  CONTROL PLANE                      │
-│                                                     │
-│  ┌─────────────────────────────────────────┐       │
-│  │               istiod                     │       │
-│  │  ┌─────────┐ ┌────────┐ ┌───────────┐  │       │
-│  │  │  Pilot  │ │ Citadel│ │  Galley   │  │       │
-│  │  │(Traffic │ │ (mTLS  │ │ (Config   │  │       │
-│  │  │ config) │ │  certs)│ │ validation│  │       │
-│  │  └─────────┘ └────────┘ └───────────┘  │       │
-│  └──────────────────┬──────────────────────┘       │
-│                     │ xDS API (push config)         │
-└─────────────────────┼──────────────────────────────┘
-                      │
-┌─────────────────────▼──────────────────────────────┐
-│                  DATA PLANE                          │
-│                                                      │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐          │
-│  │  Pod A   │  │  Pod B   │  │  Pod C   │          │
-│  │┌────────┐│  │┌────────┐│  │┌────────┐│          │
-│  ││ App    ││  ││ App    ││  ││ App    ││          │
-│  │└───┬────┘│  │└───┬────┘│  │└───┬────┘│          │
-│  │    │     │  │    │     │  │    │     │          │
-│  │┌───▼────┐│  │┌───▼────┐│  │┌───▼────┐│          │
-│  ││ Envoy  ││  ││ Envoy  ││  ││ Envoy  ││          │
-│  ││Sidecar ││◄►││Sidecar ││◄►││Sidecar ││          │
-│  │└────────┘│  │└────────┘│  │└────────┘│          │
-│  └──────────┘  └──────────┘  └──────────┘          │
-└─────────────────────────────────────────────────────┘
+    subgraph DATA["📡 DATA PLANE"]
+        subgraph PodA["Pod A"]
+            AppA["App A"]
+            EnvA["🔷 Envoy Sidecar"]
+            AppA --> EnvA
+        end
+        subgraph PodB["Pod B"]
+            AppB["App B"]
+            EnvB["🔷 Envoy Sidecar"]
+            AppB --> EnvB
+        end
+        subgraph PodC["Pod C"]
+            AppC["App C"]
+            EnvC["🔷 Envoy Sidecar"]
+            AppC --> EnvC
+        end
+    end
+
+    ISTIOD -->|"xDS API<br/>push config"| EnvA & EnvB & EnvC
+    EnvA <-->|"mTLS"| EnvB
+    EnvB <-->|"mTLS"| EnvC
+    EnvA <-->|"mTLS"| EnvC
+
+    style CONTROL fill:#4c1d95,stroke:#8b5cf6,color:#e2e8f0
+    style ISTIOD fill:#5b21b6,stroke:#a78bfa,color:#fff
+    style EnvA fill:#1d4ed8,stroke:#60a5fa,color:#fff
+    style EnvB fill:#1d4ed8,stroke:#60a5fa,color:#fff
+    style EnvC fill:#1d4ed8,stroke:#60a5fa,color:#fff
 </code></pre>
 
 <!--kg-card-begin: html-->

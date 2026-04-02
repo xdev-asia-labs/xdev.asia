@@ -138,58 +138,81 @@ course:
 
 <h3 id="21-so-do-kien-truc">2.1. Sơ đồ kiến trúc tổng thể</h3>
 
-<pre><code>
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        PRODUCTION ON-PREMISES STACK                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌─── EXTERNAL ACCESS ───────────────────────────────────────────────────┐ │
-│  │  Users → DNS → MetalLB VIP → NGINX Ingress → Istio Gateway          │ │
-│  │  + cert-manager (TLS/HTTPS)                                           │ │
-│  └───────────────────────────────────────────────────────────────────────┘ │
-│                                                                             │
-│  ┌─── KUBERNETES HA CLUSTER (3 Control Plane + N Workers) ───────────────┐ │
-│  │                                                                         │ │
-│  │  ┌── Service Mesh (Istio) ──────────────────────────────────────────┐ │ │
-│  │  │  mTLS │ Traffic Management │ Circuit Breaker │ Canary Deploy     │ │ │
-│  │  └──────────────────────────────────────────────────────────────────┘ │ │
-│  │                                                                         │ │
-│  │  ┌── Microservices ─────────┐  ┌── Data Layer ──────────────────┐   │ │
-│  │  │  API Gateway             │  │  PostgreSQL HA (CloudNativePG) │   │ │
-│  │  │  Auth Service            │  │  + PgBouncer + pgBackRest      │   │ │
-│  │  │  User Service            │  │                                 │   │ │
-│  │  │  Order Service           │  │  Redis HA (Sentinel/Cluster)   │   │ │
-│  │  │  Payment Service         │  │                                 │   │ │
-│  │  │  Notification Service    │  │  RabbitMQ HA (Quorum Queues)   │   │ │
-│  │  │  ...                     │  │  Kafka (Strimzi KRaft mode)    │   │ │
-│  │  └──────────────────────────┘  └─────────────────────────────────┘   │ │
-│  │                                                                         │ │
-│  │  ┌── GitOps & Secrets ──────┐  ┌── Observability ───────────────┐   │ │
-│  │  │  ArgoCD HA               │  │  Prometheus HA + Thanos        │   │ │
-│  │  │  Helm Charts             │  │  Grafana HA                    │   │ │
-│  │  │  Vault HA + ESO          │  │  Loki + Alloy (Logs)           │   │ │
-│  │  │  Kyverno Policies        │  │  Tempo + OTEL (Traces)         │   │ │
-│  │  └──────────────────────────┘  └─────────────────────────────────┘   │ │
-│  │                                                                         │ │
-│  │  ┌── Security ──────────────┐  ┌── Storage ─────────────────────┐   │ │
-│  │  │  RBAC + OIDC (Keycloak)  │  │  Rook-Ceph Cluster            │   │ │
-│  │  │  Falco Runtime Security  │  │  ├─ RBD (Block → Databases)   │   │ │
-│  │  │  Trivy + Harbor Registry │  │  ├─ CephFS (Shared → Apps)    │   │ │
-│  │  │  NetworkPolicy (Cilium)  │  │  └─ RGW/S3 (Object → Backup) │   │ │
-│  │  └──────────────────────────┘  └─────────────────────────────────┘   │ │
-│  │                                                                         │ │
-│  │  ┌── Infrastructure ────────────────────────────────────────────────┐ │ │
-│  │  │  Cilium CNI (eBPF) │ MetalLB │ CoreDNS │ etcd HA               │ │ │
-│  │  │  keepalived + HAProxy (API Server VIP)                           │ │ │
-│  │  └──────────────────────────────────────────────────────────────────┘ │ │
-│  └─────────────────────────────────────────────────────────────────────────┘ │
-│                                                                             │
-│  ┌─── Physical Layer ─────────────────────────────────────────────────────┐ │
-│  │  3× Control Plane Nodes │ 3-5× Worker Nodes │ 3× Storage Nodes       │ │
-│  │  Network: Mgmt + Cluster + Storage + External VLANs                   │ │
-│  │  OS: Ubuntu 24.04 LTS / RHEL 9                                        │ │
-│  └───────────────────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────────────┘
+<pre><code class="language-mermaid">
+graph TB
+    subgraph EA["🌐 EXTERNAL ACCESS"]
+        Users["👤 Users"] --> DNS["DNS"]
+        DNS --> MetalLB["MetalLB VIP"]
+        MetalLB --> NGINX["NGINX Ingress"]
+        NGINX --> Gateway["Istio Gateway<br/>+ cert-manager TLS"]
+    end
+
+    subgraph K8S["☸ KUBERNETES HA CLUSTER — 3 Control Plane + N Workers"]
+        subgraph MESH["🔒 Service Mesh — Istio"]
+            mTLS["mTLS"] ~~~ TM["Traffic Mgmt"] ~~~ CB["Circuit Breaker"] ~~~ CD["Canary Deploy"]
+        end
+
+        subgraph MS["📦 Microservices"]
+            APIGW["API Gateway"]
+            AuthSvc["Auth Service"]
+            UserSvc["User Service"]
+            OrderSvc["Order Service"]
+            PaySvc["Payment Service"]
+            NotifSvc["Notification Service"]
+        end
+
+        subgraph DL["💾 Data Layer"]
+            PG["PostgreSQL HA<br/>CloudNativePG + PgBouncer"]
+            Redis["Redis HA<br/>Sentinel / Cluster"]
+            RMQ["RabbitMQ HA<br/>Quorum Queues"]
+            Kafka["Kafka<br/>Strimzi KRaft"]
+        end
+
+        subgraph GO["🔄 GitOps & Secrets"]
+            ArgoCD["ArgoCD HA"]
+            Helm["Helm Charts"]
+            Vault["Vault HA + ESO"]
+            Kyverno["Kyverno Policies"]
+        end
+
+        subgraph OBS["📊 Observability"]
+            Prom["Prometheus HA + Thanos"]
+            Grafana["Grafana HA"]
+            Loki["Loki + Alloy"]
+            Tempo["Tempo + OTEL"]
+        end
+
+        subgraph SEC["🛡️ Security"]
+            RBAC["RBAC + OIDC<br/>Keycloak"]
+            Falco["Falco Runtime"]
+            Harbor["Trivy + Harbor"]
+            NP["NetworkPolicy<br/>Cilium"]
+        end
+
+        subgraph STOR["💿 Storage — Rook-Ceph"]
+            RBD["RBD Block<br/>→ Databases"]
+            CephFS["CephFS Shared<br/>→ Apps"]
+            RGW["RGW / S3 Object<br/>→ Backup"]
+        end
+
+        subgraph INFRA["⚙️ Infrastructure"]
+            CiliumCNI["Cilium CNI eBPF"]
+            MetalLBi["MetalLB"]
+            CoreDNS["CoreDNS"]
+            etcd["etcd HA"]
+            HAVIP["keepalived + HAProxy<br/>API Server VIP"]
+        end
+    end
+
+    subgraph PHYS["🖥️ Physical Layer"]
+        CP["3× Control Plane Nodes"] ~~~ WK["3-5× Worker Nodes"] ~~~ SN["3× Storage Nodes"]
+        NET["Network: Mgmt + Cluster + Storage + External VLANs<br/>OS: Ubuntu 24.04 LTS / RHEL 9"]
+    end
+
+    Gateway --> MESH
+    MESH --> MS
+    MS --> DL
+    K8S --> PHYS
 </code></pre>
 
 <h3 id="22-cac-thanh-phan-cot-loi">2.2. Các thành phần cốt lõi và vai trò</h3>
@@ -554,20 +577,32 @@ Istio:   Feature-rich → mTLS, traffic mirroring, canary, circuit breaker
 <p>Bạn cần tối thiểu các resources sau để thực hành toàn bộ khóa học:</p>
 
 <h4 id="option-a-vms-khuyen-nghi">Option A: VMs trên máy host mạnh (Khuyến nghị)</h4>
-<pre><code class="language-text">Host Machine: 64GB RAM, 16 cores, 500GB SSD
 
-VM Layout:
-┌─────────────────────────────────────────────────────────┐
-│  master1: 4 vCPU, 8GB RAM, 50GB disk (Control Plane 1) │
-│  master2: 4 vCPU, 8GB RAM, 50GB disk (Control Plane 2) │
-│  master3: 4 vCPU, 8GB RAM, 50GB disk (Control Plane 3) │
-│  worker1: 4 vCPU, 8GB RAM, 50GB disk + 100GB raw disk  │
-│  worker2: 4 vCPU, 8GB RAM, 50GB disk + 100GB raw disk  │
-│  worker3: 4 vCPU, 8GB RAM, 50GB disk + 100GB raw disk  │
-│  lb:      2 vCPU, 2GB RAM, 20GB disk (HAProxy/keepalived)│
-└─────────────────────────────────────────────────────────┘
-Total: ~26 vCPU, 58GB RAM, 520GB disk
+<pre><code class="language-mermaid">
+block-beta
+    columns 3
+    block:HOST["🖥️ Host Machine: 64GB RAM, 16 cores, 500GB SSD"]:3
+        block:CP["Control Plane Nodes"]:1
+            m1["master1<br/>4 vCPU · 8GB RAM<br/>50GB disk"]
+            m2["master2<br/>4 vCPU · 8GB RAM<br/>50GB disk"]
+            m3["master3<br/>4 vCPU · 8GB RAM<br/>50GB disk"]
+        end
+        block:WK["Worker Nodes"]:1
+            w1["worker1<br/>4 vCPU · 8GB RAM<br/>50GB + 100GB raw"]
+            w2["worker2<br/>4 vCPU · 8GB RAM<br/>50GB + 100GB raw"]
+            w3["worker3<br/>4 vCPU · 8GB RAM<br/>50GB + 100GB raw"]
+        end
+        block:LB["Load Balancer"]:1
+            lb["lb<br/>2 vCPU · 2GB RAM<br/>20GB disk<br/>HAProxy + keepalived"]
+        end
+    end
+
+    style CP fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style WK fill:#1e3a5f,stroke:#10b981,color:#e2e8f0
+    style LB fill:#1e3a5f,stroke:#f59e0b,color:#e2e8f0
 </code></pre>
+
+<p><strong>Total:</strong> ~26 vCPU, 58GB RAM, 520GB disk</p>
 
 <h4 id="option-b-cloud-vms">Option B: Cloud VMs (AWS/GCP/Hetzner)</h4>
 <pre><code class="language-text">7 VMs tương đương cấu hình bên trên
@@ -582,23 +617,34 @@ Khuyến nghị: Hetzner Dedicated hoặc Proxmox VE
 </code></pre>
 
 <h3 id="42-network-layout-cho-lab">4.2. Network Layout cho Lab</h3>
-<pre><code class="language-text">
-Network Topology:
-┌────────────────────────────────────────────────────────────┐
-│  Management Network: 192.168.1.0/24                        │
-│  ├─ master1: 192.168.1.11                                  │
-│  ├─ master2: 192.168.1.12                                  │
-│  ├─ master3: 192.168.1.13                                  │
-│  ├─ worker1: 192.168.1.21                                  │
-│  ├─ worker2: 192.168.1.22                                  │
-│  ├─ worker3: 192.168.1.23                                  │
-│  ├─ lb:      192.168.1.10                                  │
-│  └─ VIP:     192.168.1.100 (K8s API Server)                │
-│                                                              │
-│  Pod Network:     10.244.0.0/16 (Cilium)                   │
-│  Service Network: 10.96.0.0/12  (ClusterIP)                │
-│  MetalLB Pool:    192.168.1.200-192.168.1.250              │
-└────────────────────────────────────────────────────────────┘
+
+<pre><code class="language-mermaid">
+graph TB
+    subgraph MGMT["🌐 Management Network — 192.168.1.0/24"]
+        direction LR
+        lb["lb<br/>192.168.1.10"]
+        m1["master1<br/>192.168.1.11"]
+        m2["master2<br/>192.168.1.12"]
+        m3["master3<br/>192.168.1.13"]
+        w1["worker1<br/>192.168.1.21"]
+        w2["worker2<br/>192.168.1.22"]
+        w3["worker3<br/>192.168.1.23"]
+        VIP["🔷 VIP<br/>192.168.1.100<br/>K8s API Server"]
+    end
+
+    subgraph INTERNAL["🔒 Internal Networks"]
+        POD["Pod Network<br/>10.244.0.0/16<br/>Cilium CNI"]
+        SVC["Service Network<br/>10.96.0.0/12<br/>ClusterIP"]
+        LB_POOL["MetalLB Pool<br/>192.168.1.200–250<br/>External Services"]
+    end
+
+    VIP --> m1 & m2 & m3
+    lb --> VIP
+
+    style VIP fill:#dc2626,stroke:#fca5a5,color:#fff
+    style POD fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style SVC fill:#1e3a5f,stroke:#10b981,color:#e2e8f0
+    style LB_POOL fill:#1e3a5f,stroke:#f59e0b,color:#e2e8f0
 </code></pre>
 
 <h3 id="43-tao-vms-voi-vagrant">4.3. Tạo VMs nhanh với Vagrant (Optional)</h3>
@@ -715,43 +761,34 @@ EOF
 <h2 id="phan-5-lo-trinh-hoc-tap">PHẦN 5: LỘ TRÌNH HỌC TẬP 50 BÀI</h2>
 
 <h3 id="51-dependency-graph">5.1. Dependency Graph giữa các phần</h3>
-<pre><code>
-Phase 1: Foundation (Bài 1-4)     ─── Chuẩn bị hạ tầng cơ bản
-    │
-    ▼
-Phase 2: K8s HA (Bài 5-10)       ─── Dựng Kubernetes HA cluster
-    │
-    ├──────────────┬──────────────┐
-    ▼              ▼              ▼
-Phase 3:       Phase 5:       Phase 6:
-Rook-Ceph      MQ HA          Istio
-(Bài 11-15)    (Bài 21-23)    (Bài 24-27)
-    │              │              │
-    ▼              │              │
-Phase 4:           │              │
-PostgreSQL HA      │              │
-(Bài 16-20)        │              │
-    │              │              │
-    └──────────────┴──────────────┘
-                   │
-                   ▼
-    Phase 7: GitOps (Bài 28-31)    ─── ArgoCD + Helm + Vault
-                   │
-            ┌──────┴──────┐
-            ▼             ▼
-    Phase 8:          Phase 9:
-    Observability     Security
-    (Bài 32-35)       (Bài 36-39)
-            │             │
-            └──────┬──────┘
-                   ▼
-    Phase 10: Deployment Patterns (Bài 40-43)
-                   │
-                   ▼
-    Phase 11: DR & Chaos (Bài 44-45)
-                   │
-                   ▼
-    Phase 12: Operations + Capstone (Bài 46-50)
+
+<pre><code class="language-mermaid">
+graph TD
+    P1["📐 Phase 1: Foundation<br/>Bài 1-4<br/>Chuẩn bị hạ tầng cơ bản"]
+    P2["☸ Phase 2: K8s HA<br/>Bài 5-10<br/>Dựng Kubernetes HA cluster"]
+    P3["💿 Phase 3: Rook-Ceph<br/>Bài 11-15<br/>Distributed Storage"]
+    P4["🐘 Phase 4: PostgreSQL HA<br/>Bài 16-20"]
+    P5["📨 Phase 5: MQ HA<br/>Bài 21-23<br/>RabbitMQ · Kafka · Redis"]
+    P6["🔗 Phase 6: Istio<br/>Bài 24-27<br/>Service Mesh"]
+    P7["🔄 Phase 7: GitOps<br/>Bài 28-31<br/>ArgoCD + Helm + Vault"]
+    P8["📊 Phase 8: Observability<br/>Bài 32-35"]
+    P9["🛡️ Phase 9: Security<br/>Bài 36-39"]
+    P10["🚀 Phase 10: Deployment Patterns<br/>Bài 40-43"]
+    P11["💥 Phase 11: DR & Chaos<br/>Bài 44-45"]
+    P12["🏭 Phase 12: Operations + Capstone<br/>Bài 46-50"]
+
+    P1 --> P2
+    P2 --> P3 & P5 & P6
+    P3 --> P4
+    P4 & P5 & P6 --> P7
+    P7 --> P8 & P9
+    P8 & P9 --> P10
+    P10 --> P11
+    P11 --> P12
+
+    style P1 fill:#1e40af,stroke:#3b82f6,color:#fff
+    style P2 fill:#1e40af,stroke:#3b82f6,color:#fff
+    style P12 fill:#15803d,stroke:#22c55e,color:#fff
 </code></pre>
 
 <h3 id="52-thoi-gian-du-kien">5.2. Thời gian dự kiến</h3>

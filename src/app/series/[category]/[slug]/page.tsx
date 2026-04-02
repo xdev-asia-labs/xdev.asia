@@ -1,7 +1,9 @@
+import BookmarkButton from "@/components/BookmarkButton";
 import ContentRenderer from "@/components/ContentRenderer";
 import GiscusComments from "@/components/GiscusComments";
 import { IconBook, IconChevronRight, IconClock, IconEye, IconStar } from "@/components/Icons";
 import { SeriesProgressBar, LessonCheckbox } from "@/components/SeriesProgress";
+import ShareButtons from "@/components/ShareButtons";
 import TableOfContents from "@/components/TableOfContents";
 import { getAuthorById, getSeries, getSeriesCategories, getSeriesSlugsWithCategory } from "@/lib/data";
 import { getValidImageUrl } from "@/utils/image";
@@ -149,6 +151,12 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                                         <span>{series.duration_hours} giờ</span>
                                     </div>
                                 )}
+                                {series.view_count > 0 && (
+                                    <div className="flex items-center gap-1.5">
+                                        <IconEye size={15} className="text-zinc-400" />
+                                        <span>{series.view_count.toLocaleString("vi-VN")} lượt xem</span>
+                                    </div>
+                                )}
                                 {series.enrollment_count > 0 && (
                                     <div className="flex items-center gap-1.5">
                                         <IconEye size={15} className="text-zinc-400" />
@@ -251,6 +259,18 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                         {series.content && (
                             <ContentRenderer html={series.content} />
                         )}
+
+                        {/* Share & Bookmark */}
+                        <div className="mt-10 pt-8 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-4">
+                            <ShareButtons title={series.title} url={`${SITE_URL}/series/${category}/${slug}/`} />
+                            <BookmarkButton
+                                slug={`series-${series.slug}`}
+                                title={series.title}
+                                excerpt={series.description}
+                                featured_image={series.featured_image}
+                                category={cat?.name || null}
+                            />
+                        </div>
 
                         {/* Author Profile Card */}
                         {fullAuthor && (

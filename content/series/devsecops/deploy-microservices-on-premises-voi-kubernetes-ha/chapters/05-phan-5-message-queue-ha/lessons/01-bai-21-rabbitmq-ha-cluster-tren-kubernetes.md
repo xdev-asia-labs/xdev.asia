@@ -31,51 +31,62 @@ course:
 <h2 id="phan-1-kien-truc">PHẦN 1: KIẾN TRÚC RABBITMQ CLUSTER</h2>
 
 <h3 id="11-overview">1.1. Messaging Patterns</h3>
-<pre><code>
-RabbitMQ Messaging Patterns:
+```mermaid
+graph LR
+    subgraph P2P["1️⃣ Point-to-Point"]
+        PP["Producer"] --> Q1["Queue"] --> C1A["Consumer"]
+        Q1 --> C1B["Consumer"]
+    end
 
-1. Point-to-Point (Work Queue):
-   Producer ──► [Queue] ──► Consumer
-                        ──► Consumer  (round-robin)
+    subgraph FANOUT["2️⃣ Pub/Sub Fanout"]
+        FP["Producer"] --> EX1["Exchange"]
+        EX1 --> FQ1["Queue1"] --> FC1["Consumer1"]
+        EX1 --> FQ2["Queue2"] --> FC2["Consumer2"]
+    end
 
-2. Publish/Subscribe (Fanout):
-   Producer ──► [Exchange] ──► [Queue1] ──► Consumer1
-                           ──► [Queue2] ──► Consumer2
+    subgraph ROUTING["3️⃣ Routing"]
+        RP["Producer"] -->|"routing.key"| EX2["Exchange"]
+        EX2 -->|"match"| RQ["Queue"] --> RC["Consumer"]
+    end
 
-3. Routing (Direct/Topic):
-   Producer ──► [Exchange] ──routing.key──► [Queue] ──► Consumer
-
-4. RPC Pattern:
-   Client ──► [Request Queue] ──► Server
-   Client ◄── [Reply Queue]   ◄── Server
-</code></pre>
+    style P2P fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style FANOUT fill:#0f172a,stroke:#7c3aed,color:#e2e8f0
+    style ROUTING fill:#0f172a,stroke:#15803d,color:#e2e8f0
+```
 
 <h3 id="12-cluster-arch">1.2. RabbitMQ Cluster Architecture</h3>
-<pre><code>
-RabbitMQ 3-Node Cluster (Quorum Queues):
+```mermaid
+graph TD
+    SVC["🌐 K8s Service ClusterIP<br/>rabbitmq.messaging:5672"]
 
-┌─────────────────────────────────────────────────┐
-│                 K8s Service (ClusterIP)          │
-│                 rabbitmq.messaging:5672          │
-└──────────┬──────────┬──────────┬────────────────┘
-           │          │          │
-    ┌──────▼──┐ ┌─────▼───┐ ┌───▼──────┐
-    │ rabbit-0│ │rabbit-1 │ │ rabbit-2 │
-    │ Leader  │ │Follower │ │ Follower │
-    │(Quorum) │ │(Quorum) │ │(Quorum)  │
-    │         │ │         │ │          │
-    │ Mnesia  │ │ Mnesia  │ │ Mnesia   │
-    │ Cluster │◄►│Cluster │◄►│ Cluster │
-    └────┬────┘ └────┬────┘ └────┬─────┘
-         │           │           │
-    ┌────▼────┐ ┌────▼────┐ ┌────▼─────┐
-    │Ceph PVC │ │Ceph PVC │ │ Ceph PVC │
-    │ 20Gi    │ │ 20Gi    │ │ 20Gi     │
-    └─────────┘ └─────────┘ └──────────┘
+    SVC --> R0
+    SVC --> R1
+    SVC --> R2
 
-Quorum Queue: Raft consensus → data replicated across majority
-Classic Queue: Only on 1 node (mirrored = deprecated)
-</code></pre>
+    subgraph CLUSTER["🐰 RabbitMQ Quorum Cluster"]
+        R0["🟢 rabbit-0<br/>Leader<br/>Mnesia"]
+        R1["🔵 rabbit-1<br/>Follower<br/>Mnesia"]
+        R2["🔵 rabbit-2<br/>Follower<br/>Mnesia"]
+        R0 <-->|"Raft replication"| R1
+        R1 <-->|"Raft replication"| R2
+    end
+
+    R0 --> PVC0["💾 Ceph PVC 20Gi"]
+    R1 --> PVC1["💾 Ceph PVC 20Gi"]
+    R2 --> PVC2["💾 Ceph PVC 20Gi"]
+
+    style SVC fill:#7c3aed,stroke:#a78bfa,color:#e2e8f0
+    style CLUSTER fill:#0f172a,stroke:#3b82f6,color:#e2e8f0
+    style R0 fill:#15803d,stroke:#22c55e,color:#e2e8f0
+    style R1 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style R2 fill:#1e3a5f,stroke:#3b82f6,color:#e2e8f0
+    style PVC0 fill:#1e293b,stroke:#475569,color:#e2e8f0
+    style PVC1 fill:#1e293b,stroke:#475569,color:#e2e8f0
+    style PVC2 fill:#1e293b,stroke:#475569,color:#e2e8f0
+```
+
+> Quorum Queue: Raft consensus → data replicated across majority
+> Classic Queue: Only on 1 node (mirrored = deprecated)
 
 <!--kg-card-begin: html-->
 <table>
