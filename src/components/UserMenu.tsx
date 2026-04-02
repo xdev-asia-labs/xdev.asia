@@ -11,6 +11,7 @@ export default function UserMenu() {
     const { user, loading, signOut, openLoginModal } = useAuth();
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const { subscribed, toggleSubscription } = useSubscription();
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
@@ -41,9 +42,6 @@ export default function UserMenu() {
             </button>
         );
     }
-
-    // Logged in → show avatar dropdown
-    const { subscribed, toggleSubscription } = useSubscription();
 
     return (
         <div className="relative" ref={menuRef}>
