@@ -218,16 +218,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             {/* Featured Image */}
             {post.featured_image && (
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4">
-                    <div className="rounded-2xl overflow-hidden shadow-lg border border-zinc-200">
-                        <Image
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+                    <div className="rounded-2xl shadow-lg border border-zinc-200 bg-surface-50 p-1.5">
+                        <img
                             src={getValidImageUrl(post.featured_image, post.slug)}
                             alt={post.title}
-                            width={1200}
-                            height={630}
-                            style={{ height: "auto" }}
-                            className="w-full h-auto aspect-2/1 object-cover"
-                            priority
+                            className="w-full h-auto rounded-xl"
+                            loading="eager"
                         />
                     </div>
                 </div>

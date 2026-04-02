@@ -2,6 +2,9 @@
   "site_name": "xDev Asia",
   "site_description": "Blog cá nhân về lập trình, AI, DevOps và công nghệ",
   "site_tagline": "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế",
+  "profile_name": "Duy Tran",
+  "profile_label": "Personal Tech Blog · 2026",
+  "profile_url": "https://xdev.asia/gioi-thieu/",
   "meta_keywords": "lập trình, khóa học, AI, LLM, machine learning, web development, devops",
   "site_url": "https://xdev.asia",
   "site_email": "",
@@ -13,5 +16,8 @@
   "github_url": "https://github.com/xdev-asia-labs",
   "youtube_url": "",
   "tiktok_url": "",
-  "linkedin_url": "https://www.linkedin.com/in/duydev/"
+  "linkedin_url": "https://www.linkedin.com/in/duydev/",
+  "contact_github_url": "https://github.com/xdev-asia-labs",
+  "contact_linkedin_url": "https://www.linkedin.com/in/duydev/",
+  "contact_facebook_url": "https://www.facebook.com/duydev"
 }

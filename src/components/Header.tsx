@@ -168,7 +168,7 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                     </div>
 
                     {/* Mobile */}
-                    <div className="md:hidden flex items-center gap-0.5">
+                    <div className="flex md:hidden items-center gap-0.5">
                         <DarkModeToggle />
                         <Link
                             href="/search/"
@@ -195,7 +195,7 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                 className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${mobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
                     }`}
             >
-                <div className="border-t border-zinc-100 bg-white/95 backdrop-blur-lg px-4 py-3 space-y-0.5">
+                <div className="border-t border-zinc-100 bg-white dark:bg-zinc-900 backdrop-blur-lg px-4 py-3 space-y-0.5">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}

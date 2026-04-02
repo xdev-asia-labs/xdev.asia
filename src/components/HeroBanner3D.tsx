@@ -1,11 +1,11 @@
-"use client";
-
 import Link from "next/link";
 import { IconArrowRight, IconBook, IconCode, IconRocket } from "./Icons";
 
 interface HeroBannerProps {
     siteName: string;
     tagline: string;
+    profileName?: string;
+    profileLabel?: string;
     postCount: number;
     seriesCount: number;
     projectCount: number;
@@ -13,6 +13,8 @@ interface HeroBannerProps {
 
 export default function HeroBanner2026({
     tagline,
+    profileName = "Duy Tran",
+    profileLabel = "Personal Tech Blog · 2026",
     postCount,
     seriesCount,
     projectCount,
@@ -41,14 +43,14 @@ export default function HeroBanner2026({
                     <div className="mb-7">
                         <span className="hero-status-badge">
                             <span className="hero-status-dot" />
-                            Personal Tech Blog · 2026
+                            {profileLabel}
                         </span>
                     </div>
 
                     {/* Editorial headline */}
                     <h1 className="text-[2.75rem] sm:text-5xl lg:text-[3.75rem] font-black leading-[1.06] tracking-[-0.04em] text-zinc-900">
                         Xin chào, mình là{" "}
-                        <span className="gradient-text">Duy</span>
+                        <span className="gradient-text">{profileName}</span>
                     </h1>
 
                     <p className="mt-5 text-base md:text-lg text-zinc-500 leading-relaxed max-w-xl">

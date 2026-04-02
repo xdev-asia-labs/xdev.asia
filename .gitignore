@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 claude-code-code
+.venv-*
+scripts/generate-ai-banners.py
+scripts/generate-remaining-banners.py

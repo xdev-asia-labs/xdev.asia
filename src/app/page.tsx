@@ -65,6 +65,8 @@ export default function Home() {
         .sort((a, b) => (b.enrollment_count + b.view_count) - (a.enrollment_count + a.view_count))
         .slice(0, 4);
     const settings = getSettings();
+    const profileName = settings.profile_name || "Duy Tran";
+    const profileUrl = settings.profile_url || `${SITE_URL}/gioi-thieu/`;
     const featuredRepos = showcaseRepos.slice(0, 3);
 
     const featuredPost = posts[0];
@@ -79,8 +81,8 @@ export default function Home() {
         inLanguage: "vi",
         publisher: {
             "@type": "Person",
-            name: "Duy Tran",
-            url: `${SITE_URL}/gioi-thieu/`,
+            name: profileName,
+            url: profileUrl,
         },
         potentialAction: {
             "@type": "SearchAction",
@@ -99,6 +101,8 @@ export default function Home() {
             <HeroBanner3D
                 siteName={settings.site_name || "xDev"}
                 tagline={settings.site_tagline || settings.site_description || "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế"}
+                profileName={settings.profile_name || "Duy Tran"}
+                profileLabel={settings.profile_label || "Personal Tech Blog · 2026"}
                 postCount={allPosts.length}
                 seriesCount={allSeriesItems.length}
                 projectCount={showcaseApps.length + showcaseRepos.length}

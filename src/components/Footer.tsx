@@ -3,18 +3,25 @@ import Image from "next/image";
 import { getSettings } from "@/lib/data";
 import { IconGitHub, IconFacebook, IconYouTube, IconTikTok, IconLinkedIn } from "./Icons";
 import NewsletterForm from "./NewsletterForm";
-import SubscribeNewsletter from "./SubscribeNewsletter";
 
 export default function Footer() {
     const settings = getSettings();
     const siteName = settings.site_name || "xDev";
+    const socialGithub = settings.social_github_url || settings.github_url;
+    const socialFacebook = settings.social_facebook_url || settings.facebook_url;
+    const socialYoutube = settings.social_youtube_url || settings.youtube_url;
+    const socialTiktok = settings.social_tiktok_url || settings.tiktok_url;
+    const socialLinkedin = settings.social_linkedin_url || settings.linkedin_url;
+    const contactGithub = settings.contact_github_url || settings.github_url;
+    const contactLinkedin = settings.contact_linkedin_url || settings.linkedin_url;
+    const contactFacebook = settings.contact_facebook_url || settings.facebook_url;
 
     const socialLinks = [
-        { url: settings.github_url, icon: IconGitHub, label: "GitHub" },
-        { url: settings.facebook_url, icon: IconFacebook, label: "Facebook" },
-        { url: settings.youtube_url, icon: IconYouTube, label: "YouTube" },
-        { url: settings.tiktok_url, icon: IconTikTok, label: "TikTok" },
-        { url: settings.linkedin_url, icon: IconLinkedIn, label: "LinkedIn" },
+        { url: socialGithub, icon: IconGitHub, label: "GitHub" },
+        { url: socialFacebook, icon: IconFacebook, label: "Facebook" },
+        { url: socialYoutube, icon: IconYouTube, label: "YouTube" },
+        { url: socialTiktok, icon: IconTikTok, label: "TikTok" },
+        { url: socialLinkedin, icon: IconLinkedIn, label: "LinkedIn" },
     ].filter((s) => s.url);
 
     return (
@@ -50,8 +57,6 @@ export default function Footer() {
                                 </a>
                             ))}
                         </div>
-
-                        <SubscribeNewsletter />
                     </div>
 
                     {/* Navigation */}
@@ -82,9 +87,19 @@ export default function Footer() {
                                 {settings.site_email}
                             </a>
                         )}
-                        {settings.github_url && (
-                            <a href={settings.github_url} target="_blank" rel="noopener noreferrer" className="text-sm block mb-2.5 transition-colors">
-                                GitHub / {settings.github_url.split("/").pop()}
+                        {contactGithub && (
+                            <a href={contactGithub} target="_blank" rel="noopener noreferrer" className="text-sm block mb-2.5 transition-colors">
+                                GitHub / {contactGithub.split("/").pop()}
+                            </a>
+                        )}
+                        {contactLinkedin && (
+                            <a href={contactLinkedin} target="_blank" rel="noopener noreferrer" className="text-sm block mb-2.5 transition-colors">
+                                LinkedIn
+                            </a>
+                        )}
+                        {contactFacebook && (
+                            <a href={contactFacebook} target="_blank" rel="noopener noreferrer" className="text-sm block mb-2.5 transition-colors">
+                                Facebook
                             </a>
                         )}
                     </div>
