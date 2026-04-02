@@ -15,12 +15,14 @@ export default function GiscusComments({ term }: GiscusCommentsProps) {
 
         const script = document.createElement("script");
         script.src = "https://giscus.app/client.js";
-        // TODO: Replace these with your actual Giscus config from https://giscus.app/
         script.setAttribute("data-repo", "xdev-asia-labs/xdev.asia");
         script.setAttribute("data-repo-id", "R_kgDORyIyhw");
         script.setAttribute("data-category", "Comments");
         script.setAttribute("data-category-id", "DIC_kwDORyIyh84C50SN");
-        script.setAttribute("data-mapping", "pathname");
+        script.setAttribute("data-mapping", term ? "specific" : "pathname");
+        if (term) {
+            script.setAttribute("data-term", term);
+        }
         script.setAttribute("data-strict", "0");
         script.setAttribute("data-reactions-enabled", "1");
         script.setAttribute("data-emit-metadata", "1");
@@ -30,14 +32,12 @@ export default function GiscusComments({ term }: GiscusCommentsProps) {
         script.crossOrigin = "anonymous";
         script.async = true;
 
-        // Check dark mode
         const isDark = document.documentElement.classList.contains("dark");
         script.setAttribute("data-theme", isDark ? "dark_dimmed" : "light");
 
         ref.current.appendChild(script);
     }, [term]);
 
-    // Re-set theme when dark mode changes
     useEffect(() => {
         const observer = new MutationObserver(() => {
             const iframe = document.querySelector<HTMLIFrameElement>("iframe.giscus-frame");

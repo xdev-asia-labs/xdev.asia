@@ -6,7 +6,7 @@ excerpt: >-
   OpenVPN là giải&nbsp;pháp VPN mã nguồn&nbsp;mở, bảo mật cao, thường
   dùng&nbsp;để truy cập hệ&nbsp;thống nội bộ&nbsp;từ xa (dev, staging,
   production)&nbsp;thông qua kênh mã hóa.&nbsp;Bài viết này&nbsp;...
-featured_image: uploads/2025/11/banner-671c6058.jpeg
+featured_image: /images/blog/openvpn-ubuntu-featured.svg
 type: blog
 reading_time: 5
 view_count: 1

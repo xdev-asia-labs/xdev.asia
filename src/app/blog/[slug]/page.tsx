@@ -1,4 +1,5 @@
 import BackToTop from "@/components/BackToTop";
+import BookmarkButton from "@/components/BookmarkButton";
 import ContentRenderer from "@/components/ContentRenderer";
 import GiscusComments from "@/components/GiscusComments";
 import { IconChevronRight, IconClock } from "@/components/Icons";
@@ -82,6 +83,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     const fullAuthor = getAuthorById(post.author.id);
 
+    const canonicalUrl = `${SITE_URL}/blog/${slug}/`;
     const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
     const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
 
@@ -92,20 +94,29 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         description: post.excerpt || post.title,
         image: imageUrl,
         datePublished: post.published_at || post.created_at,
+        dateModified: post.published_at || post.created_at,
         author: {
             "@type": "Person",
             name: post.author.name,
+            ...(fullAuthor?.avatar ? { image: fullAuthor.avatar.startsWith("http") ? fullAuthor.avatar : `${SITE_URL}${fullAuthor.avatar}` } : {}),
             url: `${SITE_URL}/gioi-thieu/`,
         },
         publisher: {
             "@type": "Organization",
             name: "xDev Asia",
             url: SITE_URL,
+            logo: {
+                "@type": "ImageObject",
+                url: `${SITE_URL}/images/brand/logo.png`,
+            },
         },
         mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `${SITE_URL}/blog/${slug}/`,
+            "@id": canonicalUrl,
         },
+        ...(post.category ? { articleSection: post.category.name } : {}),
+        inLanguage: "vi",
+        ...(post.tags.length > 0 ? { keywords: post.tags.map((t) => t.name).join(", ") } : {}),
     };
 
     const breadcrumbJsonLd = {
@@ -114,7 +125,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         itemListElement: [
             { "@type": "ListItem", position: 1, name: "Trang chủ", item: SITE_URL },
             { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog/` },
-            { "@type": "ListItem", position: 3, name: post.title, item: `${SITE_URL}/blog/${slug}/` },
+            { "@type": "ListItem", position: 3, name: post.title, item: canonicalUrl },
         ],
     };
 
@@ -158,7 +169,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     )}
 
                     <div className="flex flex-wrap items-center gap-5 text-sm">
-                        <div className="flex items-center gap-3">
+                        <Link href="/gioi-thieu/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                             {post.author.avatar ? (
                                 <Image
                                     src={getValidImageUrl(post.author.avatar, post.author.name)}
@@ -190,7 +201,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
 
                     {post.tags.length > 0 && (
@@ -232,14 +243,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                         <ContentRenderer html={post.content} />
 
-                        {/* Share buttons */}
-                        <div className="mt-10 pt-8 border-t border-zinc-100">
+                        {/* Share & Bookmark */}
+                        <div className="mt-10 pt-8 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-4">
                             <ShareButtons title={post.title} url={`${SITE_URL}/blog/${slug}/`} />
+                            <BookmarkButton
+                                slug={post.slug}
+                                title={post.title}
+                                excerpt={post.excerpt}
+                                featured_image={post.featured_image}
+                                category={post.category?.name || null}
+                            />
                         </div>
 
                         {/* Author Profile Card */}
                         {fullAuthor && (
-                            <div className="mt-16 p-8 rounded-2xl glass-card">
+                            <Link href="/gioi-thieu/" className="block mt-16 p-8 rounded-2xl glass-card hover:shadow-lg transition-shadow">
                                 <div className="flex flex-col sm:flex-row items-start gap-5">
                                     {fullAuthor.avatar ? (
                                         <Image
@@ -263,7 +281,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         )}
 
                         {/* Post Navigation */}
@@ -355,7 +373,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         )}
 
                         {/* Giscus Comments */}
-                        <GiscusComments term={slug} />
+                        <GiscusComments term={`/blog/${slug}/`} />
                     </article>
 
                     {/* Sidebar TOC — desktop only */}

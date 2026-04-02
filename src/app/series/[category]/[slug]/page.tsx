@@ -1,4 +1,5 @@
 import ContentRenderer from "@/components/ContentRenderer";
+import GiscusComments from "@/components/GiscusComments";
 import { IconBook, IconChevronRight, IconClock, IconEye, IconStar } from "@/components/Icons";
 import { SeriesProgressBar, LessonCheckbox } from "@/components/SeriesProgress";
 import TableOfContents from "@/components/TableOfContents";
@@ -120,12 +121,22 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
 
                             {/* Stats row */}
                             <div className="flex flex-wrap items-center gap-5 text-sm text-zinc-500 mb-6">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white text-[10px] font-bold">
-                                        {series.author.name.charAt(0)}
-                                    </div>
+                                <Link href="/gioi-thieu/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                    {fullAuthor?.avatar ? (
+                                        <Image
+                                            src={getValidImageUrl(fullAuthor.avatar, fullAuthor.name)}
+                                            alt={fullAuthor.name}
+                                            width={28}
+                                            height={28}
+                                            className="w-7 h-7 rounded-full object-cover ring-1 ring-zinc-200"
+                                        />
+                                    ) : (
+                                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white text-[10px] font-bold">
+                                            {series.author.name.charAt(0)}
+                                        </div>
+                                    )}
                                     <span className="text-zinc-600">{series.author.name}</span>
-                                </div>
+                                </Link>
                                 {displayLessons > 0 && (
                                     <div className="flex items-center gap-1.5">
                                         <IconBook size={15} className="text-zinc-400" />
@@ -243,7 +254,7 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
 
                         {/* Author Profile Card */}
                         {fullAuthor && (
-                            <div className="mt-16 p-8 rounded-2xl glass-card" style={{ transform: "none" }}>
+                            <Link href="/gioi-thieu/" className="block mt-16 p-8 rounded-2xl glass-card hover:shadow-lg transition-shadow" style={{ transform: "none" }}>
                                 <div className="flex flex-col sm:flex-row items-start gap-5">
                                     {fullAuthor.avatar ? (
                                         <Image
@@ -260,14 +271,14 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                                         </div>
                                     )}
                                     <div className="min-w-0">
-                                        <div className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-1">Giảng viên</div>
+                                        <div className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-1">Tác giả</div>
                                         <h3 className="text-xl font-extrabold text-zinc-900 mb-2">{fullAuthor.name}</h3>
                                         {fullAuthor.bio && (
                                             <p className="text-sm text-zinc-500 leading-relaxed">{fullAuthor.bio}</p>
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         )}
 
                         {/* Reviews */}
@@ -315,6 +326,9 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                                 </div>
                             </section>
                         )}
+
+                        {/* Comments — Giscus (GitHub Discussions) */}
+                        <GiscusComments term={`/series/${series.category?.slug || "uncategorized"}/${series.slug}/`} />
                     </article>
 
                     {/* Sidebar — Table of Contents */}

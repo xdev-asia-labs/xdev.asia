@@ -8,6 +8,9 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://xdev.asia/sitemap.xml",
+    sitemap: [
+      "https://xdev.asia/sitemap.xml",
+      "https://xdev.asia/news-sitemap.xml",
+    ],
   };
 }

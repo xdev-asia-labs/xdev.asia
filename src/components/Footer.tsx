@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getSettings } from "@/lib/data";
 import { IconGitHub, IconFacebook, IconYouTube, IconTikTok, IconLinkedIn } from "./Icons";
 import NewsletterForm from "./NewsletterForm";
+import SubscribeNewsletter from "./SubscribeNewsletter";
 
 export default function Footer() {
     const settings = getSettings();
@@ -49,6 +50,8 @@ export default function Footer() {
                                 </a>
                             ))}
                         </div>
+
+                        <SubscribeNewsletter />
                     </div>
 
                     {/* Navigation */}
@@ -59,6 +62,7 @@ export default function Footer() {
                                 { href: "/blog/", label: "Blog" },
                                 { href: "/series/", label: "Series" },
                                 { href: "/showcase/", label: "Showcase" },
+                                { href: "/bookmarks/", label: "Bookmark" },
                                 { href: "/search/", label: "Tìm kiếm" },
                             ].map((link) => (
                                 <li key={link.href}>

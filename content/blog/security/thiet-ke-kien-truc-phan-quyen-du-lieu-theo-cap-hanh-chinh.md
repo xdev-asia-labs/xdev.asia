@@ -6,7 +6,7 @@ excerpt: >-
   Bài viết này phân tích chi tiết kiến trúc phân quyền dữ liệu cho các hệ thống
   có cấu trúc phân cấp — từ chính phủ, tập đoàn đa quốc gia, đến chuỗi bán lẻ
   với hàng nghìn chi nhánh.
-featured_image: uploads/2025/12/1988eb7a-a655-4bc3-8719-1f53e79f1856-1-201-a-b5694f04.jpeg
+featured_image: /images/blog/phan-quyen-du-lieu-featured.svg
 type: blog
 reading_time: 37
 view_count: 0

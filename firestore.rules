@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── View Counts ──
+    // Anyone can read; anyone can increment (no auth required for page views)
+    match /viewCounts/{slug} {
+      allow read: if true;
+      allow write: if true; // Allow anonymous view counting
+    }
+
+    // ── Comments ──
+    match /comments/{postSlug}/messages/{messageId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasAll(['text', 'authorName', 'authorUid', 'createdAt'])
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 2000;
+      allow update, delete: if request.auth != null
+        && resource.data.authorUid == request.auth.uid;
+    }
+
+    // ── User Progress (private per user) ──
+    match /users/{uid}/progress/{seriesSlug} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // ── User Bookmarks (private per user) ──
+    match /users/{uid}/bookmarks/{postSlug} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // ── Reviews ──
+    match /reviews/{seriesSlug}/items/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+      allow update, delete: if request.auth != null
+        && resource.data.authorUid == request.auth.uid;
+    }
+
+    // ── Quiz Results (private per user) ──
+    match /quizResults/{uid}/attempts/{attemptId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // ── FCM Tokens (private per user) ──
+    match /fcmTokens/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

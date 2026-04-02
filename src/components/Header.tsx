@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket } from "./Icons";
 import DarkModeToggle from "./DarkModeToggle";
+import UserMenu from "./UserMenu";
 
 /* ────────────────────────────────────────
    Icon map – maps category.icon string → component
@@ -95,11 +96,10 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                                    isActive(link.href)
-                                        ? "text-brand-600 bg-brand-50"
-                                        : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
-                                }`}
+                                className={`relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive(link.href)
+                                    ? "text-brand-600 bg-brand-50"
+                                    : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
+                                    }`}
                             >
                                 {link.label}
                                 {isActive(link.href) && (
@@ -113,11 +113,10 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                             <div className="relative" ref={dropdownRef}>
                                 <button
                                     onClick={() => setTopicDropdownOpen(!topicDropdownOpen)}
-                                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                                        topicDropdownOpen
-                                            ? "text-brand-600 bg-brand-50"
-                                            : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
-                                    }`}
+                                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${topicDropdownOpen
+                                        ? "text-brand-600 bg-brand-50"
+                                        : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
+                                        }`}
                                 >
                                     Chủ đề
                                     <IconChevronDown
@@ -126,11 +125,10 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                                     />
                                 </button>
                                 <div
-                                    className={`absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl shadow-zinc-200/50 border border-zinc-100 py-1.5 z-50 transition-all duration-200 origin-top-right ${
-                                        topicDropdownOpen
-                                            ? "opacity-100 scale-100 translate-y-0"
-                                            : "opacity-0 scale-95 -translate-y-1 pointer-events-none"
-                                    }`}
+                                    className={`absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl shadow-zinc-200/50 border border-zinc-100 py-1.5 z-50 transition-all duration-200 origin-top-right ${topicDropdownOpen
+                                        ? "opacity-100 scale-100 translate-y-0"
+                                        : "opacity-0 scale-95 -translate-y-1 pointer-events-none"
+                                        }`}
                                 >
                                     {topics.map((topic) => (
                                         <Link
@@ -166,6 +164,7 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                             <IconSearch size={18} />
                         </Link>
                         <DarkModeToggle />
+                        <UserMenu />
                     </div>
 
                     {/* Mobile */}
@@ -178,6 +177,7 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                         >
                             <IconSearch size={20} />
                         </Link>
+                        <UserMenu />
                         <button
                             id="mobile-menu-toggle"
                             className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 transition-colors"
@@ -192,20 +192,18 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
 
             {/* Mobile Menu — slide down */}
             <div
-                className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${
-                    mobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
-                }`}
+                className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${mobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
+                    }`}
             >
                 <div className="border-t border-zinc-100 bg-white/95 backdrop-blur-lg px-4 py-3 space-y-0.5">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                                isActive(link.href)
-                                    ? "text-brand-600 bg-brand-50"
-                                    : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
-                            }`}
+                            className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive(link.href)
+                                ? "text-brand-600 bg-brand-50"
+                                : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
+                                }`}
                         >
                             {link.label}
                         </Link>

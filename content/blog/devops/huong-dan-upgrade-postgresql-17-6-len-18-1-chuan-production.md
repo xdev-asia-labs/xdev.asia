@@ -7,7 +7,7 @@ excerpt: >-
   với downtime tối thiểu. Bao gồm pg_upgrade, logical replication, rollback
   plan, và các best practices được cập nhật cho PostgreSQL 18 với Async I/O,
   Statistics Preservation, và pg_upgrade --swap mode mới.
-featured_image: uploads/2025/12/30473345-eec0-4174-9420-cf1a453c23a6-1-201-a-1b145395.jpeg
+featured_image: /images/blog/postgresql-upgrade-featured.svg
 type: blog
 reading_time: 15
 view_count: 0

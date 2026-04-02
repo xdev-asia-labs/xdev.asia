@@ -55,21 +55,23 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
 
                 {/* Meta */}
                 <div className="mt-3 pt-3 border-t border-zinc-100 flex items-center gap-2.5 text-xs text-zinc-400">
-                    {post.author?.avatar ? (
-                        <Image
-                            src={getValidImageUrl(post.author.avatar, post.author.name)}
-                            alt={post.author.name}
-                            width={20}
-                            height={20}
-                            style={{ height: "auto" }}
-                            className="rounded-full ring-1 ring-zinc-200 object-cover"
-                        />
-                    ) : (
-                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-1 ring-zinc-200 text-[9px] font-bold">
-                            {post.author.name.charAt(0)}
-                        </div>
-                    )}
-                    <span className="font-medium text-zinc-600 truncate">{post.author.name}</span>
+                    <Link href="/gioi-thieu/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+                        {post.author?.avatar ? (
+                            <Image
+                                src={getValidImageUrl(post.author.avatar, post.author.name)}
+                                alt={post.author.name}
+                                width={20}
+                                height={20}
+                                style={{ height: "auto" }}
+                                className="rounded-full ring-1 ring-zinc-200 object-cover"
+                            />
+                        ) : (
+                            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white ring-1 ring-zinc-200 text-[9px] font-bold">
+                                {post.author.name.charAt(0)}
+                            </div>
+                        )}
+                        <span className="font-medium text-zinc-600 truncate">{post.author.name}</span>
+                    </Link>
                     <span className="w-0.5 h-0.5 rounded-full bg-zinc-300 shrink-0" />
                     <time dateTime={post.published_at ?? undefined} className="shrink-0">
                         {formatDate(post.published_at)}
