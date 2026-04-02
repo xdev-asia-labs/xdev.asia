@@ -1,6 +1,6 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 const firebaseConfig = {
@@ -13,17 +13,25 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Prevent re-initialization in hot reload
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+// Firebase must only initialize on the client to avoid SSR prerender errors
+// All consumers (AuthProvider, hooks) already run inside useEffect or client components
+const isClient = typeof window !== "undefined";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const app: FirebaseApp = isClient
+  ? (getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0])
+  : (null as any);
 
 // Initialize App Check with reCAPTCHA Enterprise
-if (typeof window !== "undefined") {
+if (isClient) {
   initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider("6LdnUKIsAAAAALVreZcYlvh36eDpNKBkaJDJKGhq"),
     isTokenAutoRefreshEnabled: true,
   });
 }
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const auth: Auth = isClient ? getAuth(app) : (null as any);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const db: Firestore = isClient ? getFirestore(app) : (null as any);
 export default app;
