@@ -1,0 +1,65 @@
+{
+    "expo": {
+        "name": "xDev Asia",
+        "slug": "xdev-asia",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "automatic",
+        "scheme": "xdev",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#000000"
+        },
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "asia.xdev.mobile",
+            "buildNumber": "1",
+            "infoPlist": {
+                "UIBackgroundModes": [
+                    "fetch",
+                    "remote-notification"
+                ]
+            }
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#000000"
+            },
+            "package": "asia.xdev.mobile",
+            "versionCode": 1,
+            "permissions": [
+                "INTERNET",
+                "ACCESS_NETWORK_STATE"
+            ]
+        },
+        "web": {
+            "favicon": "./assets/favicon.png",
+            "bundler": "metro"
+        },
+        "plugins": [
+            "expo-router",
+            [
+                "expo-splash-screen",
+                {
+                    "backgroundColor": "#000000",
+                    "image": "./assets/splash.png",
+                    "imageWidth": 200
+                }
+            ]
+        ],
+        "experiments": {
+            "typedRoutes": true
+        },
+        "extra": {
+            "router": {
+                "origin": false
+            },
+            "eas": {
+                "projectId": "your-project-id-here"
+            }
+        }
+    }
+}

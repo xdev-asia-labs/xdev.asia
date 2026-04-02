@@ -1,11 +1,12 @@
 import { AuthProvider } from "@/components/AuthProvider";
 import Footer from "@/components/Footer";
+import GlobalChatbot from "@/components/GlobalChatbot";
 import type { NavTopic } from "@/components/Header";
 import Header from "@/components/Header";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import SupportButton from "@/components/SupportButton";
 import LoginModal from "@/components/LoginModal";
-import { getAvailableTopics, getSettings } from "@/lib/data";
+import { buildSearchIndex, getAvailableTopics, getSettings } from "@/lib/data";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -18,6 +19,7 @@ const inter = Inter({
 
 const settings = getSettings();
 const navTopics: NavTopic[] = getAvailableTopics().map(({ slug, name, icon }) => ({ slug, name, icon }));
+const siteContextJson = JSON.stringify(buildSearchIndex());
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://xdev.asia"),
@@ -54,9 +56,10 @@ export default function RootLayout({
           <Footer />
           <LoginModal />
           <SupportButton />
+          <GlobalChatbot siteContext={siteContextJson} />
         </AuthProvider>
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-5Q4MQ1GJP7"
+          src="https://www.googletagmanager.com/gtag/js?id=G-CXVDY07EE0"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -64,7 +67,7 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-5Q4MQ1GJP7');
+            gtag('config', 'G-CXVDY07EE0');
           `}
         </Script>
 

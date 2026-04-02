@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/components/AuthProvider";
 import { gemini } from "@/lib/firebase";
 
@@ -104,9 +105,9 @@ Trả lời ngắn gọn, chính xác bằng tiếng Việt. Nếu câu hỏi kh
                     }
                     setOpen((v) => !v);
                 }}
-                className={`fixed bottom-20 right-6 z-40 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${open
-                        ? "bg-zinc-600 hover:bg-zinc-700 rotate-0"
-                        : "bg-brand-600 hover:bg-brand-700 animate-bounce-slow"
+                className={`fixed bottom-36 right-6 z-40 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${open
+                    ? "bg-zinc-600 hover:bg-zinc-700 rotate-0"
+                    : "bg-brand-600 hover:bg-brand-700 animate-bounce-slow"
                     }`}
                 title="Hỏi AI về bài viết"
             >
@@ -124,7 +125,7 @@ Trả lời ngắn gọn, chính xác bằng tiếng Việt. Nếu câu hỏi kh
 
             {/* Chat panel */}
             {open && (
-                <div className="fixed bottom-34 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden" style={{ height: "480px" }}>
+                <div className="fixed bottom-50 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden" style={{ height: "480px" }}>
                     {/* Header */}
                     <div className="px-4 py-3 bg-brand-600 text-white flex items-center gap-2 shrink-0">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -162,11 +163,28 @@ Trả lời ngắn gọn, chính xác bằng tiếng Việt. Nếu câu hỏi kh
                             <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                                 <div
                                     className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${msg.role === "user"
-                                            ? "bg-brand-600 text-white rounded-br-md"
-                                            : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 rounded-bl-md"
+                                        ? "bg-brand-600 text-white rounded-br-md whitespace-pre-wrap"
+                                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 rounded-bl-md chat-markdown"
                                         }`}
                                 >
-                                    {msg.content}
+                                    {msg.role === "ai" ? (
+                                        <ReactMarkdown
+                                            components={{
+                                                a: ({ ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-brand-600 dark:text-brand-400 underline hover:no-underline" />,
+                                                code: ({ className, children, ...props }) => {
+                                                    const isBlock = className?.includes("language-");
+                                                    return isBlock ? (
+                                                        <pre className="bg-zinc-900 text-zinc-100 rounded-lg p-3 my-2 overflow-x-auto text-xs"><code {...props}>{children}</code></pre>
+                                                    ) : (
+                                                        <code className="bg-zinc-200 dark:bg-zinc-700 px-1 py-0.5 rounded text-xs" {...props}>{children}</code>
+                                                    );
+                                                },
+                                                pre: ({ children }) => <>{children}</>,
+                                            }}
+                                        >{msg.content}</ReactMarkdown>
+                                    ) : (
+                                        msg.content
+                                    )}
                                 </div>
                             </div>
                         ))}
