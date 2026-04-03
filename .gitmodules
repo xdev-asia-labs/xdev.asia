@@ -1,3 +1,6 @@
 [submodule "xStatic"]
 	path = xStatic
 	url = git@github.com:xdev-asia-labs/xStatic.git
+[submodule "repo-demo/gemma-4-local-ai-engineering-on-mac"]
+	path = repo-demo/gemma-4-local-ai-engineering-on-mac
+	url = git@github.com:xdev-asia-labs/gemma-4-local-ai-engineering-on-mac.git
