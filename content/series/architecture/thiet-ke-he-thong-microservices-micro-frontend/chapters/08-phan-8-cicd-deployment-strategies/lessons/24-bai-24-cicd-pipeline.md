@@ -19,6 +19,9 @@ course:
 
 Với 10+ microservices và 5+ micro frontends, CI/CD Pipeline là **xương sống** cho independent deployment. Bài này thiết kế pipeline end-to-end: từ commit đến production.
 
+
+![CI/CD Pipeline cho Microservices + Micro Frontend](/storage/uploads/2026/04/mfe-ms-diagram-bai24-cicd-pipeline.png)
+
 ---
 
 ## 1. CI/CD Architecture

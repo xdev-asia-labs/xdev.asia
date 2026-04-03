@@ -21,6 +21,9 @@ course:
 
 Domain-Driven Design (DDD) không chỉ là một phương pháp viết code — đó là **tư duy phân tách hệ thống** phức tạp thành các phần có ý nghĩa business. DDD là nền tảng quyết định **cách chia Microservices** và **cách chia Micro Frontend**. Nếu chia sai, bạn sẽ có một "distributed monolith" — tệ hơn cả monolith ban đầu.
 
+
+![Context Map — Bounded Contexts và quan hệ giữa các domain trong DDD](/storage/uploads/2026/04/mfe-ms-diagram-bai2-bounded-context-map.png)
+
 ---
 
 ## 1. Tại sao cần DDD?

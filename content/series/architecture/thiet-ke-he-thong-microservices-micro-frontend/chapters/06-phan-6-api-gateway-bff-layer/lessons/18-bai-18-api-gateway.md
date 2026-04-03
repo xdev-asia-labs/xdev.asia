@@ -19,6 +19,9 @@ course:
 
 API Gateway là **entry point duy nhất** cho tất cả API calls từ frontend. Nó xử lý cross-cutting concerns: authentication, rate limiting, routing, monitoring — giúp microservices tập trung vào business logic.
 
+
+![API Gateway — điểm vào duy nhất cho tất cả requests](/storage/uploads/2026/04/mfe-ms-diagram-bai18-api-gateway.png)
+
 ---
 
 ## 1. Tại sao cần API Gateway?

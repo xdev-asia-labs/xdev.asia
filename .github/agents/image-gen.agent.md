@@ -43,7 +43,9 @@ b64 = response.data[0].b64_json
 | Hero layer | 1024×1024 (1:1) | PNG (RGBA) | `public/storage/uploads/2026/04/hero-layers/` |
 | Showcase | 1200×630 | PNG | `public/images/blog/` |
 
-**IMPORTANT:** ALL images (except hero layers) are 16:9 ratio (1920×1080). This includes inline lesson diagrams — they are NOT 1:1. The API always returns 1024×1024, so ALWAYS crop center to 16:9 then resize to 1920×1080. All non-hero images also get the logo overlay.
+**IMPORTANT:** ALL images (except hero layers) are 16:9 ratio (1920×1080). This includes inline lesson diagrams — they are NOT 1:1. The API always returns 1024×1024, so ALWAYS convert to 16:9 1920×1080. All non-hero images also get the logo overlay.
+
+**Conversion method (native wide output):** Use `size="1792x1024"` — the API returns `1376×768` natively (ratio ≈1.79, near 16:9). Then just `resize((1920, 1080))` directly. No cropping, no padding needed.
 
 ## Prompt Engineering Rules
 
@@ -79,7 +81,7 @@ from PIL import Image
 
 LOGO_PATH = BASE_DIR / "public" / "images" / "logo" / "logo-vertical-dark.png"
 LOGO_MARGIN = 30        # px from edge
-LOGO_HEIGHT = 50        # px height (auto-scale width to keep aspect ratio)
+LOGO_HEIGHT = 80        # px height (auto-scale width to keep aspect ratio)
 LOGO_OPACITY = 180      # 0-255 (180 ≈ 70% opacity)
 
 def overlay_logo(img, position="bottom-right"):
@@ -121,7 +123,7 @@ Follow the existing pattern in `scripts/generate-blog-banners.py`:
 1. Define items as a list of `{"filename": ..., "prompt": ..., "logo_position": ...}` dicts
 2. Support `sys.argv[1]` for starting index (1-based)
 3. Use `PIL` to resize/crop after generation
-4. For 16:9 (ALL images except hero layers): crop center from 1024×1024, then resize to 1920×1080
+4. For 16:9 (ALL images except hero layers): use `size="1792x1024"` in API call → gets `1376×768` back → resize to `1920×1080` directly
 5. **Overlay logo** using `overlay_logo(img, position)` before saving — on ALL images except hero layers
 6. Save as optimized PNG
 7. Print progress with `[index/total]` format

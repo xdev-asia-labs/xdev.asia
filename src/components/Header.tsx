@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket } from "./Icons";
+import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket, IconPlug } from "./Icons";
 import DarkModeToggle from "./DarkModeToggle";
 import UserMenu from "./UserMenu";
 
@@ -163,6 +163,19 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                             </div>
                         )}
 
+                        {/* MCP — highlighted */}
+                        <Link
+                            href="/mcp/"
+                            className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${isActive("/mcp")
+                                ? "bg-brand-600 text-white shadow-md shadow-brand-500/30"
+                                : "bg-linear-to-r from-brand-500 to-indigo-500 text-white shadow-md shadow-brand-500/25 hover:shadow-lg hover:shadow-brand-500/40 hover:scale-105"
+                                }`}
+                        >
+                            <IconPlug size={14} />
+                            MCP
+                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                        </Link>
+
                         {/* Search */}
                         <Link
                             href="/search/"
@@ -216,6 +229,14 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                             {link.label}
                         </Link>
                     ))}
+                    <Link
+                        href="/mcp/"
+                        className="flex items-center gap-2 mx-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-linear-to-r from-brand-500 to-indigo-500 text-white shadow-md"
+                    >
+                        <IconPlug size={16} />
+                        MCP Server
+                        <span className="ml-auto text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">NEW</span>
+                    </Link>
                     {topics.length > 0 && (
                         <>
                             <div className="pt-3 pb-1 px-4">

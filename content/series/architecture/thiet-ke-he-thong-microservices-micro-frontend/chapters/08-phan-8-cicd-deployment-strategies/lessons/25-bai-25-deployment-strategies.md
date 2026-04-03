@@ -19,6 +19,9 @@ course:
 
 Deploy microservices lên production là thời điểm rủi ro nhất. Deployment strategy quyết định **blast radius** khi có bug — ảnh hưởng 100% users hay chỉ 5%? Bài này so sánh các chiến lược và hướng dẫn chọn phù hợp.
 
+
+![Deployment Strategies — Blue-Green, Canary, Rolling](/storage/uploads/2026/04/mfe-ms-diagram-bai25-deployment-strategies.png)
+
 ---
 
 ## 1. Rolling Update

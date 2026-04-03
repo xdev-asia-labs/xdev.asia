@@ -27,20 +27,7 @@ Hầu hết các hệ thống phần mềm đều bắt đầu là **Monolith** 
 
 ### 1.1 Kiến trúc Monolith là gì?
 
-```
-┌─────────────────────────────────────────┐
-│           MONOLITH APPLICATION          │
-│                                         │
-│  ┌──────────┐ ┌──────────┐ ┌─────────┐ │
-│  │   User   │ │  Product │ │  Order  │ │
-│  │  Module  │ │  Module  │ │ Module  │ │
-│  └────┬─────┘ └────┬─────┘ └────┬────┘ │
-│       │             │            │      │
-│  ┌────┴─────────────┴────────────┴────┐ │
-│  │        SHARED DATABASE             │ │
-│  └────────────────────────────────────┘ │
-└─────────────────────────────────────────┘
-```
+![Kiến trúc Monolith — toàn bộ modules trong 1 block, shared database](/storage/uploads/2026/04/mfe-ms-diagram-bai1-monolith-architecture.png)
 
 Monolith là kiến trúc mà **toàn bộ ứng dụng** được xây dựng, deploy và scale như **một đơn vị duy nhất**. Tất cả các module (User, Product, Order...) chạy trong cùng một process, chia sẻ cùng database, và deploy cùng nhau.
 
@@ -59,17 +46,20 @@ Monolith là kiến trúc mà **toàn bộ ứng dụng** được xây dựng, 
 Khi hệ thống phát triển, Monolith gặp phải các **bottleneck**:
 
 **Về Development:**
+
 - Codebase quá lớn, dev mới cần nhiều thời gian để hiểu
 - Build time tăng lên hàng chục phút
 - Merge conflicts liên tục giữa các team
 - Một bug nhỏ có thể crash toàn bộ hệ thống
 
 **Về Deployment:**
+
 - Deploy toàn bộ ứng dụng cho 1 thay đổi nhỏ
 - Release cycle kéo dài (tuần/tháng)
 - Rollback phức tạp, ảnh hưởng toàn bộ
 
 **Về Scaling:**
+
 - Phải scale toàn bộ khi chỉ 1 module cần thêm tài nguyên
 - Không thể dùng technology khác nhau cho từng phần
 
@@ -92,7 +82,10 @@ Timeline:
 
 ### 2.2 SOA (Service-Oriented Architecture)
 
+![SOA với ESB — centralized bus trở thành single point of failure](/storage/uploads/2026/04/mfe-ms-diagram-bai1-soa-architecture.png)
+
 SOA là bước đầu tiên tách Monolith thành các services. Tuy nhiên, SOA có một số hạn chế:
+
 - Sử dụng **ESB (Enterprise Service Bus)** tập trung → single point of failure
 - Services thường **không thực sự độc lập** (shared database, shared libraries)
 - Protocol phức tạp (SOAP, WS-*)
@@ -134,20 +127,9 @@ Microservices kế thừa ý tưởng SOA nhưng với các nguyên tắc cốt 
 
 ### 3.1 Backend đã tách, Frontend vẫn gộp
 
-Nhiều tổ chức đã áp dụng Microservices cho backend, nhưng frontend vẫn là **một ứng dụng SPA khổng lồ** (React/Angular/Vue monolith):
+![Frontend Monolith — Backend đã tách nhưng Frontend vẫn là 1 cục SPA khổng lồ](/storage/uploads/2026/04/mfe-ms-diagram-bai1-frontend-monolith-problem.png)
 
-```
-┌─────────────────────────────────────┐
-│    FRONTEND MONOLITH (SPA)          │  ← Vẫn là 1 cục!
-│    React App - 500K+ lines of code  │
-│    Build time: 15 phút              │
-│    Deploy: toàn bộ                  │
-└───────────────┬─────────────────────┘
-                │ API calls
-┌───────┐  ┌───┴────┐  ┌──────────┐
-│User µS│  │Product │  │Order µS  │  ← Backend đã tách
-└───────┘  └────────┘  └──────────┘
-```
+Nhiều tổ chức đã áp dụng Microservices cho backend, nhưng frontend vẫn là **một ứng dụng SPA khổng lồ** (React/Angular/Vue monolith).
 
 ### 3.2 Hệ quả của Frontend Monolith
 
@@ -228,6 +210,7 @@ Phần 10:   Real World         → Case Study, Migration Guide
 ### 5.2 Dự án xuyên suốt
 
 Xuyên suốt series, chúng ta sẽ thiết kế một **E-Commerce Platform** hoàn chỉnh:
+
 - **5 Microservices**: User, Product, Cart, Order, Payment
 - **5 Micro Frontends**: Homepage, Product Detail, Cart, Checkout, Account
 - **Shared**: Design System, Auth, API Gateway
