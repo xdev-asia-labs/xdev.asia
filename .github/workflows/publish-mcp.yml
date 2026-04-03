@@ -10,8 +10,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
+  packages: write
 
 defaults:
   run:
@@ -62,3 +63,38 @@ jobs:
         run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        run: |
+          # Switch registry to GitHub Packages
+          echo "@xdev-asia:registry=https://npm.pkg.github.com" > ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: mcp-v${{ env.VERSION }}
+          name: "MCP Server v${{ env.VERSION }}"
+          generate_release_notes: true
+          body: |
+            ## 📦 xDev Knowledge MCP Server v${{ env.VERSION }}
+
+            ### Install
+            ```bash
+            # npm
+            npm install -g @xdev-asia/xdev-knowledge-mcp@${{ env.VERSION }}
+
+            # GitHub Packages
+            npm install -g @xdev-asia/xdev-knowledge-mcp@${{ env.VERSION }} --registry=https://npm.pkg.github.com
+            ```
+
+            ### What's included
+            - 57 series, 1200+ lessons
+            - 15 MCP tools (knowledge search, HIPAA compliance, security config)
+            - Full content bundle (AI, Architecture, DevSecOps, Programming)
+
+            ---
+            📖 [Docs](https://xdev.asia/mcp) | 📦 [npm](https://www.npmjs.com/package/@xdev-asia/xdev-knowledge-mcp)
