@@ -32,11 +32,11 @@ export default function Footer() {
                     <div className="md:col-span-2">
                         <Link href="/" className="inline-block mb-3">
                             <Image
-                                src="/images/brand/logo.png"
+                                src="/images/logo/logo-vertical-dark.svg"
                                 alt={siteName}
                                 width={120}
-                                height={40}
-                                className="h-8 w-auto object-contain brightness-0 invert"
+                                height={30}
+                                className="h-8 w-auto object-contain"
                             />
                         </Link>
                         <p className="text-sm leading-relaxed max-w-sm mb-5" style={{ color: "rgba(147, 197, 253, 0.7)" }}>

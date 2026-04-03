@@ -113,7 +113,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             url: SITE_URL,
             logo: {
                 "@type": "ImageObject",
-                url: `${SITE_URL}/images/brand/logo.png`,
+                url: `${SITE_URL}/images/logo/logo-vertical-light.png`,
             },
         },
         mainEntityOfPage: {

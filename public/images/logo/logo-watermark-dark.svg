@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 128" fill="none">
+  <defs>
+    <!-- Gradient mềm 3 tầng sáng hơn cho Dark Mode -->
+    <radialGradient id="x-gradient-ai-dark" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#A8E3FF"/>
+      <stop offset="40%" stop-color="#3399FF"/>
+      <stop offset="90%" stop-color="#4C1FFF"/>
+    </radialGradient>
+
+    <!-- Glow nhẹ quanh X -->
+    <filter id="x-soft-glow-dark" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#66B2FF" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Logo dạng watermark mờ cho Dark Mode -->
+  <g opacity="0.08" transform="scale(1.2) translate(-20, 0)">
+    <text x="60" y="86" transform="scale(1.1,1)" font-family="Space Grotesk, Inter, sans-serif" font-weight="600" font-size="60" fill="url(#x-gradient-ai-dark)" filter="url(#x-soft-glow-dark)">X</text>
+    <text x="114" y="84" font-family="Space Grotesk, Inter, sans-serif" font-weight="500" font-size="35" fill="#E8ECF8">DEV</text>
+  </g>
+</svg>

@@ -81,11 +81,19 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                 <div className="flex items-center justify-between h-16">
                     <Link href="/" className="flex items-center gap-1 group relative shrink-0">
                         <Image
-                            src="/images/brand/logo.png"
+                            src="/images/logo/logo-vertical-light.svg"
                             alt="xDev"
                             width={120}
-                            height={40}
-                            className="h-7 w-auto object-contain transition-all duration-300 group-hover:brightness-110"
+                            height={30}
+                            className="h-7 w-auto object-contain transition-all duration-300 group-hover:brightness-110 dark:hidden"
+                            priority
+                        />
+                        <Image
+                            src="/images/logo/logo-vertical-dark.svg"
+                            alt="xDev"
+                            width={120}
+                            height={30}
+                            className="h-7 w-auto object-contain transition-all duration-300 group-hover:brightness-110 hidden dark:block"
                             priority
                         />
                     </Link>

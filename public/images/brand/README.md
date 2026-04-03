@@ -8,15 +8,13 @@
 
 ### ✅ Logo hiện có
 
-- **`xdev-logo.png`** - Logo chính xDev (956x398px, PNG với transparent background)
-  - Source: <https://xdev.asia/content/images/2025/11/logo-3.png>
-  - Cũng có sẵn tại: `/public/images/logo.png`
-
-### 📝 Logo bổ sung (tùy chọn)
-
-- `xdev-logo-white.png` - Variant trắng cho nền tối (nếu cần)
-- `xdev-icon.png` - Icon vuông (512x512px) cho favicon/app icon
-- `xdev-logo.svg` - Vector version (nếu có source vector)
+- **`/public/images/logo/logo-vertical-light.svg`** - Logo cho nền sáng (X gradient xanh, DEV màu tối #3C4C88)
+- **`/public/images/logo/logo-vertical-dark.svg`** - Logo cho nền tối (X gradient xanh sáng, DEV màu sáng #E8ECF8)
+- **`/public/images/logo/logo-vertical-dark.png`** - PNG version cho dark bg (dùng trong image generation overlay)
+- **`/public/images/logo/logo-vertical-light.png`** - PNG version cho light bg (dùng trong OG image)
+- **`/public/images/logo/logo-watermark-light.svg`** - Watermark mờ cho nền sáng
+- **`/public/images/logo/logo-watermark-dark.svg`** - Watermark mờ cho nền tối
+- **`xdev-logo.png`** - Logo cũ (deprecated, giữ lại cho backward compatibility)
 
 ## Brand Colors
 

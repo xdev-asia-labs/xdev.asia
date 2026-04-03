@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 128" fill="none">
+  <defs>
+    <!-- Gradient mềm 3 tầng sáng hơn cho Light Mode -->
+    <radialGradient id="x-gradient-ai-light" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#7BD4FF"/>
+      <stop offset="40%" stop-color="#1E90FF"/>
+      <stop offset="90%" stop-color="#004CFF"/>
+    </radialGradient>
+
+    <!-- Glow nhẹ quanh X -->
+    <filter id="x-soft-glow-light" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#3399FF" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Nền trong suốt -->
+
+  <!-- XDEV tinh chỉnh combo tối ưu với X mở ngang - Light Mode -->
+  <text x="60" y="86" transform="scale(1.1,1)" font-family="Space Grotesk, Inter, sans-serif" font-weight="600" font-size="60" fill="url(#x-gradient-ai-light)" filter="url(#x-soft-glow-light)">X</text>
+  <text x="114" y="84" font-family="Space Grotesk, Inter, sans-serif" font-weight="500" font-size="35" fill="#3C4C88">DEV</text>
+</svg>

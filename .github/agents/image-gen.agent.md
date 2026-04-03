@@ -57,7 +57,11 @@ b64 = response.data[0].b64_json
 
 Always overlay the xdev.asia logo onto generated images (except hero layers).
 
-- **Logo file**: `public/images/brand/logo.png` (956×398 RGBA, transparent background)
+- **Logo file**: `public/images/logo/logo-vertical-dark.png` (512×128 RGBA, transparent background)
+  - "X" has blue gradient (#B8F1FF → #3FA9FF → #1C58FF) with soft glow, "DEV" in light color (#E8ECF8)
+  - This is the **dark background variant** — designed for generated images which always have dark backgrounds
+  - Source SVG: `public/images/logo/logo-vertical-dark.svg`
+  - If updating the logo, re-convert SVG→PNG: `cairosvg.svg2png(url='public/images/logo/logo-vertical-dark.svg', write_to='public/images/logo/logo-vertical-dark.png', output_width=512, output_height=128)`
 - **Each banner item must include** `logo_position` field to specify where to place the logo
 - **Position depends on the image content** — look at the prompt to decide where the logo won't obscure important visuals
 
@@ -73,7 +77,7 @@ Always overlay the xdev.asia logo onto generated images (except hero layers).
 ```python
 from PIL import Image
 
-LOGO_PATH = BASE_DIR / "public" / "images" / "brand" / "logo.png"
+LOGO_PATH = BASE_DIR / "public" / "images" / "logo" / "logo-vertical-dark.png"
 LOGO_MARGIN = 30        # px from edge
 LOGO_HEIGHT = 50        # px height (auto-scale width to keep aspect ratio)
 LOGO_OPACITY = 180      # 0-255 (180 ≈ 70% opacity)
