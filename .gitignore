@@ -45,3 +45,9 @@ scripts/generate-ai-banners.py
 scripts/generate-remaining-banners.py
 scripts/*.py
 mobile-app/
+
+# mcp server
+mcp-server/node_modules/
+mcp-server/dist/
+mcp-server/content/
+mcp-server/data/

@@ -1,20 +1,122 @@
 [
-  { "name": "AI", "slug": "ai" },
-  { "name": "LLM", "slug": "llm" },
-  { "name": "Machine Learning", "slug": "machine-learning" },
-  { "name": "Deep Learning", "slug": "deep-learning" },
-  { "name": "Python", "slug": "python" },
-  { "name": "PyTorch", "slug": "pytorch" },
-  { "name": "Transformer", "slug": "transformer" },
-  { "name": "NLP", "slug": "nlp" },
-  { "name": "RAG", "slug": "rag" },
-  { "name": "Fine-tuning", "slug": "fine-tuning" },
-  { "name": "Prompt Engineering", "slug": "prompt-engineering" },
-  { "name": "OpenAI", "slug": "openai" },
-  { "name": "Anthropic", "slug": "anthropic" },
-  { "name": "Ollama", "slug": "ollama" },
-  { "name": "Docker", "slug": "docker" },
-  { "name": "Web Development", "slug": "web-development" },
-  { "name": "JavaScript", "slug": "javascript" },
-  { "name": "TypeScript", "slug": "typescript" }
+  {
+    "name": "AI",
+    "slug": "ai"
+  },
+  {
+    "name": "LLM",
+    "slug": "llm"
+  },
+  {
+    "name": "Machine Learning",
+    "slug": "machine-learning"
+  },
+  {
+    "name": "Deep Learning",
+    "slug": "deep-learning"
+  },
+  {
+    "name": "Python",
+    "slug": "python"
+  },
+  {
+    "name": "PyTorch",
+    "slug": "pytorch"
+  },
+  {
+    "name": "Transformer",
+    "slug": "transformer"
+  },
+  {
+    "name": "NLP",
+    "slug": "nlp"
+  },
+  {
+    "name": "RAG",
+    "slug": "rag"
+  },
+  {
+    "name": "Fine-tuning",
+    "slug": "fine-tuning"
+  },
+  {
+    "name": "Prompt Engineering",
+    "slug": "prompt-engineering"
+  },
+  {
+    "name": "OpenAI",
+    "slug": "openai"
+  },
+  {
+    "name": "Anthropic",
+    "slug": "anthropic"
+  },
+  {
+    "name": "Ollama",
+    "slug": "ollama"
+  },
+  {
+    "name": "Docker",
+    "slug": "docker"
+  },
+  {
+    "name": "Web Development",
+    "slug": "web-development"
+  },
+  {
+    "name": "JavaScript",
+    "slug": "javascript"
+  },
+  {
+    "name": "TypeScript",
+    "slug": "typescript"
+  },
+  {
+    "name": "Security",
+    "slug": "security"
+  },
+  {
+    "name": "Healthcare",
+    "slug": "healthcare"
+  },
+  {
+    "name": "HIPAA",
+    "slug": "hipaa"
+  },
+  {
+    "name": "Quarkus",
+    "slug": "quarkus"
+  },
+  {
+    "name": "PostgreSQL",
+    "slug": "postgresql"
+  },
+  {
+    "name": "Keycloak",
+    "slug": "keycloak"
+  },
+  {
+    "name": "Microservices",
+    "slug": "microservices"
+  },
+  {
+    "name": "Encryption",
+    "slug": "encryption"
+  },
+  {
+    "name": "Zero Trust",
+    "slug": "zero-trust"
+  },
+  {
+    "name": "HL7 FHIR",
+    "slug": "hl7-fhir"
+  },
+  {
+    "name": "kubernetes",
+    "slug": "kubernetes"
+  },
+  {
+    "name": "HandsOn",
+    "slug": "handson"
+  }
 ]

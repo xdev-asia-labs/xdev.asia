@@ -1,0 +1,58 @@
+{
+    "name": "@xdev-asia/xdev-knowledge-mcp",
+    "version": "0.0.0",
+    "description": "MCP Server - Toàn bộ kiến thức xDev.asia: 57 series, 1200+ lessons, blog, showcase (AI, Architecture, DevSecOps, Programming)",
+    "type": "module",
+    "main": "dist/index.js",
+    "bin": {
+        "xdev-knowledge-mcp": "dist/index.js"
+    },
+    "files": [
+        "dist/",
+        "content/",
+        "data/",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch",
+        "start": "node dist/index.js",
+        "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
+        "prebuild:publish": "node scripts/bundle-content.mjs",
+        "build:publish": "npm run prebuild:publish && tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/xdev-asia/xdev.asia.git",
+        "directory": "mcp-server"
+    },
+    "homepage": "https://xdev.asia",
+    "publishConfig": {
+        "access": "public"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "keywords": [
+        "mcp",
+        "xdev",
+        "knowledge-base",
+        "ai",
+        "architecture",
+        "devsecops",
+        "programming",
+        "vietnamese",
+        "tutorials"
+    ],
+    "author": "xDev.asia",
+    "license": "MIT",
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.12.1",
+        "glob": "^11.0.0",
+        "gray-matter": "^4.0.3"
+    },
+    "devDependencies": {
+        "@types/node": "^22.0.0",
+        "typescript": "^5.7.0"
+    }
+}

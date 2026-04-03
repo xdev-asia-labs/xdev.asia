@@ -1,21 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 128" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 70" fill="none">
   <defs>
-    <!-- Gradient mềm 3 tầng sáng hơn -->
     <radialGradient id="x-gradient-ai-optimal" cx="50%" cy="50%" r="80%">
       <stop offset="0%" stop-color="#B8F1FF"/>
       <stop offset="40%" stop-color="#3FA9FF"/>
       <stop offset="90%" stop-color="#1C58FF"/>
     </radialGradient>
-
-    <!-- Glow nhẹ quanh X -->
     <filter id="x-soft-glow" x="-50%" y="-50%" width="200%" height="200%">
       <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#66B2FF" flood-opacity="0.4"/>
     </filter>
   </defs>
 
-  <!-- Nền trong suốt -->
-
-  <!-- XDEV tinh chỉnh combo tối ưu với X mở ngang -->
-  <text x="60" y="86" transform="scale(1.1,1)" font-family="Space Grotesk, Inter, sans-serif" font-weight="600" font-size="60" fill="url(#x-gradient-ai-optimal)" filter="url(#x-soft-glow)">X</text>
-  <text x="114" y="84" font-family="Space Grotesk, Inter, sans-serif" font-weight="500" font-size="35" fill="#E8ECF8">DEV</text>
+  <text x="8" y="52" transform="scale(1.1,1)" font-family="Space Grotesk, Inter, sans-serif" font-weight="600" font-size="60" fill="url(#x-gradient-ai-optimal)" filter="url(#x-soft-glow)">X</text>
+  <text x="62" y="50" font-family="Space Grotesk, Inter, sans-serif" font-weight="500" font-size="35" fill="#E8ECF8">DEV</text>
 </svg>
