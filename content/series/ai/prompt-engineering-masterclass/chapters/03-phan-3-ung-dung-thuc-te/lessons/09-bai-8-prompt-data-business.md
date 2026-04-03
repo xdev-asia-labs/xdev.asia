@@ -2,7 +2,9 @@
 id: 019c9619-ee08-7008-f008-ee0800000008
 title: 'Bài 8: Prompt cho Data Analysis & Business Writing'
 slug: bai-8-prompt-data-business
-description: 'Nội dung đang được xây dựng'
+description: >-
+  Prompt cho Data Analysis: phân tích CSV, SQL generation, insights. Business
+  Writing: báo cáo, email chuyên nghiệp, proposal, meeting notes.
 duration_minutes: 120
 is_free: true
 video_url: null
@@ -14,6 +16,318 @@ course:
   slug: prompt-engineering-masterclass
 ---
 
-## Bài 8: Prompt cho Data Analysis & Business Writing
+## Giới thiệu
 
-> 🚧 **Nội dung đang được xây dựng.** Hãy quay lại sau nhé!
+AI không chỉ cho developer — business users cũng cần. Bài này cover 2 mảng ứng dụng thực tế nhất: **Data Analysis** (phân tích dữ liệu) và **Business Writing** (viết văn bản doanh nghiệp).
+
+> **Thực tế:** 70% thời gian analyst dành cho clean + explore data, 30% cho insight. AI đảo ngược: bạn focus 70% vào insight, AI lo phần còn lại.
+
+---
+
+## 1. Data Analysis — Phân tích dữ liệu
+
+### 1.1 Prompt phân tích CSV
+
+```
+= ROLE =
+Bạn là Senior Data Analyst.
+
+= DATA =
+Dataset: {tên dataset}
+Columns: {liệt kê cột + data type + mô tả}
+Sample rows:
+| col1 | col2 | col3 |
+|------|------|------|
+| ... | ... | ... |
+(5-10 rows mẫu)
+
+= TASK =
+Phân tích dataset và cung cấp:
+1. **Overview:** Số rows, columns, data quality (missing values, outliers)
+2. **Key metrics:** Tính các KPIs quan trọng
+3. **Trends:** Xu hướng theo thời gian
+4. **Segments:** Phân nhóm (theo category, region...)
+5. **Insights:** Top 3 phát hiện quan trọng nhất
+6. **Actions:** Đề xuất hành động dựa trên data
+
+= OUTPUT FORMAT =
+- Bảng cho metrics
+- Bullet points cho insights
+- Code Python/SQL nếu cần
+```
+
+### 1.2 Ví dụ: Phân tích doanh thu
+
+```
+= DATA =
+Dataset: Sales Q1-Q3 2024
+Columns:
+- date (DATE): ngày bán
+- product (VARCHAR): tên sản phẩm
+- region (VARCHAR): khu vực (North, South, Central)
+- quantity (INT): số lượng
+- revenue (DECIMAL): doanh thu (VND)
+- customer_type (VARCHAR): new / returning
+
+Sample:
+| date       | product | region | quantity | revenue   | customer_type |
+|-----------|---------|--------|----------|-----------|---------------|
+| 2024-01-05 | Widget A | North  | 50       | 25000000  | new           |
+| 2024-01-08 | Widget B | South  | 30       | 18000000  | returning     |
+
+= TASK =
+1. Tổng doanh thu theo quý, theo region
+2. Top 3 sản phẩm best-seller theo quantity
+3. Tỷ lệ new vs returning customers
+4. Xu hướng monthly revenue (tăng/giảm?)
+5. Region nào underperform?
+6. Recommendations cho Q4
+
+= OUTPUT =
+Bảng + insights + Python code (pandas)
+```
+
+### 1.3 Text-to-SQL
+
+```
+= DATABASE SCHEMA =
+Table: orders
+- id (INT, PK)
+- customer_id (INT, FK → customers.id)
+- product_id (INT, FK → products.id)
+- quantity (INT)
+- total_amount (DECIMAL)
+- order_date (DATE)
+- status (VARCHAR): pending, shipped, delivered, cancelled
+
+Table: customers
+- id (INT, PK)
+- name (VARCHAR)
+- email (VARCHAR)
+- region (VARCHAR)
+- joined_date (DATE)
+
+Table: products
+- id (INT, PK)
+- name (VARCHAR)
+- category (VARCHAR)
+- price (DECIMAL)
+
+= RULES =
+- PostgreSQL syntax
+- Dùng CTE thay subquery khi possible
+- Alias tất cả columns trong SELECT
+- LUÔN có ORDER BY
+- LIMIT kết quả (max 100 rows)
+- Comment giải thích logic
+
+= QUESTION =
+"Top 5 khách hàng chi tiêu nhiều nhất trong Q3 2024,
+ cùng với sản phẩm họ mua nhiều nhất?"
+```
+
+> **💡 Bài tập 1:** Tạo prompt Text-to-SQL cho 1 database schema thật (ít nhất 3 tables). Test 5 câu hỏi business: từ đơn giản (count) đến phức tạp (multi-join + aggregation).
+
+---
+
+## 2. Business Intelligence Insights
+
+### 2.1 Prompt tạo dashboard narrative
+
+```
+= DATA SUMMARY =
+{Paste bảng tổng hợp metrics}
+
+= AUDIENCE =
+{CEO / Manager / Team lead / All-hands}
+
+= TONE =
+{Professional / Conversational / Executive brief}
+
+= TASK =
+Viết dashboard narrative (300-500 từ):
+1. **Headline:** 1 câu tóm tắt tình hình
+2. **Key takeaways:** 3-5 bullet points
+3. **Deep dive:** Giải thích số liệu quan trọng
+4. **Comparison:** So sánh với kỳ trước / target
+5. **Call to action:** Đề xuất hành động cụ thể
+
+Dùng:
+- Số liệu cụ thể (không nói "tăng nhiều", nói "tăng 23%")
+- So sánh có context ("cao hơn industry average 15%")
+- Action-oriented language
+```
+
+### 2.2 Anomaly detection prompt
+
+```
+Dữ liệu doanh thu hàng ngày (30 ngày gần nhất):
+{paste data}
+
+Phân tích và tìm:
+1. **Anomalies:** Ngày nào doanh thu bất thường? (so với moving average 7 ngày)
+2. **Pattern:** Có pattern theo ngày trong tuần không? (weekend effect?)
+3. **Trend:** Xu hướng tổng thể: đi lên, đi xuống, hay sideways?
+4. **Forecast:** Dự đoán 7 ngày tiếp theo (với confidence interval)
+5. **Alert:** Có cần hành động gấp không?
+
+Output: bảng anomalies + Python code cho visualization
+```
+
+---
+
+## 3. Business Writing
+
+### 3.1 Email chuyên nghiệp
+
+```
+= CONTEXT =
+Situation: {mô tả tình huống}
+Sender: {vai trò của bạn}
+Recipient: {ai, quan hệ}
+Purpose: {mục đích email}
+
+= TONE =
+{Formal / Semi-formal / Friendly professional}
+{Tiếng Việt / English / Bilingual}
+
+= CONSTRAINTS =
+- Độ dài: {ngắn gọn 3-5 câu / trung bình / chi tiết}
+- Call to action: {hành động mong muốn từ người nhận}
+- Deadline: {nếu có}
+- Sensitivity: {confidential / normal}
+
+= TEMPLATE =
+Subject: [chủ đề rõ ràng]
+
+Chào {tên},
+
+[Mở đầu: context/reason for writing]
+[Nội dung chính: thông tin/yêu cầu]
+[Call to action: việc cần làm cụ thể]
+[Kết: cảm ơn + next steps]
+
+Trân trọng,
+{tên}
+```
+
+### 3.2 Meeting notes
+
+```
+= RAW NOTES =
+{Paste meeting notes thô / transcript}
+
+= OUTPUT FORMAT =
+## Meeting Summary
+- **Date:** 
+- **Attendees:** 
+- **Duration:** 
+
+## Key Decisions
+1. [Decision 1] — Owner: [tên]
+2. [Decision 2] — Owner: [tên]
+
+## Action Items
+| # | Task | Owner | Deadline | Priority |
+|---|------|-------|----------|----------|
+| 1 | ... | ... | ... | High/Medium/Low |
+
+## Discussion Points
+- [Point 1: brief summary]
+- [Point 2: brief summary]
+
+## Next Steps
+- Follow-up meeting: [date]
+- Pending items: ...
+```
+
+### 3.3 Báo cáo / Proposal
+
+```
+= CONTEXT =
+Loại báo cáo: {weekly report / monthly review / project proposal / post-mortem}
+Audience: {CEO / team / stakeholders / investors}
+Objective: {inform / persuade / request budget / post-mortem analysis}
+
+= DATA =
+{Key metrics, achievements, issues, risks}
+
+= STRUCTURE =
+1. **Executive Summary** (3-5 câu, AI tự viết)
+2. **Highlights** (achievements, milestones)
+3. **Challenges** (issues, risks, blockers)
+4. **Metrics** (bảng số liệu)
+5. **Next Steps** (action items, timeline)
+6. **Budget/Resources** (nếu là proposal)
+
+= TONE =
+- Fact-based, data-driven
+- Avoid jargon khi audience là non-technical
+- Action-oriented conclusions
+```
+
+> **💡 Bài tập 2:** Viết 3 loại business documents dùng AI prompts: (a) email xin duyệt budget, (b) meeting notes từ transcript thô, (c) weekly report. Đánh giá chất lượng output.
+
+---
+
+## 4. Prompt Chain cho Analysis
+
+### 4.1 Multi-step analysis
+
+```
+Bước 1: Data Understanding
+"Mô tả dataset: số rows, columns, data types, missing values"
+
+Bước 2: Exploratory Analysis
+"Dựa trên mô tả ở bước 1, tạo Python code cho EDA:
+ distributions, correlations, time series plots"
+
+Bước 3: Insights
+"Dựa trên kết quả EDA, liệt kê top 5 insights business"
+
+Bước 4: Recommendations
+"Cho mỗi insight, đề xuất 1 action cụ thể + expected impact"
+
+Bước 5: Presentation
+"Tạo executive summary 1 trang cho CEO"
+```
+
+### 4.2 Iterative refinement
+
+```
+Lần 1: "Phân tích doanh thu Q3"
+→ Output: overview chung
+
+Lần 2: "Đi sâu vào region South — tại sao giảm 15%?"
+→ Output: root cause analysis
+
+Lần 3: "So sánh South với North — khác gì?"
+→ Output: comparative analysis
+
+Lần 4: "Đề xuất 3 actions cụ thể để South recovery Q4"
+→ Output: action plan
+
+→ Mỗi bước drill-down sâu hơn, context tích lũy
+```
+
+---
+
+## Tóm tắt
+
+| Use case | Key prompt elements |
+|---------|-------------------|
+| **CSV Analysis** | Schema, sample data, specific questions |
+| **Text-to-SQL** | Table schema, SQL dialect, rules |
+| **Dashboard Narrative** | Audience, tone, metrics, comparisons |
+| **Email** | Context, tone, CTA, constraints |
+| **Meeting Notes** | Raw notes, structured output format |
+| **Report** | Type, audience, structure, data |
+
+## Bài tập tổng hợp
+
+1. ✅ Hoàn thành 2 bài tập nhỏ (1, 2)
+2. **Data-to-Report Pipeline:** CSV → Phân tích (prompt 1) → Insights (prompt 2) → Executive Report (prompt 3) → Email summary cho CEO (prompt 4). Chain 4 prompts.
+3. **Prompt Template Library:** Tạo bộ 5 business prompt templates (email, report, meeting, proposal, data analysis). Test với 3 scenarios khác nhau.
+4. **AI Business Analyst:** Role-play: bạn là Business Analyst, dùng AI phân tích 1 bộ dữ liệu thật (Kaggle dataset). Từ raw data → presentation-ready insights.
+
+> **Bài tiếp theo:** Multimodal Prompting — Image, Audio & Video — prompt engineering cho input đa phương tiện.

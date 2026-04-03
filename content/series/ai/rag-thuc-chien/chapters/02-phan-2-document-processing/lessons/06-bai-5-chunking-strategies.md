@@ -17,6 +17,8 @@ course:
   slug: rag-thuc-chien
 ---
 
+![Chunking Strategies: Fixed-size, Recursive, Semantic](/storage/uploads/2026/04/rag-bai-5-chunking.png)
+
 ## Giới thiệu
 
 Sau khi load tài liệu (bài 4), bước tiếp theo là **chia nhỏ** (chunking). Đây là bước **quyết định 60% chất lượng** retrieval — chọn sai chunk size = tìm sai context = AI trả lời sai.

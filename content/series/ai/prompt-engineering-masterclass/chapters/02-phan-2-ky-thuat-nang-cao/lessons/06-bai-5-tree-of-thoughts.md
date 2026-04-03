@@ -16,6 +16,8 @@ course:
   slug: prompt-engineering-masterclass
 ---
 
+![Tree-of-Thoughts: IO vs CoT vs ToT — Multi-path Reasoning](/storage/uploads/2026/04/pe-bai-5-tree-of-thoughts.png)
+
 ## Giới thiệu
 
 Chain-of-Thought (CoT) bắt AI suy nghĩ **theo 1 đường**. Nhưng nhiều bài toán có **nhiều hướng** giải quyết — CoT chỉ explore 1 hướng và có thể chọn sai.

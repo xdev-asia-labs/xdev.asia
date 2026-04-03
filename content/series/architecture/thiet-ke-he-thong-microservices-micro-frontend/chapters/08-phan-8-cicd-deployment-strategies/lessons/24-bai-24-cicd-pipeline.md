@@ -1,0 +1,246 @@
+---
+id: 019e4a33-d424-7b20-c001-b1c2d3e4f524
+title: "Bài 24: CI/CD Pipeline cho Microservices & Micro Frontend"
+slug: bai-24-cicd-pipeline-cho-microservices-micro-frontend
+description: >-
+  Thiết kế CI/CD pipeline end-to-end. GitHub Actions cho build/test. Docker multi-stage build. Container registry (ECR/GHCR). ArgoCD GitOps cho Kubernetes deployment. Parallel pipelines cho nhiều services.
+duration_minutes: 90
+is_free: true
+video_url: null
+sort_order: 24
+section_title: "Phần 8: CI/CD & Deployment Strategies"
+course:
+  id: 019e4a33-d400-7b20-c001-b1c2d3e4f5a8
+  title: "Thiết kế hệ thống Microservices & Micro Frontend — Từ cơ bản đến Production"
+  slug: thiet-ke-he-thong-microservices-micro-frontend
+---
+
+## Giới thiệu
+
+Với 10+ microservices và 5+ micro frontends, CI/CD Pipeline là **xương sống** cho independent deployment. Bài này thiết kế pipeline end-to-end: từ commit đến production.
+
+---
+
+## 1. CI/CD Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│ Developer pushes code                           │
+└──────────────────────┬──────────────────────────┘
+                       │
+┌──────────────────────┴──────────────────────────┐
+│ CI Pipeline (GitHub Actions)                    │
+│ ┌─────────┐ ┌──────────┐ ┌───────────────────┐ │
+│ │  Lint   │ │  Build   │ │  Test             │ │
+│ │  & Type │→│  & Compile│→│  Unit + Integration│ │
+│ │  Check  │ │          │ │  + Contract       │ │
+│ └─────────┘ └──────────┘ └───────────────────┘ │
+│                                    │            │
+│                     ┌──────────────┴──────────┐ │
+│                     │ Docker Build & Push     │ │
+│                     │ → Container Registry    │ │
+│                     └──────────────┬──────────┘ │
+└────────────────────────────────────┼────────────┘
+                                     │
+┌────────────────────────────────────┴────────────┐
+│ CD Pipeline (ArgoCD - GitOps)                   │
+│                                                 │
+│ ┌──────────┐  ┌──────────┐  ┌────────────────┐ │
+│ │ Staging  │→ │  Smoke   │→ │  Production    │ │
+│ │ Deploy   │  │  Tests   │  │  Deploy        │ │
+│ │          │  │          │  │  (Progressive) │ │
+│ └──────────┘  └──────────┘  └────────────────┘ │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. CI Pipeline (GitHub Actions)
+
+### 2.1 Microservice Pipeline
+
+```yaml
+# .github/workflows/service-ci.yml
+name: Service CI
+
+on:
+  push:
+    paths:
+      - 'services/product-service/**'
+      - 'packages/shared-types/**'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint & Type Check
+        run: turbo lint typecheck --filter=product-service
+
+      - name: Unit Tests
+        run: turbo test --filter=product-service
+
+      - name: Integration Tests
+        run: turbo test:integration --filter=product-service
+        services:
+          postgres:
+            image: postgres:16
+            env:
+              POSTGRES_DB: test
+
+      - name: Contract Verification
+        run: turbo test:pact --filter=product-service
+
+      - name: Docker Build & Push
+        run: |
+          docker build -t ghcr.io/company/product-service:${{ github.sha }} \
+            -f services/product-service/Dockerfile .
+          docker push ghcr.io/company/product-service:${{ github.sha }}
+```
+
+### 2.2 Micro Frontend Pipeline
+
+```yaml
+# .github/workflows/mfe-ci.yml
+name: MFE CI
+
+on:
+  push:
+    paths:
+      - 'apps/product-mfe/**'
+      - 'packages/shared-ui/**'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install & Build
+        run: turbo build --filter=product-mfe...
+
+      - name: Test
+        run: turbo test --filter=product-mfe
+
+      - name: Visual Regression
+        uses: chromatic/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_TOKEN }}
+
+      - name: Deploy to CDN
+        run: |
+          aws s3 sync apps/product-mfe/dist/ \
+            s3://mfe-cdn/product-mfe/${{ github.sha }}/
+          aws cloudfront create-invalidation \
+            --distribution-id $CF_ID \
+            --paths "/product-mfe/*"
+```
+
+---
+
+## 3. Docker Multi-Stage Build
+
+```dockerfile
+# services/product-service/Dockerfile
+# Stage 1: Build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --production=false
+COPY . .
+RUN npm run build
+
+# Stage 2: Production
+FROM node:20-alpine AS runner
+WORKDIR /app
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+USER appuser
+EXPOSE 8080
+CMD ["node", "dist/main.js"]
+```
+
+---
+
+## 4. GitOps with ArgoCD
+
+### 4.1 GitOps Workflow
+
+```
+Developer pushes code → CI builds image → CI updates manifests repo
+                                                    │
+ArgoCD watches manifests repo ──────────────────────┘
+ArgoCD syncs K8s cluster to match manifests
+```
+
+### 4.2 Kustomize Overlay
+
+```yaml
+# k8s/overlays/production/product-service.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: product-service
+          image: ghcr.io/company/product-service:abc123
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+```
+
+---
+
+## 5. Parallel Pipelines
+
+```
+Commit changes to:
+├── services/product-service/ → Product Service Pipeline
+├── apps/product-mfe/         → Product MFE Pipeline
+└── packages/shared-ui/       → Shared UI Pipeline
+                                  ↓
+                              Triggers dependent:
+                              → Product MFE Pipeline
+                              → Cart MFE Pipeline
+                              → All MFE consumers
+```
+
+Turborepo `--filter=...[origin/main]` tự động detect affected packages.
+
+---
+
+## 6. Pipeline Best Practices
+
+| Practice | Mô tả |
+|----------|-------|
+| **Fail fast** | Lint → Unit → Integration (tốn ít thời gian trước) |
+| **Parallel jobs** | Lint + Test chạy song song |
+| **Caching** | npm cache, Docker layer cache, Turborepo remote cache |
+| **Affected only** | Chỉ build/test packages thay đổi |
+| **Immutable artifacts** | Tag images bằng git SHA |
+| **GitOps** | Separate config repo, ArgoCD sync |
+
+---
+
+## Tóm tắt
+
+- **CI**: Lint → Build → Test → Docker → Push (per service/MFE)
+- **CD**: GitOps với ArgoCD, declarative K8s manifests
+- **Turborepo**: affected detection, chỉ build packages thay đổi
+- **Docker multi-stage**: small, secure production images
+- **Parallel pipelines**: mỗi service/MFE có pipeline riêng
+
+---
+
+**Bài tiếp theo:** [Bài 25: Deployment Strategies — Blue/Green, Canary & Rolling](/series/thiet-ke-he-thong-microservices-micro-frontend/bai-25-deployment-strategies-blue-green-canary-rolling)

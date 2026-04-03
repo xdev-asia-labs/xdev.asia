@@ -1,5 +1,4 @@
 import { InArticleAd, SidebarAd, BannerAd } from "@/components/AdUnit";
-import AIChatWidget from "@/components/AIChatWidget";
 import AISummary from "@/components/AISummary";
 import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
@@ -406,9 +405,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     </aside>
                 </div>
             </div>
-
-            {/* AI Chat Widget */}
-            <AIChatWidget html={post.content} title={post.title} />
 
             {/* Back to top */}
             <BackToTop />

@@ -4,7 +4,6 @@ import GlobalChatbot from "@/components/GlobalChatbot";
 import type { NavTopic } from "@/components/Header";
 import Header from "@/components/Header";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
-import SupportButton from "@/components/SupportButton";
 import LoginModal from "@/components/LoginModal";
 import { buildSearchIndex, getAvailableTopics, getSettings } from "@/lib/data";
 import type { Metadata } from "next";
@@ -55,7 +54,6 @@ export default function RootLayout({
           <main id="main-content" className="flex-1">{children}</main>
           <Footer />
           <LoginModal />
-          <SupportButton />
           <GlobalChatbot siteContext={siteContextJson} />
         </AuthProvider>
         <Script

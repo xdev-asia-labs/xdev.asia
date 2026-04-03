@@ -6,7 +6,7 @@ export default function SupportButton() {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className="fixed bottom-20 right-6 z-40">
+        <div className="fixed bottom-34 right-6 z-40">
             {/* Popup */}
             {open && (
                 <div className="mb-3 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-700 p-5 w-72 animate-fade-in-up">
@@ -40,11 +40,10 @@ export default function SupportButton() {
             {/* Toggle Button */}
             <button
                 onClick={() => setOpen(!open)}
-                className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${
-                    open
+                className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${open
                         ? "bg-zinc-600 text-white rotate-45"
                         : "bg-gradient-to-br from-pink-500 to-rose-500 text-white hover:shadow-xl hover:-translate-y-0.5"
-                }`}
+                    }`}
                 aria-label="Ủng hộ tác giả"
                 title="Ủng hộ tác giả"
             >

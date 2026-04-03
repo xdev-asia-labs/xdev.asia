@@ -39,8 +39,11 @@ b64 = response.data[0].b64_json
 |------|------|--------|-----------------|
 | Blog banner | 1920×1080 (16:9) | PNG | `public/images/blog/` |
 | Series banner | 1920×1080 (16:9) | PNG | `public/images/blog/` |
+| Series diagram | 1920×1080 (16:9) | PNG | `public/storage/uploads/2026/04/` |
 | Hero layer | 1024×1024 (1:1) | PNG (RGBA) | `public/storage/uploads/2026/04/hero-layers/` |
 | Showcase | 1200×630 | PNG | `public/images/blog/` |
+
+**IMPORTANT:** ALL images (except hero layers) are 16:9 ratio (1920×1080). This includes inline lesson diagrams — they are NOT 1:1. The API always returns 1024×1024, so ALWAYS crop center to 16:9 then resize to 1920×1080. All non-hero images also get the logo overlay.
 
 ## Prompt Engineering Rules
 
@@ -114,8 +117,8 @@ Follow the existing pattern in `scripts/generate-blog-banners.py`:
 1. Define items as a list of `{"filename": ..., "prompt": ..., "logo_position": ...}` dicts
 2. Support `sys.argv[1]` for starting index (1-based)
 3. Use `PIL` to resize/crop after generation
-4. For 16:9: crop center from 1024×1024, then resize to 1920×1080
-5. **Overlay logo** using `overlay_logo(img, position)` before saving
+4. For 16:9 (ALL images except hero layers): crop center from 1024×1024, then resize to 1920×1080
+5. **Overlay logo** using `overlay_logo(img, position)` before saving — on ALL images except hero layers
 6. Save as optimized PNG
 7. Print progress with `[index/total]` format
 8. Add `time.sleep(3)` between API calls

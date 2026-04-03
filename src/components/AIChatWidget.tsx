@@ -105,7 +105,7 @@ Trả lời ngắn gọn, chính xác bằng tiếng Việt. Nếu câu hỏi kh
                     }
                     setOpen((v) => !v);
                 }}
-                className={`fixed bottom-36 right-6 z-40 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${open
+                className={`fixed bottom-48 right-6 z-40 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${open
                     ? "bg-zinc-600 hover:bg-zinc-700 rotate-0"
                     : "bg-brand-600 hover:bg-brand-700 animate-bounce-slow"
                     }`}
@@ -125,7 +125,7 @@ Trả lời ngắn gọn, chính xác bằng tiếng Việt. Nếu câu hỏi kh
 
             {/* Chat panel */}
             {open && (
-                <div className="fixed bottom-50 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden" style={{ height: "480px" }}>
+                <div className="fixed bottom-62 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border border-zinc-200 bg-white dark:bg-zinc-900 dark:border-zinc-700 flex flex-col overflow-hidden" style={{ height: "480px" }}>
                     {/* Header */}
                     <div className="px-4 py-3 bg-brand-600 text-white flex items-center gap-2 shrink-0">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

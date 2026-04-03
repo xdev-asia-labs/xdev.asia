@@ -17,6 +17,8 @@ course:
   slug: rag-thuc-chien
 ---
 
+![Kiến trúc RAG: Documents → Chunking → Embedding → Vector DB → Retrieval → LLM → Answer](/storage/uploads/2026/04/rag-bai-1-architecture.png)
+
 ## Giới thiệu
 
 Bạn có bao giờ hỏi ChatGPT về **nội quy công ty bạn** và nhận được câu trả lời... bịa? Hoặc hỏi về sự kiện **tuần trước** nhưng AI nói "Tôi không có thông tin sau tháng 4/2024"?

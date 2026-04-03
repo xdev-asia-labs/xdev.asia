@@ -17,6 +17,8 @@ course:
   slug: prompt-engineering-masterclass
 ---
 
+![Chain-of-Thought: Direct Prompting vs Step-by-Step Reasoning](/storage/uploads/2026/04/pe-bai-4-chain-of-thought.png)
+
 ## Giới thiệu
 
 Bạn có bao giờ hỏi ChatGPT một bài toán và nó trả lời... **sai**? Nhưng khi bạn thêm dòng **"Hãy giải thích từng bước"**, đột nhiên nó trả lời **đúng**?

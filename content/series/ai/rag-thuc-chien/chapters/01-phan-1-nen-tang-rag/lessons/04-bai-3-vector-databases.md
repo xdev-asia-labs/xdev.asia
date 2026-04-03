@@ -17,6 +17,8 @@ course:
   slug: rag-thuc-chien
 ---
 
+![So sánh Vector Databases: Chroma, Qdrant, Pinecone, Weaviate](/storage/uploads/2026/04/rag-bai-3-vector-db.png)
+
 ## Giới thiệu
 
 Ở bài trước, chúng ta đã biến text thành vectors. Câu hỏi tiếp theo: **lưu vectors ở đâu** và **tìm kiếm thế nào**?
