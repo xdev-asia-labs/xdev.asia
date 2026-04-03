@@ -1,0 +1,1234 @@
+---
+id: 019e1a40-a115-7001-d001-f0a1b2c30115
+title: 'Bài 15: Mã hóa End-to-End trong Microservices'
+slug: bai-15-ma-hoa-end-to-end-microservices
+description: >-
+  Mã hóa dữ liệu y tế end-to-end trong microservices: field-level encryption
+  trong Quarkus entities, envelope encryption với HashiCorp Vault Transit engine,
+  JWE (JSON Web Encryption) cho inter-service communication, encrypted Kafka messages,
+  key rotation strategies, và Quarkus Vault extension integration.
+duration_minutes: 180
+is_free: true
+video_url: null
+sort_order: 15
+section_title: "Phần 4: Xây dựng Microservices với Quarkus"
+course:
+  id: 019e1a40-a100-7001-d001-f0a1b2c30001
+  title: Xây dựng Hệ thống Y tế Microservices — Quarkus, PostgreSQL, Keycloak chuẩn HIPAA
+  slug: xay-dung-he-thong-y-te-microservices
+---
+
+## 1. Tổng quan End-to-End Encryption cho Healthcare
+
+![Mã hóa End-to-End trong Healthcare Microservices — Envelope Encryption, Vault, Kafka](/storage/uploads/2026/04/healthcare-e2e-encryption-flow.png)
+
+Trong hệ thống microservices y tế, dữ liệu PHI di chuyển qua **nhiều layers**: từ client → API Gateway → Service → Kafka → Database. Mã hóa end-to-end đảm bảo dữ liệu **luôn được bảo vệ** ở mọi điểm — không chỉ in-transit (TLS) mà cả at-rest và in-use.
+
+### 1.1. Encryption Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│            End-to-End Encryption Architecture                │
+│                                                              │
+│  Client                                                      │
+│    │  TLS 1.3 (transport encryption)                         │
+│    ▼                                                         │
+│  API Gateway                                                 │
+│    │  JWT token validation                                   │
+│    ▼                                                         │
+│  Patient Service                                             │
+│    │  Field-level encryption (SSN, diagnosis)                │
+│    │  ┌─────────────────────┐                                │
+│    │  │ Vault Transit Engine │ ◄── Key Management            │
+│    │  │ (envelope encryption)│     Key Rotation               │
+│    │  └─────────────────────┘                                │
+│    │                                                         │
+│    ├──► PostgreSQL (encrypted columns stored)                │
+│    │    AES-256-GCM encrypted fields                         │
+│    │                                                         │
+│    ├──► Kafka (encrypted messages)                           │
+│    │    JWE (JSON Web Encryption)                             │
+│    │    Custom Serializer/Deserializer                        │
+│    │                                                         │
+│    └──► Lab Service (JWE payload)                            │
+│         Decrypt with shared transit key                       │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │            HashiCorp Vault                            │    │
+│  │  Transit Engine ──► Encryption keys                   │    │
+│  │  KV Engine      ──► Database credentials              │    │
+│  │  PKI Engine     ──► TLS certificates                  │    │
+│  │  Auto-unseal    ──► Cloud KMS                         │    │
+│  └──────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 1.2. Encryption Layers
+
+| Layer | Encryption | Key Management | Khi nào |
+|-------|-----------|----------------|---------|
+| Transport | TLS 1.3 | Certificate Authority | Request/Response |
+| Field-Level | AES-256-GCM | Vault Transit | Trước khi lưu DB |
+| Message | JWE (RSA-OAEP + AES) | Vault Transit | Inter-service messaging |
+| Database | pgcrypto / TDE | PostgreSQL managed | At-rest |
+| Backup | AES-256 | KMS | Backup files |
+
+## 2. Field-Level Encryption với JPA AttributeConverter
+
+### 2.1. Tại sao Field-Level Encryption?
+
+Database-level encryption (TDE - Transparent Data Encryption) bảo vệ data at-rest nhưng **không bảo vệ** khi data đã được load vào memory hoặc truy vấn qua SQL. Field-level encryption đảm bảo:
+
+- DBA không thể đọc PHI fields ngay cả khi query trực tiếp
+- Database dump / backup vẫn encrypted
+- Mỗi field có thể dùng **key khác nhau** (separation of concerns)
+
+### 2.2. JPA AttributeConverter cho Encryption
+
+```java
+package vn.hospital.encryption;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import jakarta.inject.Inject;
+
+@Converter
+public class EncryptedStringConverter implements AttributeConverter<String, String> {
+
+    @Inject
+    FieldEncryptionService encryptionService;
+
+    @Override
+    public String convertToDatabaseColumn(String plaintext) {
+        if (plaintext == null) return null;
+        return encryptionService.encrypt(plaintext);
+    }
+
+    @Override
+    public String convertToEntityAttribute(String ciphertext) {
+        if (ciphertext == null) return null;
+        return encryptionService.decrypt(ciphertext);
+    }
+}
+```
+
+### 2.3. Entity với Encrypted Fields
+
+```java
+package vn.hospital.entity;
+
+import jakarta.persistence.*;
+import vn.hospital.encryption.EncryptedStringConverter;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
+@Entity
+@Table(name = "patients", schema = "healthcare")
+public class PatientEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "mrn", unique = true, nullable = false)
+    private String mrn;  // Medical Record Number - not encrypted (used for lookups)
+
+    @Column(name = "full_name", nullable = false)
+    @Convert(converter = EncryptedStringConverter.class)
+    private String fullName;  // PHI - encrypted
+
+    @Column(name = "ssn")
+    @Convert(converter = EncryptedStringConverter.class)
+    private String ssn;  // PHI - encrypted
+
+    @Column(name = "date_of_birth")
+    @Convert(converter = EncryptedStringConverter.class)
+    private String dateOfBirth;  // PHI - encrypted (stored as string)
+
+    @Column(name = "phone_number")
+    @Convert(converter = EncryptedStringConverter.class)
+    private String phoneNumber;  // PHI - encrypted
+
+    @Column(name = "email")
+    @Convert(converter = EncryptedStringConverter.class)
+    private String email;  // PHI - encrypted
+
+    @Column(name = "address", columnDefinition = "TEXT")
+    @Convert(converter = EncryptedStringConverter.class)
+    private String address;  // PHI - encrypted
+
+    @Column(name = "diagnosis_codes", columnDefinition = "TEXT")
+    @Convert(converter = EncryptedStringConverter.class)
+    private String diagnosisCodes;  // PHI - encrypted (JSON array)
+
+    @Column(name = "hospital_id", nullable = false)
+    private String hospitalId;  // Not encrypted - used for row-level filtering
+
+    @Column(name = "department", nullable = false)
+    private String department;  // Not encrypted - used for access control
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDate createdAt;
+
+    // Getters, setters omitted for brevity
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+    public String getMrn() { return mrn; }
+    public void setMrn(String mrn) { this.mrn = mrn; }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getSsn() { return ssn; }
+    public void setSsn(String ssn) { this.ssn = ssn; }
+    public String getDateOfBirth() { return dateOfBirth; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getEmail() { return email; }
+    public String getAddress() { return address; }
+    public String getDiagnosisCodes() { return diagnosisCodes; }
+    public String getHospitalId() { return hospitalId; }
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+}
+```
+
+### 2.4. Database Schema
+
+```sql
+-- Encrypted columns sử dụng TEXT type vì ciphertext dài hơn plaintext
+CREATE TABLE healthcare.patients (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    mrn           VARCHAR(50) NOT NULL UNIQUE,
+    full_name     TEXT NOT NULL,          -- encrypted
+    ssn           TEXT,                   -- encrypted
+    date_of_birth TEXT,                   -- encrypted
+    phone_number  TEXT,                   -- encrypted
+    email         TEXT,                   -- encrypted
+    address       TEXT,                   -- encrypted
+    diagnosis_codes TEXT,                 -- encrypted (JSON)
+    hospital_id   VARCHAR(50) NOT NULL,
+    department    VARCHAR(100) NOT NULL,
+    created_at    DATE NOT NULL DEFAULT CURRENT_DATE,
+    updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Index trên non-encrypted columns (có thể query)
+CREATE INDEX idx_patients_hospital ON healthcare.patients(hospital_id);
+CREATE INDEX idx_patients_department ON healthcare.patients(department);
+CREATE INDEX idx_patients_mrn ON healthcare.patients(mrn);
+
+-- KHÔNG THỂ index encrypted columns!
+-- Nếu cần tìm kiếm theo encrypted field, dùng blind index
+CREATE TABLE healthcare.patients_blind_index (
+    patient_id    UUID REFERENCES healthcare.patients(id),
+    field_name    VARCHAR(50) NOT NULL,
+    blind_hash    BYTEA NOT NULL,  -- HMAC-SHA256 of plaintext
+    PRIMARY KEY (patient_id, field_name)
+);
+CREATE INDEX idx_blind_hash ON healthcare.patients_blind_index(field_name, blind_hash);
+```
+
+## 3. Envelope Encryption với HashiCorp Vault Transit Engine
+
+### 3.1. Envelope Encryption Pattern
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              Envelope Encryption Pattern                  │
+│                                                          │
+│  1. App generates random Data Encryption Key (DEK)       │
+│  2. App encrypts plaintext with DEK (AES-256-GCM)       │
+│  3. App sends DEK to Vault Transit for wrapping          │
+│  4. Vault encrypts DEK with Key Encryption Key (KEK)    │
+│  5. App stores: encrypted_data + wrapped_DEK             │
+│                                                          │
+│  ┌──────────┐    ┌───────────────┐    ┌──────────┐      │
+│  │ Plaintext│    │ Vault Transit │    │ Database │      │
+│  │ "SSN:    │    │               │    │          │      │
+│  │  123..."  │    │ KEK (master)  │    │ encrypted│      │
+│  └────┬─────┘    │               │    │ _data +  │      │
+│       │          │ wrap(DEK)→    │    │ wrapped  │      │
+│       ▼          │ wrapped_DEK   │    │ _DEK     │      │
+│  DEK(random)     │               │    │          │      │
+│       │          │ unwrap(       │    │          │      │
+│       ▼          │ wrapped_DEK)  │    │          │      │
+│  AES-256-GCM     │ → DEK         │    │          │      │
+│  encrypt         │               │    │          │      │
+│       │          └───────────────┘    └──────────┘      │
+│       ▼                                                  │
+│  encrypted_data                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 3.2. Vault Transit Engine Setup
+
+```bash
+# === Vault Setup ===
+
+# Enable Transit secrets engine
+vault secrets enable transit
+
+# Create encryption keys cho healthcare
+vault write -f transit/keys/phi-data \
+    type=aes256-gcm96 \
+    auto_rotate_period=720h  # Rotate every 30 days
+
+vault write -f transit/keys/ssn-data \
+    type=aes256-gcm96 \
+    auto_rotate_period=720h
+
+vault write -f transit/keys/medical-records \
+    type=aes256-gcm96 \
+    auto_rotate_period=720h
+
+# Create policy cho Patient Service
+vault policy write patient-service - << EOF
+# Transit encrypt/decrypt
+path "transit/encrypt/phi-data" {
+  capabilities = ["update"]
+}
+path "transit/decrypt/phi-data" {
+  capabilities = ["update"]
+}
+path "transit/encrypt/ssn-data" {
+  capabilities = ["update"]
+}
+path "transit/decrypt/ssn-data" {
+  capabilities = ["update"]
+}
+
+# Rewrap (key rotation)
+path "transit/rewrap/phi-data" {
+  capabilities = ["update"]
+}
+path "transit/rewrap/ssn-data" {
+  capabilities = ["update"]
+}
+
+# Key info (read-only)
+path "transit/keys/phi-data" {
+  capabilities = ["read"]
+}
+
+# DENY: delete keys, export keys
+path "transit/keys/*/config" {
+  capabilities = ["deny"]
+}
+path "transit/export/*" {
+  capabilities = ["deny"]
+}
+EOF
+
+# Create AppRole for Patient Service
+vault auth enable approle
+
+vault write auth/approle/role/patient-service \
+    token_policies="patient-service" \
+    token_ttl=1h \
+    token_max_ttl=4h \
+    secret_id_ttl=720h
+```
+
+### 3.3. Vault Transit Encryption Service
+
+```java
+package vn.hospital.encryption;
+
+import io.quarkus.vault.VaultTransitSecretEngine;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+@ApplicationScoped
+public class VaultTransitEncryptionService {
+
+    private static final Logger LOG = Logger.getLogger(VaultTransitEncryptionService.class);
+
+    @Inject
+    VaultTransitSecretEngine transitEngine;
+
+    // Default key for PHI data
+    private static final String PHI_KEY = "phi-data";
+    private static final String SSN_KEY = "ssn-data";
+
+    /**
+     * Encrypt plaintext using Vault Transit engine.
+     * Returns: vault:v1:base64encoded_ciphertext
+     */
+    public String encrypt(String plaintext) {
+        return encrypt(plaintext, PHI_KEY);
+    }
+
+    public String encrypt(String plaintext, String keyName) {
+        if (plaintext == null || plaintext.isEmpty()) return plaintext;
+
+        try {
+            // Vault Transit expects base64-encoded plaintext
+            String base64Plaintext = Base64.getEncoder()
+                .encodeToString(plaintext.getBytes(StandardCharsets.UTF_8));
+
+            String ciphertext = transitEngine.encrypt(keyName, base64Plaintext);
+            // Returns: vault:v1:xxxxx... or vault:v2:xxxxx...
+            return ciphertext;
+        } catch (Exception e) {
+            LOG.errorf(e, "Vault encryption failed for key: %s", keyName);
+            throw new EncryptionException("Failed to encrypt data", e);
+        }
+    }
+
+    /**
+     * Decrypt ciphertext using Vault Transit engine.
+     */
+    public String decrypt(String ciphertext) {
+        return decrypt(ciphertext, PHI_KEY);
+    }
+
+    public String decrypt(String ciphertext, String keyName) {
+        if (ciphertext == null || ciphertext.isEmpty()) return ciphertext;
+
+        try {
+            // Vault returns base64-encoded plaintext
+            String base64Plaintext = transitEngine.decrypt(keyName, ciphertext);
+            return new String(
+                Base64.getDecoder().decode(base64Plaintext),
+                StandardCharsets.UTF_8
+            );
+        } catch (Exception e) {
+            LOG.errorf(e, "Vault decryption failed for key: %s", keyName);
+            throw new EncryptionException("Failed to decrypt data", e);
+        }
+    }
+
+    /**
+     * Rewrap ciphertext with latest key version (for key rotation).
+     * Old ciphertext (encrypted with v1) → new ciphertext (encrypted with v2)
+     * WITHOUT exposing plaintext.
+     */
+    public String rewrap(String ciphertext, String keyName) {
+        if (ciphertext == null) return null;
+
+        try {
+            return transitEngine.rewrap(keyName, ciphertext);
+        } catch (Exception e) {
+            LOG.errorf(e, "Vault rewrap failed for key: %s", keyName);
+            throw new EncryptionException("Failed to rewrap data", e);
+        }
+    }
+
+    /**
+     * Encrypt SSN with dedicated key.
+     */
+    public String encryptSSN(String ssn) {
+        return encrypt(ssn, SSN_KEY);
+    }
+
+    public String decryptSSN(String encryptedSSN) {
+        return decrypt(encryptedSSN, SSN_KEY);
+    }
+}
+```
+
+### 3.4. Field Encryption Service (sử dụng Vault Transit)
+
+```java
+package vn.hospital.encryption;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public class FieldEncryptionService {
+
+    @Inject
+    VaultTransitEncryptionService vaultService;
+
+    public String encrypt(String plaintext) {
+        return vaultService.encrypt(plaintext);
+    }
+
+    public String decrypt(String ciphertext) {
+        return vaultService.decrypt(ciphertext);
+    }
+}
+```
+
+### 3.5. Quarkus Vault Extension Configuration
+
+```properties
+# application.properties - Vault Configuration
+
+# === Vault Connection ===
+quarkus.vault.url=https://vault.hospital.internal:8200
+quarkus.vault.authentication.approle.role-id=${VAULT_ROLE_ID}
+quarkus.vault.authentication.approle.secret-id=${VAULT_SECRET_ID}
+
+# TLS for Vault connection
+quarkus.vault.tls.ca-cert=classpath:vault-ca.pem
+quarkus.vault.tls.use-kubernetes-ca-cert=false
+
+# === Transit Engine ===
+quarkus.vault.transit.enabled=true
+
+# === Token Renewal ===
+quarkus.vault.renew-grace-period=1H
+quarkus.vault.secret-config-cache-period=10M
+
+# === Vault KV for secrets (optional) ===
+quarkus.vault.secret-config-kv-path=healthcare/patient-service
+
+# === Dev Profile ===
+%dev.quarkus.vault.url=http://localhost:8200
+%dev.quarkus.vault.authentication.client-token=dev-root-token
+%dev.quarkus.vault.devservices.enabled=true
+%dev.quarkus.vault.devservices.image-name=hashicorp/vault:1.15
+```
+
+### 3.6. Maven Dependencies
+
+```xml
+<!-- pom.xml - Vault Extension -->
+<dependencies>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-vault</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-vault-transit</artifactId>
+    </dependency>
+</dependencies>
+```
+
+## 4. JWE (JSON Web Encryption) cho Inter-Service Communication
+
+### 4.1. JWE Overview
+
+Khi microservices gửi dữ liệu PHI qua HTTP (REST calls), JWT chỉ **signed** (JWS) nhưng **không encrypted** — ai cũng có thể decode payload. JWE mã hóa toàn bộ payload:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  JWS (JSON Web Signature) - chỉ signed                  │
+│                                                          │
+│  Header.Payload.Signature                                │
+│  │       │         │                                     │
+│  │       │         └── Verify integrity                  │
+│  │       └──────────── Base64 decode = readable!         │
+│  └──────────────────── Algorithm info                    │
+│                                                          │
+│  JWE (JSON Web Encryption) - encrypted                   │
+│                                                          │
+│  Header.EncKey.IV.Ciphertext.AuthTag                     │
+│  │       │     │      │         │                        │
+│  │       │     │      │         └── Authentication tag   │
+│  │       │     │      └──────────── Encrypted payload    │
+│  │       │     └─────────────────── Initialization vec   │
+│  │       └───────────────────────── Encrypted content key│
+│  └───────────────────────────────── Algorithm info       │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 4.2. JWE Implementation
+
+```java
+package vn.hospital.encryption;
+
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.*;
+import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.jwk.gen.*;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
+
+@ApplicationScoped
+public class JweService {
+
+    private static final Logger LOG = Logger.getLogger(JweService.class);
+
+    @Inject
+    KeyManagementService keyService;
+
+    /**
+     * Encrypt payload to JWE compact serialization.
+     * Algorithm: RSA-OAEP-256 + A256GCM
+     */
+    public String encrypt(String payload, String recipientServiceId) {
+        try {
+            // Get recipient's public key
+            RSAKey recipientPublicKey = keyService.getPublicKey(recipientServiceId);
+
+            // Create JWE header
+            JWEHeader header = new JWEHeader.Builder(
+                    JWEAlgorithm.RSA_OAEP_256,  // Key encryption
+                    EncryptionMethod.A256GCM      // Content encryption
+                )
+                .contentType("JSON")
+                .keyID(recipientPublicKey.getKeyID())
+                .build();
+
+            // Create JWE object
+            JWEObject jwe = new JWEObject(header, new Payload(payload));
+
+            // Encrypt with recipient's public key
+            jwe.encrypt(new RSAEncrypter(recipientPublicKey));
+
+            return jwe.serialize();
+        } catch (JOSEException e) {
+            LOG.error("JWE encryption failed", e);
+            throw new EncryptionException("Failed to create JWE", e);
+        }
+    }
+
+    /**
+     * Decrypt JWE compact serialization.
+     */
+    public String decrypt(String jweString) {
+        try {
+            JWEObject jwe = JWEObject.parse(jweString);
+
+            // Get our private key
+            RSAKey privateKey = keyService.getPrivateKey();
+
+            // Decrypt
+            jwe.decrypt(new RSADecrypter(privateKey));
+
+            return jwe.getPayload().toString();
+        } catch (Exception e) {
+            LOG.error("JWE decryption failed", e);
+            throw new EncryptionException("Failed to decrypt JWE", e);
+        }
+    }
+}
+```
+
+### 4.3. Key Management Service
+
+```java
+package vn.hospital.encryption;
+
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
+import io.quarkus.vault.VaultKVSecretEngine;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.logging.Logger;
+
+import java.util.Map;
+
+@ApplicationScoped
+public class KeyManagementService {
+
+    private static final Logger LOG = Logger.getLogger(KeyManagementService.class);
+
+    @Inject
+    VaultKVSecretEngine kvEngine;
+
+    @ConfigProperty(name = "app.service-id")
+    String serviceId;
+
+    private RSAKey cachedPrivateKey;
+
+    /**
+     * Get public key for a recipient service.
+     * Keys are stored in Vault KV engine.
+     */
+    public RSAKey getPublicKey(String serviceId) {
+        try {
+            Map<String, String> secret = kvEngine.readSecret(
+                "healthcare/jwe-keys/" + serviceId);
+            String jwkJson = secret.get("public_key");
+            return RSAKey.parse(jwkJson);
+        } catch (Exception e) {
+            LOG.errorf(e, "Failed to get public key for service: %s", serviceId);
+            throw new EncryptionException("Public key not found", e);
+        }
+    }
+
+    /**
+     * Get our private key (cached).
+     */
+    public RSAKey getPrivateKey() {
+        if (cachedPrivateKey == null) {
+            try {
+                Map<String, String> secret = kvEngine.readSecret(
+                    "healthcare/jwe-keys/" + serviceId);
+                String jwkJson = secret.get("private_key");
+                cachedPrivateKey = RSAKey.parse(jwkJson);
+            } catch (Exception e) {
+                LOG.error("Failed to get private key", e);
+                throw new EncryptionException("Private key not found", e);
+            }
+        }
+        return cachedPrivateKey;
+    }
+
+    /**
+     * Generate and store new RSA key pair for a service.
+     * Run this during service provisioning.
+     */
+    public void generateAndStoreKeyPair(String serviceId) {
+        try {
+            RSAKey rsaKey = new RSAKeyGenerator(4096)
+                .keyID(serviceId + "-" + System.currentTimeMillis())
+                .generate();
+
+            // Store private key (full JWK)
+            // Store public key (public JWK only)
+            kvEngine.writeSecret("healthcare/jwe-keys/" + serviceId,
+                Map.of(
+                    "private_key", rsaKey.toJSONString(),
+                    "public_key", rsaKey.toPublicJWK().toJSONString()
+                )
+            );
+
+            LOG.infof("Generated JWE key pair for service: %s", serviceId);
+        } catch (Exception e) {
+            throw new EncryptionException("Key generation failed", e);
+        }
+    }
+}
+```
+
+### 4.4. JWE REST Client Filter
+
+```java
+package vn.hospital.client;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.client.ClientResponseFilter;
+import vn.hospital.encryption.JweService;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * JAX-RS Client filter that encrypts request bodies and decrypts response bodies
+ * for inter-service communication.
+ */
+public class JweClientFilter implements ClientRequestFilter, ClientResponseFilter {
+
+    @Inject
+    JweService jweService;
+
+    private final String recipientServiceId;
+
+    public JweClientFilter(String recipientServiceId) {
+        this.recipientServiceId = recipientServiceId;
+    }
+
+    @Override
+    public void filter(ClientRequestContext request) throws IOException {
+        if (request.hasEntity()) {
+            String body = request.getEntity().toString();
+            String encrypted = jweService.encrypt(body, recipientServiceId);
+            request.setEntity(encrypted);
+            request.getHeaders().putSingle("Content-Type", "application/jose");
+        }
+    }
+
+    @Override
+    public void filter(ClientRequestContext request,
+                       ClientResponseContext response) throws IOException {
+        String contentType = response.getHeaderString("Content-Type");
+        if ("application/jose".equals(contentType) && response.hasEntity()) {
+            byte[] body = response.getEntityStream().readAllBytes();
+            String jweString = new String(body, StandardCharsets.UTF_8);
+            String decrypted = jweService.decrypt(jweString);
+            response.setEntityStream(
+                new ByteArrayInputStream(decrypted.getBytes(StandardCharsets.UTF_8)));
+            response.getHeaders().putSingle("Content-Type", "application/json");
+        }
+    }
+}
+```
+
+## 5. Encrypted Kafka Messages
+
+### 5.1. Encryption Architecture cho Kafka
+
+```
+┌─────────────────────────────────────────────────────────┐
+│           Encrypted Kafka Message Flow                   │
+│                                                          │
+│  Producer (Patient Service)                              │
+│    │                                                     │
+│    ├── 1. Serialize PatientEvent → JSON                  │
+│    ├── 2. Generate random DEK (AES-256)                  │
+│    ├── 3. Encrypt JSON with DEK                          │
+│    ├── 4. Wrap DEK with Vault Transit                    │
+│    ├── 5. Create envelope: {wrapped_dek, iv, ciphertext} │
+│    └── 6. Publish to Kafka                               │
+│                                                          │
+│  Kafka Broker                                            │
+│    │  Messages are encrypted — broker cannot read        │
+│    │                                                     │
+│  Consumer (Lab Service)                                  │
+│    │                                                     │
+│    ├── 1. Read envelope from Kafka                       │
+│    ├── 2. Unwrap DEK with Vault Transit                  │
+│    ├── 3. Decrypt ciphertext with DEK                    │
+│    ├── 4. Deserialize JSON → PatientEvent                │
+│    └── 5. Process event                                  │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 5.2. Encrypted Kafka Serializer
+
+```java
+package vn.hospital.kafka;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.vault.VaultTransitSecretEngine;
+import org.apache.kafka.common.serialization.Serializer;
+import org.jboss.logging.Logger;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Map;
+
+public class EncryptedSerializer<T> implements Serializer<T> {
+
+    private static final Logger LOG = Logger.getLogger(EncryptedSerializer.class);
+    private static final String TRANSIT_KEY = "kafka-messages";
+    private static final int GCM_TAG_LENGTH = 128;
+    private static final int IV_LENGTH = 12;
+
+    private ObjectMapper objectMapper;
+    private VaultTransitSecretEngine transitEngine;
+
+    @Override
+    public void configure(Map<String, ?> configs, boolean isKey) {
+        this.objectMapper = (ObjectMapper) configs.get("object.mapper");
+        this.transitEngine = (VaultTransitSecretEngine) configs.get("vault.transit");
+    }
+
+    @Override
+    public byte[] serialize(String topic, T data) {
+        if (data == null) return null;
+
+        try {
+            // 1. Serialize to JSON
+            String json = objectMapper.writeValueAsString(data);
+
+            // 2. Generate random DEK
+            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+            keyGen.init(256);
+            SecretKey dek = keyGen.generateKey();
+
+            // 3. Generate random IV
+            byte[] iv = new byte[IV_LENGTH];
+            new SecureRandom().nextBytes(iv);
+
+            // 4. Encrypt with DEK (AES-256-GCM)
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, dek, new GCMParameterSpec(GCM_TAG_LENGTH, iv));
+            byte[] ciphertext = cipher.doFinal(json.getBytes(StandardCharsets.UTF_8));
+
+            // 5. Wrap DEK with Vault Transit
+            String dekBase64 = Base64.getEncoder().encodeToString(dek.getEncoded());
+            String wrappedDek = transitEngine.encrypt(TRANSIT_KEY, dekBase64);
+
+            // 6. Build envelope: [wrappedDekLength][wrappedDek][iv][ciphertext]
+            byte[] wrappedDekBytes = wrappedDek.getBytes(StandardCharsets.UTF_8);
+            ByteBuffer envelope = ByteBuffer.allocate(
+                4 + wrappedDekBytes.length + IV_LENGTH + ciphertext.length);
+            envelope.putInt(wrappedDekBytes.length);
+            envelope.put(wrappedDekBytes);
+            envelope.put(iv);
+            envelope.put(ciphertext);
+
+            return envelope.array();
+        } catch (Exception e) {
+            LOG.error("Kafka message encryption failed", e);
+            throw new RuntimeException("Encryption failed", e);
+        }
+    }
+}
+```
+
+### 5.3. Encrypted Kafka Deserializer
+
+```java
+package vn.hospital.kafka;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.vault.VaultTransitSecretEngine;
+import org.apache.kafka.common.serialization.Deserializer;
+import org.jboss.logging.Logger;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Map;
+
+public class EncryptedDeserializer<T> implements Deserializer<T> {
+
+    private static final Logger LOG = Logger.getLogger(EncryptedDeserializer.class);
+    private static final String TRANSIT_KEY = "kafka-messages";
+    private static final int GCM_TAG_LENGTH = 128;
+    private static final int IV_LENGTH = 12;
+
+    private ObjectMapper objectMapper;
+    private VaultTransitSecretEngine transitEngine;
+    private Class<T> targetType;
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void configure(Map<String, ?> configs, boolean isKey) {
+        this.objectMapper = (ObjectMapper) configs.get("object.mapper");
+        this.transitEngine = (VaultTransitSecretEngine) configs.get("vault.transit");
+        this.targetType = (Class<T>) configs.get("target.type");
+    }
+
+    @Override
+    public T deserialize(String topic, byte[] data) {
+        if (data == null) return null;
+
+        try {
+            ByteBuffer buffer = ByteBuffer.wrap(data);
+
+            // 1. Read wrapped DEK
+            int wrappedDekLength = buffer.getInt();
+            byte[] wrappedDekBytes = new byte[wrappedDekLength];
+            buffer.get(wrappedDekBytes);
+            String wrappedDek = new String(wrappedDekBytes, StandardCharsets.UTF_8);
+
+            // 2. Read IV
+            byte[] iv = new byte[IV_LENGTH];
+            buffer.get(iv);
+
+            // 3. Read ciphertext
+            byte[] ciphertext = new byte[buffer.remaining()];
+            buffer.get(ciphertext);
+
+            // 4. Unwrap DEK with Vault Transit
+            String dekBase64 = transitEngine.decrypt(TRANSIT_KEY, wrappedDek);
+            byte[] dekBytes = Base64.getDecoder().decode(dekBase64);
+            SecretKeySpec dek = new SecretKeySpec(dekBytes, "AES");
+
+            // 5. Decrypt with DEK
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, dek, new GCMParameterSpec(GCM_TAG_LENGTH, iv));
+            byte[] plaintext = cipher.doFinal(ciphertext);
+
+            // 6. Deserialize JSON
+            return objectMapper.readValue(plaintext, targetType);
+        } catch (Exception e) {
+            LOG.error("Kafka message decryption failed", e);
+            throw new RuntimeException("Decryption failed", e);
+        }
+    }
+}
+```
+
+### 5.4. Kafka Configuration
+
+```properties
+# application.properties - Encrypted Kafka
+
+# === Kafka Connection ===
+kafka.bootstrap.servers=kafka.hospital.internal:9093
+
+# SSL for Kafka connection
+kafka.security.protocol=SSL
+kafka.ssl.truststore.location=/etc/kafka/truststore.p12
+kafka.ssl.truststore.password=${KAFKA_TRUSTSTORE_PASSWORD}
+kafka.ssl.keystore.location=/etc/kafka/keystore.p12
+kafka.ssl.keystore.password=${KAFKA_KEYSTORE_PASSWORD}
+
+# === Outgoing Channel (Producer) ===
+mp.messaging.outgoing.patient-events.connector=smallrye-kafka
+mp.messaging.outgoing.patient-events.topic=healthcare.patient-events
+mp.messaging.outgoing.patient-events.value.serializer=vn.hospital.kafka.EncryptedSerializer
+
+# === Incoming Channel (Consumer) ===
+mp.messaging.incoming.patient-events-in.connector=smallrye-kafka
+mp.messaging.incoming.patient-events-in.topic=healthcare.patient-events
+mp.messaging.incoming.patient-events-in.value.deserializer=vn.hospital.kafka.EncryptedDeserializer
+mp.messaging.incoming.patient-events-in.group.id=lab-service
+```
+
+## 6. Key Rotation Strategies
+
+### 6.1. Key Rotation Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              Key Rotation Strategy                       │
+│                                                          │
+│  Phase 1: Rotate KEK in Vault                            │
+│    vault write -f transit/keys/phi-data/rotate           │
+│    → New version v2 created                              │
+│    → Old v1 still active for decrypt                     │
+│                                                          │
+│  Phase 2: Rewrap existing data                           │
+│    SELECT * FROM patients WHERE encrypted_col             │
+│      LIKE 'vault:v1:%'                                   │
+│    → For each row: vault rewrap                          │
+│    → vault:v1:xxx → vault:v2:yyy (no plaintext exposed) │
+│                                                          │
+│  Phase 3: Disable old key version                        │
+│    vault write transit/keys/phi-data/config              │
+│      min_decryption_version=2                            │
+│                                                          │
+│  Timeline:                                               │
+│  ├── Day 0: Rotate key                                   │
+│  ├── Day 1-7: Rewrap all data                            │
+│  ├── Day 8: Verify no v1 data remains                    │
+│  └── Day 9: Disable v1                                   │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 6.2. Key Rotation Job
+
+```java
+package vn.hospital.encryption;
+
+import io.quarkus.scheduler.Scheduled;
+import io.quarkus.vault.VaultTransitSecretEngine;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.jboss.logging.Logger;
+
+import java.util.List;
+
+@ApplicationScoped
+public class KeyRotationJob {
+
+    private static final Logger LOG = Logger.getLogger(KeyRotationJob.class);
+
+    @Inject
+    VaultTransitSecretEngine transitEngine;
+
+    @Inject
+    EntityManager entityManager;
+
+    @Inject
+    VaultTransitEncryptionService encryptionService;
+
+    /**
+     * Rewrap data encrypted with old key versions.
+     * Runs daily at 2 AM.
+     */
+    @Scheduled(cron = "0 0 2 * * ?")
+    @Transactional
+    public void rewrapOldData() {
+        LOG.info("Starting key rotation rewrap job");
+
+        int totalRewrapped = 0;
+        int batchSize = 100;
+
+        // Rewrap patients table
+        totalRewrapped += rewrapTable(
+            "healthcare.patients",
+            List.of("full_name", "ssn", "date_of_birth", "phone_number",
+                     "email", "address", "diagnosis_codes"),
+            "phi-data",
+            batchSize
+        );
+
+        LOG.infof("Key rotation complete: %d fields rewrapped", totalRewrapped);
+    }
+
+    @SuppressWarnings("unchecked")
+    private int rewrapTable(String tableName, List<String> columns,
+                             String keyName, int batchSize) {
+        int totalRewrapped = 0;
+
+        // Get current key version
+        // Vault Transit ciphertext format: vault:vN:base64data
+        // We want to rewrap anything not on latest version
+
+        for (String column : columns) {
+            // Find rows with old key versions
+            String sql = String.format(
+                "SELECT id, %s FROM %s WHERE %s IS NOT NULL " +
+                "AND %s NOT LIKE 'vault:v%%' LIMIT %d",
+                column, tableName, column, column, batchSize);
+
+            // Note: In production, determine latest version dynamically
+            List<Object[]> rows = entityManager.createNativeQuery(sql)
+                .getResultList();
+
+            for (Object[] row : rows) {
+                String id = row[0].toString();
+                String ciphertext = (String) row[1];
+
+                try {
+                    String rewrapped = encryptionService.rewrap(ciphertext, keyName);
+
+                    if (!rewrapped.equals(ciphertext)) {
+                        String updateSql = String.format(
+                            "UPDATE %s SET %s = ?1 WHERE id = ?2::uuid",
+                            tableName, column);
+                        entityManager.createNativeQuery(updateSql)
+                            .setParameter(1, rewrapped)
+                            .setParameter(2, id)
+                            .executeUpdate();
+                        totalRewrapped++;
+                    }
+                } catch (Exception e) {
+                    LOG.errorf(e, "Rewrap failed for %s.%s id=%s",
+                        tableName, column, id);
+                }
+            }
+        }
+
+        return totalRewrapped;
+    }
+}
+```
+
+### 6.3. Key Rotation Vault Commands
+
+```bash
+# === Rotate encryption key ===
+# Tạo key version mới (old versions vẫn dùng để decrypt)
+vault write -f transit/keys/phi-data/rotate
+
+# Check key versions
+vault read transit/keys/phi-data
+# latest_version: 2
+# min_decryption_version: 1
+# min_encryption_version: 0 (latest)
+
+# === After rewrap complete ===
+# Set minimum decryption version (disable old versions)
+vault write transit/keys/phi-data/config \
+    min_decryption_version=2
+
+# === Emergency: Disable a compromised key version ===
+vault write transit/keys/phi-data/config \
+    min_decryption_version=3  # Skip compromised v2
+
+# === Key rotation audit ===
+vault audit list
+vault read sys/audit
+```
+
+## 7. Sensitive Data Handling trong Logs và Exceptions
+
+### 7.1. PHI Masking cho Logging
+
+```java
+package vn.hospital.logging;
+
+import io.quarkus.logging.LoggingFilter;
+import jakarta.enterprise.context.ApplicationScoped;
+
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
+import java.util.regex.Pattern;
+
+@ApplicationScoped
+@LoggingFilter(name = "phi-masking-filter")
+public class PhiMaskingFilter implements Filter {
+
+    // Patterns for PHI data
+    private static final Pattern SSN_PATTERN =
+        Pattern.compile("\\b\\d{3}-?\\d{2}-?\\d{4}\\b");
+    private static final Pattern PHONE_PATTERN =
+        Pattern.compile("\\b(\\+?\\d{1,3}[-.\\s]?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}\\b");
+    private static final Pattern EMAIL_PATTERN =
+        Pattern.compile("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
+    private static final Pattern MRN_PATTERN =
+        Pattern.compile("\\bMRN[:\\s]*[A-Z0-9]{6,15}\\b");
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        if (record.getMessage() != null) {
+            String masked = maskPHI(record.getMessage());
+            record.setMessage(masked);
+        }
+        return true;
+    }
+
+    public static String maskPHI(String input) {
+        if (input == null) return null;
+
+        String result = input;
+        result = SSN_PATTERN.matcher(result).replaceAll("***-**-****");
+        result = PHONE_PATTERN.matcher(result).replaceAll("***-***-****");
+        result = EMAIL_PATTERN.matcher(result).replaceAll("***@***.***");
+        result = MRN_PATTERN.matcher(result).replaceAll("MRN:***");
+
+        return result;
+    }
+}
+```
+
+### 7.2. application.properties cho Logging Filter
+
+```properties
+# Enable PHI masking filter
+quarkus.log.filter."phi-masking-filter".if-starts-with=vn.hospital
+
+# Structured JSON logging cho audit
+quarkus.log.console.json=true
+quarkus.log.console.json.additional-field."app".value=patient-service
+quarkus.log.console.json.additional-field."env".value=${ENV:dev}
+```
+
+## Tổng kết
+
+Trong bài học này, chúng ta đã xây dựng **End-to-End Encryption** toàn diện cho healthcare microservices:
+
+1. **Field-Level Encryption**: JPA AttributeConverter tự động encrypt/decrypt PHI columns — DBA không thể đọc plaintext
+2. **Envelope Encryption**: Vault Transit engine quản lý KEK, application sử dụng DEK — separation of key management
+3. **Vault Integration**: Quarkus Vault extension, AppRole authentication, Transit encrypt/decrypt/rewrap APIs
+4. **JWE**: JSON Web Encryption cho inter-service REST calls — payload encrypted end-to-end, không chỉ signed
+5. **Encrypted Kafka**: Custom serializer/deserializer với envelope encryption — broker không thể đọc messages
+6. **Key Rotation**: Automated rewrap job, zero-downtime key rotation, multi-version key support
+7. **PHI Masking**: Logging filter ngăn PHI leak vào logs, exception sanitization
+
+Encryption landscape:
+```
+Client ──[TLS 1.3]──► Gateway ──[TLS]──► Service
+                                              │
+                                   ┌──────────┼──────────┐
+                                   │          │          │
+                              Field-Level  JWE       Encrypted
+                              Encryption  payloads   Kafka
+                                   │          │          │
+                                   └──────────┼──────────┘
+                                              │
+                                    Vault Transit (KEK)
+```
+
+## Bài tập
+
+1. **Field-Level Encryption**: Tạo Quarkus project với JPA + PostgreSQL. Implement `EncryptedStringConverter` sử dụng AES-256-GCM (local key trước). Tạo `PatientEntity` với encrypted fields (fullName, ssn, email). INSERT/SELECT patient và verify data trong database là ciphertext (dùng `psql` direct query).
+
+2. **Vault Transit Integration**: Setup HashiCorp Vault (Docker). Enable Transit engine, tạo key `phi-data`. Cấu hình Quarkus Vault extension. Thay `EncryptedStringConverter` để sử dụng Vault Transit. Test encrypt/decrypt thông qua Vault. Verify key version trong ciphertext (`vault:v1:...`).
+
+3. **Key Rotation**: Rotate key trong Vault (`vault write -f transit/keys/phi-data/rotate`). Verify new inserts dùng v2. Implement rewrap job cho existing data. Verify tất cả data chuyển sang v2. Set `min_decryption_version=2` và verify.
+
+4. **Encrypted Kafka**: Setup Kafka (Docker Compose). Implement `EncryptedSerializer` và `EncryptedDeserializer` với envelope encryption. Publish PatientEvent encrypted message. Consume và decrypt. Verify message trong Kafka (kafka-console-consumer) là binary/encrypted, không đọc được.
+
+---
+
+---
+
+<!-- SERIES-NAV:START -->
+| ◀ Bài trước | Bài tiếp theo ▶ |
+|:---|---:|
+| [Bài 14: API Gateway Security - Rate Limiting, Input Validation & WAF](/series/bao-mat-du-lieu-y-te-cho-microservices/bai-14-api-gateway-rate-limiting-waf) | [Bài 16: mTLS, Service Mesh & Secure Inter-Service Communication](/series/bao-mat-du-lieu-y-te-cho-microservices/bai-16-mtls-service-mesh-inter-service-communication) |
+<!-- SERIES-NAV:END -->

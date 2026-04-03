@@ -1,0 +1,493 @@
+---
+id: 019e1a40-a104-7001-d001-f0a1b2c30104
+title: 'Bài 4: Threat Modeling STRIDE/DREAD cho Hệ thống Y tế'
+slug: bai-4-threat-modeling-stride-dread
+description: >-
+  Áp dụng Threat Modeling cho hệ thống y tế: STRIDE (Spoofing, Tampering,
+  Repudiation, Information Disclosure, DoS, Elevation of Privilege),
+  DREAD scoring, Attack Trees, Data Flow Diagrams cho microservices y tế,
+  OWASP Top 10 trong healthcare context, và xây dựng Security Requirements
+  từ threat model.
+duration_minutes: 150
+is_free: true
+video_url: null
+sort_order: 4
+section_title: "Phần 1: Kiến trúc & Nền tảng"
+course:
+  id: 019e1a40-a100-7001-d001-f0a1b2c30001
+  title: Xây dựng Hệ thống Y tế Microservices — Quarkus, PostgreSQL, Keycloak chuẩn HIPAA
+  slug: xay-dung-he-thong-y-te-microservices
+---
+
+## 1. Threat Modeling là gì?
+
+![Threat Modeling STRIDE cho hệ thống y tế Microservices](/storage/uploads/2026/04/healthcare-threat-model-stride.png)
+
+**Threat Modeling** là quá trình có hệ thống để xác định, đánh giá, và ưu tiên các mối đe dọa bảo mật tiềm ẩn đối với hệ thống. Trong y tế, threat modeling đặc biệt quan trọng vì hậu quả của một cuộc tấn công không chỉ là mất dữ liệu — mà có thể ảnh hưởng đến **tính mạng bệnh nhân**.
+
+### 1.1. Quy trình Threat Modeling
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                  Threat Modeling Process                   │
+│                                                           │
+│  1. Define Scope ──▶ 2. Decompose ──▶ 3. Identify       │
+│     & Objectives      Application       Threats          │
+│         │                                    │           │
+│         │              ┌─────────────────────┘           │
+│         │              ▼                                  │
+│         └──────── 6. Validate ◀── 5. Rate   ◀── 4. Mitigate │
+│                    & Iterate      Threats        Threats  │
+└──────────────────────────────────────────────────────────┘
+```
+
+### 1.2. Khi nào cần Threat Modeling?
+
+- **Thiết kế hệ thống mới** (HIS, EMR, LIS)
+- **Thêm microservice mới** vào hệ thống hiện tại
+- **Thay đổi kiến trúc** (ví dụ: chuyển từ monolith sang microservices)
+- **Tích hợp hệ thống bên ngoài** (lab instruments, insurance APIs)
+- **Review định kỳ** (6 tháng hoặc sau mỗi major release)
+
+## 2. STRIDE Threat Model
+
+### 2.1. Overview STRIDE
+
+STRIDE là framework phân loại threats do Microsoft phát triển:
+
+| Letter | Threat | Property Violated | Ví dụ trong Y Tế |
+|--------|--------|-------------------|-------------------|
+| **S** | Spoofing | Authentication | Giả mạo bác sĩ để truy cập hồ sơ bệnh nhân |
+| **T** | Tampering | Integrity | Sửa đổi kết quả xét nghiệm trong database |
+| **R** | Repudiation | Non-repudiation | Bác sĩ phủ nhận đã kê đơn thuốc sai |
+| **I** | Information Disclosure | Confidentiality | Rò rỉ danh sách bệnh nhân HIV |
+| **D** | Denial of Service | Availability | Tấn công DDoS khiến hệ thống cấp cứu ngừng hoạt động |
+| **E** | Elevation of Privilege | Authorization | Y tá truy cập được chức năng admin |
+
+### 2.2. STRIDE Analysis cho Healthcare Microservices
+
+#### S - Spoofing (Giả mạo danh tính)
+
+```
+Threat: Attacker giả mạo JWT token để truy cập Patient API
+───────────────────────────────────────────────────────────
+Attack Vector:
+  1. Steal JWT từ browser localStorage
+  2. Forge JWT với modified claims (role: "admin")
+  3. Replay expired token
+
+Affected Components:
+  - API Gateway
+  - Patient Service
+  - Clinical Service
+
+Mitigations:
+  ┌────────────────────────────────────────────┐
+  │ M1: Keycloak OIDC token validation         │
+  │     → quarkus-oidc auto-verifies signature │
+  │                                             │
+  │ M2: Short-lived access tokens (5 min)      │
+  │     → Reduce token theft window            │
+  │                                             │
+  │ M3: DPoP (Proof-of-Possession)             │
+  │     → Token bound to client certificate    │
+  │                                             │
+  │ M4: Refresh token rotation                 │
+  │     → One-time use refresh tokens          │
+  │                                             │
+  │ M5: mTLS between services                  │
+  │     → Service identity verification        │
+  └────────────────────────────────────────────┘
+```
+
+#### T - Tampering (Giả mạo dữ liệu)
+
+```
+Threat: Insider sửa đổi kết quả xét nghiệm trong lab_db
+───────────────────────────────────────────────────────────
+Attack Vector:
+  1. DBA trực tiếp UPDATE lab_results table
+  2. Khai thác SQL injection để sửa dữ liệu
+  3. Intercept và modify API response
+
+Mitigations:
+  ┌────────────────────────────────────────────┐
+  │ M1: pgAudit logging (log all DML)          │
+  │ M2: Database triggers cho change tracking  │
+  │ M3: Digital signatures cho lab results     │
+  │ M4: Immutable audit log (append-only)      │
+  │ M5: Dual control cho critical changes      │
+  │ M6: Row versioning with checksums          │
+  └────────────────────────────────────────────┘
+```
+
+```sql
+-- Integrity protection: Row versioning with checksum
+CREATE TABLE lab_results (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_id UUID NOT NULL,
+    test_code VARCHAR(20) NOT NULL,
+    result_value NUMERIC,
+    result_unit VARCHAR(20),
+    status VARCHAR(20) DEFAULT 'PRELIMINARY',
+    performed_by UUID NOT NULL,
+    verified_by UUID,
+    -- Integrity fields
+    version INTEGER NOT NULL DEFAULT 1,
+    data_checksum TEXT NOT NULL,  -- HMAC-SHA256 of all data fields
+    previous_checksum TEXT,      -- Chain integrity
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Trigger to enforce integrity
+CREATE OR REPLACE FUNCTION verify_lab_result_integrity()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Verify previous record wasn't tampered
+    IF TG_OP = 'UPDATE' THEN
+        IF OLD.data_checksum != NEW.previous_checksum THEN
+            RAISE EXCEPTION 'Integrity violation: checksum chain broken';
+        END IF;
+        NEW.version := OLD.version + 1;
+    END IF;
+
+    -- Calculate new checksum
+    NEW.data_checksum := encode(
+        hmac(
+            concat(NEW.patient_id::text, NEW.test_code,
+                   NEW.result_value::text, NEW.result_unit,
+                   NEW.version::text),
+            current_setting('app.hmac_key'),
+            'sha256'
+        ),
+        'hex'
+    );
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+#### I - Information Disclosure (Rò rỉ thông tin)
+
+```
+Threat: PHI bị lộ qua error messages, logs, hoặc API responses
+───────────────────────────────────────────────────────────
+Attack Vector:
+  1. Verbose error messages expose database schema
+  2. Application logs contain patient names, SSN
+  3. API returns more data than necessary
+  4. Debug endpoints left enabled in production
+
+Mitigations trong Quarkus:
+```
+
+```java
+// ❌ BAD: Verbose error response exposes internals
+@ServerExceptionMapper
+public Response handleException(Exception e) {
+    return Response.serverError()
+        .entity(Map.of("error", e.getMessage(), // May contain SQL, PHI
+                       "stackTrace", Arrays.toString(e.getStackTrace())))
+        .build();
+}
+
+// ✅ GOOD: Generic error response with correlation ID
+@ServerExceptionMapper
+public Response handleException(Exception e) {
+    String correlationId = UUID.randomUUID().toString();
+    log.error("Internal error [correlationId={}]", correlationId, e);
+
+    return Response.serverError()
+        .entity(Map.of(
+            "error", "An internal error occurred",
+            "correlationId", correlationId,
+            "timestamp", Instant.now().toString()))
+        .build();
+}
+```
+
+```java
+// ❌ BAD: API returns all patient fields
+@GET
+@Path("/{id}")
+public Patient getPatient(@PathParam("id") UUID id) {
+    return patientRepository.findById(id); // Returns SSN, full address, etc.
+}
+
+// ✅ GOOD: DTO with minimal necessary fields
+@GET
+@Path("/{id}")
+public PatientSummaryDTO getPatient(@PathParam("id") UUID id) {
+    Patient patient = patientRepository.findById(id);
+    return PatientSummaryDTO.from(patient); // Only name, DOB, MRN
+}
+```
+
+#### D - Denial of Service
+
+```
+Threat: Tấn công DDoS khiến hệ thống cấp cứu ngừng hoạt động
+───────────────────────────────────────────────────────────
+Impact trong Y Tế:
+  - Không thể tra cứu dị ứng thuốc → kê đơn sai → nguy hiểm
+  - Không truy cập được lab results → chẩn đoán chậm
+  - Hệ thống đặt lịch down → bệnh nhân không thể đến khám
+
+Mitigations:
+  ┌────────────────────────────────────────────┐
+  │ M1: Rate limiting at API Gateway           │
+  │ M2: Circuit breaker (Quarkus Fault Toler.) │
+  │ M3: Auto-scaling Kubernetes pods           │
+  │ M4: CDN/WAF (Cloudflare, AWS Shield)       │
+  │ M5: Database connection pooling            │
+  │ M6: Fallback mode / offline capability     │
+  │ M7: Priority queuing for ER requests       │
+  └────────────────────────────────────────────┘
+```
+
+#### E - Elevation of Privilege
+
+```
+Threat: Y tá nâng quyền lên doctor role để kê đơn thuốc
+───────────────────────────────────────────────────────────
+Attack Vector:
+  1. Exploit IDOR (Insecure Direct Object Reference)
+  2. Modify JWT claims locally
+  3. Access admin API endpoints without authorization
+  4. Exploit broken function-level authorization
+
+Mitigations trong Keycloak + Quarkus:
+```
+
+```java
+// Fine-grained authorization check
+@Path("/api/v1/prescriptions")
+@Authenticated
+public class PrescriptionResource {
+
+    @Inject
+    SecurityIdentity identity;
+
+    @Inject
+    AuthorizationService authzService;
+
+    @POST
+    public Response createPrescription(PrescriptionRequest request) {
+        // Check 1: Role-based - only doctors can prescribe
+        if (!identity.hasRole("doctor")) {
+            throw new ForbiddenException("Only doctors can create prescriptions");
+        }
+
+        // Check 2: Attribute-based - doctor must be assigned to patient
+        boolean isAssigned = authzService.isDoctorAssignedToPatient(
+            identity.getPrincipal().getName(),
+            request.patientId()
+        );
+        if (!isAssigned) {
+            auditService.logUnauthorizedAccess(identity, "PRESCRIPTION_CREATE",
+                request.patientId());
+            throw new ForbiddenException("Not assigned to this patient");
+        }
+
+        // Check 3: Department-based - only prescribe within specialty
+        String doctorDepartment = identity.getAttribute("department");
+        if (!authzService.canPrescribeForDepartment(doctorDepartment,
+                request.medicationCategory())) {
+            throw new ForbiddenException("Cannot prescribe outside specialty");
+        }
+
+        return prescriptionService.create(request);
+    }
+}
+```
+
+## 3. DREAD Scoring
+
+### 3.1. DREAD Factors
+
+| Factor | Description | 1 (Low) | 5 (Medium) | 10 (High) |
+|--------|-------------|---------|------------|-----------|
+| **D**amage | Mức độ thiệt hại | Data exposure nhỏ | Significant data loss | Complete system compromise |
+| **R**eproducibility | Dễ dàng tái hiện | Khó, cần nhiều điều kiện | Cần authentication | Dễ dàng reproduce |
+| **E**xploitability | Dễ dàng khai thác | Cần expertise cao | Cần tools | Script kiddie level |
+| **A**ffected Users | Số người bị ảnh hưởng | Một vài users | Một department | Tất cả bệnh nhân |
+| **D**iscoverability | Dễ phát hiện lỗ hổng | Khó tìm | Cần effort | Publicly known |
+
+### 3.2. DREAD Analysis cho Healthcare Threats
+
+| Threat | D | R | E | A | D | Total | Priority |
+|--------|---|---|---|---|---|-------|----------|
+| SQL Injection in Patient Search | 10 | 8 | 7 | 10 | 8 | **8.6** | CRITICAL |
+| Token theft via XSS | 8 | 7 | 6 | 8 | 7 | **7.2** | HIGH |
+| Insider PHI access | 9 | 9 | 5 | 7 | 4 | **6.8** | HIGH |
+| DDoS on ER system | 7 | 10 | 8 | 10 | 9 | **8.8** | CRITICAL |
+| Unpatched Quarkus CVE | 8 | 6 | 7 | 10 | 8 | **7.8** | HIGH |
+| Backup data theft | 10 | 3 | 4 | 10 | 3 | **6.0** | MEDIUM |
+
+> **DREAD Score**: Total / 5. Score > 7 = Critical, 5-7 = High, 3-5 = Medium, < 3 = Low
+
+## 4. OWASP Top 10 trong Healthcare Context
+
+### 4.1. Mapping OWASP Top 10 cho Healthcare Microservices
+
+| # | OWASP Vulnerability | Healthcare Impact | Quarkus/PostgreSQL/Keycloak Mitigation |
+|---|---------------------|-------------------|----------------------------------------|
+| A01 | Broken Access Control | Y tá xem hồ sơ tâm thần bệnh nhân | Keycloak RBAC + PostgreSQL RLS |
+| A02 | Cryptographic Failures | PHI stored/transmitted unencrypted | pgcrypto + TLS 1.3 + Vault KMS |
+| A03 | Injection | SQL injection expose patient data | Hibernate ORM parameterized queries |
+| A04 | Insecure Design | No consent management | FHIR Consent resource + audit |
+| A05 | Security Misconfiguration | Keycloak default admin credentials | Hardened configuration, no defaults |
+| A06 | Vulnerable Components | Log4Shell in healthcare app | Quarkus BOM, Dependabot, SBOM |
+| A07 | Auth Failures | Weak passwords for doctor accounts | Keycloak password policies + MFA |
+| A08 | Software/Data Integrity | Tampered lab results | Digital signatures, pgAudit |
+| A09 | Logging Failures | No audit trail for PHI access | OpenTelemetry + ELK + pgAudit |
+| A10 | SSRF | Internal service access via FHIR proxy | URL allowlisting, network policies |
+
+## 5. Attack Trees cho Healthcare
+
+### 5.1. Attack Tree: Steal Patient Medical Records
+
+```
+Goal: Steal Patient Medical Records
+│
+├── 1. External Attack
+│   ├── 1.1 Exploit Web Application
+│   │   ├── 1.1.1 SQL Injection [DREAD: 8.6] ★
+│   │   ├── 1.1.2 XSS to steal session [DREAD: 7.2]
+│   │   └── 1.1.3 IDOR to access other patients [DREAD: 7.0]
+│   │
+│   ├── 1.2 Compromise Authentication
+│   │   ├── 1.2.1 Credential stuffing [DREAD: 5.4]
+│   │   ├── 1.2.2 Phishing doctor credentials [DREAD: 6.8]
+│   │   └── 1.2.3 Brute force Keycloak [DREAD: 3.2]
+│   │
+│   └── 1.3 Network Attack
+│       ├── 1.3.1 MITM on API calls [DREAD: 4.6]
+│       └── 1.3.2 DNS spoofing [DREAD: 4.2]
+│
+├── 2. Internal Attack (Insider Threat)
+│   ├── 2.1 Privileged User Abuse
+│   │   ├── 2.1.1 DBA exports database [DREAD: 6.8]
+│   │   ├── 2.1.2 Admin disables audit [DREAD: 5.6]
+│   │   └── 2.1.3 Doctor accesses non-patient [DREAD: 6.0]
+│   │
+│   └── 2.2 Stolen Credentials
+│       ├── 2.2.1 Shared workstation session [DREAD: 6.2]
+│       └── 2.2.2 Post-it password [DREAD: 5.0]
+│
+└── 3. Supply Chain Attack
+    ├── 3.1 Compromised dependency [DREAD: 7.8]
+    ├── 3.2 Malicious Docker image [DREAD: 6.4]
+    └── 3.3 Compromised CI/CD pipeline [DREAD: 7.0]
+```
+
+## 6. Từ Threat Model đến Security Requirements
+
+### 6.1. Generating Security Requirements
+
+| Threat | STRIDE | Requirement ID | Security Requirement | Implementation |
+|--------|--------|---------------|---------------------|----------------|
+| Token theft | S | SEC-001 | Access tokens MUST expire within 5 minutes | Keycloak realm settings |
+| SQL injection | T, I | SEC-002 | All database queries MUST use parameterized statements | Hibernate ORM |
+| PHI in logs | I | SEC-003 | Application logs MUST NOT contain any of 18 HIPAA identifiers | Log sanitization filter |
+| No audit trail | R | SEC-004 | All PHI access MUST be logged with user ID, timestamp, resource | pgAudit + OpenTelemetry |
+| DDoS | D | SEC-005 | API endpoints MUST have rate limiting (100 req/min/user) | Kong rate-limiting plugin |
+| Privilege escalation | E | SEC-006 | Authorization MUST be checked at both Gateway and Service level | Keycloak + @RolesAllowed |
+| Unencrypted PHI | I | SEC-007 | PHI at-rest MUST be encrypted with AES-256 | pgcrypto column encryption |
+| No MFA | S | SEC-008 | Clinical users MUST use MFA for external access | Keycloak conditional MFA |
+
+### 6.2. Security Requirements Traceability Matrix
+
+```
+Requirement → Implementation → Test → Compliance Mapping
+
+SEC-001 → quarkus.oidc.token.age=300
+        → Integration test: verify expired token rejected
+        → HIPAA §164.312(d) - Authentication
+
+SEC-002 → @NamedQuery with :params
+        → SAST scan (Snyk, SonarQube)
+        → OWASP A03 - Injection
+
+SEC-003 → PhiLogFilter.java
+        → Unit test: verify PHI patterns masked
+        → HIPAA §164.312(b) - Audit Controls
+
+SEC-004 → pgAudit + AuditInterceptor.java
+        → Integration test: verify audit entry created
+        → HIPAA §164.312(b) - Audit Controls
+```
+
+## 7. Threat Modeling Tools và Templates
+
+### 7.1. Tools
+
+- **Microsoft Threat Modeling Tool**: Free, STRIDE-based, DFD editor
+- **OWASP Threat Dragon**: Open-source, web-based
+- **IriusRisk**: Enterprise threat modeling platform
+- **draw.io**: Data Flow Diagrams (free)
+
+### 7.2. Threat Model Document Template
+
+```markdown
+# Threat Model: [System/Service Name]
+## Version: [1.0] | Date: [2026-04-03] | Author: [Security Team]
+
+### 1. System Description
+- Purpose: [What does the system do?]
+- Technology Stack: [Quarkus, PostgreSQL, Keycloak]
+- Data Classification: [Level 3 - Confidential]
+
+### 2. Architecture Diagram
+[Include DFD with trust boundaries]
+
+### 3. Assets
+[List sensitive data and components]
+
+### 4. Threat Enumeration (STRIDE)
+[Table of all identified threats]
+
+### 5. DREAD Scoring
+[Risk prioritization]
+
+### 6. Mitigations
+[Countermeasures for each threat]
+
+### 7. Security Requirements
+[Generated requirements with traceability]
+
+### 8. Action Items
+[Prioritized list of security work items]
+
+### 9. Review Schedule
+[Next review date and trigger conditions]
+```
+
+## 8. Tổng kết
+
+Trong bài học này, chúng ta đã:
+
+- Hiểu và áp dụng **STRIDE** để phân loại threats cho healthcare microservices
+- Sử dụng **DREAD** scoring để ưu tiên threats
+- Xây dựng **Attack Trees** cho healthcare-specific scenarios
+- Mapping **OWASP Top 10** vào context y tế với mitigations cụ thể
+- Chuyển đổi threats thành **Security Requirements** có thể implement và test
+
+## Bài tập
+
+1. Thực hiện STRIDE analysis đầy đủ cho Prescription Service (kê đơn thuốc)
+2. Xây dựng Attack Tree cho scenario "Modify Lab Results" với DREAD scoring
+3. Tạo Security Requirements Traceability Matrix cho 10 requirements quan trọng nhất
+4. Sử dụng OWASP Threat Dragon để vẽ Data Flow Diagram cho Patient Service
+
+---
+
+---
+
+<!-- SERIES-NAV:START -->
+| ◀ Bài trước | Bài tiếp theo ▶ |
+|:---|---:|
+| [Bài 3: Phân loại Dữ liệu Y Tế (PHI/ePHI) và Đánh giá Rủi ro](/series/bao-mat-du-lieu-y-te-cho-microservices/bai-3-phan-loai-du-lieu-y-te-phi-va-danh-gia-rui-ro) | [Bài 5: Thiết kế Keycloak Realm chuẩn Y Tế - Multi-tenancy cho Bệnh viện](/series/bao-mat-du-lieu-y-te-cho-microservices/bai-5-thiet-ke-keycloak-realm-chuan-y-te) |
+<!-- SERIES-NAV:END -->
