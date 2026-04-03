@@ -22,7 +22,6 @@ course:
 
 ![Kim tự tháp phân loại dữ liệu y tế — 4 cấp độ từ Public đến Restricted](/storage/uploads/2026/04/healthcare-data-classification-pyramid.png)
 
-
 ### 1.1. Tại sao cần phân loại dữ liệu?
 
 Không phải tất cả dữ liệu đều cần cùng mức độ bảo vệ. Phân loại dữ liệu giúp:
@@ -34,46 +33,14 @@ Không phải tất cả dữ liệu đều cần cùng mức độ bảo vệ. 
 
 ### 1.2. Healthcare Data Classification Levels
 
-```
-┌─────────────────────────────────────────────────────────┐
-│ Level 4: RESTRICTED (Hạn chế tối đa)                   │
-│ ├── Thông tin chẩn đoán HIV/AIDS, sức khỏe tâm thần    │
-│ ├── Kết quả xét nghiệm di truyền                        │
-│ ├── Hồ sơ điều trị nghiện                                │
-│ └── Thông tin sức khỏe sinh sản                          │
-│ → Encryption: Required (AES-256)                         │
-│ → Access: Named individuals only                         │
-│ → Audit: Full logging, real-time alerts                  │
-├─────────────────────────────────────────────────────────┤
-│ Level 3: CONFIDENTIAL (Bảo mật)                         │
-│ ├── Hồ sơ bệnh án (EMR)                                 │
-│ ├── Kết quả xét nghiệm                                  │
-│ ├── Đơn thuốc                                            │
-│ ├── Chẩn đoán hình ảnh                                   │
-│ └── Thông tin bảo hiểm y tế                              │
-│ → Encryption: Required (AES-256)                         │
-│ → Access: Role-based (treating clinicians)               │
-│ → Audit: Full logging                                    │
-├─────────────────────────────────────────────────────────┤
-│ Level 2: INTERNAL (Nội bộ)                               │
-│ ├── Thông tin lịch hẹn                                   │
-│ ├── Dữ liệu thống kê (ẩn danh)                          │
-│ ├── Thông tin nhân viên y tế                             │
-│ └── Cấu hình hệ thống                                   │
-│ → Encryption: Recommended                               │
-│ → Access: Department-based                               │
-│ → Audit: Standard logging                                │
-├─────────────────────────────────────────────────────────┤
-│ Level 1: PUBLIC (Công khai)                              │
-│ ├── Danh mục dịch vụ y tế                               │
-│ ├── Giờ làm việc phòng khám                              │
-│ ├── Thông tin liên hệ bệnh viện                         │
-│ └── Hướng dẫn sức khỏe chung                            │
-│ → Encryption: Not required                               │
-│ → Access: Public                                         │
-│ → Audit: Basic logging                                   │
-└─────────────────────────────────────────────────────────┘
-```
+![Kim tự tháp phân loại dữ liệu y tế — 4 mức từ Public đến Restricted](/storage/uploads/2026/04/healthcare-data-classification-levels.png)
+
+| Level | Tên | Ví dụ | Encryption | Access | Audit |
+|-------|-----|--------|------------|--------|-------|
+| **4 - RESTRICTED** | Hạn chế tối đa | HIV/AIDS, sức khỏe tâm thần, di truyền, điều trị nghiện, sức khỏe sinh sản | Required (AES-256) | Named individuals only | Full logging, real-time alerts |
+| **3 - CONFIDENTIAL** | Bảo mật | Hồ sơ bệnh án, xét nghiệm, đơn thuốc, chẩn đoán hình ảnh, BHYT | Required (AES-256) | Role-based (treating clinicians) | Full logging |
+| **2 - INTERNAL** | Nội bộ | Lịch hẹn, thống kê (ẩn danh), nhân viên y tế, cấu hình | Recommended | Department-based | Standard logging |
+| **1 - PUBLIC** | Công khai | Danh mục dịch vụ, giờ làm việc, liên hệ bệnh viện, hướng dẫn SK | Not required | Public | Basic logging |
 
 ### 1.3. Data Classification trong PostgreSQL Schema
 
@@ -115,45 +82,7 @@ VALUES
 
 ### 2.1. PHI Data Flow trong Microservices
 
-```
-┌──────────┐    HTTPS/TLS    ┌──────────┐    OIDC     ┌──────────┐
-│  Patient │ ──────────────▶ │   API    │ ──────────▶ │ Keycloak │
-│  Portal  │                 │ Gateway  │             │          │
-└──────────┘                 └────┬─────┘             └──────────┘
-                                  │
-                    JWT Token + PHI Request
-                                  │
-              ┌───────────────────┼───────────────────┐
-              ▼                   ▼                   ▼
-        ┌──────────┐       ┌──────────┐        ┌──────────┐
-        │ Patient  │       │ Clinical │        │   Lab    │
-        │ Service  │       │ Service  │        │ Service  │
-        └────┬─────┘       └────┬─────┘        └────┬─────┘
-             │                  │                    │
-     PHI (encrypted)    PHI (encrypted)      PHI (encrypted)
-             │                  │                    │
-             ▼                  ▼                    ▼
-        ┌──────────┐       ┌──────────┐        ┌──────────┐
-        │patient_db│       │clinical  │        │  lab_db  │
-        │(RLS+Enc) │       │_db (RLS) │        │(RLS+Enc) │
-        └──────────┘       └──────────┘        └──────────┘
-             │                  │                    │
-             └──────────────────┼────────────────────┘
-                                │
-                    Audit Events (encrypted)
-                                │
-                                ▼
-                        ┌──────────────┐
-                        │    Kafka     │
-                        │ (audit topic)│
-                        └──────┬───────┘
-                               │
-                               ▼
-                        ┌──────────────┐
-                        │  Audit DB    │
-                        │ (append-only)│
-                        └──────────────┘
-```
+![Luồng dữ liệu PHI qua các microservices — từ Patient Portal qua API Gateway, Keycloak đến các services và databases](/storage/uploads/2026/04/healthcare-phi-data-flow.png)
 
 ### 2.2. Data Flow Documentation Template
 
@@ -170,24 +99,7 @@ VALUES
 
 ### 3.1. Risk Assessment Methodology
 
-```
-Bước 1: Xác định Threats (Mối đe dọa)
-          │
-          ▼
-Bước 2: Xác định Vulnerabilities (Lỗ hổng)
-          │
-          ▼
-Bước 3: Đánh giá Likelihood (Khả năng xảy ra)
-          │
-          ▼
-Bước 4: Đánh giá Impact (Mức độ ảnh hưởng)
-          │
-          ▼
-Bước 5: Tính Risk Level = Likelihood × Impact
-          │
-          ▼
-Bước 6: Xác định Risk Response (Giảm thiểu, chấp nhận, chuyển giao)
-```
+![6 bước đánh giá rủi ro theo NIST SP 800-30 — từ xác định Threats đến Risk Response](/storage/uploads/2026/04/healthcare-risk-assessment-steps.png)
 
 ### 3.2. Threat Identification cho Healthcare Microservices
 
@@ -239,27 +151,15 @@ public class SecurityVulnerabilityChecklist {
 
 ### 3.4. Risk Matrix
 
-```
-         │ Negligible │   Low    │  Medium  │   High   │  Critical
-         │    (1)     │   (2)    │   (3)    │   (4)    │    (5)
-─────────┼────────────┼──────────┼──────────┼──────────┼──────────
-Very High│            │          │   HIGH   │ CRITICAL │ CRITICAL
-  (5)    │    LOW     │  MEDIUM  │          │          │
-─────────┼────────────┼──────────┼──────────┼──────────┼──────────
-High     │            │          │          │          │
-  (4)    │    LOW     │  MEDIUM  │   HIGH   │   HIGH   │ CRITICAL
-─────────┼────────────┼──────────┼──────────┼──────────┼──────────
-Medium   │            │          │          │          │
-  (3)    │    LOW     │   LOW    │  MEDIUM  │   HIGH   │   HIGH
-─────────┼────────────┼──────────┼──────────┼──────────┼──────────
-Low      │            │          │          │          │
-  (2)    │    LOW     │   LOW    │   LOW    │  MEDIUM  │  MEDIUM
-─────────┼────────────┼──────────┼──────────┼──────────┼──────────
-Very Low │            │          │          │          │
-  (1)    │    LOW     │   LOW    │   LOW    │   LOW    │  MEDIUM
-─────────┴────────────┴──────────┴──────────┴──────────┴──────────
-           Impact →    Likelihood ↑
-```
+![Ma trận đánh giá rủi ro 5x5 — Likelihood x Impact từ LOW đến CRITICAL](/storage/uploads/2026/04/healthcare-risk-matrix-heatmap.png)
+
+| | Negligible (1) | Low (2) | Medium (3) | High (4) | Critical (5) |
+|-|----------------|---------|------------|----------|-------------|
+| **Very High (5)** | LOW | MEDIUM | HIGH | CRITICAL | CRITICAL |
+| **High (4)** | LOW | MEDIUM | HIGH | HIGH | CRITICAL |
+| **Medium (3)** | LOW | LOW | MEDIUM | HIGH | HIGH |
+| **Low (2)** | LOW | LOW | LOW | MEDIUM | MEDIUM |
+| **Very Low (1)** | LOW | LOW | LOW | LOW | MEDIUM |
 
 ## 4. Risk Register cho Healthcare Microservices
 
@@ -280,32 +180,12 @@ Very Low │            │          │          │          │
 
 ### 4.2. Risk Treatment Plan
 
-```
-Risk Response Strategies:
-┌─────────────────────────────────────────────────────────┐
-│                                                          │
-│  MITIGATE (Giảm thiểu)     ← Preferred for HIGH risks  │
-│  ├── Implement controls                                  │
-│  ├── Reduce likelihood or impact                        │
-│  └── Example: Add RLS to prevent unauthorized access    │
-│                                                          │
-│  TRANSFER (Chuyển giao)                                  │
-│  ├── Insurance (cyber insurance)                        │
-│  ├── Outsource to specialist provider                   │
-│  └── Example: Cloud provider handles physical security  │
-│                                                          │
-│  ACCEPT (Chấp nhận)        ← Only for LOW risks         │
-│  ├── Document risk acceptance                           │
-│  ├── Monitor for changes                                │
-│  └── Example: Accept risk of public info disclosure     │
-│                                                          │
-│  AVOID (Tránh)                                           │
-│  ├── Eliminate the risk source                          │
-│  ├── Change architecture/process                        │
-│  └── Example: Don't store SSN if not absolutely needed  │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
-```
+![4 chiến lược xử lý rủi ro — Mitigate, Transfer, Accept, Avoid](/storage/uploads/2026/04/healthcare-risk-response-strategies.png)
+
+- **MITIGATE** (Giảm thiểu) ← Preferred cho HIGH risks: Implement controls, giảm likelihood/impact
+- **TRANSFER** (Chuyển giao): Cyber insurance, outsource cho specialist provider
+- **ACCEPT** (Chấp nhận) ← Chỉ cho LOW risks: Document risk acceptance, monitor
+- **AVOID** (Tránh): Loại bỏ nguồn rủi ro, thay đổi architecture
 
 ## 5. Data Retention Policy
 

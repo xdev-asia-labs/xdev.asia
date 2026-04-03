@@ -40,113 +40,37 @@ Microservices giải quyết bằng cách:
 
 ### 1.2. Healthcare Domain Services
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Healthcare Microservices                       │
-├────────────┬────────────┬────────────┬────────────┬─────────────┤
-│  Patient   │ Clinical   │    Lab     │  Pharmacy  │  Billing    │
-│  Service   │ Service    │  Service   │  Service   │  Service    │
-│            │  (EMR)     │  (LIS)     │            │             │
-├────────────┼────────────┼────────────┼────────────┼─────────────┤
-│ • Patient  │ • Encounter│ • Orders   │ • Prescr.  │ • Invoices  │
-│   Registry │ • Diagnosis│ • Results  │ • Dispense │ • Insurance │
-│ • Demo-    │ • Notes    │ • Specimens│ • Drug DB  │ • Claims    │
-│   graphics │ • Vitals   │ • Reports  │ • Interact │ • Payments  │
-└────────────┴────────────┴────────────┴────────────┴─────────────┘
-                              │
-              ┌───────────────┼───────────────┐
-              │               │               │
-        ┌─────┴─────┐  ┌─────┴─────┐  ┌──────┴──────┐
-        │ Scheduling │  │  Imaging  │  │ Notification│
-        │  Service   │  │  Service  │  │   Service   │
-        │            │  │  (RIS/    │  │             │
-        │ • Appoint. │  │   PACS)   │  │ • SMS/Email │
-        │ • Calendar │  │ • Studies │  │ • Push      │
-        │ • Waitlist │  │ • Reports │  │ • Alerts    │
-        └────────────┘  └───────────┘  └─────────────┘
-```
+![Tổng quan các Healthcare Microservices — 8 domain services chính trong hệ thống y tế](/storage/uploads/2026/04/healthcare-domain-services-grid.png)
+
+**Core Services:**
+
+| Service | Chức năng chính |
+|---------|----------------|
+| **Patient Service** | Patient Registry, Demographics |
+| **Clinical Service (EMR)** | Encounters, Diagnosis, Notes, Vitals |
+| **Lab Service (LIS)** | Orders, Results, Specimens, Reports |
+| **Pharmacy Service** | Prescriptions, Dispensing, Drug DB |
+| **Billing Service** | Invoices, Insurance, Claims, Payments |
+| **Scheduling Service** | Appointments, Calendar, Waitlist |
+| **Imaging Service (RIS/PACS)** | Studies, Reports |
+| **Notification Service** | SMS/Email, Push, Alerts |
 
 ## 2. Reference Architecture: Secure Healthcare Platform
 
 ### 2.1. High-Level Architecture
 
-```
-                    ┌─────────────────────────┐
-                    │      Internet/WAN        │
-                    └───────────┬──────────────┘
-                                │
-                    ┌───────────▼──────────────┐
-                    │         WAF/CDN          │
-                    │    (Cloudflare/AWS WAF)   │
-                    └───────────┬──────────────┘
-                                │
-                    ┌───────────▼──────────────┐
-                    │      DMZ Network         │
-                    │  ┌─────────────────────┐ │
-                    │  │    API Gateway       │ │
-                    │  │  (Kong / APISIX)     │ │
-                    │  └─────────┬───────────┘ │
-                    └────────────┼──────────────┘
-                                 │
-        ┌────────────────────────┼────────────────────────┐
-        │               Internal Network                   │
-        │                                                  │
-        │    ┌──────────────┐  ┌──────────────┐           │
-        │    │   Keycloak   │  │   Service    │           │
-        │    │   Cluster    │  │    Mesh      │           │
-        │    │  (IAM/SSO)   │  │  (Istio)     │           │
-        │    └──────┬───────┘  └──────┬───────┘           │
-        │           │                  │                    │
-        │    ┌──────▼──────────────────▼───────┐           │
-        │    │      Quarkus Microservices       │           │
-        │    │  ┌─────┐ ┌─────┐ ┌─────┐       │           │
-        │    │  │Pati.│ │Clin.│ │Lab  │ ...    │           │
-        │    │  └──┬──┘ └──┬──┘ └──┬──┘        │           │
-        │    └─────┼───────┼───────┼───────────┘           │
-        │          │       │       │                        │
-        │    ┌─────▼───────▼───────▼───────────┐           │
-        │    │        Data Layer                │           │
-        │    │  ┌──────┐  ┌────┐  ┌─────┐      │           │
-        │    │  │Postgr│  │Kafka│ │Redis │      │           │
-        │    │  │ SQL  │  │    │  │Cache │      │           │
-        │    │  └──────┘  └────┘  └─────┘      │           │
-        │    └─────────────────────────────────┘           │
-        │                                                  │
-        │    ┌─────────────────────────────────┐           │
-        │    │     Observability Stack          │           │
-        │    │  ┌─────┐ ┌──────┐ ┌──────┐      │           │
-        │    │  │ELK  │ │Prome.│ │Jaeger│      │           │
-        │    │  │Stack│ │+Graf.│ │/Tempo│      │           │
-        │    │  └─────┘ └──────┘ └──────┘      │           │
-        │    └─────────────────────────────────┘           │
-        └──────────────────────────────────────────────────┘
-```
+![Kiến trúc tổng quan Healthcare Platform — từ Internet qua WAF, DMZ, API Gateway đến Internal Network](/storage/uploads/2026/04/healthcare-high-level-architecture.png)
 
 ### 2.2. Network Segmentation (Defense-in-Depth)
 
-```
-Zone 1: DMZ (Demilitarized Zone)
-├── API Gateway
-├── Static content / CDN origin
-└── Reverse Proxy
+![Mô hình Defense-in-Depth với 4 vùng mạng — DMZ, Application, Data, Management](/storage/uploads/2026/04/healthcare-network-segmentation.png)
 
-Zone 2: Application Zone
-├── Quarkus Microservices
-├── Keycloak
-└── Message Queue (Kafka)
-
-Zone 3: Data Zone (Most restricted)
-├── PostgreSQL Clusters
-├── Redis Cache
-├── Backup Storage
-└── Key Management (Vault)
-
-Zone 4: Management Zone
-├── Monitoring (Prometheus, Grafana)
-├── Logging (ELK Stack)
-├── CI/CD Pipeline
-└── Admin Access
-```
+| Zone | Thành phần |
+|------|------------|
+| **Zone 1: DMZ** | API Gateway, Static content / CDN origin, Reverse Proxy |
+| **Zone 2: Application** | Quarkus Microservices, Keycloak, Message Queue (Kafka) |
+| **Zone 3: Data** (Most restricted) | PostgreSQL Clusters, Redis Cache, Backup Storage, Key Management (Vault) |
+| **Zone 4: Management** | Monitoring (Prometheus, Grafana), Logging (ELK Stack), CI/CD Pipeline, Admin Access |
 
 **Firewall Rules giữa các zones:**
 
@@ -294,53 +218,19 @@ public class PatientResource {
 
 ### 4.1. Data Isolation Strategy
 
-```
-Patient Service ──→ patient_db (PostgreSQL)
-    ├── patients (demographics, contacts)
-    ├── patient_consents
-    └── patient_identifiers
+![Database-per-Service pattern — mỗi microservice có database riêng biệt với data isolation](/storage/uploads/2026/04/healthcare-database-per-service.png)
 
-Clinical Service ──→ clinical_db (PostgreSQL)
-    ├── encounters
-    ├── diagnoses
-    ├── clinical_notes (encrypted)
-    └── vital_signs
-
-Lab Service ──→ lab_db (PostgreSQL)
-    ├── lab_orders
-    ├── lab_results (encrypted)
-    ├── specimens
-    └── reference_ranges
-
-Pharmacy Service ──→ pharmacy_db (PostgreSQL)
-    ├── prescriptions
-    ├── dispensing_records
-    └── drug_interactions
-
-Audit Service ──→ audit_db (PostgreSQL - append-only)
-    ├── audit_events (immutable)
-    ├── access_logs
-    └── security_incidents
-```
+| Service | Database | Tables |
+|---------|----------|--------|
+| **Patient Service** | patient_db | patients (demographics, contacts), patient_consents, patient_identifiers |
+| **Clinical Service** | clinical_db | encounters, diagnoses, clinical_notes (encrypted), vital_signs |
+| **Lab Service** | lab_db | lab_orders, lab_results (encrypted), specimens, reference_ranges |
+| **Pharmacy Service** | pharmacy_db | prescriptions, dispensing_records, drug_interactions |
+| **Audit Service** | audit_db (append-only) | audit_events (immutable), access_logs, security_incidents |
 
 ### 4.2. Shared Data via Events (Event Sourcing)
 
-```
-┌──────────┐     ┌─────────┐     ┌──────────┐
-│ Patient  │────▶│  Kafka  │────▶│ Clinical │
-│ Service  │     │ Topics  │     │ Service  │
-└──────────┘     │         │     └──────────┘
-                 │ patient.│
-                 │ created │────▶┌──────────┐
-                 │ patient.│     │   Lab    │
-                 │ updated │     │ Service  │
-                 │ patient.│     └──────────┘
-                 │ consent.│
-                 │ changed │────▶┌──────────┐
-                 └─────────┘     │ Pharmacy │
-                                 │ Service  │
-                                 └──────────┘
-```
+![Event-driven architecture — Patient Service publish events qua Kafka đến các consuming services](/storage/uploads/2026/04/healthcare-event-sourcing-kafka.png)
 
 > **Quan trọng**: Kafka messages chứa PHI phải được mã hóa. Sử dụng Kafka encryption at-rest và application-level encryption cho sensitive fields.
 

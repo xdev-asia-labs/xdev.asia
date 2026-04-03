@@ -23,7 +23,6 @@ course:
 
 ![Tổng quan HIPAA Technical Safeguards — 5 danh mục kiểm soát bảo mật kỹ thuật](/storage/uploads/2026/04/healthcare-hipaa-safeguards-overview.png)
 
-
 Dữ liệu y tế là một trong những loại dữ liệu nhạy cảm nhất. Một bản ghi y tế (medical record) chứa thông tin cá nhân, lịch sử bệnh án, kết quả xét nghiệm, đơn thuốc, và thông tin bảo hiểm — tất cả đều có giá trị cao trên thị trường đen.
 
 ### Thống kê đáng lo ngại
@@ -129,29 +128,13 @@ Security Rule đặt ra yêu cầu bảo mật cho ePHI, chia thành 3 loại sa
 
 #### Technical Safeguards (focus chính của series này)
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                  HIPAA Technical Safeguards                   │
-├─────────────────┬───────────────────────────────────────────┤
-│ Access Control  │ • Unique User Identification (Required)   │
-│                 │ • Emergency Access Procedure (Required)    │
-│                 │ • Automatic Logoff (Addressable)          │
-│                 │ • Encryption & Decryption (Addressable)   │
-├─────────────────┼───────────────────────────────────────────┤
-│ Audit Controls  │ • Hardware, software, procedural          │
-│                 │   mechanisms to record and examine        │
-│                 │   access to ePHI (Required)               │
-├─────────────────┼───────────────────────────────────────────┤
-│ Integrity       │ • Mechanism to authenticate ePHI          │
-│                 │   (Addressable)                           │
-├─────────────────┼───────────────────────────────────────────┤
-│ Authentication  │ • Person or Entity Authentication         │
-│                 │   (Required)                              │
-├─────────────────┼───────────────────────────────────────────┤
-│ Transmission    │ • Integrity Controls (Addressable)        │
-│ Security        │ • Encryption (Addressable)                │
-└─────────────────┴───────────────────────────────────────────┘
-```
+| Danh mục | Controls |
+|----------|----------|
+| **Access Control** | Unique User Identification (Required), Emergency Access Procedure (Required), Automatic Logoff (Addressable), Encryption & Decryption (Addressable) |
+| **Audit Controls** | Hardware, software, procedural mechanisms to record and examine access to ePHI (Required) |
+| **Integrity** | Mechanism to authenticate ePHI (Addressable) |
+| **Authentication** | Person or Entity Authentication (Required) |
+| **Transmission Security** | Integrity Controls (Addressable), Encryption (Addressable) |
 
 > **Lưu ý**: "Required" = bắt buộc triển khai. "Addressable" = phải đánh giá và triển khai nếu hợp lý, hoặc document lý do không triển khai.
 
@@ -174,23 +157,14 @@ Khi xảy ra data breach liên quan đến PHI:
 
 FHIR định nghĩa các security components:
 
-```
-┌──────────────────────────────────────────┐
-│           FHIR Security Layers           │
-├──────────────────────────────────────────┤
-│  Communication Security (HTTPS/TLS)      │
-├──────────────────────────────────────────┤
-│  Authentication (OAuth2, SMART on FHIR)  │
-├──────────────────────────────────────────┤
-│  Authorization (Scopes, Consent)         │
-├──────────────────────────────────────────┤
-│  Audit (AuditEvent resource)             │
-├──────────────────────────────────────────┤
-│  Digital Signatures (Provenance)         │
-├──────────────────────────────────────────┤
-│  Consent Management (Consent resource)   │
-└──────────────────────────────────────────┘
-```
+![Các lớp bảo mật trong kiến trúc FHIR — từ Communication Security đến Consent Management](/storage/uploads/2026/04/healthcare-fhir-security-layers.png)
+
+- **Communication Security**: HTTPS/TLS
+- **Authentication**: OAuth2, SMART on FHIR
+- **Authorization**: Scopes, Consent
+- **Audit**: AuditEvent resource
+- **Digital Signatures**: Provenance
+- **Consent Management**: Consent resource
 
 ### 4.3. SMART on FHIR
 
@@ -240,27 +214,13 @@ Quy định về hồ sơ bệnh án điện tử:
 
 ### 6.1. NIST Cybersecurity Framework
 
-```
-       ┌──────────┐
-       │ IDENTIFY  │ → Asset Management, Risk Assessment
-       └────┬─────┘
-            ↓
-       ┌──────────┐
-       │ PROTECT   │ → Access Control, Data Security, Training
-       └────┬─────┘
-            ↓
-       ┌──────────┐
-       │ DETECT    │ → Anomalies, Monitoring, Detection Processes
-       └────┬─────┘
-            ↓
-       ┌──────────┐
-       │ RESPOND   │ → Response Planning, Communications, Mitigation
-       └────┬─────┘
-            ↓
-       ┌──────────┐
-       │ RECOVER   │ → Recovery Planning, Improvements, Communications
-       └──────────┘
-```
+![Vòng đời NIST Cybersecurity Framework — 5 chức năng: Identify, Protect, Detect, Respond, Recover](/storage/uploads/2026/04/healthcare-nist-csf-framework.png)
+
+- **IDENTIFY**: Asset Management, Risk Assessment
+- **PROTECT**: Access Control, Data Security, Training
+- **DETECT**: Anomalies, Monitoring, Detection Processes
+- **RESPOND**: Response Planning, Communications, Mitigation
+- **RECOVER**: Recovery Planning, Improvements, Communications
 
 ### 6.2. ISO 27799 - Health Informatics Security
 
