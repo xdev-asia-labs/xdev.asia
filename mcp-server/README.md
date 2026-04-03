@@ -129,3 +129,9 @@ mcp-server/
 ├── package.json
 └── tsconfig.json
 ```
+
+## Bài viết liên quan trên xDev.asia
+
+- 📖 [Trang MCP Server](https://xdev.asia/mcp) — Hướng dẫn cài đặt và sử dụng xDev Knowledge MCP
+- 📖 [Bài 12: MCP — Model Context Protocol](https://xdev.asia/lessons/build-ai-agents/bai-12-mcp) — Giải thích MCP là gì, cách xây dựng MCP Server
+- 📖 [Bài 13: MCP Servers — Kết nối AI với thế giới bên ngoài](https://xdev.asia/lessons/vibe-coding-voi-github-copilot/bai-13-mcp-servers-ket-noi-ai-voi-the-gioi-ben-ngoai) — Cách dùng MCP trong GitHub Copilot
