@@ -27,19 +27,7 @@ course:
 
 ### 1.1. Quy trình Threat Modeling
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                  Threat Modeling Process                   │
-│                                                           │
-│  1. Define Scope ──▶ 2. Decompose ──▶ 3. Identify       │
-│     & Objectives      Application       Threats          │
-│         │                                    │           │
-│         │              ┌─────────────────────┘           │
-│         │              ▼                                  │
-│         └──────── 6. Validate ◀── 5. Rate   ◀── 4. Mitigate │
-│                    & Iterate      Threats        Threats  │
-└──────────────────────────────────────────────────────────┘
-```
+![Quy trình Threat Modeling 6 bước — từ Define Scope đến Validate & Iterate](/storage/uploads/2026/04/healthcare-threat-modeling-process.png)
 
 ### 1.2. Khi nào cần Threat Modeling?
 
@@ -68,58 +56,46 @@ STRIDE là framework phân loại threats do Microsoft phát triển:
 
 #### S - Spoofing (Giả mạo danh tính)
 
-```
-Threat: Attacker giả mạo JWT token để truy cập Patient API
-───────────────────────────────────────────────────────────
-Attack Vector:
-  1. Steal JWT từ browser localStorage
-  2. Forge JWT với modified claims (role: "admin")
-  3. Replay expired token
+![Spoofing Attack — giả mạo JWT token để truy cập Patient API và các biện pháp phòng chống](/storage/uploads/2026/04/healthcare-stride-spoofing-attack.png)
 
-Affected Components:
-  - API Gateway
-  - Patient Service
-  - Clinical Service
+**Threat:** Attacker giả mạo JWT token để truy cập Patient API
 
-Mitigations:
-  ┌────────────────────────────────────────────┐
-  │ M1: Keycloak OIDC token validation         │
-  │     → quarkus-oidc auto-verifies signature │
-  │                                             │
-  │ M2: Short-lived access tokens (5 min)      │
-  │     → Reduce token theft window            │
-  │                                             │
-  │ M3: DPoP (Proof-of-Possession)             │
-  │     → Token bound to client certificate    │
-  │                                             │
-  │ M4: Refresh token rotation                 │
-  │     → One-time use refresh tokens          │
-  │                                             │
-  │ M5: mTLS between services                  │
-  │     → Service identity verification        │
-  └────────────────────────────────────────────┘
-```
+**Attack Vector:**
+
+1. Steal JWT từ browser localStorage
+2. Forge JWT với modified claims (role: "admin")
+3. Replay expired token
+
+**Affected Components:** API Gateway, Patient Service, Clinical Service
+
+**Mitigations:**
+
+- **M1:** Keycloak OIDC token validation — quarkus-oidc auto-verifies signature
+- **M2:** Short-lived access tokens (5 min) — giảm token theft window
+- **M3:** DPoP (Proof-of-Possession) — token bound to client certificate
+- **M4:** Refresh token rotation — one-time use refresh tokens
+- **M5:** mTLS between services — service identity verification
 
 #### T - Tampering (Giả mạo dữ liệu)
 
-```
-Threat: Insider sửa đổi kết quả xét nghiệm trong lab_db
-───────────────────────────────────────────────────────────
-Attack Vector:
-  1. DBA trực tiếp UPDATE lab_results table
-  2. Khai thác SQL injection để sửa dữ liệu
-  3. Intercept và modify API response
+![Tampering Attack — insider sửa đổi kết quả xét nghiệm và các biện pháp bảo vệ tính toàn vẹn dữ liệu](/storage/uploads/2026/04/healthcare-stride-tampering-integrity.png)
 
-Mitigations:
-  ┌────────────────────────────────────────────┐
-  │ M1: pgAudit logging (log all DML)          │
-  │ M2: Database triggers cho change tracking  │
-  │ M3: Digital signatures cho lab results     │
-  │ M4: Immutable audit log (append-only)      │
-  │ M5: Dual control cho critical changes      │
-  │ M6: Row versioning with checksums          │
-  └────────────────────────────────────────────┘
-```
+**Threat:** Insider sửa đổi kết quả xét nghiệm trong lab_db
+
+**Attack Vector:**
+
+1. DBA trực tiếp UPDATE lab_results table
+2. Khai thác SQL injection để sửa dữ liệu
+3. Intercept và modify API response
+
+**Mitigations:**
+
+- **M1:** pgAudit logging (log all DML)
+- **M2:** Database triggers cho change tracking
+- **M3:** Digital signatures cho lab results
+- **M4:** Immutable audit log (append-only)
+- **M5:** Dual control cho critical changes
+- **M6:** Row versioning with checksums
 
 ```sql
 -- Integrity protection: Row versioning with checksum
