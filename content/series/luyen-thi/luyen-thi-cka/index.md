@@ -35,17 +35,17 @@ category:
 tags:
 
 - name: Kubernetes
-    slug: kubernetes
+  slug: kubernetes
 - name: CKA
-    slug: cka
+  slug: cka
 - name: CNCF
-    slug: cncf
+  slug: cncf
 - name: Chứng chỉ
-    slug: chung-chi
+  slug: chung-chi
 - name: DevOps
-    slug: devops
+  slug: devops
 - name: Linux Foundation
-    slug: linux-foundation
+  slug: linux-foundation
 
 quiz_slug: cka
 
