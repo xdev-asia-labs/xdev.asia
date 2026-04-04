@@ -47,122 +47,122 @@ tags:
 
 quiz_slug: kcna
 
-ctions:
+sections:
 
 - id: kcna-section-01
-    title: "Domain 1: Kubernetes Fundamentals (46%)"
-    description: Kiến trúc K8s, core objects, networking, storage, RBAC
-sort_order: 1
-    lessons:
+  title: "Domain 1: Kubernetes Fundamentals (46%)"
+  description: Kiến trúc K8s, core objects, networking, storage, RBAC
+  sort_order: 1
+  lessons:
   - id: kcna-d1-l01
-        title: "Bài 1: Kubernetes Architecture & Core Components"
-        slug: 01-kien-truc-kubernetes
-        description: >-
-          Control plane vs Worker node. kube-apiserver, etcd, kube-scheduler,
-          controller-manager, kubelet, kube-proxy. Kubernetes objects overview.
-        duration_minutes: 55
-        is_free: true
+    title: "Bài 1: Kubernetes Architecture & Core Components"
+    slug: 01-kien-truc-kubernetes
+    description: >-
+      Control plane vs Worker node. kube-apiserver, etcd, kube-scheduler,
+      controller-manager, kubelet, kube-proxy. Kubernetes objects overview.
+    duration_minutes: 55
+    is_free: true
     sort_order: 1
-        video_url: null
+    video_url: null
   - id: kcna-d1-l02
-        title: "Bài 2: Pods, Workloads & Controllers"
-        slug: 02-pods-workloads-controllers
-        description: >-
-          Pod lifecycle. Deployments, ReplicaSets, StatefulSets, DaemonSets,
-          Jobs, CronJobs. Labels, selectors, annotations.
-        duration_minutes: 55
-        is_free: true
+    title: "Bài 2: Pods, Workloads & Controllers"
+    slug: 02-pods-workloads-controllers
+    description: >-
+      Pod lifecycle. Deployments, ReplicaSets, StatefulSets, DaemonSets,
+      Jobs, CronJobs. Labels, selectors, annotations.
+    duration_minutes: 55
+    is_free: true
     sort_order: 2
-        video_url: null
+    video_url: null
   - id: kcna-d1-l03
-        title: "Bài 3: Services, Networking & Storage"
-        slug: 03-services-networking-storage
-        description: >-
-          ClusterIP, NodePort, LoadBalancer. CoreDNS, Service discovery.
-          PersistentVolume, PVC, StorageClass. ConfigMaps & Secrets.
-        duration_minutes: 55
-        is_free: true
+    title: "Bài 3: Services, Networking & Storage"
+    slug: 03-services-networking-storage
+    description: >-
+      ClusterIP, NodePort, LoadBalancer. CoreDNS, Service discovery.
+      PersistentVolume, PVC, StorageClass. ConfigMaps & Secrets.
+    duration_minutes: 55
+    is_free: true
     sort_order: 3
-        video_url: null
+    video_url: null
   - id: kcna-d1-l04
-        title: "Bài 4: RBAC & Security Basics"
-        slug: 04-rbac-security
-        description: >-
-          Role, ClusterRole, RoleBinding, ClusterRoleBinding. ServiceAccounts.
-          Pod Security Standards. Network Policies overview.
-        duration_minutes: 50
-        is_free: true
-        sort_order: 4
-      video_url: null
+    title: "Bài 4: RBAC & Security Basics"
+    slug: 04-rbac-security
+    description: >-
+      Role, ClusterRole, RoleBinding, ClusterRoleBinding. ServiceAccounts.
+      Pod Security Standards. Network Policies overview.
+    duration_minutes: 50
+    is_free: true
+    sort_order: 4
+    video_url: null
 
 - id: kcna-section-02
-    title: "Domain 2: Container Orchestration (22%)"
-    description: Container runtimes, OCI, container lifecycle, orchestration patterns
-sort_order: 2
-    lessons:
+  title: "Domain 2: Container Orchestration (22%)"
+  description: Container runtimes, OCI, container lifecycle, orchestration patterns
+  sort_order: 2
+  lessons:
   - id: kcna-d2-l01
-        title: "Bài 5: Container Runtimes & OCI Standards"
-        slug: 05-container-runtimes-oci
-        description: >-
-          Docker vs containerd vs CRI-O. OCI Image Spec, OCI Runtime Spec.
-          Container lifecycle. Image layers và registry.
-        duration_minutes: 50
-        is_free: true
+    title: "Bài 5: Container Runtimes & OCI Standards"
+    slug: 05-container-runtimes-oci
+    description: >-
+      Docker vs containerd vs CRI-O. OCI Image Spec, OCI Runtime Spec.
+      Container lifecycle. Image layers và registry.
+    duration_minutes: 50
+    is_free: true
     sort_order: 5
-        video_url: null
+    video_url: null
   - id: kcna-d2-l02
-        title: "Bài 6: Container Orchestration Patterns"
-        slug: 06-orchestration-patterns
-        description: >-
-          Scheduling, resource management, high availability.
-          Multi-tenancy. Namespace isolation. Resource quotas.
-          Horizontal Pod Autoscaler, Vertical Pod Autoscaler.
-        duration_minutes: 50
-        is_free: true
-        sort_order: 6
-      video_url: null
+    title: "Bài 6: Container Orchestration Patterns"
+    slug: 06-orchestration-patterns
+    description: >-
+      Scheduling, resource management, high availability.
+      Multi-tenancy. Namespace isolation. Resource quotas.
+      Horizontal Pod Autoscaler, Vertical Pod Autoscaler.
+    duration_minutes: 50
+    is_free: true
+    sort_order: 6
+    video_url: null
 
 - id: kcna-section-03
-    title: "Domain 3: Cloud Native Architecture (16%)"
-    description: 12-factor app, microservices, service mesh, serverless
-sort_order: 3
-    lessons:
+  title: "Domain 3: Cloud Native Architecture (16%)"
+  description: 12-factor app, microservices, service mesh, serverless
+  sort_order: 3
+  lessons:
   - id: kcna-d3-l01
-        title: "Bài 7: Cloud Native Architecture & Design Patterns"
-        slug: 07-cloud-native-architecture
-        description: >-
-          12-factor app methodology. Microservices vs Monolith.
-          Immutable infrastructure. Service mesh (Istio, Linkerd overview).
-          Serverless computing. CNCF landscape.
-        duration_minutes: 55
-        is_free: true
-        sort_order: 7
-      video_url: null
+    title: "Bài 7: Cloud Native Architecture & Design Patterns"
+    slug: 07-cloud-native-architecture
+    description: >-
+      12-factor app methodology. Microservices vs Monolith.
+      Immutable infrastructure. Service mesh (Istio, Linkerd overview).
+      Serverless computing. CNCF landscape.
+    duration_minutes: 55
+    is_free: true
+    sort_order: 7
+    video_url: null
 
 - id: kcna-section-04
-    title: "Domain 4 & 5: Observability & Application Delivery (16%)"
-    description: Logging, monitoring, tracing, Helm, GitOps, CI/CD
-sort_order: 4
-    lessons:
+  title: "Domain 4 & 5: Observability & Application Delivery (16%)"
+  description: Logging, monitoring, tracing, Helm, GitOps, CI/CD
+  sort_order: 4
+  lessons:
   - id: kcna-d4-l01
-        title: "Bài 8: Cloud Native Observability"
-        slug: 08-observability
-        description: >-
-          Logging với Fluentd/Loki. Metrics với Prometheus & Grafana.
-          Distributed tracing với Jaeger/Zipkin. OpenTelemetry.
-          Alerting và SLO/SLI/SLA.
-        duration_minutes: 50
-        is_free: true
+    title: "Bài 8: Cloud Native Observability"
+    slug: 08-observability
+    description: >-
+      Logging với Fluentd/Loki. Metrics với Prometheus & Grafana.
+      Distributed tracing với Jaeger/Zipkin. OpenTelemetry.
+      Alerting và SLO/SLI/SLA.
+    duration_minutes: 50
+    is_free: true
     sort_order: 8
-        video_url: null
+    video_url: null
   - id: kcna-d5-l01
-        title: "Bài 9: Application Delivery — Helm, GitOps & CI/CD"
-        slug: 09-helm-gitops-cicd
-        description: >-
-          Helm charts, values, templates. GitOps với ArgoCD & Flux.
-          CI/CD pipelines cho Kubernetes. Kustomize basics.
-          Progressive delivery (canary, blue-green).
-        duration_minutes: 50
-        is_free: true
-        sort_order: 9
-        video_url: null
+    title: "Bài 9: Application Delivery — Helm, GitOps & CI/CD"
+    slug: 09-helm-gitops-cicd
+    description: >-
+      Helm charts, values, templates. GitOps với ArgoCD & Flux.
+      CI/CD pipelines cho Kubernetes. Kustomize basics.
+      Progressive delivery (canary, blue-green).
+    duration_minutes: 50
+    is_free: true
+    sort_order: 9
+    video_url: null
