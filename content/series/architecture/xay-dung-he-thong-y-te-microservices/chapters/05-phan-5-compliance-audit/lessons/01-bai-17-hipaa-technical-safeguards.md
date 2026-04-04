@@ -23,41 +23,33 @@ course:
 
 ![HIPAA Security Rule — Administrative, Physical, Technical Safeguards](/storage/uploads/2026/04/healthcare-hipaa-security-rule.png)
 
-
 HIPAA Security Rule yêu cầu các tổ chức xử lý ePHI (electronic Protected Health Information) phải triển khai **Technical Safeguards** — các biện pháp kỹ thuật bảo vệ dữ liệu y tế điện tử. Đây là phần quan trọng nhất đối với developers và engineers.
 
 ### 1.1. Cấu trúc HIPAA Security Rule
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              HIPAA Security Rule §164.302-318                │
-│                                                              │
-│  §164.308 Administrative Safeguards                          │
-│    ├── Risk Analysis                                         │
-│    ├── Workforce Security                                    │
-│    ├── Information Access Management                         │
-│    ├── Security Awareness Training                           │
-│    ├── Security Incident Procedures                          │
-│    ├── Contingency Plan                                      │
-│    └── Evaluation                                            │
-│                                                              │
-│  §164.310 Physical Safeguards                                │
-│    ├── Facility Access Controls                              │
-│    ├── Workstation Use & Security                            │
-│    └── Device and Media Controls                             │
-│                                                              │
-│  §164.312 Technical Safeguards  ◄── BÀI NÀY                 │
-│    ├── Access Control (§164.312(a))                           │
-│    ├── Audit Controls (§164.312(b))                          │
-│    ├── Integrity Controls (§164.312(c))                      │
-│    ├── Person/Entity Authentication (§164.312(d))            │
-│    └── Transmission Security (§164.312(e))                   │
-│                                                              │
-│  §164.314 Organizational Requirements                        │
-│    ├── Business Associate Agreements (BAA)                   │
-│    └── Group Health Plan Requirements                        │
-└─────────────────────────────────────────────────────────────┘
-```
+**HIPAA Security Rule §164.302-318:**
+
+- **§164.308 Administrative Safeguards**
+  - Risk Analysis
+  - Workforce Security
+  - Information Access Management
+  - Security Awareness Training
+  - Security Incident Procedures
+  - Contingency Plan
+  - Evaluation
+- **§164.310 Physical Safeguards**
+  - Facility Access Controls
+  - Workstation Use & Security
+  - Device and Media Controls
+- **§164.312 Technical Safeguards** ← **BÀI NÀY**
+  - Access Control (§164.312(a))
+  - Audit Controls (§164.312(b))
+  - Integrity Controls (§164.312(c))
+  - Person/Entity Authentication (§164.312(d))
+  - Transmission Security (§164.312(e))
+- **§164.314 Organizational Requirements**
+  - Business Associate Agreements (BAA)
+  - Group Health Plan Requirements
 
 ### 1.2. Required vs Addressable
 
@@ -1221,36 +1213,33 @@ fi
 
 Khi sử dụng third-party services (cloud providers, SaaS), BAA yêu cầu các đảm bảo kỹ thuật:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│          BAA Technical Requirements Mapping                  │
-│                                                              │
-│  Cloud Provider (AWS/GCP/Azure)                              │
-│    ├── Encryption at rest: AES-256                           │
-│    ├── Encryption in transit: TLS 1.2+                       │
-│    ├── Access logging: CloudTrail/Cloud Audit Logs           │
-│    ├── Data residency: Specify region                        │
-│    └── Incident notification: ≤ 60 days                      │
-│                                                              │
-│  Database Service (RDS/Cloud SQL)                            │
-│    ├── Encrypted storage volumes                             │
-│    ├── Encrypted backups                                     │
-│    ├── Audit logging enabled                                 │
-│    ├── Network isolation (VPC)                               │
-│    └── IAM authentication                                    │
-│                                                              │
-│  Monitoring Service (Datadog/New Relic)                      │
-│    ├── PHI masking before sending                            │
-│    ├── Data processing agreement                             │
-│    ├── EU/US data residency                                  │
-│    └── Log retention controls                                │
-│                                                              │
-│  Email Service (SendGrid/SES)                                │
-│    ├── TLS enforced                                          │
-│    ├── No PHI in email content                               │
-│    └── Breach notification capability                        │
-└─────────────────────────────────────────────────────────────┘
-```
+**Cloud Provider (AWS/GCP/Azure):**
+
+- Encryption at rest: AES-256
+- Encryption in transit: TLS 1.2+
+- Access logging: CloudTrail/Cloud Audit Logs
+- Data residency: Specify region
+- Incident notification: ≤ 60 days
+
+**Database Service (RDS/Cloud SQL):**
+
+- Encrypted storage volumes + backups
+- Audit logging enabled
+- Network isolation (VPC)
+- IAM authentication
+
+**Monitoring Service (Datadog/New Relic):**
+
+- PHI masking before sending
+- Data processing agreement
+- EU/US data residency
+- Log retention controls
+
+**Email Service (SendGrid/SES):**
+
+- TLS enforced
+- No PHI in email content
+- Breach notification capability
 
 ### 8.2. BAA Compliance Verification
 

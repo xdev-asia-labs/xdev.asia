@@ -23,62 +23,34 @@ course:
 
 ![Penetration Testing Lifecycle — Planning, Discovery, Attack, Reporting, Remediation](/storage/uploads/2026/04/healthcare-pentest-lifecycle.png)
 
-
 ### 1.1. Tại sao Pentest Healthcare Systems khác biệt?
 
 Security testing cho hệ thống y tế đòi hỏi cách tiếp cận đặc biệt so với các hệ thống IT thông thường. Dữ liệu y tế có **giá trị cao nhất trên dark web** — gấp 10-50 lần thẻ tín dụng — vì chứa thông tin không thể thay đổi như tiền sử bệnh, mã gen, số bảo hiểm xã hội.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        Healthcare Security Testing — Unique Challenges       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
-│  │  Regulatory   │  │    Data      │  │   System     │       │
-│  │  Compliance   │  │  Sensitivity │  │ Availability │       │
-│  ├──────────────┤  ├──────────────┤  ├──────────────┤       │
-│  │ • HIPAA §164 │  │ • ePHI/PHI   │  │ • 24/7 ops   │       │
-│  │ • ISO 27799  │  │ • Genetic    │  │ • Life-critical│      │
-│  │ • NĐ 13/2023│  │ • Mental     │  │ • No downtime │       │
-│  │ • Risk Assess│  │ • Substance  │  │ • ER systems  │       │
-│  └──────────────┘  └──────────────┘  └──────────────┘       │
-│                                                              │
-│  Constraints:                                                │
-│  ✗ Cannot disrupt patient care                               │
-│  ✗ Cannot access/expose real PHI                             │
-│  ✗ Must maintain audit trail during testing                  │
-│  ✗ Results = legal evidence (preserve chain of custody)       │
-│  ✓ Must test with synthetic healthcare data                  │
-│  ✓ Must have formal authorization (BAA amendment)            │
-└─────────────────────────────────────────────────────────────┘
-```
+![Healthcare Security Testing — Unique Challenges: Regulatory, Data Sensitivity, System Availability](/storage/uploads/2026/04/healthcare-pentest-constraints.png)
+
+| Thách thức | Chi tiết |
+|----------|--------|
+| **Regulatory Compliance** | HIPAA §164, ISO 27799, NĐ 13/2023, Risk Assessment |
+| **Data Sensitivity** | ePHI/PHI, Genetic, Mental health, Substance abuse |
+| **System Availability** | 24/7 ops, Life-critical, No downtime, ER systems |
+
+**Constraints:** Cannot disrupt patient care, cannot access/expose real PHI, must maintain audit trail, results = legal evidence. Must test with synthetic data and have formal authorization (BAA amendment).
 
 ### 1.2. Healthcare Security Testing Framework
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│            Healthcare Security Testing Lifecycle             │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   Phase 1           Phase 2           Phase 3                │
-│  ┌──────────┐     ┌──────────┐     ┌──────────┐            │
-│  │ Planning │────▶│ Discovery│────▶│  Attack  │            │
-│  │ & Scoping│     │ & Recon  │     │Simulation│            │
-│  └──────────┘     └──────────┘     └──────────┘            │
-│       │                                  │                   │
-│       │           Phase 5           Phase 4                  │
-│       │         ┌──────────┐     ┌──────────┐              │
-│       └────────▶│Remediation│◀───│ Reporting│              │
-│                 │& Retest  │     │& Evidence│              │
-│                 └──────────┘     └──────────┘              │
-│                                                              │
-│  HIPAA Mapping:                                              │
-│  • §164.308(a)(8) — Evaluation (required)                   │
-│  • §164.312(a)(1) — Access Control verification             │
-│  • §164.312(e)(1) — Transmission Security testing           │
-│  • §164.306(e)    — Risk Analysis update                    │
-└─────────────────────────────────────────────────────────────┘
-```
+![Healthcare Security Testing Lifecycle — 5 phases: Planning → Discovery → Attack → Reporting → Remediation](/storage/uploads/2026/04/healthcare-pentest-lifecycle.png)
+
+**5 Phases:**
+
+1. **Planning & Scoping** → 2. **Discovery & Recon** → 3. **Attack Simulation** → 4. **Reporting & Evidence** → 5. **Remediation & Retest**
+
+**HIPAA Mapping:**
+
+- §164.308(a)(8) — Evaluation (required)
+- §164.312(a)(1) — Access Control verification
+- §164.312(e)(1) — Transmission Security testing
+- §164.306(e) — Risk Analysis update
 
 ### 1.3. Phân loại Security Testing
 
@@ -1448,47 +1420,36 @@ public class HIPAAComplianceScanner {
 
 ### 8.2. Compliance Report Template
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ HIPAA Technical Safeguards — Compliance Assessment Report   │
-├─────────────────────────────────────────────────────────────┤
-│ System:    Healthcare Microservices Platform                 │
-│ Date:      2026-Q1                                          │
-│ Assessor:  Security Team                                    │
-│ Scope:     Quarkus APIs + PostgreSQL + Keycloak             │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│ §164.312(a)(1) — Access Control                             │
-│ ├── Unique User ID ......................... ✅ PASS        │
-│ ├── Emergency Access Procedure ............ ✅ PASS         │
-│ ├── Automatic Logoff (15 min) ............. ✅ PASS         │
-│ └── Encryption/Decryption ................. ✅ PASS         │
-│                                                              │
-│ §164.312(b) — Audit Controls                                │
-│ ├── pgAudit enabled ....................... ✅ PASS         │
-│ ├── Application audit trail ............... ✅ PASS         │
-│ ├── Immutable log storage ................. ⚠️ PARTIAL     │
-│ └── 6-year retention ...................... ✅ PASS         │
-│                                                              │
-│ §164.312(c)(1) — Integrity                                  │
-│ ├── ePHI integrity mechanism .............. ✅ PASS         │
-│ └── Digital signatures .................... ✅ PASS         │
-│                                                              │
-│ §164.312(d) — Authentication                                │
-│ ├── MFA for ePHI access ................... ✅ PASS         │
-│ ├── Password policy ....................... ✅ PASS         │
-│ └── Certificate-based auth ................ ✅ PASS         │
-│                                                              │
-│ §164.312(e)(1) — Transmission Security                      │
-│ ├── TLS 1.2+ enforced ..................... ✅ PASS         │
-│ ├── mTLS inter-service .................... ✅ PASS         │
-│ └── Weak cipher suites disabled ........... ✅ PASS         │
-│                                                              │
-│ Overall Score: 95% Compliant (1 partial finding)            │
-│ Risk Level:   LOW                                            │
-│ Next Review:  2026-Q2                                        │
-└─────────────────────────────────────────────────────────────┘
-```
+**HIPAA Technical Safeguards — Compliance Assessment Report**
+
+| Field | Value |
+|-------|-------|
+| System | Healthcare Microservices Platform |
+| Date | 2026-Q1 |
+| Assessor | Security Team |
+| Scope | Quarkus APIs + PostgreSQL + Keycloak |
+
+**§164.312(a)(1) — Access Control:**
+
+- Unique User ID — ✅ PASS
+- Emergency Access Procedure — ✅ PASS
+- Automatic Logoff (15 min) — ✅ PASS
+- Encryption/Decryption — ✅ PASS
+
+**§164.312(b) — Audit Controls:**
+
+- pgAudit enabled — ✅ PASS
+- Application audit trail — ✅ PASS
+- Immutable log storage — ⚠️ PARTIAL
+- 6-year retention — ✅ PASS
+
+**§164.312(c)(1) — Integrity:** ePHI integrity mechanism ✅, Digital signatures ✅
+
+**§164.312(d) — Authentication:** MFA for ePHI access ✅, Password policy ✅, Certificate-based auth ✅
+
+**§164.312(e)(1) — Transmission Security:** TLS 1.2+ enforced ✅, mTLS inter-service ✅, Weak cipher suites disabled ✅
+
+**Overall Score:** 95% Compliant (1 partial finding) | **Risk Level:** LOW | **Next Review:** 2026-Q2
 
 ---
 

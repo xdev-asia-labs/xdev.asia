@@ -23,37 +23,18 @@ course:
 
 ![4 lớp mã hóa dữ liệu y tế: Disk, TDE, Column, Application](/storage/uploads/2026/04/healthcare-encryption-layers.png)
 
-
 Dữ liệu y tế (PHI) yêu cầu mã hóa ở **hai trạng thái**: at-rest (khi lưu trữ) và in-transit (khi truyền). HIPAA Security Rule §164.312(a)(2)(iv) và §164.312(e)(2)(ii) quy định cụ thể về encryption requirements.
 
 ### 1.1. Encryption Layers
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Data Lifecycle                        │
-│                                                         │
-│  Application ──── In-Transit ────► Database              │
-│                   (TLS 1.3)                              │
-│                                                         │
-│  ┌─────────────────────────────────────────────────┐    │
-│  │              At-Rest Encryption                  │    │
-│  │                                                  │    │
-│  │  Level 1: Full Disk Encryption (LUKS/dm-crypt)  │    │
-│  │     └── Bảo vệ khi disk bị đánh cắp            │    │
-│  │                                                  │    │
-│  │  Level 2: Transparent Data Encryption (TDE)     │    │
-│  │     └── Encrypt data files, WAL, temp files     │    │
-│  │                                                  │    │
-│  │  Level 3: Column-Level Encryption (pgcrypto)    │    │
-│  │     └── Encrypt từng field PHI riêng biệt       │    │
-│  │                                                  │    │
-│  │  Level 4: Application-Level Encryption          │    │
-│  │     └── Encrypt trước khi gửi tới database      │    │
-│  └─────────────────────────────────────────────────┘    │
-│                                                         │
-│  Backup ──── Encrypted Backup ────► S3 (SSE-KMS)       │
-└─────────────────────────────────────────────────────────┘
-```
+![Các lớp mã hóa dữ liệu y tế — In-Transit, At-Rest (4 levels), Backup](/storage/uploads/2026/04/healthcare-encryption-layers.png)
+
+- **In-Transit**: TLS 1.3 giữa Application và Database
+- **At-Rest Level 1**: Full Disk Encryption (LUKS/dm-crypt) — bảo vệ khi disk bị đánh cắp
+- **At-Rest Level 2**: Transparent Data Encryption (TDE) — encrypt data files, WAL, temp files
+- **At-Rest Level 3**: Column-Level Encryption (pgcrypto) — encrypt từng field PHI riêng biệt
+- **At-Rest Level 4**: Application-Level Encryption — encrypt trước khi gửi tới database
+- **Backup**: Encrypted Backup → S3 (SSE-KMS)
 
 ### 1.2. So sánh các phương pháp mã hóa
 
@@ -490,35 +471,15 @@ public class SslVerificationService {
 
 ### 5.1. Vault Transit Secrets Engine
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              Envelope Encryption Pattern                 │
-│                                                         │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐     │
-│  │ Quarkus  │      │  Vault   │      │ HSM/KMS  │     │
-│  │ App      │      │ Transit  │      │          │     │
-│  └────┬─────┘      └────┬─────┘      └────┬─────┘     │
-│       │                  │                  │           │
-│  1. Generate DEK         │                  │           │
-│  (Data Encryption Key)   │                  │           │
-│       │                  │                  │           │
-│  2. Encrypt data         │                  │           │
-│     with DEK             │                  │           │
-│       │                  │                  │           │
-│  3. ─── Encrypt DEK ──►│                  │           │
-│       │                  │ 4. Wrap DEK     │           │
-│       │                  │    with KEK ────►│           │
-│       │  ◄── Wrapped ───│                  │           │
-│       │      DEK         │                  │           │
-│       │                  │                  │           │
-│  5. Store encrypted      │                  │           │
-│     data + wrapped DEK   │                  │           │
-│     in PostgreSQL        │                  │           │
-│                                                         │
-│  DEK = Data Encryption Key (per-record hoặc per-table) │
-│  KEK = Key Encryption Key (master key trong Vault)     │
-└─────────────────────────────────────────────────────────┘
-```
+![Envelope Encryption Pattern với Vault Transit — DEK + KEK](/storage/uploads/2026/04/healthcare-vault-envelope-encryption.png)
+
+**Quy trình Envelope Encryption:**
+
+1. Generate DEK (Data Encryption Key) — per-record hoặc per-table
+2. Encrypt data with DEK
+3. Gửi DEK tới Vault Transit để wrap
+4. Vault wrap DEK với KEK (Key Encryption Key) qua HSM/KMS
+5. Lưu encrypted data + wrapped DEK trong PostgreSQL
 
 ### 5.2. Vault Configuration
 
@@ -895,30 +856,13 @@ echo "Restore completed from: ${BACKUP_FILE}"
 
 ### 8.1. Quy trình Key Rotation
 
-```
-┌─────────────────────────────────────────────────────┐
-│              Key Rotation Timeline                   │
-│                                                      │
-│  Day 0          Day 90         Day 180               │
-│  ├──────────────┼──────────────┤                     │
-│  │   Key v1     │   Key v2     │   Key v3            │
-│  │  (active)    │  (active)    │  (active)           │
-│  │              │              │                     │
-│  │  Encrypt     │  RE-encrypt  │  RE-encrypt         │
-│  │  new data    │  old data    │  old data           │
-│  │  with v1     │  with v2     │  with v3            │
-│  │              │              │                     │
-│  │              │  v1 still    │  v1 retired         │
-│  │              │  can decrypt │  v2 can decrypt     │
-│  └──────────────┴──────────────┴─────────────────────│
-│                                                      │
-│  Vault tự động:                                      │
-│  - Rotate KEK mỗi 90 ngày                           │
-│  - OLD versions vẫn decrypt được                     │
-│  - NEW data encrypt bằng latest version              │
-│  - Rewrap: re-encrypt DEK với new KEK version        │
-└─────────────────────────────────────────────────────┘
-```
+![Key Rotation Timeline — v1 → v2 → v3 mỗi 90 ngày với Vault auto-rotation](/storage/uploads/2026/04/healthcare-key-rotation-timeline.png)
+
+- **Day 0–90**: Key v1 active — encrypt new data
+- **Day 90–180**: Key v2 active — re-encrypt old data, v1 vẫn decrypt được
+- **Day 180+**: Key v3 active — v1 retired, v2 vẫn decrypt được
+- Vault tự động rotate KEK, OLD versions vẫn decrypt, NEW data encrypt bằng latest
+- **Rewrap**: re-encrypt DEK với new KEK version
 
 ### 8.2. Batch Re-encryption Script
 
@@ -1004,6 +948,7 @@ Trong bài học này, chúng ta đã triển khai **mã hóa toàn diện** cho
 9. **Key Rotation**: Automated DEK rewrapping khi KEK rotate
 
 Nguyên tắc quan trọng:
+
 - **Never store encryption keys cùng với encrypted data**
 - **Always use authenticated encryption** (AES-GCM)
 - **Implement key rotation** với zero-downtime

@@ -23,60 +23,38 @@ course:
 
 ![HIPAA De-identification — Safe Harbor vs Expert Determination](/storage/uploads/2026/04/healthcare-data-deidentification.png)
 
-
 HIPAA cho phép sử dụng và chia sẻ dữ liệu y tế mà **không cần patient consent** nếu dữ liệu đã được **de-identified** — tức là không thể dùng để xác định danh tính bệnh nhân. Đây là nền tảng cho medical research, population health analytics, và machine learning trong healthcare.
 
 ### 1.1. HIPAA De-identification Standards — §164.514
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        HIPAA De-identification — §164.514(a)                 │
-│                                                              │
-│  PHI (Protected Health Information)                          │
-│    │                                                         │
-│    ├── Method 1: Safe Harbor §164.514(b)                     │
-│    │   └── Remove all 18 identifiers                         │
-│    │   └── No actual knowledge of re-identification          │
-│    │   └── Deterministic, rules-based                        │
-│    │                                                         │
-│    └── Method 2: Expert Determination §164.514(b)(1)         │
-│        └── Statistical/scientific expert certifies            │
-│        └── Risk of re-identification is "very small"         │
-│        └── Documents methods and results                     │
-│                                                              │
-│                  ▼                                            │
-│  De-identified Data                                          │
-│    └── NOT considered PHI                                    │
-│    └── NOT subject to HIPAA Privacy Rule                     │
-│    └── Can be shared freely for research                     │
-└─────────────────────────────────────────────────────────────┘
-```
+![HIPAA De-identification — Safe Harbor vs Expert Determination flow](/storage/uploads/2026/04/healthcare-safe-harbor-flow.png)
+
+**PHI (Protected Health Information)** có 2 phương pháp de-identification theo §164.514(a):
+
+- **Method 1: Safe Harbor** §164.514(b)
+  - Remove tất cả **18 identifiers**
+  - Không có actual knowledge về re-identification
+  - Deterministic, rules-based
+- **Method 2: Expert Determination** §164.514(b)(1)
+  - Statistical/scientific expert certifies
+  - Risk of re-identification là **"very small"**
+  - Document phương pháp và kết quả
+
+**→ De-identified Data**: NOT considered PHI, NOT subject to HIPAA Privacy Rule, có thể share freely cho research
 
 ### 1.2. Data Protection Spectrum
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│            Data Protection Spectrum                          │
-│                                                              │
-│  ◄─── More Privacy ────────────────── Less Privacy ──►       │
-│                                                              │
-│  Synthetic   Anonymized   De-identified   Masked   Original │
-│  Data        Data         Data            Data     PHI      │
-│    │            │              │             │         │      │
-│    │            │              │             │         │      │
-│    ▼            ▼              ▼             ▼         ▼      │
-│  Fake data   Cannot      18 identifiers  Partial   Full     │
-│  generated   reverse     removed         hiding    data     │
-│  from        to          (Safe Harbor)   (SSN:     visible  │
-│  patterns    original                    ***-4567)           │
-│              data                                            │
-│                                                              │
-│  Use cases:  Research    Research         Production Testing │
-│  Dev/Test    Analytics   Sharing          Display            │
-│  Training    Population  Publications     Logs               │
-│              Health                                          │
-└─────────────────────────────────────────────────────────────┘
-```
+![Data Protection Spectrum — từ Synthetic Data đến Original PHI](/storage/uploads/2026/04/healthcare-data-protection-spectrum.png)
+
+| Level | Mô tả | Use Cases |
+|-------|--------|----------|
+| **Synthetic Data** | Fake data generated from patterns | Dev/Test, Training |
+| **Anonymized Data** | Cannot reverse to original | Research, Analytics, Population Health |
+| **De-identified Data** | 18 identifiers removed (Safe Harbor) | Research Sharing, Publications |
+| **Masked Data** | Partial hiding (SSN: ***-4567) | Production Display, Logs |
+| **Original PHI** | Full data visible | Testing (restricted) |
+
+◄── **More Privacy** ─────────────────── **Less Privacy** ──►
 
 ## 2. HIPAA Safe Harbor Method — 18 Identifiers
 
@@ -341,30 +319,13 @@ Expert Determination method cho phép linh hoạt hơn Safe Harbor nhưng yêu c
 3. Document phương pháp và kết quả đánh giá
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│         Expert Determination Process                         │
-│                                                              │
-│  Step 1: Identify quasi-identifiers                          │
-│    └── Combinations of fields có thể re-identify             │
-│    └── Ví dụ: ZIP + DOB + Gender → 87% population unique    │
-│                                                              │
-│  Step 2: Apply statistical methods                           │
-│    └── k-anonymity (k ≥ 5 recommended)                       │
-│    └── l-diversity                                           │
-│    └── t-closeness                                           │
-│                                                              │
-│  Step 3: Re-identification risk assessment                   │
-│    └── Prosecutor risk < 0.04 (1/25)                         │
-│    └── Journalist risk < 0.04                                │
-│    └── Marketer risk < 0.04                                  │
-│                                                              │
-│  Step 4: Document and certify                                │
-│    └── Expert's qualifications                               │
-│    └── Methods used                                          │
-│    └── Risk assessment results                               │
-│    └── Signed certification                                  │
-└─────────────────────────────────────────────────────────────┘
-```
+
+**Expert Determination Process:**
+
+1. **Identify quasi-identifiers** — Tổ hợp các fields có thể re-identify (ví dụ: ZIP + DOB + Gender → 87% population unique)
+2. **Apply statistical methods** — k-anonymity (k ≥ 5 recommended), l-diversity, t-closeness
+3. **Re-identification risk assessment** — Prosecutor/Journalist/Marketer risk < 0.04 (1/25)
+4. **Document and certify** — Expert’s qualifications, methods used, risk assessment results, signed certification
 
 ### 3.2. Quasi-Identifier Analysis
 
@@ -544,35 +505,24 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 ### 5.1. Masking Pipeline cho Non-Production
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│        Static Data Masking Pipeline                          │
-│                                                              │
-│  Production DB                                               │
-│    │                                                         │
-│    ├── 1. pg_dump (logical backup)                           │
-│    │                                                         │
-│    ▼                                                         │
-│  Staging Area (temporary)                                    │
-│    │                                                         │
-│    ├── 2. Apply masking transformations                      │
-│    │   ├── Names → Faker-generated names                     │
-│    │   ├── SSN → Random SSN format                           │
-│    │   ├── Dates → Shifted by random offset                  │
-│    │   ├── Addresses → Randomized                            │
-│    │   └── MRN → Re-keyed                                    │
-│    │                                                         │
-│    ├── 3. Validate masked data                               │
-│    │   ├── No real PHI remaining                             │
-│    │   ├── Referential integrity preserved                   │
-│    │   └── Data distributions similar                        │
-│    │                                                         │
-│    ▼                                                         │
-│  Dev/Test DB                                                 │
-│    └── Safe to use without HIPAA constraints                 │
-│                                                              │
-│  ⚠ Staging area is securely deleted after masking            │
-└─────────────────────────────────────────────────────────────┘
-```
+
+**Static Data Masking Pipeline:**
+
+1. **Production DB** → `pg_dump` (logical backup)
+2. **Staging Area** (temporary, isolated network)
+3. **Apply masking transformations:**
+   - Names → Faker-generated names
+   - SSN → Random SSN format
+   - Dates → Shifted by random offset
+   - Addresses → Randomized
+   - MRN → Re-keyed
+4. **Validate masked data:**
+   - No real PHI remaining
+   - Referential integrity preserved
+   - Data distributions similar
+5. **Dev/Test DB** — Safe to use without HIPAA constraints
+
+> ⚠️ Staging area is securely deleted after masking
 
 ### 5.2. SQL-Based Static Masking Script
 
@@ -640,31 +590,26 @@ COMMIT;
 **Định nghĩa**: Một dataset đạt k-anonymity nếu mỗi tổ hợp quasi-identifiers xuất hiện ít nhất **k lần**. Nghĩa là mỗi record không thể phân biệt khỏi ít nhất k-1 records khác.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  K-Anonymity Example (k=3)                                   │
-│                                                              │
-│  BEFORE (k=1, not anonymous):                                │
-│  ┌──────────┬────┬────────┬─────────────┐                    │
-│  │ Age      │ ZIP│ Gender │ Diagnosis   │                    │
-│  ├──────────┼────┼────────┼─────────────┤                    │
-│  │ 28       │700 │ M      │ Diabetes    │  ← Unique!         │
-│  │ 29       │700 │ M      │ Heart       │                    │
-│  │ 35       │700 │ F      │ Cancer      │  ← Unique!         │
-│  └──────────┴────┴────────┴─────────────┘                    │
-│                                                              │
-│  AFTER (k=3, generalized):                                   │
-│  ┌──────────┬────┬────────┬─────────────┐                    │
-│  │ Age Range│ ZIP│ Gender │ Diagnosis   │                    │
-│  ├──────────┼────┼────────┼─────────────┤                    │
-│  │ 25-35    │7** │ *      │ Diabetes    │  ← 3 matches       │
-│  │ 25-35    │7** │ *      │ Heart       │  ← 3 matches       │
-│  │ 25-35    │7** │ *      │ Cancer      │  ← 3 matches       │
-│  └──────────┴────┴────────┴─────────────┘                    │
-│                                                              │
-│  Techniques: Generalization (age ranges, ZIP truncation)     │
-│              Suppression (remove rare values)                │
-└─────────────────────────────────────────────────────────────┘
-```
+
+![K-Anonymity Example — Before (k=1) vs After (k=3) Generalization](/storage/uploads/2026/04/healthcare-k-anonymity-example.png)
+
+**BEFORE (k=1, not anonymous):**
+
+| Age | ZIP | Gender | Diagnosis |
+|-----|-----|--------|----------|
+| 28 | 700 | M | Diabetes ← Unique! |
+| 29 | 700 | M | Heart |
+| 35 | 700 | F | Cancer ← Unique! |
+
+**AFTER (k=3, generalized):**
+
+| Age Range | ZIP | Gender | Diagnosis |
+|-----------|-----|--------|----------|
+| 25-35 | 7** | * | Diabetes ← 3 matches |
+| 25-35 | 7** | * | Heart ← 3 matches |
+| 25-35 | 7** | * | Cancer ← 3 matches |
+
+**Techniques:** Generalization (age ranges, ZIP truncation), Suppression (remove rare values)
 
 ### 6.2. K-Anonymity Implementation
 
@@ -832,28 +777,22 @@ public class KAnonymityService {
 **T-Closeness**: Phân phối sensitive attribute trong mỗi equivalence class phải gần với phân phối tổng thể (khoảng cách ≤ t). Ngăn chặn **skewness attack**.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  K-Anonymity vs L-Diversity                                  │
-│                                                              │
-│  K-Anonymity (k=3) — VULNERABLE:                            │
-│  ┌──────────┬─────────────┐                                  │
-│  │ Age 25-35│ Diagnosis   │                                  │
-│  ├──────────┼─────────────┤                                  │
-│  │ 25-35    │ HIV         │  ← All have HIV!                 │
-│  │ 25-35    │ HIV         │  ← Attacker knows diagnosis      │
-│  │ 25-35    │ HIV         │  ← even without knowing WHO      │
-│  └──────────┴─────────────┘                                  │
-│                                                              │
-│  L-Diversity (l=3) — PROTECTED:                              │
-│  ┌──────────┬─────────────┐                                  │
-│  │ Age 25-35│ Diagnosis   │                                  │
-│  ├──────────┼─────────────┤                                  │
-│  │ 25-35    │ Diabetes    │  ← 3 different diagnoses         │
-│  │ 25-35    │ Heart       │  ← Attacker cannot infer         │
-│  │ 25-35    │ Cold        │  ← which one belongs to target   │
-│  └──────────┴─────────────┘                                  │
-└─────────────────────────────────────────────────────────────┘
-```
+
+**K-Anonymity (k=3) — VULNERABLE (Homogeneity Attack):**
+
+| Age Range | Diagnosis |
+|-----------|----------|
+| 25-35 | HIV ← All have HIV! |
+| 25-35 | HIV ← Attacker knows diagnosis |
+| 25-35 | HIV ← even without knowing WHO |
+
+**L-Diversity (l=3) — PROTECTED:**
+
+| Age Range | Diagnosis |
+|-----------|----------|
+| 25-35 | Diabetes ← 3 different diagnoses |
+| 25-35 | Heart ← Attacker cannot infer |
+| 25-35 | Cold ← which one belongs to target |
 
 | Method | Protects Against | Weakness |
 |--------|-----------------|----------|
@@ -865,33 +804,16 @@ public class KAnonymityService {
 
 ### 7.1. Tokenization Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│           Tokenization Architecture                          │
-│                                                              │
-│  Original SSN: 079-123-456789                                │
-│       │                                                      │
-│       ▼                                                      │
-│  ┌────────────────────────┐                                  │
-│  │  Tokenization Service  │                                  │
-│  │  (Format-Preserving    │                                  │
-│  │   Encryption - FPE)    │                                  │
-│  └───────────┬────────────┘                                  │
-│              │                                               │
-│       ┌──────┴──────┐                                        │
-│       ▼             ▼                                        │
-│  Token: 248-971-832145    Token Vault (mapping)              │
-│  (same format, different  ┌──────────────────┐               │
-│   value, reversible       │ Token → Original │               │
-│   with key)               │ Encrypted store  │               │
-│                            └──────────────────┘               │
-│                                                              │
-│  Advantages:                                                 │
-│  • Same format → existing systems work (validation, UI)     │
-│  • Reversible → authorized users can detokenize             │
-│  • Referential integrity → same SSN always → same token     │
-└─────────────────────────────────────────────────────────────┘
-```
+**Flow:**
+- **Original SSN**: `079-123-456789`
+- → **Tokenization Service** (Format-Preserving Encryption — FPE)
+  - **Token**: `248-971-832145` (same format, different value, reversible with key)
+  - **Token Vault**: Encrypted mapping Token → Original
+
+**Advantages:**
+- Same format → existing systems work (validation, UI)
+- Reversible → authorized users can detokenize  
+- Referential integrity → same SSN always → same token
 
 ### 7.2. FPE Tokenization Service
 
@@ -1280,55 +1202,23 @@ public class DeidentificationResource {
 
 ### 10.1. Complete Pipeline
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        Data Masking & De-identification Pipeline             │
-│                                                              │
-│  Source: Production Database                                 │
-│    │                                                         │
-│    ├──────────────────────────────────────────────────────┐   │
-│    │  Step 1: Extract                                     │   │
-│    │  pg_dump --format=custom --compress=9                │   │
-│    │  Output: encrypted dump file                         │   │
-│    └──────────────────────────────────────────────┬───────┘   │
-│                                                   │           │
-│    ├──────────────────────────────────────────────────────┐   │
-│    │  Step 2: Load into Staging                           │   │
-│    │  pg_restore → staging database                       │   │
-│    │  (isolated network, no external access)              │   │
-│    └──────────────────────────────────────────────┬───────┘   │
-│                                                   │           │
-│    ├──────────────────────────────────────────────────────┐   │
-│    │  Step 3: Apply Masking Rules                         │   │
-│    │  ├── Direct identifiers → Remove/Replace             │   │
-│    │  ├── Quasi-identifiers → Generalize                  │   │
-│    │  ├── Dates → Shift by random offset                  │   │
-│    │  ├── Free text → NLP scrubbing                       │   │
-│    │  └── Verify: k-anonymity check                       │   │
-│    └──────────────────────────────────────────────┬───────┘   │
-│                                                   │           │
-│    ├──────────────────────────────────────────────────────┐   │
-│    │  Step 4: Validate                                    │   │
-│    │  ├── No real PHI remaining (regex scan)              │   │
-│    │  ├── Referential integrity preserved                 │   │
-│    │  ├── Statistical properties maintained               │   │
-│    │  └── K-anonymity verified (k ≥ 5)                    │   │
-│    └──────────────────────────────────────────────┬───────┘   │
-│                                                   │           │
-│    ├──────────────────────────────────────────────────────┐   │
-│    │  Step 5: Export                                      │   │
-│    │  pg_dump staging → masked dump file                  │   │
-│    │  Load into dev/test/research databases               │   │
-│    └──────────────────────────────────────────────┬───────┘   │
-│                                                   │           │
-│    ├──────────────────────────────────────────────────────┐   │
-│    │  Step 6: Cleanup                                     │   │
-│    │  DROP staging database                               │   │
-│    │  Securely delete temp files                          │   │
-│    │  Audit log the entire process                        │   │
-│    └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
+**Data Masking & De-identification Pipeline:**
+
+1. **Extract** — `pg_dump --format=custom --compress=9` → encrypted dump file
+2. **Load into Staging** — `pg_restore` → staging database (isolated network, no external access)
+3. **Apply Masking Rules:**
+   - Direct identifiers → Remove/Replace
+   - Quasi-identifiers → Generalize
+   - Dates → Shift by random offset
+   - Free text → NLP scrubbing
+   - Verify: k-anonymity check
+4. **Validate:**
+   - No real PHI remaining (regex scan)
+   - Referential integrity preserved
+   - Statistical properties maintained
+   - K-anonymity verified (k ≥ 5)
+5. **Export** — `pg_dump staging` → masked dump file → load into dev/test/research databases
+6. **Cleanup** — DROP staging database, securely delete temp files, audit log the entire process
 
 ### 10.2. Comparison Table
 

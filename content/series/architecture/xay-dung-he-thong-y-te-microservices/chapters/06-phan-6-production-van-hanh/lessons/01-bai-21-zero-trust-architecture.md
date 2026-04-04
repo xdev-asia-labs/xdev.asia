@@ -27,36 +27,18 @@ course:
 
 Mô hình bảo mật truyền thống dựa trên **perimeter security** — "tin tưởng mọi thứ bên trong firewall" — đã không còn phù hợp với hệ thống y tế hiện đại. Với sự gia tăng của telemedicine, IoT medical devices, cloud adoption, và remote access cho bác sĩ, **perimeter không còn tồn tại rõ ràng**.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│           Traditional Perimeter Security (OUTDATED)          │
-│                                                              │
-│  Internet ──► [Firewall] ──► ┌────────────────────────┐     │
-│                               │   "Trusted Zone"       │     │
-│                               │                        │     │
-│                               │  EHR ◄──► Lab System   │     │
-│                               │   │                    │     │
-│                               │   ▼                    │     │
-│                               │  Database (ePHI)       │     │
-│                               │           ▲            │     │
-│                               │  IoT ─────┘            │     │
-│                               │                        │     │
-│                               │  ⚠ Nếu 1 device bị    │     │
-│                               │    compromise → toàn   │     │
-│                               │    bộ network bị       │     │
-│                               │    truy cập!           │     │
-│                               └────────────────────────┘     │
-│                                                              │
-│  Problems:                                                   │
-│  ✗ Ransomware lây lan lateral trong trusted zone             │
-│  ✗ Insider threats không bị kiểm soát                        │
-│  ✗ IoT devices yếu bảo mật → entry point                    │
-│  ✗ Remote doctors bypass perimeter                           │
-│  ✗ Cloud services nằm ngoài perimeter                        │
-└─────────────────────────────────────────────────────────────┘
-```
+![Traditional Perimeter Security vs Zero Trust — so sánh mô hình bảo mật](/storage/uploads/2026/04/healthcare-zero-trust-vs-perimeter.png)
+
+**Problems với Perimeter Security:**
+
+- Ransomware lây lan lateral trong trusted zone
+- Insider threats không bị kiểm soát
+- IoT devices yếu bảo mật → entry point
+- Remote doctors bypass perimeter
+- Cloud services nằm ngoài perimeter
 
 **Thống kê đáng lo ngại:**
+
 - 89% tổ chức healthcare từng bị data breach (Ponemon 2024)
 - Chi phí trung bình của healthcare data breach: **$10.93 triệu** (cao nhất mọi ngành)
 - 60% ransomware attacks vào healthcare bắt nguồn từ lateral movement trong internal network
@@ -65,40 +47,27 @@ Mô hình bảo mật truyền thống dựa trên **perimeter security** — "t
 
 NIST Special Publication 800-207 định nghĩa **Zero Trust Architecture** (ZTA) là mô hình bảo mật dựa trên nguyên tắc: **không có implicit trust** cho bất kỳ asset, user, hay network segment nào.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│            NIST SP 800-207 — Zero Trust Architecture         │
-│                                                              │
-│  Core Components:                                            │
-│                                                              │
-│  ┌──────────┐    ┌──────────────┐    ┌──────────────────┐   │
-│  │  Policy   │    │   Policy     │    │  Policy          │   │
-│  │  Engine   │◄──►│  Administrator│◄──►│  Enforcement     │   │
-│  │  (PE)     │    │   (PA)       │    │  Point (PEP)     │   │
-│  └────┬─────┘    └──────────────┘    └────────┬─────────┘   │
-│       │                                        │             │
-│       ▼                                        ▼             │
-│  ┌──────────┐                          ┌──────────────┐     │
-│  │ Data     │                          │  Enterprise  │     │
-│  │ Sources: │                          │  Resources:  │     │
-│  │ • CDM    │                          │  • EHR       │     │
-│  │ • Threat │                          │  • Lab APIs  │     │
-│  │   Intel  │                          │  • Databases │     │
-│  │ • Activity│                         │  • FHIR      │     │
-│  │   Logs   │                          │  • PACS      │     │
-│  │ • PKI    │                          └──────────────┘     │
-│  └──────────┘                                               │
-│                                                              │
-│  Tenets:                                                     │
-│  1. All data sources and computing services are resources    │
-│  2. All communication is secured regardless of location      │
-│  3. Access to individual resources is granted per-session    │
-│  4. Access is determined by dynamic policy                   │
-│  5. Enterprise monitors and measures security posture        │
-│  6. Authentication and authorization are dynamic             │
-│  7. Enterprise collects info about current state of assets   │
-└─────────────────────────────────────────────────────────────┘
-```
+**NIST SP 800-207 — Zero Trust Architecture:**
+
+**Core Components:**
+
+- **Policy Engine (PE)** — Quyết định access dựa trên data sources
+- **Policy Administrator (PA)** — Thực thi decisions từ PE
+- **Policy Enforcement Point (PEP)** — Điểm kiểm soát access
+
+**Data Sources:** CDM, Threat Intel, Activity Logs, PKI
+
+**Enterprise Resources:** EHR, Lab APIs, Databases, FHIR, PACS
+
+**7 Tenets:**
+
+1. All data sources and computing services are resources
+2. All communication is secured regardless of location
+3. Access to individual resources is granted per-session
+4. Access is determined by dynamic policy
+5. Enterprise monitors and measures security posture
+6. Authentication and authorization are dynamic
+7. Enterprise collects info about current state of assets
 
 ### 1.3. Zero Trust Principles cho Healthcare
 
@@ -115,55 +84,15 @@ NIST Special Publication 800-207 định nghĩa **Zero Trust Architecture** (ZTA
 
 ### 2.1. Healthcare ZTA Overview
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│              Zero Trust Architecture — Hospital System               │
-│                                                                      │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐               │
-│  │ Doctor      │  │ Nurse        │  │ IoT Medical  │               │
-│  │ (Mobile)    │  │ (Workstation)│  │ Device       │               │
-│  └──────┬──────┘  └──────┬───────┘  └──────┬───────┘               │
-│         │                │                  │                        │
-│         ▼                ▼                  ▼                        │
-│  ┌─────────────────────────────────────────────────┐                │
-│  │           Policy Enforcement Point (PEP)         │                │
-│  │        Istio Ingress Gateway + Envoy Proxy       │                │
-│  │  ┌─────────┐ ┌──────────┐ ┌────────────────┐   │                │
-│  │  │ mTLS    │ │ JWT      │ │ Rate Limiting  │   │                │
-│  │  │ Termina.│ │ Validat. │ │ + WAF          │   │                │
-│  │  └─────────┘ └──────────┘ └────────────────┘   │                │
-│  └────────────────────┬────────────────────────────┘                │
-│                       │                                              │
-│  ┌────────────────────▼────────────────────────────┐                │
-│  │           Policy Engine + Policy Administrator   │                │
-│  │                                                  │                │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────────┐  │                │
-│  │  │ Keycloak │  │ OPA      │  │ Risk Engine  │  │                │
-│  │  │ (AuthN)  │  │ (AuthZ)  │  │ (Scoring)    │  │                │
-│  │  └──────────┘  └──────────┘  └──────────────┘  │                │
-│  │                                                  │                │
-│  │  Data Sources:                                   │                │
-│  │  • Device posture (MDM)                          │                │
-│  │  • User behavior analytics                       │                │
-│  │  • Threat intelligence feeds                     │                │
-│  │  • GeoIP + Time-of-day                           │                │
-│  └─────────────────────────────────────────────────┘                │
-│                       │                                              │
-│  ┌────────────────────▼────────────────────────────┐                │
-│  │              Micro-segmented Services            │                │
-│  │                                                  │                │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────────┐    │                │
-│  │  │ Patient  │ │ Lab      │ │ Appointment  │    │                │
-│  │  │ Service  │ │ Service  │ │ Service      │    │                │
-│  │  │ (mTLS)   │ │ (mTLS)   │ │ (mTLS)       │    │                │
-│  │  └────┬─────┘ └────┬─────┘ └──────┬───────┘    │                │
-│  │       │             │              │             │                │
-│  │  ┌────▼─────────────▼──────────────▼───────┐    │                │
-│  │  │   Encrypted Database Layer (RLS + TDE)  │    │                │
-│  │  └────────────────────────────────────────┘     │                │
-│  └─────────────────────────────────────────────────┘                │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Zero Trust Architecture — Hospital System với PEP, Policy Engine, Micro-segmented Services](/storage/uploads/2026/04/healthcare-zero-trust-architecture.png)
+
+**Layers:**
+
+- **Users:** Doctor (Mobile), Nurse (Workstation), IoT Medical Device
+- **PEP:** Istio Ingress Gateway + Envoy Proxy (mTLS, JWT Validation, Rate Limiting + WAF)
+- **Policy Engine:** Keycloak (AuthN) + OPA (AuthZ) + Risk Engine (Scoring)
+- **Data Sources:** Device posture (MDM), User behavior analytics, Threat intelligence, GeoIP + Time-of-day
+- **Micro-segmented Services:** Patient/Lab/Appointment Service (mTLS) → Encrypted Database Layer (RLS + TDE)
 
 ### 2.2. So sánh Perimeter Security vs Zero Trust
 
@@ -465,39 +394,18 @@ public class StepUpAuthenticationService {
 
 ### 4.1. Network Architecture cho Healthcare
 
-```
-┌────────────────────────────────────────────────────────────────┐
-│         Micro-segmented Healthcare Kubernetes Cluster           │
-│                                                                 │
-│  Namespace: healthcare-frontend                                 │
-│  ┌──────────────┐                                              │
-│  │ Patient Portal│──── ONLY port 443 ────►                     │
-│  │ API Gateway   │                        │                     │
-│  └──────────────┘                         │                     │
-│                                           ▼                     │
-│  ──────────────── Network Policy ──────────────────            │
-│                                           │                     │
-│  Namespace: healthcare-services           │                     │
-│  ┌──────────────┐ ┌──────────────┐ ┌─────▼────────┐           │
-│  │ Patient Svc  │ │ Lab Svc      │ │ Appointment  │           │
-│  │ port:8080    │ │ port:8080    │ │ Svc port:8080│           │
-│  └──────┬───────┘ └──────┬───────┘ └──────┬───────┘           │
-│         │                │                 │                    │
-│  ──────────────── Network Policy ──────────────────            │
-│         │                │                 │                    │
-│  Namespace: healthcare-data               │                    │
-│  ┌──────▼───────┐ ┌─────▼────────┐       │                    │
-│  │ PostgreSQL   │ │ Redis Cache  │       │                    │
-│  │ port:5432    │ │ port:6379    │       │                    │
-│  └──────────────┘ └──────────────┘       │                    │
-│                                           │                    │
-│  Namespace: healthcare-monitoring (READ ONLY)                  │
-│  ┌──────────────┐ ┌──────────────┐                             │
-│  │ Prometheus   │ │ Falco        │                             │
-│  │ (scrape only)│ │ (eBPF hooks) │                             │
-│  └──────────────┘ └──────────────┘                             │
-└────────────────────────────────────────────────────────────────┘
-```
+**Micro-segmented Healthcare Kubernetes Cluster:**
+
+- **Namespace: `healthcare-frontend`**
+  - Patient Portal / API Gateway → ONLY port 443
+- *── Network Policy ──*
+- **Namespace: `healthcare-services`**
+  - Patient Svc (port:8080), Lab Svc (port:8080), Appointment Svc (port:8080)
+- *── Network Policy ──*
+- **Namespace: `healthcare-data`**
+  - PostgreSQL (port:5432), Redis Cache (port:6379)
+- **Namespace: `healthcare-monitoring`** (READ ONLY)
+  - Prometheus (scrape only), Falco (eBPF hooks)
 
 ### 4.2. Kubernetes NetworkPolicies
 
@@ -858,42 +766,15 @@ public class DeviceTrustService {
 
 ### 6.1. OPA Architecture trong Healthcare ZTA
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              OPA Policy Architecture                     │
-│                                                          │
-│  ┌───────────────────────────────────────────────┐      │
-│  │              Policy Bundle Server              │      │
-│  │     (Git repo → OPA Bundle → Distribution)     │      │
-│  └───────────────────────┬───────────────────────┘      │
-│                          │ Pull bundles                   │
-│                          ▼                               │
-│  ┌───────────────────────────────────────────────┐      │
-│  │              OPA Server (Sidecar/Central)      │      │
-│  │                                                │      │
-│  │  ┌─────────────────────────────────────────┐  │      │
-│  │  │  Rego Policies:                         │  │      │
-│  │  │  • healthcare/patient_access.rego       │  │      │
-│  │  │  • healthcare/device_trust.rego         │  │      │
-│  │  │  • healthcare/data_classification.rego  │  │      │
-│  │  │  • healthcare/emergency_access.rego     │  │      │
-│  │  └─────────────────────────────────────────┘  │      │
-│  │                                                │      │
-│  │  ┌─────────────────────────────────────────┐  │      │
-│  │  │  Data:                                  │  │      │
-│  │  │  • roles_permissions.json               │  │      │
-│  │  │  • department_assignments.json          │  │      │
-│  │  │  • data_classification_rules.json       │  │      │
-│  │  └─────────────────────────────────────────┘  │      │
-│  └───────────────────────────────────────────────┘      │
-│       ▲         ▲         ▲         ▲                    │
-│       │ query   │ query   │ query   │ query              │
-│  ┌────┴──┐ ┌───┴───┐ ┌───┴───┐ ┌───┴──────┐            │
-│  │Patient│ │ Lab   │ │ Appt. │ │ API      │            │
-│  │ Svc   │ │ Svc   │ │ Svc   │ │ Gateway  │            │
-│  └───────┘ └───────┘ └───────┘ └──────────┘            │
-└─────────────────────────────────────────────────────────┘
-```
+![OPA Policy Architecture — Bundle Server → OPA Server → Healthcare Services](/storage/uploads/2026/04/healthcare-opa-policy-engine.png)
+
+**Components:**
+
+- **Policy Bundle Server:** Git repo → OPA Bundle → Distribution
+- **OPA Server** (Sidecar/Central):
+  - **Rego Policies:** patient_access, device_trust, data_classification, emergency_access
+  - **Data:** roles_permissions.json, department_assignments.json, data_classification_rules.json
+- **Clients (query):** Patient Svc, Lab Svc, Appt. Svc, API Gateway
 
 ### 6.2. OPA Rego Policies cho Healthcare
 
@@ -1313,52 +1194,49 @@ data:
 
 ### 9.1. Phased Zero Trust Migration
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        Zero Trust Migration Roadmap — Healthcare             │
-│                                                              │
-│  Phase 1: Foundation (Month 1-3)                             │
-│  ├── Deploy Keycloak (centralized identity)                  │
-│  ├── Enable MFA for all staff                                │
-│  ├── Inventory all assets and data flows                     │
-│  ├── Classify data (PHI vs non-PHI)                          │
-│  └── Implement basic audit logging                           │
-│                                                              │
-│  Phase 2: Identity-Centric Security (Month 4-6)             │
-│  ├── SSO for all applications (Keycloak OIDC)                │
-│  ├── RBAC enforcement (roles → permissions)                  │
-│  ├── Device registration program                             │
-│  ├── Certificate-based auth for services                     │
-│  └── Decommission shared accounts                            │
-│                                                              │
-│  Phase 3: Micro-segmentation (Month 7-9)                     │
-│  ├── Network segmentation (VLANs per department)             │
-│  ├── Kubernetes NetworkPolicies                              │
-│  ├── Istio service mesh (mTLS everywhere)                    │
-│  ├── Database: RLS per user context                          │
-│  └── Block lateral movement paths                            │
-│                                                              │
-│  Phase 4: Continuous Verification (Month 10-12)              │
-│  ├── OPA policy engine deployment                            │
-│  ├── Risk scoring engine                                     │
-│  ├── Device posture checking (MDM integration)               │
-│  ├── Step-up authentication for sensitive ops                │
-│  └── Behavioral analytics (UBA)                              │
-│                                                              │
-│  Phase 5: Advanced & Optimization (Month 13-18)              │
-│  ├── Replace VPN with ZTNA                                   │
-│  ├── Full DLP integration                                    │
-│  ├── IoT medical device isolation                            │
-│  ├── Automated incident response                             │
-│  └── Continuous compliance monitoring                        │
-│                                                              │
-│  ─────────── Ongoing ───────────                             │
-│  • Red team exercises quarterly                              │
-│  • Policy review and updates                                 │
-│  • New threat assessment                                     │
-│  • Staff training                                            │
-└─────────────────────────────────────────────────────────────┘
-```
+**Zero Trust Migration Roadmap — Healthcare:**
+
+**Phase 1: Foundation (Month 1-3)**
+
+- Deploy Keycloak (centralized identity)
+- Enable MFA for all staff
+- Inventory all assets and data flows
+- Classify data (PHI vs non-PHI)
+- Implement basic audit logging
+
+**Phase 2: Identity-Centric Security (Month 4-6)**
+
+- SSO for all applications (Keycloak OIDC)
+- RBAC enforcement (roles → permissions)
+- Device registration program
+- Certificate-based auth for services
+- Decommission shared accounts
+
+**Phase 3: Micro-segmentation (Month 7-9)**
+
+- Network segmentation (VLANs per department)
+- Kubernetes NetworkPolicies
+- Istio service mesh (mTLS everywhere)
+- Database: RLS per user context
+- Block lateral movement paths
+
+**Phase 4: Continuous Verification (Month 10-12)**
+
+- OPA policy engine deployment
+- Risk scoring engine
+- Device posture checking (MDM integration)
+- Step-up authentication for sensitive ops
+- Behavioral analytics (UBA)
+
+**Phase 5: Advanced & Optimization (Month 13-18)**
+
+- Replace VPN with ZTNA
+- Full DLP integration
+- IoT medical device isolation
+- Automated incident response
+- Continuous compliance monitoring
+
+**Ongoing:** Red team exercises quarterly, policy review, new threat assessment, staff training
 
 ### 9.2. Migration Checklist
 
@@ -1384,51 +1262,28 @@ data:
 
 ### 10.1. Data-Centric Zero Trust
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│           Zero Trust Data Protection Layers                  │
-│                                                              │
-│  Layer 1: Classify Everything                                │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  Data Classification Engine                      │        │
-│  │  • PHI: patient name, SSN, diagnosis, labs       │        │
-│  │  • PII: email, phone, address                    │        │
-│  │  • Sensitive: billing, insurance                  │        │
-│  │  • Internal: schedules, inventory                 │        │
-│  │  • Public: hospital info, general health tips     │        │
-│  └─────────────────────────────────────────────────┘        │
-│                                                              │
-│  Layer 2: Encrypt Everything                                 │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  Encryption Matrix:                               │        │
-│  │  ┌──────────┬──────────┬──────────┬──────────┐  │        │
-│  │  │          │ At Rest  │In Transit│ In Use   │  │        │
-│  │  ├──────────┼──────────┼──────────┼──────────┤  │        │
-│  │  │ PHI      │ AES-256  │ TLS 1.3  │ Enclaves │  │        │
-│  │  │ PII      │ AES-256  │ TLS 1.3  │ Masking  │  │        │
-│  │  │ Sensitive│ AES-256  │ TLS 1.3  │ —        │  │        │
-│  │  │ Internal │ TDE      │ TLS 1.2+ │ —        │  │        │
-│  │  └──────────┴──────────┴──────────┴──────────┘  │        │
-│  └─────────────────────────────────────────────────┘        │
-│                                                              │
-│  Layer 3: Control Everything                                 │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  • Row-Level Security (PostgreSQL RLS)           │        │
-│  │  • Column-level encryption (pgcrypto)            │        │
-│  │  • Dynamic data masking per role                  │        │
-│  │  • DLP: block unauthorized data transfer          │        │
-│  │  • Watermarking for screenshots/exports           │        │
-│  └─────────────────────────────────────────────────┘        │
-│                                                              │
-│  Layer 4: Monitor Everything                                 │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  • Full audit trail (who, what, when, why)        │        │
-│  │  • Real-time anomaly detection                    │        │
-│  │  • Data lineage tracking                          │        │
-│  │  • Compliance dashboards                          │        │
-│  └─────────────────────────────────────────────────┘        │
-└─────────────────────────────────────────────────────────────┘
-```
+![Zero Trust Data Protection Layers — Classify, Encrypt, Control, Monitor](/storage/uploads/2026/04/healthcare-data-zero-trust-layers.png)
+
+**Layer 1: Classify Everything**
+
+- PHI: patient name, SSN, diagnosis, labs
+- PII: email, phone, address
+- Sensitive: billing, insurance
+- Internal: schedules, inventory
+- Public: hospital info, general health tips
+
+**Layer 2: Encrypt Everything**
+
+| | At Rest | In Transit | In Use |
+|---|---------|-----------|--------|
+| PHI | AES-256 | TLS 1.3 | Enclaves |
+| PII | AES-256 | TLS 1.3 | Masking |
+| Sensitive | AES-256 | TLS 1.3 | — |
+| Internal | TDE | TLS 1.2+ | — |
+
+**Layer 3: Control Everything** — RLS, Column-level encryption, Dynamic masking, DLP, Watermarking
+
+**Layer 4: Monitor Everything** — Full audit trail, Real-time anomaly detection, Data lineage tracking, Compliance dashboards
 
 ### 10.2. Application Properties cho Zero Trust
 

@@ -23,61 +23,43 @@ course:
 
 ![Kiến trúc Audit Logging — pgAudit, Debezium CDC, Fluent Bit, ELK](/storage/uploads/2026/04/healthcare-audit-logging-stack.png)
 
-
 HIPAA Security Rule §164.312(b) yêu cầu **hardware, software, and/or procedural mechanisms that record and examine activity** trong hệ thống chứa ePHI. Audit logging không chỉ là compliance requirement mà còn là công cụ **phát hiện intrusion, forensics, và accountability**.
 
 ### 1.1. Audit Requirements cho Y Tế
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              Healthcare Audit Requirements               │
-│                                                          │
-│  WHO?     ──► User identity (Keycloak subject)          │
-│  WHAT?    ──► Action performed (SELECT, INSERT, UPDATE)  │
-│  WHEN?    ──► Timestamp (with timezone)                  │
-│  WHERE?   ──► Source IP, application, service            │
-│  WHICH?   ──► Object accessed (table, column, row)       │
-│  HOW?     ──► Query text, parameters                     │
-│  RESULT?  ──► Success/failure, rows affected             │
-│                                                          │
-│  Additional Healthcare Requirements:                     │
-│  - PHI access tracking                                   │
-│  - Break-the-glass audit                                 │
-│  - Before/After values cho data changes                  │
-│  - Immutable audit trail (no tampering)                  │
-│  - 6-year retention (HIPAA minimum)                      │
-└─────────────────────────────────────────────────────────┘
-```
+| Yêu cầu | Mô tả |
+|---------|--------|
+| **WHO?** | User identity (Keycloak subject) |
+| **WHAT?** | Action performed (SELECT, INSERT, UPDATE) |
+| **WHEN?** | Timestamp (with timezone) |
+| **WHERE?** | Source IP, application, service |
+| **WHICH?** | Object accessed (table, column, row) |
+| **HOW?** | Query text, parameters |
+| **RESULT?** | Success/failure, rows affected |
+
+**Yêu cầu bổ sung cho Healthcare:**
+
+- PHI access tracking
+- Break-the-glass audit
+- Before/After values cho data changes
+- Immutable audit trail (no tampering)
+- 6-year retention (HIPAA minimum)
 
 ### 1.2. Audit Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                      Audit Stack                         │
-│                                                          │
-│  ┌──────────┐     ┌──────────┐     ┌──────────┐        │
-│  │ Quarkus  │     │PostgreSQL│     │ Debezium │        │
-│  │ App Logs │     │ pgAudit  │     │ CDC      │        │
-│  └────┬─────┘     └────┬─────┘     └────┬─────┘        │
-│       │                │                 │               │
-│       │ JSON logs      │ CSV/syslog     │ Kafka events  │
-│       │                │                 │               │
-│       └────────────────┼─────────────────┘               │
-│                        │                                 │
-│                   ┌────▼─────┐                           │
-│                   │ Fluent   │                           │
-│                   │ Bit      │                           │
-│                   └────┬─────┘                           │
-│                        │                                 │
-│              ┌─────────┼─────────┐                       │
-│              │         │         │                       │
-│         ┌────▼───┐ ┌───▼────┐ ┌──▼──────┐              │
-│         │OpenSear│ │ S3     │ │PostgreSQ│              │
-│         │ch/ELK  │ │Archive │ │L Audit  │              │
-│         │(Query) │ │(7 yrs) │ │DB       │              │
-│         └────────┘ └────────┘ └─────────┘              │
-└─────────────────────────────────────────────────────────┘
-```
+![Audit Stack — Quarkus + pgAudit + Debezium CDC → FluentBit → OpenSearch/S3/PostgreSQL](/storage/uploads/2026/04/healthcare-audit-architecture.png)
+
+**Audit Sources:**
+
+- **Quarkus App Logs** → JSON logs
+- **PostgreSQL pgAudit** → CSV/syslog
+- **Debezium CDC** → Kafka events
+
+**Pipeline:** Tất cả → **FluentBit** → phân phối tới:
+
+- **OpenSearch/ELK** — Query & visualization
+- **S3 Archive** — Lưu trữ 7 năm
+- **PostgreSQL Audit DB** — Structured query
 
 ## 2. pgAudit - Installation & Configuration
 
@@ -179,6 +161,7 @@ SELECT * FROM patient_schema.patients;
 ```
 
 Audit log output (CSV format):
+
 ```
 2025-01-15 10:30:45.123 ICT [12345] user=app_patient_svc,db=healthcare_db,app=patient-service,client=10.0.1.10
 AUDIT: SESSION,1,1,WRITE,INSERT,,patient_schema.patients,
@@ -240,6 +223,7 @@ ORDER BY relname;
 ## 4. Custom Audit Trigger Functions
 
 pgAudit ghi lại **SQL statements**, nhưng không capture:
+
 - **Before/After values** (old vs new data)
 - **Application-level context** (JWT user, IP)
 - **Business-level events** (who viewed which patient record)
@@ -524,38 +508,20 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 ### 5.1. CDC Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              CDC với Debezium + Kafka                    │
-│                                                          │
-│  PostgreSQL                                              │
-│  ┌──────────┐                                            │
-│  │ WAL      │ ← Write-Ahead Log (logical replication)   │
-│  │ (changes)│                                            │
-│  └────┬─────┘                                            │
-│       │ Logical Decoding                                 │
-│       ▼                                                  │
-│  ┌──────────┐                                            │
-│  │ Debezium │ ← Kafka Connect Source Connector           │
-│  │Connector │                                            │
-│  └────┬─────┘                                            │
-│       │ JSON change events                               │
-│       ▼                                                  │
-│  ┌──────────────────────────────────────────┐            │
-│  │              Apache Kafka                 │            │
-│  │  Topics:                                  │            │
-│  │  ├── healthcare.patient_schema.patients   │            │
-│  │  ├── healthcare.patient_schema.records    │            │
-│  │  └── healthcare.audit_schema.changes      │            │
-│  └────┬─────────────┬───────────┬───────────┘            │
-│       │             │           │                        │
-│  ┌────▼───┐   ┌─────▼──┐  ┌────▼────┐                  │
-│  │OpenSear│   │ Audit  │  │ Alert   │                  │
-│  │ch Sink │   │ S3     │  │ Engine  │                  │
-│  │Connect │   │Archive │  │(KSQL)   │                  │
-│  └────────┘   └────────┘  └─────────┘                  │
-└─────────────────────────────────────────────────────────┘
-```
+![CDC Pipeline — PostgreSQL WAL → Debezium → Kafka → OpenSearch/S3/KSQL](/storage/uploads/2026/04/healthcare-cdc-pipeline.png)
+
+**CDC Flow:**
+
+1. **PostgreSQL WAL** — Write-Ahead Log (logical replication)
+2. **Logical Decoding** → **Debezium Connector** (Kafka Connect Source)
+3. **JSON change events** → **Apache Kafka** Topics:
+   - `healthcare.patient_schema.patients`
+   - `healthcare.patient_schema.records`
+   - `healthcare.audit_schema.changes`
+4. **Consumers:**
+   - **OpenSearch Sink Connect** — Full-text search
+   - **Audit S3 Archive** — Long-term retention
+   - **Alert Engine (KSQL)** — Real-time anomaly detection
 
 ### 5.2. PostgreSQL Configuration cho CDC
 
@@ -1200,13 +1166,11 @@ Trong bài học này, chúng ta đã xây dựng **hệ thống Audit Logging t
 9. **Monitoring**: Prometheus alerting cho replication lag, trigger health, access anomalies
 
 Architecture tổng thể:
-```
-App Audit (Quarkus)  ──► Kafka  ──► OpenSearch (real-time query)
-                              └──► S3 (archive 7+ years)
-DB Audit (pgAudit)   ──► CSV   ──► Fluent Bit ──► OpenSearch
-Custom Triggers      ──► audit_schema tables ──► Compliance Reports
-CDC (Debezium)       ──► Kafka  ──► KSQL (anomaly detection)
-```
+
+- **App Audit (Quarkus)** → Kafka → OpenSearch (real-time query) + S3 (archive 7+ years)
+- **DB Audit (pgAudit)** → CSV → Fluent Bit → OpenSearch
+- **Custom Triggers** → `audit_schema` tables → Compliance Reports
+- **CDC (Debezium)** → Kafka → KSQL (anomaly detection)
 
 ## Bài tập
 

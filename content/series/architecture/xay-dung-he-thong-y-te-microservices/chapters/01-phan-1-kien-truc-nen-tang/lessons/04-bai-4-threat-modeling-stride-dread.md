@@ -203,25 +203,25 @@ public PatientSummaryDTO getPatient(@PathParam("id") UUID id) {
 
 #### D - Denial of Service
 
-```
-Threat: Tấn công DDoS khiến hệ thống cấp cứu ngừng hoạt động
-───────────────────────────────────────────────────────────
-Impact trong Y Tế:
-  - Không thể tra cứu dị ứng thuốc → kê đơn sai → nguy hiểm
-  - Không truy cập được lab results → chẩn đoán chậm
-  - Hệ thống đặt lịch down → bệnh nhân không thể đến khám
+![DoS mitigation — 7 lớp bảo vệ chống DDoS cho hệ thống y tế](/storage/uploads/2026/04/healthcare-stride-dos-mitigation.png)
 
-Mitigations:
-  ┌────────────────────────────────────────────┐
-  │ M1: Rate limiting at API Gateway           │
-  │ M2: Circuit breaker (Quarkus Fault Toler.) │
-  │ M3: Auto-scaling Kubernetes pods           │
-  │ M4: CDN/WAF (Cloudflare, AWS Shield)       │
-  │ M5: Database connection pooling            │
-  │ M6: Fallback mode / offline capability     │
-  │ M7: Priority queuing for ER requests       │
-  └────────────────────────────────────────────┘
-```
+**Threat:** Tấn công DDoS khiến hệ thống cấp cứu ngừng hoạt động
+
+**Impact trong Y Tế:**
+
+- Không thể tra cứu dị ứng thuốc → kê đơn sai → nguy hiểm
+- Không truy cập được lab results → chẩn đoán chậm
+- Hệ thống đặt lịch down → bệnh nhân không thể đến khám
+
+**Mitigations:**
+
+- **M1:** Rate limiting at API Gateway
+- **M2:** Circuit breaker (Quarkus Fault Tolerance)
+- **M3:** Auto-scaling Kubernetes pods
+- **M4:** CDN/WAF (Cloudflare, AWS Shield)
+- **M5:** Database connection pooling
+- **M6:** Fallback mode / offline capability
+- **M7:** Priority queuing for ER requests
 
 #### E - Elevation of Privilege
 
@@ -325,39 +325,28 @@ public class PrescriptionResource {
 
 ### 5.1. Attack Tree: Steal Patient Medical Records
 
-```
-Goal: Steal Patient Medical Records
-│
-├── 1. External Attack
-│   ├── 1.1 Exploit Web Application
-│   │   ├── 1.1.1 SQL Injection [DREAD: 8.6] ★
-│   │   ├── 1.1.2 XSS to steal session [DREAD: 7.2]
-│   │   └── 1.1.3 IDOR to access other patients [DREAD: 7.0]
-│   │
-│   ├── 1.2 Compromise Authentication
-│   │   ├── 1.2.1 Credential stuffing [DREAD: 5.4]
-│   │   ├── 1.2.2 Phishing doctor credentials [DREAD: 6.8]
-│   │   └── 1.2.3 Brute force Keycloak [DREAD: 3.2]
-│   │
-│   └── 1.3 Network Attack
-│       ├── 1.3.1 MITM on API calls [DREAD: 4.6]
-│       └── 1.3.2 DNS spoofing [DREAD: 4.2]
-│
-├── 2. Internal Attack (Insider Threat)
-│   ├── 2.1 Privileged User Abuse
-│   │   ├── 2.1.1 DBA exports database [DREAD: 6.8]
-│   │   ├── 2.1.2 Admin disables audit [DREAD: 5.6]
-│   │   └── 2.1.3 Doctor accesses non-patient [DREAD: 6.0]
-│   │
-│   └── 2.2 Stolen Credentials
-│       ├── 2.2.1 Shared workstation session [DREAD: 6.2]
-│       └── 2.2.2 Post-it password [DREAD: 5.0]
-│
-└── 3. Supply Chain Attack
-    ├── 3.1 Compromised dependency [DREAD: 7.8]
-    ├── 3.2 Malicious Docker image [DREAD: 6.4]
-    └── 3.3 Compromised CI/CD pipeline [DREAD: 7.0]
-```
+![Attack Tree — các vector tấn công đánh cắp hồ sơ bệnh nhân với DREAD scoring](/storage/uploads/2026/04/healthcare-attack-tree.png)
+
+**Goal: Steal Patient Medical Records**
+
+| Attack Path | DREAD | Priority |
+|---|---|---|
+| 1.1.1 SQL Injection | 8.6 | CRITICAL |
+| 1.1.2 XSS to steal session | 7.2 | HIGH |
+| 1.1.3 IDOR to access other patients | 7.0 | HIGH |
+| 1.2.1 Credential stuffing | 5.4 | MEDIUM |
+| 1.2.2 Phishing doctor credentials | 6.8 | HIGH |
+| 1.2.3 Brute force Keycloak | 3.2 | LOW |
+| 1.3.1 MITM on API calls | 4.6 | MEDIUM |
+| 1.3.2 DNS spoofing | 4.2 | MEDIUM |
+| 2.1.1 DBA exports database | 6.8 | HIGH |
+| 2.1.2 Admin disables audit | 5.6 | MEDIUM |
+| 2.1.3 Doctor accesses non-patient | 6.0 | MEDIUM |
+| 2.2.1 Shared workstation session | 6.2 | MEDIUM |
+| 2.2.2 Post-it password | 5.0 | MEDIUM |
+| 3.1 Compromised dependency | 7.8 | HIGH |
+| 3.2 Malicious Docker image | 6.4 | HIGH |
+| 3.3 Compromised CI/CD pipeline | 7.0 | HIGH |
 
 ## 6. Từ Threat Model đến Security Requirements
 

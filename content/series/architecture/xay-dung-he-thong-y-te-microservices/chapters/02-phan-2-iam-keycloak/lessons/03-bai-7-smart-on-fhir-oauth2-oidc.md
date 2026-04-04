@@ -23,7 +23,6 @@ course:
 
 ![SMART on FHIR Launch Flow — OAuth2/OIDC qua Keycloak cho EHR](/storage/uploads/2026/04/healthcare-smart-fhir-launch-flow.png)
 
-
 ### 1.1. SMART là gì?
 
 **SMART (Substitutable Medical Applications, Reusable Technologies)** on FHIR là một tiêu chuẩn mở cho phép các ứng dụng third-party truy cập dữ liệu y tế một cách an toàn thông qua FHIR APIs. SMART định nghĩa:
@@ -35,41 +34,31 @@ course:
 
 ### 1.2. SMART App Launch Flows
 
-```
-┌──────────────────────────────────────────────────────┐
-│               EHR Launch Flow                         │
-│                                                       │
-│ 1. User clicks "Launch App" in EHR                   │
-│ 2. EHR sends launch request with context              │
-│    (patient ID, encounter ID)                        │
-│ 3. App redirects to Authorization Server (Keycloak)  │
-│ 4. User authenticates (or SSO)                       │
-│ 5. Keycloak issues access token with SMART scopes    │
-│ 6. App uses token to access FHIR resources           │
-└──────────────────────────────────────────────────────┘
+**EHR Launch Flow:**
 
-┌──────────────────────────────────────────────────────┐
-│            Standalone Launch Flow                     │
-│                                                       │
-│ 1. User opens app directly (e.g., mobile app)        │
-│ 2. App redirects to Keycloak for authentication      │
-│ 3. User authenticates with credentials + MFA         │
-│ 4. App requests SMART scopes                         │
-│ 5. If patient context needed → patient picker        │
-│ 6. Keycloak issues access token                      │
-│ 7. App accesses FHIR resources                       │
-└──────────────────────────────────────────────────────┘
+1. User clicks "Launch App" in EHR
+2. EHR sends launch request with context (patient ID, encounter ID)
+3. App redirects to Authorization Server (Keycloak)
+4. User authenticates (or SSO)
+5. Keycloak issues access token with SMART scopes
+6. App uses token to access FHIR resources
 
-┌──────────────────────────────────────────────────────┐
-│       Backend Services Authorization                  │
-│                                                       │
-│ 1. Service authenticates with signed JWT assertion   │
-│ 2. Keycloak validates JWT and issues access token    │
-│ 3. Service accesses FHIR resources                   │
-│ → No user interaction required                       │
-│ → Used for: data sync, analytics, reporting          │
-└──────────────────────────────────────────────────────┘
-```
+**Standalone Launch Flow:**
+
+1. User opens app directly (e.g., mobile app)
+2. App redirects to Keycloak for authentication
+3. User authenticates with credentials + MFA
+4. App requests SMART scopes
+5. If patient context needed → patient picker
+6. Keycloak issues access token
+7. App accesses FHIR resources
+
+**Backend Services Authorization:**
+
+1. Service authenticates with signed JWT assertion
+2. Keycloak validates JWT and issues access token
+3. Service accesses FHIR resources
+→ No user interaction required. Used for: data sync, analytics, reporting.
 
 ## 2. SMART Scopes
 

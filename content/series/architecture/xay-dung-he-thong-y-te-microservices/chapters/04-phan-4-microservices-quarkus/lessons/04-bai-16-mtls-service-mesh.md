@@ -33,61 +33,26 @@ mTLS và Service Mesh giải quyết tất cả các vấn đề trên.
 
 ### 1.1. Defense-in-Depth cho Inter-Service Communication
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│       Secure Inter-Service Communication Layers              │
-│                                                              │
-│  Layer 1: Network Policies (Kubernetes)                      │
-│    ├── Namespace isolation                                   │
-│    ├── Pod-to-pod firewall rules                             │
-│    └── Egress restrictions                                   │
-│                                                              │
-│  Layer 2: mTLS (Istio Service Mesh)                          │
-│    ├── Automatic certificate provisioning                    │
-│    ├── Certificate rotation (24h default)                    │
-│    └── Mutual authentication (both sides verified)           │
-│                                                              │
-│  Layer 3: Authorization Policies (Istio)                     │
-│    ├── Service-to-service access control                     │
-│    ├── Path-based authorization                              │
-│    └── JWT claim-based policies                              │
-│                                                              │
-│  Layer 4: Application Security (Quarkus)                     │
-│    ├── JWT validation                                        │
-│    ├── RBAC (@RolesAllowed)                                  │
-│    └── Business logic authorization                          │
-│                                                              │
-│  Layer 5: Payload Encryption (JWE)                           │
-│    ├── Field-level encryption                                │
-│    └── End-to-end encryption                                 │
-└─────────────────────────────────────────────────────────────┘
-```
+![5 Security Layers cho Inter-Service Communication — Network → mTLS → AuthZ → JWT → Encryption](/storage/uploads/2026/04/healthcare-service-communication-layers.png)
+
+**5 lớp bảo vệ:**
+
+- **Layer 1**: Network Policies (Kubernetes) — Namespace isolation, pod-to-pod firewall, egress restrictions
+- **Layer 2**: mTLS (Istio) — Auto certificate provisioning, rotation 24h, mutual authentication
+- **Layer 3**: Authorization Policies (Istio) — Service-to-service ACL, path-based, JWT claim-based
+- **Layer 4**: Application Security (Quarkus) — JWT validation, RBAC, business logic authorization
+- **Layer 5**: Payload Encryption (JWE) — Field-level encryption, end-to-end encryption
 
 ### 1.2. mTLS vs One-Way TLS
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  One-Way TLS (Standard HTTPS)                            │
-│                                                          │
-│  Client ──────────────────────────► Server               │
-│         ◄── Server Certificate ──┘                       │
-│                                                          │
-│  • Client verifies server identity                       │
-│  • Server does NOT verify client                         │
-│  • Any client can connect                                │
-│                                                          │
-├─────────────────────────────────────────────────────────┤
-│  Mutual TLS (mTLS)                                       │
-│                                                          │
-│  Client ──── Client Certificate ──► Server               │
-│         ◄── Server Certificate ──┘                       │
-│                                                          │
-│  • Client verifies server identity ✓                     │
-│  • Server verifies client identity ✓                     │
-│  • Both sides authenticated                              │
-│  • Encrypted channel established                         │
-└─────────────────────────────────────────────────────────┘
-```
+![So sánh One-Way TLS vs Mutual TLS (mTLS)](/storage/uploads/2026/04/healthcare-tls-comparison.png)
+
+| | One-Way TLS | Mutual TLS (mTLS) |
+|---|---|---|
+| Client verify server | ✓ | ✓ |
+| Server verify client | ✗ | ✓ |
+| Kết nối | Any client có thể connect | Cả hai đều authenticated |
+| Kênh truyền | Encrypted | Encrypted + verified |
 
 ## 2. mTLS Configuration trong Quarkus
 
@@ -441,42 +406,15 @@ istioctl analyze -n healthcare
 
 ### 4.2. Istio Architecture với Healthcare Services
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                Kubernetes Cluster                            │
-│                                                              │
-│  ┌────────────────── istio-system ─────────────────────┐     │
-│  │  istiod (control plane)                              │     │
-│  │    ├── Certificate Authority (Citadel)               │     │
-│  │    ├── Configuration (Pilot)                         │     │
-│  │    └── Telemetry (Mixer replacement)                 │     │
-│  └──────────────────────────────────────────────────────┘     │
-│                                                              │
-│  ┌────────────────── healthcare ───────────────────────┐     │
-│  │                                                      │     │
-│  │  ┌──────────────────────────────────────────────┐   │     │
-│  │  │ Pod: patient-service                          │   │     │
-│  │  │ ┌───────────────┐  ┌────────────────────────┐│   │     │
-│  │  │ │ Envoy Proxy   │  │ patient-service        ││   │     │
-│  │  │ │ (sidecar)     │◄►│ (Quarkus container)    ││   │     │
-│  │  │ │               │  │                        ││   │     │
-│  │  │ │ - mTLS        │  │ - Business logic       ││   │     │
-│  │  │ │ - Auth policy │  │ - JWT validation       ││   │     │
-│  │  │ │ - Telemetry   │  │ - RBAC                 ││   │     │
-│  │  │ └───────────────┘  └────────────────────────┘│   │     │
-│  │  └──────────────────────────────────────────────┘   │     │
-│  │                    ^ mTLS v                          │     │
-│  │  ┌──────────────────────────────────────────────┐   │     │
-│  │  │ Pod: lab-service                              │   │     │
-│  │  │ ┌───────────────┐  ┌────────────────────────┐│   │     │
-│  │  │ │ Envoy Proxy   │  │ lab-service            ││   │     │
-│  │  │ │ (sidecar)     │◄►│ (Quarkus container)    ││   │     │
-│  │  │ └───────────────┘  └────────────────────────┘│   │     │
-│  │  └──────────────────────────────────────────────┘   │     │
-│  │                                                      │     │
-│  └──────────────────────────────────────────────────────┘     │
-└─────────────────────────────────────────────────────────────┘
-```
+![Istio Service Mesh Architecture cho Healthcare — istiod + Envoy sidecars](/storage/uploads/2026/04/healthcare-istio-mesh.png)
+
+**Architecture:**
+
+- **istio-system**: istiod control plane (Citadel CA, Pilot config, Telemetry)
+- **healthcare namespace**: Pods với Envoy sidecar proxies
+  - Patient Service + Envoy (mTLS, auth policy, telemetry)
+  - Lab Service + Envoy
+- Tất cả traffic giữa services đi qua Envoy → mã hóa mTLS tự động
 
 ### 4.3. PeerAuthentication - STRICT mTLS
 

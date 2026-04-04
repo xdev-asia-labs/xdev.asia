@@ -23,7 +23,6 @@ course:
 
 ![Container Attack Surface — Build, Deploy, Runtime vulnerabilities](/storage/uploads/2026/04/healthcare-container-attack-surface.png)
 
-
 ### 1.1. Container Attack Surface
 
 Container là đơn vị triển khai chính trong microservices healthcare. Mỗi container chứa application code, dependencies, và runtime — tất cả đều là attack surface tiềm năng. Trong healthcare, một container bị compromise có thể dẫn đến rò rỉ ePHI của hàng triệu bệnh nhân.
@@ -465,36 +464,13 @@ echo "  - Retention: keep last 10 releases"
 
 Kubernetes định nghĩa 3 mức Pod Security Standards (PSS):
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│         Kubernetes Pod Security Standards (PSS)              │
-│                                                              │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  PRIVILEGED                                      │        │
-│  │  • No restrictions                               │        │
-│  │  • Full host access                              │        │
-│  │  ⚠ NEVER for healthcare workloads                │        │
-│  └─────────────────────────────────────────────────┘        │
-│                                                              │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  BASELINE                                        │        │
-│  │  • Prevents known privilege escalations          │        │
-│  │  • No hostNetwork, hostPID, hostIPC              │        │
-│  │  • No privileged containers                      │        │
-│  │  → OK for monitoring, logging sidecars           │        │
-│  └─────────────────────────────────────────────────┘        │
-│                                                              │
-│  ┌─────────────────────────────────────────────────┐        │
-│  │  RESTRICTED  ◄── REQUIRED cho Healthcare         │        │
-│  │  • Everything in Baseline, plus:                 │        │
-│  │  • Must run as non-root                          │        │
-│  │  • Must drop ALL capabilities                    │        │
-│  │  • Read-only root filesystem                     │        │
-│  │  • Seccomp profile required                      │        │
-│  │  • No privilege escalation                       │        │
-│  └─────────────────────────────────────────────────┘        │
-└─────────────────────────────────────────────────────────────┘
-```
+**Kubernetes Pod Security Standards (PSS) — 3 levels:**
+
+| Level | Mô tả | Healthcare Use |
+|-------|--------|---------------|
+| **PRIVILEGED** | No restrictions, full host access | ⚠️ NEVER cho healthcare workloads |
+| **BASELINE** | Prevents known privilege escalations (no hostNetwork/PID/IPC, no privileged containers) | OK cho monitoring, logging sidecars |
+| **RESTRICTED** ◄ Required | Everything in Baseline + must run as non-root, drop ALL capabilities, read-only root filesystem, Seccomp profile required, no privilege escalation | **Bắt buộc cho Healthcare** |
 
 ### 5.2. Pod Security Standards Enforcement
 
@@ -905,27 +881,9 @@ rules:
 
 ### 8.1. Kyverno Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│           Kyverno Admission Controller                   │
-│                                                          │
-│  kubectl apply ──► API Server ──► Kyverno Webhook       │
-│                                       │                  │
-│                                       ▼                  │
-│                              ┌─────────────────┐        │
-│                              │  Policy Engine   │        │
-│                              │                  │        │
-│                              │  Validate ──► ✓/✗│        │
-│                              │  Mutate ──► Patch│        │
-│                              │  Generate ──► New│        │
-│                              └─────────────────┘        │
-│                                       │                  │
-│                                       ▼                  │
-│                              ┌─────────────────┐        │
-│                              │  Admit / Reject  │        │
-│                              └─────────────────┘        │
-└─────────────────────────────────────────────────────────┘
-```
+**Kyverno Admission Controller Flow:**
+
+`kubectl apply` → **API Server** → **Kyverno Webhook** → **Policy Engine** (Validate → ✓/✗, Mutate → Patch, Generate → New) → **Admit / Reject**
 
 ### 8.2. Kyverno Policies cho Healthcare
 

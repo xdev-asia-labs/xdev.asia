@@ -26,30 +26,17 @@ PostgreSQL là lựa chọn phổ biến cho hệ thống y tế nhờ tính lin
 
 ### 1.1. Các lớp bảo mật PostgreSQL
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  Application Layer                   │
-│    Quarkus / Spring Boot + Connection Pool           │
-├─────────────────────────────────────────────────────┤
-│                  Network Layer                       │
-│    Firewall Rules + VPN/Private Network              │
-├─────────────────────────────────────────────────────┤
-│              Authentication Layer                    │
-│    pg_hba.conf + SSL/TLS + Client Certificates       │
-├─────────────────────────────────────────────────────┤
-│              Authorization Layer                     │
-│    Roles + Privileges + Row-Level Security           │
-├─────────────────────────────────────────────────────┤
-│                Encryption Layer                      │
-│    TDE + Column Encryption + Backup Encryption       │
-├─────────────────────────────────────────────────────┤
-│                  Audit Layer                         │
-│    pgAudit + Custom Triggers + Log Shipping          │
-├─────────────────────────────────────────────────────┤
-│              Operating System Layer                  │
-│    File Permissions + SELinux/AppArmor               │
-└─────────────────────────────────────────────────────┘
-```
+![7 lớp bảo mật PostgreSQL — từ Application đến OS Layer](/storage/uploads/2026/04/healthcare-postgresql-security-layers.png)
+
+| Layer | Tên | Thành phần |
+|-------|-----|------------|
+| 7 | Application | Quarkus / Spring Boot + Connection Pool |
+| 6 | Network | Firewall Rules + VPN/Private Network |
+| 5 | Authentication | pg_hba.conf + SSL/TLS + Client Certificates |
+| 4 | Authorization | Roles + Privileges + Row-Level Security |
+| 3 | Encryption | TDE + Column Encryption + Backup Encryption |
+| 2 | Audit | pgAudit + Custom Triggers + Log Shipping |
+| 1 | Operating System | File Permissions + SELinux/AppArmor |
 
 ### 1.2. Checklist bảo mật cần hoàn thành
 
@@ -145,7 +132,8 @@ hostssl all             all               0.0.0.0/0            reject
 sudo -u postgres psql
 ```
 
-**Rule 4 - `hostssl` + `scram-sha-256`**: 
+**Rule 4 - `hostssl` + `scram-sha-256`**:
+
 - `hostssl` = bắt buộc SSL/TLS
 - `scram-sha-256` = password hashing mạnh nhất PostgreSQL hỗ trợ
 
@@ -273,28 +261,13 @@ WHERE usename IS NOT NULL;
 
 ### 4.1. Nguyên tắc Least Privilege cho Healthcare
 
-```
-┌──────────────────────────────────────────────────────┐
-│              PostgreSQL Role Hierarchy                │
-│                                                      │
-│  postgres (superuser) ← CHỈ dùng cho maintenance    │
-│      │                                               │
-│      ├── dba_admin (CREATEDB, CREATEROLE)            │
-│      │       └── Quản lý schema, backup, monitoring  │
-│      │                                               │
-│      ├── app_roles (LOGIN, limited privileges)       │
-│      │       ├── app_patient_svc                     │
-│      │       ├── app_lab_svc                         │
-│      │       ├── app_pharmacy_svc                    │
-│      │       └── app_gateway_svc                     │
-│      │                                               │
-│      ├── readonly_role (SELECT only)                 │
-│      │       ├── readonly_analytics                  │
-│      │       └── readonly_reporting                  │
-│      │                                               │
-│      └── monitoring_user (pg_monitor)                │
-└──────────────────────────────────────────────────────┘
-```
+![PostgreSQL Role Hierarchy cho hệ thống y tế](/storage/uploads/2026/04/healthcare-postgresql-role-hierarchy.png)
+
+- **postgres** (superuser) ← CHỈ dùng cho maintenance
+  - **dba_admin** (CREATEDB, CREATEROLE) — Quản lý schema, backup, monitoring
+  - **app_roles** (LOGIN, limited privileges) — app_patient_svc, app_lab_svc, app_pharmacy_svc, app_gateway_svc
+  - **readonly_role** (SELECT only) — readonly_analytics, readonly_reporting
+  - **monitoring_user** (pg_monitor)
 
 ### 4.2. Tạo Role Hierarchy
 
@@ -570,33 +543,13 @@ WHERE rolcanlogin = true
 ### 6.1. Tại sao cần PgBouncer
 
 Trong hệ thống microservices, mỗi service instance tạo connection pool riêng. PgBouncer giúp:
+
 - Giảm tổng số connections tới PostgreSQL
 - Thêm một lớp authentication
 - Rate limiting
 - Connection routing
 
-```
-┌─────────────────────────────────────────────────────┐
-│  Microservices (mỗi cái 20 connections)             │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐            │
-│  │ Patient  │ │ Lab      │ │ Pharmacy │            │
-│  │ Service  │ │ Service  │ │ Service  │            │
-│  │ x3 pods  │ │ x2 pods  │ │ x2 pods  │            │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘            │
-│       │ 60 conn     │ 40 conn    │ 40 conn          │
-│       └─────────────┼────────────┘                  │
-│                     │ 140 total                     │
-│              ┌──────┴───────┐                       │
-│              │  PgBouncer   │                       │
-│              │  Pool: 50    │ ← Giảm từ 140 → 50   │
-│              └──────┬───────┘                       │
-│                     │ 50 conn                       │
-│              ┌──────┴───────┐                       │
-│              │  PostgreSQL  │                       │
-│              │  max: 200    │                       │
-│              └──────────────┘                       │
-└─────────────────────────────────────────────────────┘
-```
+![PgBouncer connection pooling — giảm 140 connections xuống 50](/storage/uploads/2026/04/healthcare-pgbouncer-connection-pooling.png)
 
 ### 6.2. PgBouncer Configuration
 
@@ -1011,6 +964,7 @@ Trong bài học này, chúng ta đã triển khai **PostgreSQL Security Hardeni
 8. **OS-Level** - File permissions và systemd hardening
 
 Các nguyên tắc cốt lõi:
+
 - **Defense in Depth**: Nhiều lớp bảo mật chồng chéo
 - **Least Privilege**: Mỗi role chỉ có quyền tối thiểu cần thiết
 - **Encrypt Everything**: SSL/TLS cho mọi connection

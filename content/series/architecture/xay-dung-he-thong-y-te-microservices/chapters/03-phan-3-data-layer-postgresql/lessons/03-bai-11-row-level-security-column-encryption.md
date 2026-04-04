@@ -23,7 +23,6 @@ course:
 
 ![Row-Level Security Pipeline — JWT Claims → SET LOCAL → RLS Policy](/storage/uploads/2026/04/healthcare-rls-request-flow.png)
 
-
 Row-Level Security (RLS) cho phép PostgreSQL kiểm soát **hàng nào** trong bảng mà user có thể nhìn thấy hoặc thao tác. Đây là tính năng critical cho healthcare vì:
 
 - **Bác sĩ A** chỉ thấy bệnh nhân của mình
@@ -33,63 +32,35 @@ Row-Level Security (RLS) cho phép PostgreSQL kiểm soát **hàng nào** trong 
 
 ### 1.1. RLS vs Application-Level Filtering
 
-```
-┌─────────────────────────────────────────────────────────┐
-│         Application-Level Filtering (KHÔNG AN TOÀN)      │
-│                                                          │
-│  SELECT * FROM patients WHERE doctor_id = :currentDoctor │
-│                                                          │
-│  Vấn đề:                                                │
-│  - Developer quên WHERE clause → data leak               │
-│  - SQL injection bypass WHERE clause                     │
-│  - Direct DB access bypass application logic             │
-│  - Reporting tools bypass application                    │
-└─────────────────────────────────────────────────────────┘
+![So sánh Application-Level Filtering vs Row-Level Security trong PostgreSQL](/storage/uploads/2026/04/healthcare-rls-vs-app-filtering.png)
 
-┌─────────────────────────────────────────────────────────┐
-│         Row-Level Security (AN TOÀN)                     │
-│                                                          │
-│  SELECT * FROM patients;  ← Trả về CHỈ rows allowed    │
-│                                                          │
-│  Ưu điểm:                                               │
-│  - Database enforce, không bypass được                   │
-│  - Transparent cho application                           │
-│  - Works với mọi tool (psql, reporting, BI)             │
-│  - Defense in depth layer                               │
-└─────────────────────────────────────────────────────────┘
-```
+**Application-Level Filtering (KHÔNG AN TOÀN):**
+
+- `SELECT * FROM patients WHERE doctor_id = :currentDoctor`
+- Developer quên WHERE clause → data leak
+- SQL injection bypass WHERE clause
+- Direct DB access bypass application logic
+- Reporting tools bypass application
+
+**Row-Level Security (AN TOÀN):**
+
+- `SELECT * FROM patients;` — Trả về CHỈ rows allowed
+- Database enforce, không bypass được
+- Transparent cho application
+- Works với mọi tool (psql, reporting, BI)
+- Defense in depth layer
 
 ### 1.2. RLS Architecture cho Healthcare
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                  Request Flow                            │
-│                                                          │
-│  Quarkus App                                             │
-│      │                                                   │
-│      │ 1. Extract JWT claims                             │
-│      │    (user_id, role, department, hospital_id)       │
-│      │                                                   │
-│      │ 2. SET LOCAL session variables                    │
-│      │    SET LOCAL app.current_user_id = 'uuid';       │
-│      │    SET LOCAL app.current_role = 'doctor';        │
-│      │    SET LOCAL app.current_dept = 'cardiology';    │
-│      │    SET LOCAL app.hospital_id = 'uuid';           │
-│      │                                                   │
-│      │ 3. Execute query                                  │
-│      │    SELECT * FROM patients;                        │
-│      ▼                                                   │
-│  PostgreSQL                                              │
-│      │                                                   │
-│      │ 4. RLS Policy evaluates                           │
-│      │    current_setting('app.current_role')            │
-│      │    current_setting('app.current_dept')            │
-│      │                                                   │
-│      │ 5. Return ONLY allowed rows                       │
-│      ▼                                                   │
-│  Results (filtered by RLS)                               │
-└─────────────────────────────────────────────────────────┘
-```
+![RLS Request Flow — JWT → Session Variables → Policy Evaluation → Filtered Results](/storage/uploads/2026/04/healthcare-rls-request-flow.png)
+
+**Request Flow:**
+
+1. **Quarkus App** — Extract JWT claims (user_id, role, department, hospital_id)
+2. **SET LOCAL** session variables (`app.current_user_id`, `app.current_role`, `app.current_dept`, `app.hospital_id`)
+3. **Execute query** — `SELECT * FROM patients;`
+4. **PostgreSQL RLS Policy** evaluates `current_setting('app.current_role')`, `current_setting('app.current_dept')`
+5. **Return ONLY allowed rows** — Results filtered by RLS
 
 ## 2. Thiết lập RLS cơ bản
 

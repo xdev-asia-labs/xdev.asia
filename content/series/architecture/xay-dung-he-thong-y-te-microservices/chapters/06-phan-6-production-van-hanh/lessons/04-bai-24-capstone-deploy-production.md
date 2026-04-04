@@ -27,38 +27,24 @@ course:
 
 Trong bài cuối cùng này, chúng ta sẽ **tổng hợp toàn bộ kiến thức từ 23 bài trước** để xây dựng một **Secure Healthcare Microservices Platform** hoàn chỉnh — từ thiết kế kiến trúc, triển khai security controls, đến compliance verification.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        Capstone: Secure Healthcare Platform                  │
-│        "Hệ thống Quản lý Y tế An toàn"                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Tổng hợp từ 23 bài:                                        │
-│                                                              │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐       │
-│  │ Bài 1-4 │  │ Bài 5-8 │  │ Bài 9-12│  │Bài 13-16│       │
-│  │ HIPAA   │  │Keycloak │  │ PgSQL   │  │ Quarkus │       │
-│  │ Threat  │  │ IAM     │  │ Security│  │ Security│       │
-│  │ Model   │  │ MFA     │  │ RLS     │  │ mTLS    │       │
-│  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘       │
-│       │            │            │            │              │
-│       └────────────┴────────────┴────────────┘              │
-│                         │                                    │
-│  ┌─────────┐  ┌────────┴────────┐  ┌─────────┐             │
-│  │Bài 17-20│  │   CAPSTONE      │  │Bài 21-23│             │
-│  │Compliance│  │   PROJECT       │  │Zero Trust│            │
-│  │ Audit   │  │  Bài 24         │  │Container │            │
-│  │ DR/BCP  │  │                  │  │ Pentest  │            │
-│  └─────────┘  └─────────────────┘  └─────────┘             │
-│                                                              │
-│  Deliverables:                                               │
-│  ✓ Working microservices with full security                 │
-│  ✓ HIPAA Technical Safeguards compliance                    │
-│  ✓ Automated security testing pipeline                      │
-│  ✓ Deployment on Kubernetes with hardening                  │
-│  ✓ Security Assessment Report                               │
-└─────────────────────────────────────────────────────────────┘
-```
+**Tổng hợp từ 23 bài học:**
+
+| Phần | Bài | Chủ đề chính |
+|:---|:---|:---|
+| **Phần 1: Nền tảng** | Bài 1–4 | HIPAA, Threat Modeling, Risk Assessment, Architecture |
+| **Phần 2: IAM** | Bài 5–8 | Keycloak, RBAC/ABAC, MFA, SMART on FHIR |
+| **Phần 3: Database** | Bài 9–12 | PostgreSQL Security, Encryption, RLS, pgAudit |
+| **Phần 4: Microservices** | Bài 13–16 | Quarkus Security, API Gateway, E2E Encryption, mTLS |
+| **Phần 5: Compliance** | Bài 17–20 | HIPAA Safeguards, Audit Trail, Data Masking, DR/BCP |
+| **Phần 6: Nâng cao** | Bài 21–24 | Zero Trust, Container Security, Pentest, Capstone |
+
+**Deliverables:**
+
+- ✅ Working microservices with full security
+- ✅ HIPAA Technical Safeguards compliance
+- ✅ Automated security testing pipeline
+- ✅ Deployment on Kubernetes with hardening
+- ✅ Security Assessment Report
 
 ### 1.2. Phạm vi hệ thống
 
@@ -79,69 +65,20 @@ Chúng ta sẽ xây dựng **Hệ thống Quản lý Bệnh viện** (Hospital M
 
 ### 2.1. System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    INTERNET / EXTERNAL                           │
-└─────────────────────┬───────────────────────────────────────────┘
-                      │ HTTPS (TLS 1.3)
-                      ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    DMZ / Edge Layer                               │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                 API Gateway (Kong)                        │   │
-│  │  • Rate limiting (100 req/min per client)                │   │
-│  │  • WAF rules (OWASP CRS)                                │   │
-│  │  • Request validation (JSON Schema)                      │   │
-│  │  • JWT verification (delegate to Keycloak)               │   │
-│  │  • IP allowlisting for admin APIs                        │   │
-│  └──────────────────────┬───────────────────────────────────┘   │
-└─────────────────────────┼───────────────────────────────────────┘
-                          │ mTLS
-┌─────────────────────────┼───────────────────────────────────────┐
-│              APPLICATION LAYER (Kubernetes)                       │
-│                          │                                       │
-│  ┌───────────┐  ┌───────┴─────┐  ┌───────────┐  ┌───────────┐ │
-│  │  Patient   │  │  Encounter  │  │    Lab     │  │Prescription│ │
-│  │  Service   │  │  Service    │  │  Service   │  │  Service   │ │
-│  │  (Quarkus) │  │  (Quarkus)  │  │  (Quarkus) │  │  (Quarkus) │ │
-│  │            │  │             │  │            │  │            │ │
-│  │ • OIDC     │  │ • OIDC      │  │ • OIDC     │  │ • OIDC     │ │
-│  │ • RBAC     │  │ • ABAC      │  │ • RBAC     │  │ • MFA check│ │
-│  │ • Encrypt  │  │ • Encrypt   │  │ • Encrypt  │  │ • Encrypt  │ │
-│  │ • Audit    │  │ • Audit     │  │ • Audit    │  │ • Audit    │ │
-│  └─────┬─────┘  └──────┬──────┘  └─────┬─────┘  └─────┬─────┘ │
-│        │               │               │               │        │
-│  ┌─────┴───────────────┴───────────────┴───────────────┴─────┐ │
-│  │                  Service Mesh (Istio)                      │ │
-│  │       mTLS everywhere • Network Policies • Tracing         │ │
-│  └───────────────────────┬───────────────────────────────────┘ │
-│                          │                                      │
-│  ┌───────────┐  ┌───────┴─────┐  ┌───────────┐                │
-│  │Notification│  │   Audit     │  │ Keycloak  │                │
-│  │  Service   │  │  Service    │  │   IAM     │                │
-│  └───────────┘  └─────────────┘  └───────────┘                │
-└─────────────────────────┼───────────────────────────────────────┘
-                          │ SSL + mTLS
-┌─────────────────────────┼───────────────────────────────────────┐
-│                    DATA LAYER                                    │
-│                          │                                       │
-│  ┌────────────┐  ┌──────┴──────┐  ┌────────────┐              │
-│  │ PostgreSQL │  │   Kafka     │  │   Vault    │              │
-│  │ (Primary)  │  │  (Events)   │  │   (KMS)    │              │
-│  │            │  │             │  │            │              │
-│  │ • RLS      │  │ • Encrypted │  │ • Transit  │              │
-│  │ • pgcrypto │  │   topics    │  │ • PKI      │              │
-│  │ • pgAudit  │  │ • Schema    │  │ • Auto     │              │
-│  │ • SSL      │  │   Registry  │  │   unseal   │              │
-│  │ • Backups  │  │             │  │            │              │
-│  └────────────┘  └─────────────┘  └────────────┘              │
-│                                                                  │
-│  ┌────────────┐  ┌─────────────┐                               │
-│  │ PostgreSQL │  │Elasticsearch│                               │
-│  │ (Replica)  │  │ (Audit Logs)│                               │
-│  └────────────┘  └─────────────┘                               │
-└──────────────────────────────────────────────────────────────────┘
-```
+![Kiến trúc Capstone Healthcare Platform](/storage/uploads/2026/04/healthcare-capstone-architecture.png)
+
+**Kiến trúc 3 lớp bảo mật:**
+
+| Layer | Components | Security Controls |
+|:---|:---|:---|
+| **DMZ / Edge** | API Gateway (Kong) | Rate limiting (100 req/min), WAF (OWASP CRS), JWT verification, IP allowlisting |
+| **Application (K8s)** | Patient, Encounter, Lab, Prescription Services (Quarkus) | OIDC, RBAC/ABAC, Encryption, Audit |
+| **Service Mesh** | Istio | mTLS everywhere, Network Policies, Distributed Tracing |
+| **Supporting** | Notification, Audit, Keycloak IAM | Event-driven, immutable logs, multi-tenant |
+| **Data** | PostgreSQL (Primary + Replica) | RLS, pgcrypto, pgAudit, SSL, Backups |
+| **Messaging** | Kafka (Events) | Encrypted topics, Schema Registry |
+| **Secrets** | Vault (KMS) | Transit encryption, PKI, Auto-unseal |
+| **Logging** | Elasticsearch | Audit log aggregation |
 
 ### 2.2. Project Structure
 
@@ -1710,44 +1647,30 @@ services:
 
 ### 9.2. Security Dashboard Panels
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│           Healthcare Security Dashboard                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
-│  │ Auth Failures│ │ PHI Access  │ │ Emergency   │           │
-│  │    Today     │ │   Today     │ │  Access     │           │
-│  │     12       │ │   1,234     │ │     0       │           │
-│  │  ▼ vs yday  │ │  ≈ normal   │ │  ✅ OK     │           │
-│  └─────────────┘ └─────────────┘ └─────────────┘           │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  PHI Access by Department (Last 24h)                  │   │
-│  │  ████████████████████ Cardiology (450)                │   │
-│  │  ███████████████ Internal Medicine (320)              │   │
-│  │  ██████████ Neurology (210)                           │   │
-│  │  █████ Pediatrics (120)                               │   │
-│  │  ███ Emergency (78)                                   │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Access Denied Events (Last 7 days)                   │   │
-│  │  ┊    ╭╮                                              │   │
-│  │  ┊   ╭╯╰╮    ╭╮                                      │   │
-│  │  ┊╭──╯  ╰────╯╰──╮                                   │   │
-│  │  ┊╯               ╰──────                             │   │
-│  │  └────────────────────────                             │   │
-│  │   Mon Tue Wed Thu Fri Sat Sun                         │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Recent Security Events:                                     │
-│  ⚠️ 14:23 — dr.tran: 45 patient records in 3 min (alert)  │
-│  ✅ 14:15 — yta.pham: Normal ward rounds access            │
-│  ✅ 13:50 — lab.tech: Lab results upload (batch)           │
-│  ℹ️ 13:30 — System: Certificate rotation completed        │
-└─────────────────────────────────────────────────────────────┘
-```
+**Healthcare Security Dashboard — Key Metrics:**
+
+| Metric | Giá trị | Trạng thái |
+|:---|:---|:---|
+| **Auth Failures Today** | 12 | ▼ Giảm so với hôm qua |
+| **PHI Access Today** | 1,234 | ≈ Bình thường |
+| **Emergency Access** | 0 | ✅ OK |
+
+**PHI Access by Department (Last 24h):**
+
+| Department | Lượt truy cập |
+|:---|:---|
+| Cardiology | 450 |
+| Internal Medicine | 320 |
+| Neurology | 210 |
+| Pediatrics | 120 |
+| Emergency | 78 |
+
+**Recent Security Events:**
+
+- ⚠️ 14:23 — `dr.tran`: 45 patient records in 3 min (alert)
+- ✅ 14:15 — `yta.pham`: Normal ward rounds access
+- ✅ 13:50 — `lab.tech`: Lab results upload (batch)
+- ℹ️ 13:30 — System: Certificate rotation completed
 
 ---
 
@@ -1755,75 +1678,77 @@ services:
 
 ### 10.1. Final Project Checklist
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│     Capstone Project — HIPAA Compliance Checklist            │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  IDENTITY & ACCESS MANAGEMENT                                │
-│  ☑ Keycloak realm with RBAC/ABAC roles                     │
-│  ☑ MFA required for sensitive operations                    │
-│  ☑ Break-the-glass emergency access with audit              │
-│  ☑ Session timeout ≤ 15 minutes                            │
-│  ☑ Password policy (12+ chars, complexity, history)         │
-│  ☑ Brute force protection enabled                           │
-│                                                              │
-│  DATA PROTECTION                                             │
-│  ☑ PHI encrypted at rest (Vault Transit / pgcrypto)         │
-│  ☑ PHI encrypted in transit (TLS 1.2+, mTLS)               │
-│  ☑ Column-level encryption for sensitive fields             │
-│  ☑ Key management via HashiCorp Vault                       │
-│  ☑ Key rotation policy configured                           │
-│                                                              │
-│  ACCESS CONTROL                                              │
-│  ☑ Row-Level Security on all PHI tables                     │
-│  ☑ Department-based data isolation                          │
-│  ☑ Patient self-access restriction                          │
-│  ☑ Multi-tenant isolation                                   │
-│  ☑ Principle of least privilege for DB roles                │
-│                                                              │
-│  AUDIT & MONITORING                                          │
-│  ☑ All PHI access logged (audit_data.access_log)            │
-│  ☑ pgAudit enabled for SQL-level audit                     │
-│  ☑ Immutable audit trail (no UPDATE/DELETE)                 │
-│  ☑ Centralized logging (ELK Stack)                          │
-│  ☑ Security alerts for suspicious patterns                  │
-│  ☑ After-hours access monitoring                            │
-│                                                              │
-│  APPLICATION SECURITY                                        │
-│  ☑ JWT validation + claim-based authorization               │
-│  ☑ Input validation (Bean Validation)                       │
-│  ☑ Output encoding (XSS prevention)                         │
-│  ☑ Parameterized queries (SQL injection prevention)         │
-│  ☑ Security headers configured                              │
-│  ☑ Error responses sanitized (no stack traces)              │
-│  ☑ Rate limiting at API Gateway                             │
-│                                                              │
-│  INFRASTRUCTURE SECURITY                                     │
-│  ☑ Container security (non-root, read-only FS)              │
-│  ☑ Network Policies (microsegmentation)                     │
-│  ☑ Pod Security Standards enforced                          │
-│  ☑ Service mesh with mTLS (Istio)                           │
-│  ☑ Secrets managed by Vault (not in env vars)               │
-│                                                              │
-│  SECURITY TESTING                                            │
-│  ☑ SAST in CI/CD (SonarQube, Semgrep, SpotBugs)            │
-│  ☑ SCA dependency scanning (Trivy, Snyk)                   │
-│  ☑ DAST with OWASP ZAP + Nuclei                            │
-│  ☑ HIPAA compliance integration tests                       │
-│  ☑ SBOM generation (CycloneDX)                              │
-│                                                              │
-│  COMPLIANCE                                                  │
-│  ☑ HIPAA Technical Safeguards mapped and verified           │
-│  ☑ Risk Assessment documented                               │
-│  ☑ Security Assessment Report generated                     │
-│  ☑ Backup & DR procedures tested                            │
-│  ☑ Incident Response Plan documented                        │
-│                                                              │
-│  Status: ✅ ALL CHECKS PASSED                               │
-│  HIPAA Compliance: 100% Technical Safeguards                 │
-└─────────────────────────────────────────────────────────────┘
-```
+**Capstone Project — HIPAA Compliance Checklist**
+
+**IDENTITY & ACCESS MANAGEMENT**
+
+- [x] Keycloak realm with RBAC/ABAC roles
+- [x] MFA required for sensitive operations
+- [x] Break-the-glass emergency access with audit
+- [x] Session timeout ≤ 15 minutes
+- [x] Password policy (12+ chars, complexity, history)
+- [x] Brute force protection enabled
+
+**DATA PROTECTION**
+
+- [x] PHI encrypted at rest (Vault Transit / pgcrypto)
+- [x] PHI encrypted in transit (TLS 1.2+, mTLS)
+- [x] Column-level encryption for sensitive fields
+- [x] Key management via HashiCorp Vault
+- [x] Key rotation policy configured
+
+**ACCESS CONTROL**
+
+- [x] Row-Level Security on all PHI tables
+- [x] Department-based data isolation
+- [x] Patient self-access restriction
+- [x] Multi-tenant isolation
+- [x] Principle of least privilege for DB roles
+
+**AUDIT & MONITORING**
+
+- [x] All PHI access logged (audit_data.access_log)
+- [x] pgAudit enabled for SQL-level audit
+- [x] Immutable audit trail (no UPDATE/DELETE)
+- [x] Centralized logging (ELK Stack)
+- [x] Security alerts for suspicious patterns
+- [x] After-hours access monitoring
+
+**APPLICATION SECURITY**
+
+- [x] JWT validation + claim-based authorization
+- [x] Input validation (Bean Validation)
+- [x] Output encoding (XSS prevention)
+- [x] Parameterized queries (SQL injection prevention)
+- [x] Security headers configured
+- [x] Error responses sanitized (no stack traces)
+- [x] Rate limiting at API Gateway
+
+**INFRASTRUCTURE SECURITY**
+
+- [x] Container security (non-root, read-only FS)
+- [x] Network Policies (microsegmentation)
+- [x] Pod Security Standards enforced
+- [x] Service mesh with mTLS (Istio)
+- [x] Secrets managed by Vault (not in env vars)
+
+**SECURITY TESTING**
+
+- [x] SAST in CI/CD (SonarQube, Semgrep, SpotBugs)
+- [x] SCA dependency scanning (Trivy, Snyk)
+- [x] DAST with OWASP ZAP + Nuclei
+- [x] HIPAA compliance integration tests
+- [x] SBOM generation (CycloneDX)
+
+**COMPLIANCE**
+
+- [x] HIPAA Technical Safeguards mapped and verified
+- [x] Risk Assessment documented
+- [x] Security Assessment Report generated
+- [x] Backup & DR procedures tested
+- [x] Incident Response Plan documented
+
+> **Status: ✅ ALL CHECKS PASSED — HIPAA Compliance: 100% Technical Safeguards**
 
 ---
 
@@ -1831,36 +1756,16 @@ services:
 
 Qua **24 bài học**, chúng ta đã xây dựng kiến thức và kỹ năng toàn diện để bảo mật hệ thống y tế:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│         Hành trình Bảo mật Dữ liệu Y Tế                    │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Phần 1: Nền tảng          Phần 2: IAM                     │
-│  ✓ HIPAA, HL7 FHIR         ✓ Keycloak multi-tenant         │
-│  ✓ Threat Modeling          ✓ RBAC/ABAC healthcare          │
-│  ✓ Risk Assessment          ✓ SMART on FHIR                 │
-│  ✓ Architecture             ✓ MFA + Emergency Access        │
-│                                                              │
-│  Phần 3: Database           Phần 4: Microservices           │
-│  ✓ PostgreSQL Hardening     ✓ Quarkus OIDC + JWT            │
-│  ✓ Encryption (TDE,         ✓ API Gateway + WAF             │
-│    pgcrypto)                ✓ E2E Encryption                │
-│  ✓ Row-Level Security       ✓ mTLS + Service Mesh           │
-│  ✓ pgAudit + CDC                                            │
-│                                                              │
-│  Phần 5: Compliance         Phần 6: Nâng cao                │
-│  ✓ HIPAA Safeguards         ✓ Zero Trust Architecture       │
-│  ✓ Audit Trail + ELK        ✓ Container + K8s Security      │
-│  ✓ Data Masking             ✓ Penetration Testing           │
-│  ✓ DR + BCP                 ✓ Capstone Project              │
-│                                                              │
-│  ═══════════════════════════════════════════════════════     │
-│  Kết quả: Secure Healthcare Microservices Platform          │
-│  với FULL HIPAA Technical Safeguards compliance              │
-│  trên Quarkus + PostgreSQL + Keycloak                       │
-└─────────────────────────────────────────────────────────────┘
-```
+| Phần | Chủ đề | Kiến thức đạt được |
+|:---|:---|:---|
+| **Phần 1: Nền tảng** | Bài 1–4 | HIPAA, HL7 FHIR, Threat Modeling, Risk Assessment, Architecture |
+| **Phần 2: IAM** | Bài 5–8 | Keycloak multi-tenant, RBAC/ABAC healthcare, SMART on FHIR, MFA + Emergency Access |
+| **Phần 3: Database** | Bài 9–12 | PostgreSQL Hardening, Encryption (TDE, pgcrypto), Row-Level Security, pgAudit + CDC |
+| **Phần 4: Microservices** | Bài 13–16 | Quarkus OIDC + JWT, API Gateway + WAF, E2E Encryption, mTLS + Service Mesh |
+| **Phần 5: Compliance** | Bài 17–20 | HIPAA Safeguards, Audit Trail + ELK, Data Masking, DR + BCP |
+| **Phần 6: Nâng cao** | Bài 21–24 | Zero Trust Architecture, Container + K8s Security, Penetration Testing, Capstone Project |
+
+> **Kết quả: Secure Healthcare Microservices Platform với FULL HIPAA Technical Safeguards compliance trên Quarkus + PostgreSQL + Keycloak**
 
 ### Bước tiếp theo
 

@@ -26,46 +26,13 @@ course:
 
 Khi xây dựng hệ thống y tế cho nhiều bệnh viện/phòng khám, có 3 chiến lược:
 
-```
-Strategy A: Realm per Hospital (Isolation cao)
-┌───────────────────────────────────────────┐
-│ Keycloak Instance                         │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐  │
-│  │ BV Chợ   │ │ BV Bình  │ │ BV Nhân  │  │
-│  │ Rẫy      │ │ Dân      │ │ Dân 115  │  │
-│  │ Realm    │ │ Realm    │ │ Realm    │  │
-│  └──────────┘ └──────────┘ └──────────┘  │
-│  → Isolated users, roles, clients         │
-│  → Best for: Independent hospitals        │
-└───────────────────────────────────────────┘
+![3 chiến lược Keycloak Multi-tenancy cho hệ thống đa bệnh viện](/storage/uploads/2026/04/healthcare-keycloak-multitenancy.png)
 
-Strategy B: Shared Realm + Organizations (Keycloak 26+)
-┌───────────────────────────────────────────┐
-│ Keycloak Instance                         │
-│  ┌──────────────────────────────────────┐ │
-│  │         Healthcare Realm              │ │
-│  │  ┌─────────┐ ┌─────────┐ ┌────────┐  │ │
-│  │  │ Org:    │ │ Org:    │ │ Org:   │  │ │
-│  │  │ BV CR   │ │ BV BD   │ │ BV ND  │  │ │
-│  │  └─────────┘ └─────────┘ └────────┘  │ │
-│  │  → Shared identity + org isolation    │ │
-│  │  → Best for: Hospital networks        │ │
-│  └──────────────────────────────────────┘ │
-└───────────────────────────────────────────┘
-
-Strategy C: Shared Realm + Groups (Simple)
-┌───────────────────────────────────────────┐
-│ Keycloak Instance                         │
-│  ┌──────────────────────────────────────┐ │
-│  │         Healthcare Realm              │ │
-│  │  Groups: /hospitals/bv-cho-ray        │ │
-│  │          /hospitals/bv-binh-dan       │ │
-│  │          /hospitals/bv-nhan-dan       │ │
-│  │  → Simple, less isolation             │ │
-│  │  → Best for: Small clinic networks    │ │
-│  └──────────────────────────────────────┘ │
-└───────────────────────────────────────────┘
-```
+| Strategy | Mô hình | Isolation | Phù hợp |
+|----------|---------|-----------|----------|
+| **A: Realm per Hospital** | Mỗi bệnh viện 1 Realm riêng | Cao nhất — isolated users, roles, clients | Bệnh viện độc lập |
+| **B: Shared Realm + Organizations** | 1 Healthcare Realm, mỗi BV là 1 Organization | Trung bình — shared identity + org isolation | Chuỗi bệnh viện, Sở Y tế |
+| **C: Shared Realm + Groups** | 1 Realm, phân chia bằng Groups | Thấp — simple, less isolation | Phòng khám nhỏ |
 
 ### 1.2. Khuyến nghị cho Y Tế Việt Nam
 
@@ -143,29 +110,23 @@ Strategy C: Shared Realm + Groups (Simple)
 
 ### 3.1. Clients Overview
 
-```
-┌─────────────────────────────────────────────────────┐
-│              Healthcare Keycloak Clients              │
-├─────────────────────┬───────────────────────────────┤
-│ Client              │ Type        │ Description      │
-├─────────────────────┼─────────────┼─────────────────┤
-│ his-web-app         │ Public      │ HIS Web Frontend │
-│ emr-web-app         │ Public      │ EMR Web Frontend │
-│ patient-portal      │ Public      │ Patient Portal   │
-│ mobile-doctor-app   │ Public      │ Doctor Mobile App│
-│ patient-service     │ Confidential│ Patient API      │
-│ clinical-service    │ Confidential│ Clinical API     │
-│ lab-service         │ Confidential│ Lab Results API  │
-│ pharmacy-service    │ Confidential│ Pharmacy API     │
-│ scheduling-service  │ Confidential│ Scheduling API   │
-│ billing-service     │ Confidential│ Billing API      │
-│ notification-service│ Confidential│ Notifications    │
-│ audit-service       │ Confidential│ Audit/Logging    │
-│ api-gateway         │ Confidential│ Kong/APISIX      │
-│ admin-cli           │ Confidential│ Admin Operations │
-│ fhir-server         │ Confidential│ HAPI FHIR Server │
-└─────────────────────┴─────────────┴─────────────────┘
-```
+| Client | Type | Description |
+|--------|------|-------------|
+| his-web-app | Public | HIS Web Frontend |
+| emr-web-app | Public | EMR Web Frontend |
+| patient-portal | Public | Patient Portal |
+| mobile-doctor-app | Public | Doctor Mobile App |
+| patient-service | Confidential | Patient API |
+| clinical-service | Confidential | Clinical API |
+| lab-service | Confidential | Lab Results API |
+| pharmacy-service | Confidential | Pharmacy API |
+| scheduling-service | Confidential | Scheduling API |
+| billing-service | Confidential | Billing API |
+| notification-service | Confidential | Notifications |
+| audit-service | Confidential | Audit/Logging |
+| api-gateway | Confidential | Kong/APISIX |
+| admin-cli | Confidential | Admin Operations |
+| fhir-server | Confidential | HAPI FHIR Server |
 
 ### 3.2. Patient Portal Client (Public)
 
@@ -400,27 +361,15 @@ Realm Roles:
 
 ### 6.2. Shared Workstation Support
 
-```
-Bệnh viện thường có shared workstations — nhiều bác sĩ/y tá
-dùng chung 1 máy tính. Giải pháp:
+Bệnh viện thường có shared workstations — nhiều bác sĩ/y tá dùng chung 1 máy tính. Giải pháp:
 
-┌──────────────────────────────────────────────┐
-│ Option 1: Fast User Switching               │
-│ → Keycloak short session + badge login       │
-│ → Pro: Nhanh, tiện lợi                      │
-│ → Con: Cần infrastructure (badge reader)     │
-├──────────────────────────────────────────────┤
-│ Option 2: Auto-logoff + Quick re-auth       │
-│ → Session timeout 10-15 min + PIN            │
-│ → Pro: Simple, no hardware needed            │
-│ → Con: Slower than badge                     │
-├──────────────────────────────────────────────┤
-│ Option 3: Virtual Desktop (VDI)             │
-│ → Each user has own virtual desktop          │
-│ → Pro: Full isolation                        │
-│ → Con: Expensive, higher latency             │
-└──────────────────────────────────────────────┘
-```
+![3 phương án xác thực trên shared workstation bệnh viện](/storage/uploads/2026/04/healthcare-shared-workstation-auth.png)
+
+| Option | Cơ chế | Ưu điểm | Hạn chế |
+|--------|---------|---------|----------|
+| **1. Fast User Switching** | Keycloak short session + badge login | Nhanh, tiện lợi | Cần infrastructure (badge reader) |
+| **2. Auto-logoff + Quick re-auth** | Session timeout 10-15 min + PIN | Simple, no hardware needed | Chậm hơn badge |
+| **3. Virtual Desktop (VDI)** | Mỗi user 1 virtual desktop riêng | Full isolation | Đắt, higher latency |
 
 ## 7. Realm Export/Import Automation
 

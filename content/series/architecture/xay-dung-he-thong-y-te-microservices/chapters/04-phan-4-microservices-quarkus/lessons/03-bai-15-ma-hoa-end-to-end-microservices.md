@@ -26,42 +26,14 @@ Trong hệ thống microservices y tế, dữ liệu PHI di chuyển qua **nhi�
 
 ### 1.1. Encryption Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│            End-to-End Encryption Architecture                │
-│                                                              │
-│  Client                                                      │
-│    │  TLS 1.3 (transport encryption)                         │
-│    ▼                                                         │
-│  API Gateway                                                 │
-│    │  JWT token validation                                   │
-│    ▼                                                         │
-│  Patient Service                                             │
-│    │  Field-level encryption (SSN, diagnosis)                │
-│    │  ┌─────────────────────┐                                │
-│    │  │ Vault Transit Engine │ ◄── Key Management            │
-│    │  │ (envelope encryption)│     Key Rotation               │
-│    │  └─────────────────────┘                                │
-│    │                                                         │
-│    ├──► PostgreSQL (encrypted columns stored)                │
-│    │    AES-256-GCM encrypted fields                         │
-│    │                                                         │
-│    ├──► Kafka (encrypted messages)                           │
-│    │    JWE (JSON Web Encryption)                             │
-│    │    Custom Serializer/Deserializer                        │
-│    │                                                         │
-│    └──► Lab Service (JWE payload)                            │
-│         Decrypt with shared transit key                       │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │            HashiCorp Vault                            │    │
-│  │  Transit Engine ──► Encryption keys                   │    │
-│  │  KV Engine      ──► Database credentials              │    │
-│  │  PKI Engine     ──► TLS certificates                  │    │
-│  │  Auto-unseal    ──► Cloud KMS                         │    │
-│  └──────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
+![End-to-End Encryption Architecture — Client → API Gateway → Services → Database với Vault](/storage/uploads/2026/04/healthcare-e2e-encryption-flow.png)
+
+**Encryption Flow:**
+
+- **Client** → **API Gateway**: TLS 1.3 (transport encryption) + JWT validation
+- **Patient Service**: Field-level encryption (SSN, diagnosis) với Vault Transit Engine
+- **Outputs**: PostgreSQL (AES-256-GCM encrypted columns), Kafka (JWE messages), Lab Service (JWE payload)
+- **HashiCorp Vault**: Transit Engine (encryption keys), KV Engine (credentials), PKI Engine (TLS certs), Auto-unseal (Cloud KMS)
 
 ### 1.2. Encryption Layers
 
@@ -231,33 +203,15 @@ CREATE INDEX idx_blind_hash ON healthcare.patients_blind_index(field_name, blind
 
 ### 3.1. Envelope Encryption Pattern
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              Envelope Encryption Pattern                  │
-│                                                          │
-│  1. App generates random Data Encryption Key (DEK)       │
-│  2. App encrypts plaintext with DEK (AES-256-GCM)       │
-│  3. App sends DEK to Vault Transit for wrapping          │
-│  4. Vault encrypts DEK with Key Encryption Key (KEK)    │
-│  5. App stores: encrypted_data + wrapped_DEK             │
-│                                                          │
-│  ┌──────────┐    ┌───────────────┐    ┌──────────┐      │
-│  │ Plaintext│    │ Vault Transit │    │ Database │      │
-│  │ "SSN:    │    │               │    │          │      │
-│  │  123..."  │    │ KEK (master)  │    │ encrypted│      │
-│  └────┬─────┘    │               │    │ _data +  │      │
-│       │          │ wrap(DEK)→    │    │ wrapped  │      │
-│       ▼          │ wrapped_DEK   │    │ _DEK     │      │
-│  DEK(random)     │               │    │          │      │
-│       │          │ unwrap(       │    │          │      │
-│       ▼          │ wrapped_DEK)  │    │          │      │
-│  AES-256-GCM     │ → DEK         │    │          │      │
-│  encrypt         │               │    │          │      │
-│       │          └───────────────┘    └──────────┘      │
-│       ▼                                                  │
-│  encrypted_data                                          │
-└─────────────────────────────────────────────────────────┘
-```
+![Envelope Encryption Pattern — DEK + KEK với Vault Transit](/storage/uploads/2026/04/healthcare-envelope-encryption.png)
+
+**Quy trình:**
+
+1. App generates random Data Encryption Key (DEK)
+2. App encrypts plaintext with DEK (AES-256-GCM)
+3. App sends DEK to Vault Transit for wrapping
+4. Vault encrypts DEK with Key Encryption Key (KEK)
+5. App stores: `encrypted_data` + `wrapped_DEK` trong database
 
 ### 3.2. Vault Transit Engine Setup
 
@@ -1200,6 +1154,7 @@ Trong bài học này, chúng ta đã xây dựng **End-to-End Encryption** toà
 7. **PHI Masking**: Logging filter ngăn PHI leak vào logs, exception sanitization
 
 Encryption landscape:
+
 ```
 Client ──[TLS 1.3]──► Gateway ──[TLS]──► Service
                                               │

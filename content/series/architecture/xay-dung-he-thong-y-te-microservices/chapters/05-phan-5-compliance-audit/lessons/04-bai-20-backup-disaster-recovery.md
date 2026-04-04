@@ -23,73 +23,48 @@ course:
 
 ![Disaster Recovery & Business Continuity — RPO/RTO cho hệ thống y tế](/storage/uploads/2026/04/healthcare-disaster-recovery.png)
 
-
 HIPAA Security Rule §164.308(a)(7) yêu cầu mọi tổ chức xử lý ePHI phải có **Contingency Plan** — kế hoạch dự phòng cho các tình huống khẩn cấp (thiên tai, tấn công ransomware, sự cố phần cứng, lỗi con người). Trong healthcare, **downtime có thể ảnh hưởng trực tiếp đến tính mạng bệnh nhân**.
 
 ### 1.1. HIPAA Contingency Plan Requirements
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│       HIPAA Contingency Plan — §164.308(a)(7)                │
-│                                                              │
-│  (i)   Data Backup Plan [Required]                           │
-│    └── Create and maintain exact copies of ePHI              │
-│    └── Regular backup schedule                               │
-│    └── Backup verification                                   │
-│                                                              │
-│  (ii)  Disaster Recovery Plan [Required]                     │
-│    └── Procedures to restore lost data                       │
-│    └── Restore from backups                                  │
-│    └── Test recovery procedures                              │
-│                                                              │
-│  (iii) Emergency Mode Operation Plan [Required]              │
-│    └── Continue critical operations during emergency         │
-│    └── Protect ePHI during emergency                         │
-│    └── Prioritize patient safety systems                     │
-│                                                              │
-│  (iv)  Testing and Revision Procedures [Addressable]         │
-│    └── Periodic testing of contingency plans                 │
-│    └── Update plans based on test results                    │
-│                                                              │
-│  (v)   Applications and Data Criticality Analysis [Addr.]    │
-│    └── Identify critical applications                        │
-│    └── Prioritize recovery order                             │
-└─────────────────────────────────────────────────────────────┘
-```
+**HIPAA Contingency Plan — §164.308(a)(7):**
+
+1. **Data Backup Plan** [Required]
+   - Create and maintain exact copies of ePHI
+   - Regular backup schedule
+   - Backup verification
+2. **Disaster Recovery Plan** [Required]
+   - Procedures to restore lost data
+   - Restore from backups
+   - Test recovery procedures
+3. **Emergency Mode Operation Plan** [Required]
+   - Continue critical operations during emergency
+   - Protect ePHI during emergency
+   - Prioritize patient safety systems
+4. **Testing and Revision Procedures** [Addressable]
+   - Periodic testing of contingency plans
+   - Update plans based on test results
+5. **Applications and Data Criticality Analysis** [Addressable]
+   - Identify critical applications
+   - Prioritize recovery order
 
 ### 1.2. RTO/RPO Requirements cho Healthcare
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│      RTO / RPO cho Healthcare Systems                        │
-│                                                              │
-│  RPO (Recovery Point Objective):                             │
-│    "Bao nhiêu dữ liệu có thể mất?"                          │
-│                                                              │
-│  RTO (Recovery Time Objective):                              │
-│    "Bao lâu để hệ thống hoạt động trở lại?"                 │
-│                                                              │
-│  ┌────────────────┬────────┬────────┬───────────────────┐    │
-│  │ System         │  RPO   │  RTO   │ Criticality       │    │
-│  ├────────────────┼────────┼────────┼───────────────────┤    │
-│  │ EHR (Bệnh án)  │ 0-1min │ <15min │ Critical          │    │
-│  │ Lab Results    │ <5min  │ <30min │ Critical          │    │
-│  │ Pharmacy       │ <5min  │ <30min │ Critical          │    │
-│  │ Patient Portal │ <1hr   │ <4hr   │ Important         │    │
-│  │ Billing        │ <4hr   │ <8hr   │ Standard          │    │
-│  │ Analytics      │ <24hr  │ <24hr  │ Low               │    │
-│  │ Audit Logs     │ 0      │ <1hr   │ Critical (HIPAA)  │    │
-│  └────────────────┴────────┴────────┴───────────────────┘    │
-│                                                              │
-│  Timeline:                                                   │
-│  ◄───── RPO ─────┤ Disaster ├───── RTO ─────►               │
-│  Data loss window │  occurs  │ Downtime window               │
-│                                                              │
-│  Target cho Critical Healthcare:                             │
-│    RPO ≈ 0 (synchronous replication)                        │
-│    RTO < 15 minutes (automated failover)                     │
-└─────────────────────────────────────────────────────────────┘
-```
+![RTO/RPO Timeline cho Healthcare Systems](/storage/uploads/2026/04/healthcare-rto-rpo-timeline.png)
+
+| System | RPO | RTO | Criticality |
+|--------|-----|-----|------------|
+| EHR (Bệnh án) | 0-1min | <15min | Critical |
+| Lab Results | <5min | <30min | Critical |
+| Pharmacy | <5min | <30min | Critical |
+| Patient Portal | <1hr | <4hr | Important |
+| Billing | <4hr | <8hr | Standard |
+| Analytics | <24hr | <24hr | Low |
+| Audit Logs | 0 | <1hr | Critical (HIPAA) |
+
+**Timeline:** ◄── RPO (Data loss window) ──┤ Disaster occurs ├── RTO (Downtime window) ──►
+
+**Target cho Critical Healthcare:** RPO ≈ 0 (synchronous replication), RTO < 15 minutes (automated failover)
 
 ## 2. PostgreSQL Backup Strategies
 
@@ -741,41 +716,20 @@ volumes:
 
 ### 5.1. Cross-Region Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        Cross-Region DR Architecture                          │
-│                                                              │
-│  PRIMARY REGION (ap-southeast-1: Singapore)                  │
-│  ┌─────────────────────────────────────────────┐             │
-│  │  ┌──────────┐   ┌──────────┐               │             │
-│  │  │ pg-primary│──►│pg-replica│  (sync)       │             │
-│  │  │  (R/W)   │   │  (R/O)   │               │             │
-│  │  └──────────┘   └──────────┘               │             │
-│  │       │                                     │             │
-│  │       │ WAL streaming (async)               │             │
-│  │       │                                     │             │
-│  └───────┼─────────────────────────────────────┘             │
-│          │                                                    │
-│          │  Internet / VPN / Direct Connect                   │
-│          │  (encrypted TLS 1.3)                               │
-│          │                                                    │
-│  DR REGION (ap-northeast-1: Tokyo)                           │
-│  ┌───────┼─────────────────────────────────────┐             │
-│  │       ▼                                     │             │
-│  │  ┌──────────┐                               │             │
-│  │  │ pg-dr    │  (async replica, read-only)   │             │
-│  │  │          │  Lag: < 1 minute              │             │
-│  │  └──────────┘                               │             │
-│  │                                              │             │
-│  │  + pgBackRest S3 backup (encrypted)          │             │
-│  │  + Standby microservices (cold/warm)         │             │
-│  └──────────────────────────────────────────────┘             │
-│                                                              │
-│  Failover: DNS switch + Patroni promote DR                   │
-│  RPO: < 1 minute (async lag)                                 │
-│  RTO: < 15 minutes (automated)                               │
-└─────────────────────────────────────────────────────────────┘
-```
+![Cross-Region DR Architecture — Singapore (Primary) → Tokyo (DR)](/storage/uploads/2026/04/healthcare-cross-region-dr.png)
+
+**PRIMARY REGION** (ap-southeast-1: Singapore):
+
+- pg-primary (R/W) → pg-replica (R/O) — sync replication
+- WAL streaming (async) tới DR region
+
+**DR REGION** (ap-northeast-1: Tokyo):
+
+- pg-dr (async replica, read-only) — Lag: < 1 minute
+- pgBackRest S3 backup (encrypted)
+- Standby microservices (cold/warm)
+
+**Failover:** DNS switch + Patroni promote DR — **RPO < 1 minute**, **RTO < 15 minutes** (automated)
 
 ### 5.2. DR Replication Setup
 
@@ -852,23 +806,17 @@ echo "=== DR Replica setup complete ==="
 
 ### 6.1. Recovery Scope
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        Microservices State Recovery                          │
-│                                                              │
-│  Component              │ State                │ Recovery     │
-│  ───────────────────────┼──────────────────────┼────────────  │
-│  PostgreSQL             │ Patient data (PHI)   │ PITR/Replica │
-│  Kafka                  │ Consumer offsets      │ Reset offset │
-│  Kafka                  │ Topic data            │ Replay logs  │
-│  Keycloak               │ Realm, users, roles   │ Realm export │
-│  HashiCorp Vault        │ Encryption keys       │ Snapshot     │
-│  Elasticsearch          │ Audit logs            │ Snapshot     │
-│  Application Config     │ ConfigMaps, Secrets   │ Git + Velero │
-│  Container Images       │ Docker images         │ Registry     │
-│  Certificates           │ TLS certs             │ cert-manager │
-└─────────────────────────────────────────────────────────────┘
-```
+| Component | State | Recovery |
+|-----------|-------|----------|
+| PostgreSQL | Patient data (PHI) | PITR/Replica |
+| Kafka | Consumer offsets | Reset offset |
+| Kafka | Topic data | Replay logs |
+| Keycloak | Realm, users, roles | Realm export |
+| HashiCorp Vault | Encryption keys | Snapshot |
+| Elasticsearch | Audit logs | Snapshot |
+| Application Config | ConfigMaps, Secrets | Git + Velero |
+| Container Images | Docker images | Registry |
+| Certificates | TLS certs | cert-manager |
 
 ### 6.2. Kafka Consumer Offset Recovery
 
@@ -1076,43 +1024,38 @@ esac
 
 ### 8.1. DR Test Runbook
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│       Healthcare DR Test Runbook                             │
-│                                                              │
-│  Pre-Test (T-1 week):                                        │
-│  □ Notify all stakeholders                                   │
-│  □ Verify backup integrity (pgbackrest verify)               │
-│  □ Confirm DR environment is ready                           │
-│  □ Review escalation contacts                                │
-│  □ Prepare rollback plan                                     │
-│                                                              │
-│  Test Execution:                                             │
-│  □ T+0:00 — Simulate primary failure                         │
-│  □ T+0:01 — Verify automated failover triggered              │
-│  □ T+0:05 — Verify DR database accessible                    │
-│  □ T+0:10 — Verify application connectivity                  │
-│  □ T+0:15 — Verify PHI data integrity (record counts)        │
-│  □ T+0:20 — Test critical operations                         │
-│         □ Patient lookup                                     │
-│         □ Lab result entry                                   │
-│         □ Prescription creation                              │
-│         □ Audit log writing                                  │
-│  □ T+0:30 — Verify audit trail continuity                    │
-│  □ T+0:45 — Performance benchmarks                           │
-│                                                              │
-│  Post-Test:                                                  │
-│  □ Document actual RTO achieved                              │
-│  □ Document actual RPO (data loss)                           │
-│  □ Document any issues encountered                           │
-│  □ Update DR plan based on findings                          │
-│  □ Failback to primary                                       │
-│  □ Verify failback successful                                │
-│  □ Submit test report to compliance                          │
-│                                                              │
-│  Frequency: Quarterly (HIPAA Addressable §164.308(a)(7)(iv)) │
-└─────────────────────────────────────────────────────────────┘
-```
+**Healthcare DR Test Runbook:**
+
+**Pre-Test (T-1 week):**
+
+- [ ] Notify all stakeholders
+- [ ] Verify backup integrity (`pgbackrest verify`)
+- [ ] Confirm DR environment is ready
+- [ ] Review escalation contacts
+- [ ] Prepare rollback plan
+
+**Test Execution:**
+
+- [ ] T+0:00 — Simulate primary failure
+- [ ] T+0:01 — Verify automated failover triggered
+- [ ] T+0:05 — Verify DR database accessible
+- [ ] T+0:10 — Verify application connectivity
+- [ ] T+0:15 — Verify PHI data integrity (record counts)
+- [ ] T+0:20 — Test critical operations: Patient lookup, Lab result entry, Prescription creation, Audit log writing
+- [ ] T+0:30 — Verify audit trail continuity
+- [ ] T+0:45 — Performance benchmarks
+
+**Post-Test:**
+
+- [ ] Document actual RTO achieved
+- [ ] Document actual RPO (data loss)
+- [ ] Document any issues encountered
+- [ ] Update DR plan based on findings
+- [ ] Failback to primary
+- [ ] Verify failback successful
+- [ ] Submit test report to compliance
+
+**Frequency:** Quarterly (HIPAA Addressable §164.308(a)(7)(iv))
 
 ### 8.2. Automated DR Test Script
 

@@ -23,7 +23,6 @@ course:
 
 ![Kiến trúc 4 lớp kiểm soát truy cập: RBAC, ABAC, RLS, Patient Consent](/storage/uploads/2026/04/healthcare-rbac-abac-layers.png)
 
-
 ### 1.1. Role-Based Access Control (RBAC)
 
 RBAC gán quyền dựa trên **vai trò** của người dùng trong tổ chức:
@@ -58,28 +57,12 @@ Policy: ALLOW if
 
 ### 1.3. Kết hợp RBAC + ABAC cho Y Tế
 
-```
-┌──────────────────────────────────────────────────────┐
-│              Healthcare Access Decision               │
-│                                                       │
-│  Layer 1: RBAC (Keycloak Roles)                      │
-│  ├── Is user a doctor? → Can access clinical data     │
-│  ├── Is user a nurse? → Can access vital signs        │
-│  └── Is user a patient? → Can access own records      │
-│                                                       │
-│  Layer 2: ABAC (Keycloak Authorization Services)     │
-│  ├── Department match? → Only own department data     │
-│  ├── Treatment relationship? → Assigned patients only │
-│  ├── Time-based? → After-hours requires MFA           │
-│  └── Location-based? → External requires VPN          │
-│                                                       │
-│  Layer 3: RLS (PostgreSQL Row-Level Security)        │
-│  └── Database enforces per-row access based on JWT    │
-│                                                       │
-│  Layer 4: Consent (Patient consent check)            │
-│  └── Patient has granted access for this purpose?     │
-└──────────────────────────────────────────────────────┘
-```
+| Layer | Tên | Cơ chế | Ví dụ |
+|-------|-----|---------|--------|
+| **Layer 1** | RBAC (Keycloak Roles) | Is user a doctor? → Can access clinical data. Is user a nurse? → Can access vital signs. Is user a patient? → Can access own records. | `@RolesAllowed("doctor")` |
+| **Layer 2** | ABAC (Keycloak Authorization Services) | Department match? → Only own department data. Treatment relationship? → Assigned patients only. Time-based? → After-hours requires MFA. Location-based? → External requires VPN. | Custom policies |
+| **Layer 3** | RLS (PostgreSQL Row-Level Security) | Database enforces per-row access based on JWT claims | `CREATE POLICY` |
+| **Layer 4** | Consent (Patient consent check) | Patient has granted access for this purpose? | FHIR Consent resource |
 
 ## 2. Keycloak Authorization Services
 

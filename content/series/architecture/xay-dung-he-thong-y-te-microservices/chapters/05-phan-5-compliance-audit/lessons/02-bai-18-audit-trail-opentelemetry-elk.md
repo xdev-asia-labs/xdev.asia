@@ -331,40 +331,17 @@ public class PatientService {
 
 ### 3.1. Correlation ID Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│        Distributed Tracing - Patient Data Flow               │
-│                                                              │
-│  Client Request                                              │
-│  Headers: X-Request-ID: req-abc-123                          │
-│           traceparent: 00-trace123-span456-01                │
-│    │                                                         │
-│    ▼                                                         │
-│  API Gateway (span-1)                                        │
-│    │  trace_id: trace123                                     │
-│    │  span_id: span-gw-001                                   │
-│    │  attributes: {user_id, request_id, client_ip}           │
-│    │                                                         │
-│    ▼                                                         │
-│  Patient Service (span-2, parent: span-gw-001)               │
-│    │  span_id: span-ps-001                                   │
-│    │  attributes: {patient_id, action, department}           │
-│    │                                                         │
-│    ├──► PostgreSQL Query (span-3, parent: span-ps-001)       │
-│    │    span_id: span-db-001                                 │
-│    │    attributes: {db.statement, db.operation}             │
-│    │                                                         │
-│    ├──► Kafka Publish (span-4, parent: span-ps-001)          │
-│    │    span_id: span-kafka-001                              │
-│    │    attributes: {messaging.destination, event_type}      │
-│    │                                                         │
-│    └──► Lab Service REST Call (span-5, parent: span-ps-001)  │
-│         span_id: span-ls-001                                 │
-│         attributes: {http.method, http.url}                  │
-│                                                              │
-│  Trace ID: trace123 liên kết TẤT CẢ spans trong flow        │
-└─────────────────────────────────────────────────────────────┘
-```
+![Distributed Tracing — Patient Data Flow qua API Gateway → Patient Service → DB/Kafka/Lab Service](/storage/uploads/2026/04/healthcare-distributed-tracing-flow.png)
+
+**Trace Flow:**
+
+- **Client Request** với `X-Request-ID` + `traceparent` headers
+- **API Gateway** (span-1) → trace_id, user_id, client_ip
+- **Patient Service** (span-2) → patient_id, action, department
+  - PostgreSQL Query (span-3) — db.statement, db.operation
+  - Kafka Publish (span-4) — messaging.destination, event_type
+  - Lab Service REST Call (span-5) — http.method, http.url
+- **Trace ID** liên kết TẤT CẢ spans trong flow
 
 ### 3.2. MDC (Mapped Diagnostic Context) Integration
 
