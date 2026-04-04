@@ -1,0 +1,362 @@
+{
+    "id": "aws-ai-practitioner",
+    "title": "AWS Certified AI Practitioner (AIF-C01)",
+    "slug": "aws-ai-practitioner",
+    "description": "Practice exam for AWS Certified AI Practitioner — 20 questions covering all 5 domains",
+    "icon": "award",
+    "provider": "AWS",
+    "level": "Foundational",
+    "duration_minutes": 30,
+    "passing_score": 70,
+    "questions_count": 20,
+    "tags": [
+        "AWS",
+        "AI",
+        "Cloud",
+        "Bedrock",
+        "GenAI"
+    ],
+    "series_slug": "luyen-thi-aws-ai-practitioner",
+    "domains": [
+        {
+            "name": "Domain 1: Fundamentals of AI and ML",
+            "weight": 20,
+            "lessons": [
+                {
+                    "title": "Bài 1: AI, ML & Deep Learning Concepts",
+                    "slug": "01-bai-1-ai-ml-deep-learning-concepts"
+                },
+                {
+                    "title": "Bài 2: ML Lifecycle & AWS AI Services",
+                    "slug": "02-bai-2-ml-lifecycle-aws-services"
+                }
+            ]
+        },
+        {
+            "name": "Domain 2: Fundamentals of Generative AI",
+            "weight": 24,
+            "lessons": [
+                {
+                    "title": "Bài 3: Generative AI & Foundation Models",
+                    "slug": "03-bai-3-generative-ai-foundation-models"
+                },
+                {
+                    "title": "Bài 4: LLMs, Transformers & Multi-modal",
+                    "slug": "04-bai-4-llm-transformers-multimodal"
+                }
+            ]
+        },
+        {
+            "name": "Domain 3: Applications of Foundation Models",
+            "weight": 28,
+            "lessons": [
+                {
+                    "title": "Bài 5: Prompt Engineering",
+                    "slug": "05-bai-5-prompt-engineering-techniques"
+                },
+                {
+                    "title": "Bài 6: RAG & Knowledge Bases",
+                    "slug": "06-bai-6-rag-vector-databases-knowledge-bases"
+                },
+                {
+                    "title": "Bài 7: Fine-tuning & Model Customization",
+                    "slug": "07-bai-7-fine-tuning-model-customization"
+                },
+                {
+                    "title": "Bài 8: Amazon Bedrock Deep Dive",
+                    "slug": "08-bai-8-amazon-bedrock-deep-dive"
+                }
+            ]
+        },
+        {
+            "name": "Domain 4: Guidelines for Responsible AI",
+            "weight": 14,
+            "lessons": [
+                {
+                    "title": "Bài 9: Responsible AI — Fairness & Bias",
+                    "slug": "09-bai-9-responsible-ai-fairness-bias-transparency"
+                },
+                {
+                    "title": "Bài 10: AWS Responsible AI Tools",
+                    "slug": "10-bai-10-aws-responsible-ai-tools"
+                }
+            ]
+        },
+        {
+            "name": "Domain 5: Security, Compliance & Governance",
+            "weight": 14,
+            "lessons": [
+                {
+                    "title": "Bài 11: AI Security & Data Privacy",
+                    "slug": "11-bai-11-ai-security-data-privacy-compliance"
+                },
+                {
+                    "title": "Bài 12: Exam Strategy & Cheat Sheet",
+                    "slug": "12-bai-12-exam-strategy-cheat-sheet"
+                }
+            ]
+        }
+    ],
+    "questions": [
+        {
+            "id": 1,
+            "domain": "Domain 2: Fundamentals of Generative AI",
+            "question": "What is a Foundation Model?",
+            "options": [
+                "A model designed for only one specific task",
+                "A large AI model pre-trained on broad data that can be adapted to many downstream tasks",
+                "A model that only processes structured tabular data",
+                "A model trained entirely using Reinforcement Learning"
+            ],
+            "correct": 1,
+            "explanation": "A Foundation Model is a large AI model pre-trained on vast, diverse datasets. It can be adapted to many downstream tasks through fine-tuning, RAG, or prompt engineering."
+        },
+        {
+            "id": 2,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "What is the PRIMARY purpose of Amazon Bedrock?",
+            "options": [
+                "Managing relational databases",
+                "Deploying containers on the cloud",
+                "Accessing and using Foundation Models from multiple providers through a single API",
+                "Monitoring cloud costs"
+            ],
+            "correct": 2,
+            "explanation": "Amazon Bedrock is a fully managed service that provides access to Foundation Models from multiple providers (Anthropic, Meta, Amazon, Mistral, etc.) through a single API for building generative AI applications."
+        },
+        {
+            "id": 3,
+            "domain": "Domain 1: Fundamentals of AI and ML",
+            "question": "How does Supervised Learning differ from Unsupervised Learning?",
+            "options": [
+                "Supervised Learning does not require any data",
+                "Supervised Learning uses labeled data to train the model",
+                "Unsupervised Learning always produces more accurate results",
+                "Supervised Learning can only be used for classification tasks"
+            ],
+            "correct": 1,
+            "explanation": "Supervised Learning uses labeled data (input-output pairs) to train models for classification or regression, while Unsupervised Learning discovers hidden patterns in unlabeled data (e.g., clustering)."
+        },
+        {
+            "id": 4,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "What problem does RAG (Retrieval-Augmented Generation) solve for LLMs?",
+            "options": [
+                "It increases inference speed",
+                "It reduces training costs",
+                "It reduces hallucination by grounding responses in external knowledge sources",
+                "It increases the context window size"
+            ],
+            "correct": 2,
+            "explanation": "RAG combines retrieval of relevant external data with generation, helping LLMs produce more accurate, fact-based answers by grounding responses in retrieved documents rather than relying solely on training knowledge."
+        },
+        {
+            "id": 5,
+            "domain": "Domain 2: Fundamentals of Generative AI",
+            "question": "A customer support chatbot gives inconsistent and overly creative answers to factual questions. Which inference parameter should be adjusted?",
+            "options": [
+                "Increase temperature to 1.0",
+                "Decrease temperature closer to 0",
+                "Increase max tokens",
+                "Increase top-k to 500"
+            ],
+            "correct": 1,
+            "explanation": "Lower temperature values (closer to 0) make the model more deterministic and focused, producing consistent and factual responses. Higher temperature values increase randomness and creativity."
+        },
+        {
+            "id": 6,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "Which prompting technique is MOST effective for improving a model's accuracy on complex mathematical reasoning tasks?",
+            "options": [
+                "Zero-shot prompting",
+                "Negative prompting",
+                "Chain-of-Thought (CoT) prompting",
+                "System prompting"
+            ],
+            "correct": 2,
+            "explanation": "Chain-of-Thought prompting instructs the model to reason step by step before giving a final answer. This significantly improves accuracy on math, logic, and multi-step reasoning tasks."
+        },
+        {
+            "id": 7,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "A company wants to build a Q&A assistant that answers questions from internal documents stored in Amazon S3. The documents are updated weekly. Which approach is MOST suitable?",
+            "options": [
+                "Fine-tune a foundation model on the documents",
+                "Use RAG with Amazon Bedrock Knowledge Bases",
+                "Pre-train a custom model from scratch",
+                "Use zero-shot prompting with a large context window"
+            ],
+            "correct": 1,
+            "explanation": "Amazon Bedrock Knowledge Bases provides managed RAG — it automatically chunks, embeds, and indexes S3 documents, retrieves relevant information per query, and stays current via auto-sync without model retraining."
+        },
+        {
+            "id": 8,
+            "domain": "Domain 2: Fundamentals of Generative AI",
+            "question": "Which Transformer architecture type is BEST suited for text generation tasks such as chatbots and content creation?",
+            "options": [
+                "Encoder-only (e.g., BERT)",
+                "Decoder-only (e.g., GPT, Claude)",
+                "Encoder-Decoder (e.g., T5)",
+                "Convolutional Neural Network (CNN)"
+            ],
+            "correct": 1,
+            "explanation": "Decoder-only architectures (like GPT, Claude, Llama) generate text autoregressively one token at a time and are the basis for most modern chatbots and text generators."
+        },
+        {
+            "id": 9,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "A retail company wants to build an AI assistant that can check inventory, process returns, and answer product questions from their catalog. Which Amazon Bedrock feature should they use?",
+            "options": [
+                "Bedrock Guardrails",
+                "Bedrock Knowledge Bases only",
+                "Bedrock Agents with Action Groups and Knowledge Bases",
+                "Bedrock Model Evaluation"
+            ],
+            "correct": 2,
+            "explanation": "Bedrock Agents can orchestrate multi-step tasks by calling APIs (action groups for inventory/returns) and retrieving information (knowledge bases for product catalog) — combining reasoning with actions."
+        },
+        {
+            "id": 10,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "Which technique allows fine-tuning a large language model while updating only a small fraction of the model's parameters?",
+            "options": [
+                "Full fine-tuning",
+                "LoRA (Low-Rank Adaptation)",
+                "Continued pre-training",
+                "RLHF (Reinforcement Learning from Human Feedback)"
+            ],
+            "correct": 1,
+            "explanation": "LoRA is a Parameter-Efficient Fine-Tuning (PEFT) technique that adds small trainable adapter matrices while freezing the original model weights — typically updating less than 1% of total parameters, reducing cost significantly."
+        },
+        {
+            "id": 11,
+            "domain": "Domain 4: Guidelines for Responsible AI",
+            "question": "What is the PRIMARY purpose of Amazon Bedrock Guardrails?",
+            "options": [
+                "Accelerating model inference",
+                "Implementing safety controls such as content filtering, denied topics, and PII detection for AI applications",
+                "Compressing model size for deployment",
+                "Managing billing and costs"
+            ],
+            "correct": 1,
+            "explanation": "Bedrock Guardrails implement safety controls including content filters (hate, violence, sexual), denied topics, word filters, PII detection/redaction, and contextual grounding checks — applied to both model inputs and outputs."
+        },
+        {
+            "id": 12,
+            "domain": "Domain 4: Guidelines for Responsible AI",
+            "question": "A hiring AI system consistently ranks male candidates higher than equally qualified female candidates. What is the MOST likely cause?",
+            "options": [
+                "Measurement bias in data collection",
+                "Selection bias in the training data reflecting historical hiring patterns",
+                "The model's architecture is too complex",
+                "The inference temperature is set too high"
+            ],
+            "correct": 1,
+            "explanation": "If training data contained historical hiring decisions that favored male candidates, the model would learn and reproduce that selection bias — the training data didn't represent the qualified population fairly."
+        },
+        {
+            "id": 13,
+            "domain": "Domain 4: Guidelines for Responsible AI",
+            "question": "Which AWS service can detect bias in ML model predictions and provide per-prediction explainability using SHAP values?",
+            "options": [
+                "Amazon Rekognition",
+                "Amazon SageMaker Clarify",
+                "Amazon Bedrock Guardrails",
+                "Amazon Comprehend"
+            ],
+            "correct": 1,
+            "explanation": "SageMaker Clarify provides pre-training bias detection (data analysis), post-training bias detection (prediction analysis across demographic groups), and model explainability through SHAP values."
+        },
+        {
+            "id": 14,
+            "domain": "Domain 4: Guidelines for Responsible AI",
+            "question": "A document processing application needs human review when AI-extracted data has low confidence. Which AWS service provides this human-in-the-loop capability?",
+            "options": [
+                "Amazon SageMaker Ground Truth",
+                "Amazon Augmented AI (A2I)",
+                "Amazon Mechanical Turk directly",
+                "Amazon Bedrock Agents"
+            ],
+            "correct": 1,
+            "explanation": "Amazon A2I provides human-in-the-loop workflows with built-in integration for Amazon Textract and Rekognition. It automatically triggers human review when AI confidence falls below a defined threshold."
+        },
+        {
+            "id": 15,
+            "domain": "Domain 5: Security, Compliance & Governance",
+            "question": "A financial services company wants to ensure Amazon Bedrock API calls do NOT traverse the public internet. What should they configure?",
+            "options": [
+                "AWS Direct Connect only",
+                "VPC endpoint (AWS PrivateLink) for Amazon Bedrock",
+                "A VPN connection",
+                "Amazon CloudFront distribution"
+            ],
+            "correct": 1,
+            "explanation": "A VPC interface endpoint (AWS PrivateLink) for Amazon Bedrock allows private connectivity from within a VPC without any traffic going through the public internet."
+        },
+        {
+            "id": 16,
+            "domain": "Domain 5: Security, Compliance & Governance",
+            "question": "According to the AWS Shared Responsibility Model, who is responsible for ensuring ML training data does not contain bias?",
+            "options": [
+                "AWS",
+                "The foundation model provider",
+                "The customer",
+                "Both AWS and the customer equally"
+            ],
+            "correct": 2,
+            "explanation": "Under the Shared Responsibility Model, customers are responsible for 'security IN the cloud' — including training data quality, bias detection, model selection, IAM, and ethical AI practices."
+        },
+        {
+            "id": 17,
+            "domain": "Domain 5: Security, Compliance & Governance",
+            "question": "A chatbot must NEVER reveal customer credit card numbers in responses. Which approach provides the STRONGEST guarantee?",
+            "options": [
+                "Add 'never output credit card numbers' to the system prompt",
+                "Fine-tune the model to avoid outputting PII",
+                "Use Amazon Bedrock Guardrails with PII filters set to BLOCK",
+                "Remove credit card numbers from the knowledge base"
+            ],
+            "correct": 2,
+            "explanation": "Bedrock Guardrails with PII filters provide programmatic detection and blocking of credit card numbers — this cannot be bypassed by prompt injection, unlike system prompts which are soft constraints."
+        },
+        {
+            "id": 18,
+            "domain": "Domain 5: Security, Compliance & Governance",
+            "question": "A company needs to discover which Amazon S3 buckets contain personally identifiable information (PII) before using the data for ML training. Which AWS service should they use?",
+            "options": [
+                "Amazon Comprehend",
+                "Amazon Macie",
+                "Amazon Inspector",
+                "AWS Config"
+            ],
+            "correct": 1,
+            "explanation": "Amazon Macie uses ML to automatically discover and classify sensitive data (including PII) stored in Amazon S3 buckets. Comprehend detects PII in text at runtime, but Macie is designed for S3-level data discovery."
+        },
+        {
+            "id": 19,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "A company wants to process 50,000 customer reviews overnight using a foundation model for sentiment analysis. Which Amazon Bedrock pricing model is MOST cost-effective?",
+            "options": [
+                "On-Demand pricing",
+                "Provisioned Throughput",
+                "Batch Inference",
+                "Free tier"
+            ],
+            "correct": 2,
+            "explanation": "Batch Inference is designed for large-scale, non-real-time workloads and offers up to 50% cost savings compared to on-demand pricing. Ideal for processing large datasets overnight."
+        },
+        {
+            "id": 20,
+            "domain": "Domain 3: Applications of Foundation Models",
+            "question": "A non-technical marketing team wants to experiment with generative AI applications without an AWS account or coding skills. Which AWS service should they use?",
+            "options": [
+                "Amazon SageMaker Canvas",
+                "Amazon Bedrock Console",
+                "Amazon PartyRock",
+                "Amazon Q Business"
+            ],
+            "correct": 2,
+            "explanation": "Amazon PartyRock is a free, no-code playground for generative AI that requires no AWS account. Users can build and share GenAI apps with drag-and-drop — ideal for experimentation and learning."
+        }
+    ]
+}

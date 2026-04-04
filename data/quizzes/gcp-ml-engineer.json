@@ -1,0 +1,200 @@
+{
+    "id": "gcp-ml-engineer",
+    "title": "Google Cloud Professional ML Engineer",
+    "slug": "gcp-ml-engineer",
+    "description": "Luyện thi chứng chỉ Google Cloud Professional Machine Learning Engineer",
+    "icon": "award",
+    "provider": "Google Cloud",
+    "level": "Chuyên nghiệp",
+    "duration_minutes": 120,
+    "passing_score": 70,
+    "questions_count": 15,
+    "tags": [
+        "GCP",
+        "ML",
+        "Vertex AI"
+    ],
+    "series_slug": "luyen-thi-gcp-ml-engineer",
+    "questions": [
+        {
+            "id": 1,
+            "question": "Vertex AI Pipeline được xây dựng trên framework nào?",
+            "options": [
+                "Apache Spark",
+                "Kubeflow Pipelines / TFX",
+                "Apache Airflow",
+                "Jenkins"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Pipelines dựa trên Kubeflow Pipelines SDK và TFX (TensorFlow Extended), cho phép orchestrate ML workflow trên Google Cloud."
+        },
+        {
+            "id": 2,
+            "question": "BigQuery ML cho phép làm gì đặc biệt?",
+            "options": [
+                "Chỉ query dữ liệu",
+                "Train và deploy ML model trực tiếp bằng SQL trong BigQuery",
+                "Chỉ export dữ liệu sang CSV",
+                "Quản lý Kubernetes cluster"
+            ],
+            "correct": 1,
+            "explanation": "BigQuery ML (BQML) cho phép data analysts train model ML bằng SQL quen thuộc ngay trong BigQuery — không cần viết Python hay setup infrastructure riêng."
+        },
+        {
+            "id": 3,
+            "question": "Vertex AI Feature Store khác gì so với lưu features trong database thông thường?",
+            "options": [
+                "Không có gì khác",
+                "Hỗ trợ serving features với low-latency, đảm bảo training-serving consistency, và feature versioning",
+                "Chỉ hỗ trợ structured data",
+                "Chỉ dùng được với TensorFlow"
+            ],
+            "correct": 1,
+            "explanation": "Feature Store chuyên biệt cho ML: serving features online (low-latency) và offline (batch), đảm bảo features đồng nhất giữa training và serving, hỗ trợ time-travel và monitoring."
+        },
+        {
+            "id": 4,
+            "question": "Khi nào nên dùng AutoML thay vì custom training trên Vertex AI?",
+            "options": [
+                "Khi cần kiểm soát hoàn toàn architecture",
+                "Khi team không có nhiều ML expertise hoặc cần baseline model nhanh",
+                "Khi dataset rất lớn (>1TB)",
+                "Khi cần distributed training"
+            ],
+            "correct": 1,
+            "explanation": "AutoML phù hợp khi cần model nhanh, team có ít ML expertise, hoặc cần baseline. Custom training khi cần kiểm soát architecture, thuật toán đặc thù, hoặc tối ưu sâu."
+        },
+        {
+            "id": 5,
+            "question": "Vertex AI Experiments dùng để?",
+            "options": [
+                "Deploy model lên production",
+                "Track, compare và reproduce ML experiments (hyperparameters, metrics, artifacts)",
+                "Tạo dataset mới",
+                "Quản lý IAM"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Experiments cung cấp experiment tracking: log hyperparameters, metrics, model artifacts — cho phép compare nhiều runs và reproduce kết quả."
+        },
+        {
+            "id": 6,
+            "question": "TFX (TensorFlow Extended) bao gồm những component chính nào?",
+            "options": [
+                "Chỉ có ExampleGen và Trainer",
+                "ExampleGen, StatisticsGen, SchemaGen, ExampleValidator, Transform, Trainer, Evaluator, Pusher",
+                "Chỉ có Trainer và Serving",
+                "Chỉ có Transform và Evaluator"
+            ],
+            "correct": 1,
+            "explanation": "TFX là end-to-end ML platform gồm: ExampleGen (ingest), StatisticsGen + SchemaGen + ExampleValidator (validate), Transform (feature eng), Trainer, Tuner, Evaluator, Pusher (deploy)."
+        },
+        {
+            "id": 7,
+            "question": "Vertex AI Model Monitoring kiểm tra điều gì?",
+            "options": [
+                "Chỉ monitor CPU/memory",
+                "Skew (training-serving) và drift (prediction data thay đổi theo thời gian)",
+                "Chỉ monitor latency",
+                "Chỉ monitor cost"
+            ],
+            "correct": 1,
+            "explanation": "Model Monitoring phát hiện: training-serving skew (feature distribution khác nhau) và prediction drift (dữ liệu production drift khỏi baseline), trigger alert khi vượt threshold."
+        },
+        {
+            "id": 8,
+            "question": "Google Cloud AI Platform Prediction hỗ trợ chiến lược deploy nào?",
+            "options": [
+                "Chỉ single model deployment",
+                "Traffic splitting cho A/B testing và canary deployments",
+                "Chỉ batch prediction",
+                "Chỉ edge deployment"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Prediction hỗ trợ traffic splitting: có thể route % traffic sang model versions khác nhau — phục vụ A/B testing, canary release, và progressive rollout."
+        },
+        {
+            "id": 9,
+            "question": "Dataflow trong ML pipeline đóng vai trò gì?",
+            "options": [
+                "Training model",
+                "Xử lý dữ liệu quy mô lớn (batch & streaming) cho data preprocessing/feature engineering",
+                "Deploy model",
+                "Monitor model"
+            ],
+            "correct": 1,
+            "explanation": "Dataflow (dựa trên Apache Beam) xử lý data ở scale lớn: ETL, feature engineering cho cả batch và streaming — bước tiền xử lý quan trọng trong ML pipeline."
+        },
+        {
+            "id": 10,
+            "question": "Vertex AI Matching Engine dùng cho bài toán nào?",
+            "options": [
+                "Training model",
+                "Tìm kiếm nearest neighbor (vector similarity search) ở quy mô lớn",
+                "Data labeling",
+                "Model serving thông thường"
+            ],
+            "correct": 1,
+            "explanation": "Matching Engine là managed approximate nearest neighbor (ANN) service — dùng cho similarity search, recommendation, RAG retrieval ở quy mô tỷ vectors."
+        },
+        {
+            "id": 11,
+            "question": "Vertex AI Workbench khác gì Colab Enterprise?",
+            "options": [
+                "Giống hệt nhau",
+                "Workbench là JupyterLab managed instances cho ML production, Colab Enterprise cho collaboration và exploration",
+                "Workbench chỉ support R",
+                "Colab Enterprise chỉ dùng miễn phí"
+            ],
+            "correct": 1,
+            "explanation": "Workbench cung cấp JupyterLab managed instances với tích hợp sâu vào GCP services (BigQuery, GCS) cho production ML. Colab Enterprise thiên về collaboration, sharing và exploration."
+        },
+        {
+            "id": 12,
+            "question": "Kỹ thuật nào giảm kích thước model để deploy trên edge devices?",
+            "options": [
+                "Tăng layers",
+                "Quantization, pruning, knowledge distillation",
+                "Tăng batch size",
+                "Dùng thêm GPU"
+            ],
+            "correct": 1,
+            "explanation": "Model compression: Quantization (giảm precision: FP32→INT8), Pruning (loại bỏ weights/neurons không quan trọng), Knowledge Distillation (teacher model dạy student model nhỏ hơn)."
+        },
+        {
+            "id": 13,
+            "question": "Vertex AI GenAI Studio dùng để?",
+            "options": [
+                "Chỉ train model từ đầu",
+                "Prototyping, testing, và tuning Foundation Models (PaLM, Gemini) trên Google Cloud",
+                "Quản lý billing",
+                "Giám sát network"
+            ],
+            "correct": 1,
+            "explanation": "GenAI Studio cung cấp UI và API để thử nghiệm Foundation Models, prompt design, tuning, và deploy — không cần ML expertise sâu."
+        },
+        {
+            "id": 14,
+            "question": "Khi data có nhiều missing values, chiến lược nào phù hợp?",
+            "options": [
+                "Luôn xoá rows có missing values",
+                "Tuỳ context: imputation (mean/median/mode, KNN, model-based), hoặc tạo indicator feature cho missingness",
+                "Luôn fill bằng 0",
+                "Bỏ qua và train trực tiếp"
+            ],
+            "correct": 1,
+            "explanation": "Xử lý missing values tuỳ thuộc vào pattern (MCAR/MAR/MNAR): imputation thống kê (mean/median), model-based (KNN, MICE), hoặc thêm feature indicator. Xoá rows chỉ khi missing ít và MCAR."
+        },
+        {
+            "id": 15,
+            "question": "Continuous Training (CT) trong MLOps là gì?",
+            "options": [
+                "Train model chỉ một lần",
+                "Tự động retrain model khi phát hiện trigger (data drift, schedule, hoặc performance degradation)",
+                "Train model thủ công hàng tuần",
+                "Chỉ dùng cho deep learning"
+            ],
+            "correct": 1,
+            "explanation": "Continuous Training tự động kích hoạt retrain pipeline khi: data mới đến (scheduled), data drift vượt threshold, hoặc model performance giảm — đảm bảo model luôn fresh."
+        }
+    ]
+}

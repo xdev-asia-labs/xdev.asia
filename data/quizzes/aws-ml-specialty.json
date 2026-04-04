@@ -1,0 +1,200 @@
+{
+    "id": "aws-ml-specialty",
+    "title": "AWS Certified Machine Learning - Specialty",
+    "slug": "aws-ml-specialty",
+    "description": "Luyện thi chứng chỉ AWS ML Specialty — build, train, deploy ML trên AWS",
+    "icon": "award",
+    "provider": "AWS",
+    "level": "Chuyên gia",
+    "duration_minutes": 180,
+    "passing_score": 75,
+    "questions_count": 15,
+    "tags": [
+        "AWS",
+        "ML",
+        "SageMaker"
+    ],
+    "series_slug": "luyen-thi-aws-ml-specialty",
+    "questions": [
+        {
+            "id": 1,
+            "question": "SageMaker built-in algorithm nào phù hợp nhất cho bài toán phát hiện bất thường (anomaly detection)?",
+            "options": [
+                "XGBoost",
+                "Random Cut Forest",
+                "BlazingText",
+                "DeepAR"
+            ],
+            "correct": 1,
+            "explanation": "Random Cut Forest (RCF) là thuật toán unsupervised trong SageMaker, chuyên detect anomaly trong dữ liệu streaming hoặc time series."
+        },
+        {
+            "id": 2,
+            "question": "Feature Store trong SageMaker dùng để làm gì?",
+            "options": [
+                "Lưu trữ mô hình đã train",
+                "Quản lý và chia sẻ features giữa các team ML, đảm bảo consistency",
+                "Giám sát endpoint inference",
+                "Quản lý IAM policies"
+            ],
+            "correct": 1,
+            "explanation": "SageMaker Feature Store là kho lưu trữ features centralized, giúp các team ML chia sẻ features, tránh duplicate work, và đảm bảo tính nhất quán giữa training và inference."
+        },
+        {
+            "id": 3,
+            "question": "SageMaker sử dụng mode nào để train trên nhiều instance cùng lúc?",
+            "options": [
+                "Pipe mode",
+                "Distributed training mode",
+                "File mode",
+                "Batch mode"
+            ],
+            "correct": 1,
+            "explanation": "SageMaker hỗ trợ distributed training cho phép chia workload training ra nhiều instances (data parallelism hoặc model parallelism) để tăng tốc."
+        },
+        {
+            "id": 4,
+            "question": "SageMaker Model Monitor phát hiện loại drift nào?",
+            "options": [
+                "Chỉ concept drift",
+                "Data quality, model quality, bias drift, và feature attribution drift",
+                "Chỉ data drift",
+                "Chỉ bias drift"
+            ],
+            "correct": 1,
+            "explanation": "SageMaker Model Monitor phát hiện 4 loại: Data Quality (thay đổi schema/statistics), Model Quality (độ chính xác giảm), Bias Drift (bias thay đổi), Feature Attribution Drift (feature importance thay đổi)."
+        },
+        {
+            "id": 5,
+            "question": "Khi nào nên dùng SageMaker Inference Pipeline?",
+            "options": [
+                "Khi cần chạy batch transform",
+                "Khi cần chain nhiều bước xử lý (preprocessing → model → postprocessing) trong một endpoint",
+                "Khi cần train nhiều model",
+                "Khi cần A/B testing"
+            ],
+            "correct": 1,
+            "explanation": "Inference Pipeline cho phép chain tối đa 15 containers trong một endpoint — ví dụ: data preprocessing → feature engineering → model prediction → postprocessing."
+        },
+        {
+            "id": 6,
+            "question": "BlazingText trong SageMaker được dùng cho tác vụ nào?",
+            "options": [
+                "Object detection",
+                "Word2Vec và text classification",
+                "Time series forecasting",
+                "Recommender systems"
+            ],
+            "correct": 1,
+            "explanation": "BlazingText là implementation siêu nhanh của Word2Vec và nhận diện text classification. Nó hỗ trợ training trên multi-GPU với tốc độ rất cao."
+        },
+        {
+            "id": 7,
+            "question": "SageMaker Ground Truth được sử dụng để?",
+            "options": [
+                "Deploy model lên production",
+                "Tạo labeled datasets với hỗ trợ của human annotators và active learning",
+                "Tối ưu hyperparameter",
+                "Giám sát chi phí training"
+            ],
+            "correct": 1,
+            "explanation": "Ground Truth là dịch vụ data labeling, kết hợp human annotators (Amazon Mechanical Turk, private team, hoặc vendors) với active learning để giảm chi phí labeling."
+        },
+        {
+            "id": 8,
+            "question": "Elastic Inference trong SageMaker dùng để?",
+            "options": [
+                "Tăng dung lượng storage",
+                "Gắn GPU fractional vào instance để giảm chi phí inference",
+                "Tự động scale số lượng model",
+                "Nén model để deploy nhanh"
+            ],
+            "correct": 1,
+            "explanation": "Elastic Inference cho phép gắn GPU acceleration với chi phí thấp vào SageMaker endpoints hoặc notebook instances — chỉ trả tiền cho GPU resource thực sự dùng."
+        },
+        {
+            "id": 9,
+            "question": "Chiến lược nào giúp xử lý dữ liệu mất cân bằng (imbalanced dataset)?",
+            "options": [
+                "Chỉ dùng accuracy làm metric",
+                "SMOTE (oversampling), undersampling, class weights, hoặc ensemble methods",
+                "Tăng learning rate",
+                "Giảm số epoch training"
+            ],
+            "correct": 1,
+            "explanation": "Imbalanced data cần kỹ thuật đặc biệt: SMOTE tạo thêm sample cho class thiểu số, undersampling giảm class đa số, hoặc điều chỉnh class weights trong loss function."
+        },
+        {
+            "id": 10,
+            "question": "SageMaker Clarify dùng để?",
+            "options": [
+                "Tối ưu hyperparameter",
+                "Phát hiện bias trong dữ liệu và mô hình, giải thích dự đoán (explainability)",
+                "Quản lý experiment",
+                "Xây dựng data pipeline"
+            ],
+            "correct": 1,
+            "explanation": "SageMaker Clarify giúp phát hiện bias trong data và model, cung cấp feature importance (SHAP values), hỗ trợ Responsible AI và regulatory compliance."
+        },
+        {
+            "id": 11,
+            "question": "DeepAR trong SageMaker được dùng cho bài toán nào?",
+            "options": [
+                "Image classification",
+                "Dự báo chuỗi thời gian (time series forecasting)",
+                "Text summarization",
+                "Object detection"
+            ],
+            "correct": 1,
+            "explanation": "DeepAR là thuật toán RNN-based cho time series forecasting, đặc biệt hiệu quả khi có nhiều chuỗi thời gian liên quan (cold-start problem)."
+        },
+        {
+            "id": 12,
+            "question": "Multi-Model Endpoint trong SageMaker có ưu điểm gì?",
+            "options": [
+                "Chỉ hỗ trợ GPU instances",
+                "Host nhiều model trên cùng một endpoint, giảm chi phí khi có nhiều model ít traffic",
+                "Tăng tốc training",
+                "Chỉ support PyTorch"
+            ],
+            "correct": 1,
+            "explanation": "Multi-Model Endpoint cho phép host hàng trăm model trên cùng endpoint, load model on-demand — tiết kiệm chi phí rất lớn so với mỗi model một endpoint riêng."
+        },
+        {
+            "id": 13,
+            "question": "Khi nào nên dùng SageMaker Batch Transform thay vì Real-time Endpoint?",
+            "options": [
+                "Khi cần inference nhanh, real-time",
+                "Khi cần xử lý inference cho dataset lớn không cần response ngay lập tức",
+                "Khi cần A/B testing",
+                "Khi cần model auto-scaling"
+            ],
+            "correct": 1,
+            "explanation": "Batch Transform phù hợp khi cần inference lượng lớn dữ liệu, không cần response real-time — ví dụ: nightly scoring, preprocessing dataset lớn."
+        },
+        {
+            "id": 14,
+            "question": "SageMaker Autopilot là gì?",
+            "options": [
+                "Tool deploy model tự động",
+                "AutoML — tự động phân tích data, thử nhiều algorithms, và chọn model tốt nhất",
+                "Tool giám sát endpoint",
+                "Framework training distributed"
+            ],
+            "correct": 1,
+            "explanation": "SageMaker Autopilot là giải pháp AutoML, tự động phân tích data, feature engineering, thử nhiều algorithms/hyperparameters, và đề xuất model tốt nhất — kèm notebook giải thích."
+        },
+        {
+            "id": 15,
+            "question": "Pipe Mode trong SageMaker training có lợi ích gì?",
+            "options": [
+                "Tăng kích thước model",
+                "Stream dữ liệu trực tiếp từ S3 vào training container, không cần download toàn bộ trước",
+                "Giảm thời gian deploy",
+                "Tự động chọn algorithm"
+            ],
+            "correct": 1,
+            "explanation": "Pipe Mode stream dữ liệu từ S3 vào training container thay vì copy toàn bộ (File Mode) — giảm startup time và disk requirement, đặc biệt hiệu quả với dataset lớn."
+        }
+    ]
+}

@@ -156,28 +156,28 @@ export interface Review {
   user: Author;
 }
 
-export interface QuizAnswer {
+export interface ApiQuizAnswer {
   id: string;
   answer: string;
   is_correct: boolean;
 }
 
-export interface QuizQuestion {
+export interface ApiQuizQuestion {
   id: string;
   type: string;
   question: string;
   explanation: string | null;
   points: number;
-  answers: QuizAnswer[];
+  answers: ApiQuizAnswer[];
 }
 
-export interface Quiz {
+export interface ApiQuiz {
   id: string;
   title: string;
   description: string | null;
   time_limit_minutes: number | null;
   passing_score: number;
-  questions: QuizQuestion[];
+  questions: ApiQuizQuestion[];
 }
 
 export interface Series {

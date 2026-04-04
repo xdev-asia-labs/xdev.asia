@@ -317,19 +317,28 @@ export function getCategories(): Category[] {
   return readJSON<Category[]>("categories.json");
 }
 
-// Quizzes (data/quizzes.json)
+// Quizzes (data/quizzes/{slug}.json)
+function readAllQuizFiles(): Quiz[] {
+  const quizzesDir = path.join(dataDir, "quizzes");
+  if (!fs.existsSync(quizzesDir)) return [];
+  return fs
+    .readdirSync(quizzesDir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(fs.readFileSync(path.join(quizzesDir, f), "utf-8")) as Quiz);
+}
+
 export function getAllQuizzes(): QuizIndex[] {
-  const quizzes = readJSON<Quiz[]>("quizzes.json");
-  return quizzes.map(({ questions, ...rest }) => rest);
+  return readAllQuizFiles().map(({ questions, ...rest }) => rest);
 }
 
 export function getQuiz(slug: string): Quiz | null {
-  const quizzes = readJSON<Quiz[]>("quizzes.json");
-  return quizzes.find((q) => q.slug === slug) || null;
+  const filePath = path.join(dataDir, "quizzes", `${slug}.json`);
+  if (!fs.existsSync(filePath)) return null;
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as Quiz;
 }
 
 export function getQuizSlugs(): string[] {
-  return readJSON<Quiz[]>("quizzes.json").map((q) => q.slug);
+  return readAllQuizFiles().map((q) => q.slug);
 }
 
 export function getBlogCategories(): Category[] {
