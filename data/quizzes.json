@@ -760,5 +760,1064 @@
                 "explanation": "Continuous Training tự động kích hoạt retrain pipeline khi: data mới đến (scheduled), data drift vượt threshold, hoặc model performance giảm — đảm bảo model luôn fresh."
             }
         ]
+    },
+    {
+        "id": "kcna",
+        "title": "KCNA — Kubernetes and Cloud Native Associate",
+        "slug": "kcna",
+        "description": "Practice exam for KCNA — 20 multiple-choice questions covering all 5 domains",
+        "icon": "award",
+        "provider": "CNCF",
+        "level": "Associate",
+        "duration_minutes": 30,
+        "passing_score": 75,
+        "questions_count": 20,
+        "tags": [
+            "Kubernetes",
+            "CNCF",
+            "Cloud Native",
+            "DevOps"
+        ],
+        "series_slug": "luyen-thi-kcna",
+        "domains": [
+            {
+                "name": "Domain 1: Kubernetes Fundamentals",
+                "weight": 46,
+                "lessons": [
+                    {
+                        "title": "Bài 1: Kubernetes Architecture & Core Components",
+                        "slug": "01-kien-truc-kubernetes"
+                    },
+                    {
+                        "title": "Bài 2: Pods, Workloads & Controllers",
+                        "slug": "02-pods-workloads-controllers"
+                    },
+                    {
+                        "title": "Bài 3: Services, Networking & Storage",
+                        "slug": "03-services-networking-storage"
+                    },
+                    {
+                        "title": "Bài 4: RBAC & Security Basics",
+                        "slug": "04-rbac-security"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 2: Container Orchestration",
+                "weight": 22,
+                "lessons": [
+                    {
+                        "title": "Bài 5: Container Runtimes & OCI Standards",
+                        "slug": "05-container-runtimes-oci"
+                    },
+                    {
+                        "title": "Bài 6: Container Orchestration Patterns",
+                        "slug": "06-orchestration-patterns"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 3: Cloud Native Architecture",
+                "weight": 16,
+                "lessons": [
+                    {
+                        "title": "Bài 7: Cloud Native Architecture & Design Patterns",
+                        "slug": "07-cloud-native-architecture"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 4 & 5: Observability & Application Delivery",
+                "weight": 16,
+                "lessons": [
+                    {
+                        "title": "Bài 8: Cloud Native Observability",
+                        "slug": "08-observability"
+                    },
+                    {
+                        "title": "Bài 9: Application Delivery — Helm, GitOps & CI/CD",
+                        "slug": "09-helm-gitops-cicd"
+                    }
+                ]
+            }
+        ],
+        "questions": [
+            {
+                "id": 1,
+                "domain": "Kubernetes Fundamentals",
+                "question": "Which Kubernetes component is responsible for watching for newly created Pods with no assigned node and selecting a node for them to run on?",
+                "options": [
+                    "kube-apiserver",
+                    "kube-scheduler",
+                    "kube-controller-manager",
+                    "kubelet"
+                ],
+                "correct": 1,
+                "explanation": "kube-scheduler watches for newly created Pods and selects the best node for them based on resource availability, constraints, and policies."
+            },
+            {
+                "id": 2,
+                "domain": "Kubernetes Fundamentals",
+                "question": "Which component stores all cluster state in Kubernetes?",
+                "options": [
+                    "kube-apiserver",
+                    "kube-controller-manager",
+                    "etcd",
+                    "kubelet"
+                ],
+                "correct": 2,
+                "explanation": "etcd is the consistent and highly-available key-value store used as Kubernetes' backing store for all cluster state."
+            },
+            {
+                "id": 3,
+                "domain": "Kubernetes Fundamentals",
+                "question": "A Pod is in 'Pending' state. What is the MOST likely reason?",
+                "options": [
+                    "The container application crashed",
+                    "No node satisfies the scheduling requirements",
+                    "The image pull failed",
+                    "A liveness probe failed"
+                ],
+                "correct": 1,
+                "explanation": "Pending means the Pod has been accepted but one or more containers have not been started — most commonly because no node has sufficient resources or the Pod doesn't match any node's constraints."
+            },
+            {
+                "id": 4,
+                "domain": "Kubernetes Fundamentals",
+                "question": "Which Kubernetes resource ensures exactly one Pod runs on every node in the cluster?",
+                "options": [
+                    "Deployment",
+                    "ReplicaSet",
+                    "StatefulSet",
+                    "DaemonSet"
+                ],
+                "correct": 3,
+                "explanation": "A DaemonSet ensures that all (or some) Nodes run a copy of a Pod — commonly used for log collectors, monitoring agents, and network plugins."
+            },
+            {
+                "id": 5,
+                "domain": "Kubernetes Fundamentals",
+                "question": "What is the default Service type in Kubernetes?",
+                "options": [
+                    "NodePort",
+                    "LoadBalancer",
+                    "ClusterIP",
+                    "ExternalName"
+                ],
+                "correct": 2,
+                "explanation": "ClusterIP is the default Service type. It exposes the Service on a cluster-internal IP, making it only accessible from within the cluster."
+            },
+            {
+                "id": 6,
+                "domain": "Kubernetes Fundamentals",
+                "question": "Which access mode allows a PersistentVolume to be mounted as read-write by many nodes simultaneously?",
+                "options": [
+                    "ReadWriteOnce (RWO)",
+                    "ReadOnlyMany (ROX)",
+                    "ReadWriteMany (RWX)",
+                    "ReadWriteOncePod (RWOP)"
+                ],
+                "correct": 2,
+                "explanation": "ReadWriteMany (RWX) allows the volume to be mounted as read-write by many nodes simultaneously, required for shared storage scenarios."
+            },
+            {
+                "id": 7,
+                "domain": "Kubernetes Fundamentals",
+                "question": "Which RBAC resource grants permissions within a specific namespace?",
+                "options": [
+                    "ClusterRole",
+                    "ClusterRoleBinding",
+                    "Role",
+                    "ServiceAccount"
+                ],
+                "correct": 2,
+                "explanation": "Role is namespace-scoped. ClusterRole is cluster-wide. A Role combined with a RoleBinding grants permissions within a specific namespace."
+            },
+            {
+                "id": 8,
+                "domain": "Kubernetes Fundamentals",
+                "question": "In a StatefulSet, what is the naming pattern for Pods?",
+                "options": [
+                    "Random hash suffix (e.g., web-abc12)",
+                    "Incrementing ordinal (e.g., web-0, web-1)",
+                    "Timestamp suffix",
+                    "UUID suffix"
+                ],
+                "correct": 1,
+                "explanation": "StatefulSet Pods have a stable, unique ordinal identity (web-0, web-1, web-2). This predictable naming enables ordered deployment, scaling, and rolling updates."
+            },
+            {
+                "id": 9,
+                "domain": "Container Orchestration",
+                "question": "Which is the default container runtime interface (CRI) used by Kubernetes since v1.20?",
+                "options": [
+                    "Docker",
+                    "containerd",
+                    "CRI-O",
+                    "rkt"
+                ],
+                "correct": 1,
+                "explanation": "containerd is the default CRI since Kubernetes deprecated Dockershim in v1.20. containerd is lightweight and directly implements the CRI specification."
+            },
+            {
+                "id": 10,
+                "domain": "Container Orchestration",
+                "question": "What does OCI stand for in the context of containers?",
+                "options": [
+                    "Open Container Interface",
+                    "Open Container Initiative",
+                    "Oracle Container Infrastructure",
+                    "Orchestration Container Interface"
+                ],
+                "correct": 1,
+                "explanation": "OCI stands for Open Container Initiative — an open governance structure for creating open industry standards around container formats and runtimes."
+            },
+            {
+                "id": 11,
+                "domain": "Container Orchestration",
+                "question": "Which Kubernetes feature automatically scales the number of Pod replicas based on CPU utilization?",
+                "options": [
+                    "Vertical Pod Autoscaler",
+                    "Horizontal Pod Autoscaler",
+                    "Cluster Autoscaler",
+                    "KEDA"
+                ],
+                "correct": 1,
+                "explanation": "Horizontal Pod Autoscaler (HPA) automatically scales the number of Pod replicas based on observed CPU utilization or custom metrics."
+            },
+            {
+                "id": 12,
+                "domain": "Cloud Native Architecture",
+                "question": "According to the 12-factor app methodology, how should application configuration be stored?",
+                "options": [
+                    "In the container image",
+                    "In config files committed to git",
+                    "In environment variables",
+                    "In a database"
+                ],
+                "correct": 2,
+                "explanation": "Factor III of 12-factor app: Store config in the environment. Configuration that varies between deployments should be stored in environment variables, not in code."
+            },
+            {
+                "id": 13,
+                "domain": "Cloud Native Architecture",
+                "question": "What is the primary purpose of a Service Mesh in a microservices architecture?",
+                "options": [
+                    "Database connection pooling",
+                    "Managing service-to-service communication, observability, and security",
+                    "Container image distribution",
+                    "DNS resolution for services"
+                ],
+                "correct": 1,
+                "explanation": "A service mesh (like Istio or Linkerd) handles service-to-service communication with features like load balancing, mTLS encryption, circuit breaking, observability, and traffic management."
+            },
+            {
+                "id": 14,
+                "domain": "Cloud Native Architecture",
+                "question": "Which CNCF project is the primary service mesh used in production Kubernetes environments?",
+                "options": [
+                    "Helm",
+                    "Istio",
+                    "Argo CD",
+                    "Prometheus"
+                ],
+                "correct": 1,
+                "explanation": "Istio is the most widely adopted service mesh. It provides traffic management, security (mTLS), and observability via an Envoy sidecar proxy injected into each Pod."
+            },
+            {
+                "id": 15,
+                "domain": "Cloud Native Architecture",
+                "question": "What differentiates serverless computing from traditional container deployments?",
+                "options": [
+                    "Serverless uses more servers",
+                    "Serverless abstracts server management; scales to zero when idle",
+                    "Serverless requires container orchestration",
+                    "Serverless is only for batch workloads"
+                ],
+                "correct": 1,
+                "explanation": "Serverless abstracts infrastructure management — the platform handles scaling, including scaling to zero when there's no traffic, so you pay only for actual execution time."
+            },
+            {
+                "id": 16,
+                "domain": "Cloud Native Observability",
+                "question": "Which is the standard CNCF observability data format that unifies metrics, logs, and traces?",
+                "options": [
+                    "Prometheus Remote Write",
+                    "OpenTelemetry",
+                    "Fluentd",
+                    "Grafana Loki"
+                ],
+                "correct": 1,
+                "explanation": "OpenTelemetry (OTel) is the CNCF standard for observability — providing a single set of APIs, SDKs, and tools to collect, process, and export metrics, logs, and traces."
+            },
+            {
+                "id": 17,
+                "domain": "Cloud Native Observability",
+                "question": "In the SLO/SLI/SLA framework, what does SLI stand for?",
+                "options": [
+                    "Service Level Infrastructure",
+                    "Service Level Indicator",
+                    "System Load Index",
+                    "Service Latency Index"
+                ],
+                "correct": 1,
+                "explanation": "SLI (Service Level Indicator) is a quantitative measure of service behavior. Examples: request latency, error rate, throughput. SLOs are targets based on SLIs."
+            },
+            {
+                "id": 18,
+                "domain": "Application Delivery",
+                "question": "What is GitOps?",
+                "options": [
+                    "A git branching strategy",
+                    "A practice where Git is the single source of truth for declarative infrastructure and code",
+                    "A CI/CD tool",
+                    "A container registry"
+                ],
+                "correct": 1,
+                "explanation": "GitOps uses Git repositories as the single source of truth for declarative infrastructure. Automated agents (like Argo CD or Flux) reconcile the actual state with the desired state in Git."
+            },
+            {
+                "id": 19,
+                "domain": "Application Delivery",
+                "question": "Which command installs a Helm chart with the release name 'myapp' from a chart directory?",
+                "options": [
+                    "helm deploy myapp ./chart",
+                    "helm install myapp ./chart",
+                    "helm apply myapp ./chart",
+                    "helm start myapp ./chart"
+                ],
+                "correct": 1,
+                "explanation": "helm install <release-name> <chart-path> is the correct command. You can also use --values to override defaults and --namespace to specify the target namespace."
+            },
+            {
+                "id": 20,
+                "domain": "Application Delivery",
+                "question": "In a canary deployment strategy, what is the purpose of the 'canary' version?",
+                "options": [
+                    "To replace the stable version immediately",
+                    "To test the new version with a small percentage of traffic before full rollout",
+                    "To run only in staging environment",
+                    "To handle high-traffic scenarios"
+                ],
+                "correct": 1,
+                "explanation": "Canary deployment sends a small percentage of traffic (e.g., 5-10%) to the new version. If metrics are healthy, traffic is gradually increased. This limits blast radius of new version issues."
+            }
+        ]
+    },
+    {
+        "id": "cka",
+        "title": "CKA — Certified Kubernetes Administrator",
+        "slug": "cka",
+        "description": "Practice exam for CKA — 20 scenario-based questions covering all 5 domains",
+        "icon": "award",
+        "provider": "CNCF",
+        "level": "Intermediate",
+        "duration_minutes": 30,
+        "passing_score": 66,
+        "questions_count": 20,
+        "tags": [
+            "Kubernetes",
+            "CKA",
+            "CNCF",
+            "DevOps",
+            "Administration"
+        ],
+        "series_slug": "luyen-thi-cka",
+        "domains": [
+            {
+                "name": "Domain 1: Cluster Architecture, Installation & Configuration",
+                "weight": 25,
+                "lessons": [
+                    {
+                        "title": "Bài 1: Kubernetes Architecture & kubeadm",
+                        "slug": "01-kien-truc-cka-kubeadm"
+                    },
+                    {
+                        "title": "Bài 2: Cluster Upgrade",
+                        "slug": "02-cluster-upgrade-kubeadm"
+                    },
+                    {
+                        "title": "Bài 3: RBAC",
+                        "slug": "03-rbac-cka"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 2: Workloads & Scheduling",
+                "weight": 15,
+                "lessons": [
+                    {
+                        "title": "Bài 4: Deployments, DaemonSets & StatefulSets",
+                        "slug": "04-deployments-daemonsets-statefulsets"
+                    },
+                    {
+                        "title": "Bài 5: Scheduling — Taints, Tolerations & Affinity",
+                        "slug": "05-scheduling-taints-affinity"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 3: Services & Networking",
+                "weight": 20,
+                "lessons": [
+                    {
+                        "title": "Bài 6: Services, Endpoints & CoreDNS",
+                        "slug": "06-services-endpoints-coredns"
+                    },
+                    {
+                        "title": "Bài 7: Ingress, Network Policies & CNI",
+                        "slug": "07-ingress-networkpolicies-cni"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 4: Storage",
+                "weight": 10,
+                "lessons": [
+                    {
+                        "title": "Bài 8: Persistent Volumes, PVCs & StorageClass",
+                        "slug": "08-persistent-volumes-storageclass"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 5: Troubleshooting",
+                "weight": 30,
+                "lessons": [
+                    {
+                        "title": "Bài 9: etcd Backup & Restore",
+                        "slug": "09-etcd-backup-restore"
+                    },
+                    {
+                        "title": "Bài 10: Troubleshooting Nodes",
+                        "slug": "10-troubleshooting-nodes"
+                    },
+                    {
+                        "title": "Bài 11: Troubleshooting Workloads",
+                        "slug": "11-troubleshooting-workloads"
+                    },
+                    {
+                        "title": "Bài 12: Troubleshooting Networking & Exam Strategy",
+                        "slug": "12-troubleshooting-networking-exam"
+                    }
+                ]
+            }
+        ],
+        "questions": [
+            {
+                "id": 1,
+                "domain": "Cluster Architecture",
+                "question": "You need to backup etcd on the control plane node. The etcd data directory is /var/lib/etcd, CA cert at /etc/kubernetes/pki/etcd/ca.crt, server cert at /etc/kubernetes/pki/etcd/server.crt, and key at /etc/kubernetes/pki/etcd/server.key. Which command creates the snapshot?",
+                "options": [
+                    "kubectl backup etcd --destination=/tmp/etcd-backup.db",
+                    "ETCDCTL_API=3 etcdctl snapshot save /tmp/etcd-backup.db --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key",
+                    "etcdctl snapshot save /tmp/etcd-backup.db",
+                    "kubeadm etcd backup /tmp/etcd-backup.db"
+                ],
+                "correct": 1,
+                "explanation": "ETCDCTL_API=3 sets the API version. The etcdctl snapshot save command requires --cacert, --cert, and --key for authentication. Without ETCDCTL_API=3, etcdctl defaults to v2 which doesn't support snapshot."
+            },
+            {
+                "id": 2,
+                "domain": "Cluster Architecture",
+                "question": "A cluster has Kubernetes v1.30 and you need to upgrade it to v1.31. What is the correct order of operations?",
+                "options": [
+                    "Upgrade worker nodes first, then control plane",
+                    "Upgrade all nodes simultaneously with kubeadm upgrade apply",
+                    "Upgrade control plane first, then drain and upgrade each worker node",
+                    "Upgrade etcd first, then control plane, then workers"
+                ],
+                "correct": 2,
+                "explanation": "Always upgrade the control plane first (kubeadm upgrade apply v1.31.x), then upgrade each worker node one at a time: drain the node, upgrade kubeadm/kubelet/kubectl, then uncordon."
+            },
+            {
+                "id": 3,
+                "domain": "Cluster Architecture",
+                "question": "You need to create a ClusterRole 'pod-reader' that allows get, watch, list on pods, then bind it to user 'jane'. Which commands achieve this?",
+                "options": [
+                    "kubectl create role pod-reader --verb=get,watch,list --resource=pods && kubectl create rolebinding pod-reader --role=pod-reader --user=jane",
+                    "kubectl create clusterrole pod-reader --verb=get,watch,list --resource=pods && kubectl create clusterrolebinding pod-reader --clusterrole=pod-reader --user=jane",
+                    "kubectl create rolebinding pod-reader --clusterrole=pod-reader --user=jane",
+                    "kubectl apply -f rbac.yaml"
+                ],
+                "correct": 1,
+                "explanation": "ClusterRole is cluster-scoped. ClusterRoleBinding binds a ClusterRole to a user cluster-wide. If you used Role + RoleBinding, jane would only have access in one namespace."
+            },
+            {
+                "id": 4,
+                "domain": "Workloads & Scheduling",
+                "question": "A node has a taint 'key=value:NoSchedule'. How do you allow a Pod to be scheduled on this node?",
+                "options": [
+                    "Add a nodeSelector: {key: value} to the Pod spec",
+                    "Add a toleration to the Pod spec: {key: key, operator: Equal, value: value, effect: NoSchedule}",
+                    "Add node affinity with requiredDuringScheduling",
+                    "Remove the taint before scheduling"
+                ],
+                "correct": 1,
+                "explanation": "Tolerations allow Pods to be scheduled on nodes with matching taints. The toleration must match the taint key, value, and effect. Without the toleration, the scheduler will skip this node."
+            },
+            {
+                "id": 5,
+                "domain": "Workloads & Scheduling",
+                "question": "You want to ensure a Pod is ONLY scheduled on nodes labeled 'disktype=ssd'. Which scheduling feature should you use?",
+                "options": [
+                    "Taints and Tolerations",
+                    "Pod Anti-affinity",
+                    "Node Affinity (requiredDuringSchedulingIgnoredDuringExecution)",
+                    "nodeSelector is sufficient for strict requirements"
+                ],
+                "correct": 2,
+                "explanation": "Node Affinity with requiredDuringSchedulingIgnoredDuringExecution enforces strict node selection. nodeSelector works too, but Node Affinity provides richer expressions (In, NotIn, Exists, etc.)."
+            },
+            {
+                "id": 6,
+                "domain": "Services & Networking",
+                "question": "A Pod cannot resolve the DNS name 'my-service.default.svc.cluster.local'. CoreDNS pods are running. What should you check FIRST?",
+                "options": [
+                    "Check if the Service exists and its selector matches the Pod labels",
+                    "Restart the kubelet on all nodes",
+                    "Check if the Pod has network access",
+                    "Delete and recreate the Service"
+                ],
+                "correct": 0,
+                "explanation": "First verify the Service exists (kubectl get svc my-service) and its selector matches the target Pods (kubectl get endpoints my-service). If Endpoints are empty, the selector doesn't match any Pods."
+            },
+            {
+                "id": 7,
+                "domain": "Services & Networking",
+                "question": "You need to create a NetworkPolicy that denies ALL ingress traffic to Pods in namespace 'prod'. Which spec achieves this?",
+                "options": [
+                    "spec: {podSelector: {}, policyTypes: [Ingress], ingress: [{}]}",
+                    "spec: {podSelector: {}, policyTypes: [Ingress]}",
+                    "spec: {podSelector: {matchLabels: {}}, policyTypes: [Deny]}",
+                    "spec: {podSelector: null, policyTypes: [Ingress], ingress: []}"
+                ],
+                "correct": 1,
+                "explanation": "An empty podSelector ({}) selects ALL Pods in the namespace. Specifying policyTypes: [Ingress] without any ingress rules creates a default deny for all ingress traffic."
+            },
+            {
+                "id": 8,
+                "domain": "Storage",
+                "question": "A PersistentVolumeClaim is stuck in 'Pending' state. What is the MOST likely cause?",
+                "options": [
+                    "The Pod using the PVC is not running",
+                    "No PersistentVolume matches the PVC's storage class, access mode, or capacity requirements",
+                    "The namespace doesn't exist",
+                    "kubectl was not used to create the PVC"
+                ],
+                "correct": 1,
+                "explanation": "PVC Pending means no PV matched the binding criteria: storageClassName, accessModes, and requested storage capacity. Check with kubectl describe pvc to see the binding failure reason."
+            },
+            {
+                "id": 9,
+                "domain": "Storage",
+                "question": "Which reclaim policy ensures a PersistentVolume is deleted when its claim is released?",
+                "options": [
+                    "Retain",
+                    "Recycle",
+                    "Delete",
+                    "Release"
+                ],
+                "correct": 2,
+                "explanation": "Delete policy automatically deletes the PV and its associated storage asset when the PVC is deleted. Retain keeps the PV data for manual recovery. Recycle is deprecated."
+            },
+            {
+                "id": 10,
+                "domain": "Troubleshooting",
+                "question": "A Node shows status 'NotReady'. Which command gives you the MOST useful diagnostic information?",
+                "options": [
+                    "kubectl get node <node-name>",
+                    "kubectl describe node <node-name> and check Events/Conditions sections",
+                    "kubectl logs <node-name>",
+                    "kubectl get pods --all-namespaces"
+                ],
+                "correct": 1,
+                "explanation": "kubectl describe node shows Conditions (DiskPressure, MemoryPressure, NetworkUnavailable, Ready), resource usage, and Events. On the node itself, check: systemctl status kubelet and journalctl -u kubelet."
+            },
+            {
+                "id": 11,
+                "domain": "Troubleshooting",
+                "question": "A Pod is in 'CrashLoopBackOff'. Which command shows the logs from the PREVIOUS container instance?",
+                "options": [
+                    "kubectl logs <pod-name>",
+                    "kubectl logs <pod-name> --previous",
+                    "kubectl describe pod <pod-name>",
+                    "kubectl logs <pod-name> --all"
+                ],
+                "correct": 1,
+                "explanation": "kubectl logs --previous (or -p) shows the logs from the previously terminated container instance, which is crucial for diagnosing why a container crashed."
+            },
+            {
+                "id": 12,
+                "domain": "Troubleshooting",
+                "question": "A Pod is stuck in 'ImagePullBackOff'. What is the MOST common cause?",
+                "options": [
+                    "Insufficient CPU resources on the node",
+                    "Wrong image name/tag or missing image pull secret for private registry",
+                    "Node affinity constraints not met",
+                    "NetworkPolicy blocking traffic"
+                ],
+                "correct": 1,
+                "explanation": "ImagePullBackOff is caused by: (1) incorrect image name/tag, (2) missing or incorrect imagePullSecret for private registries, (3) registry is unreachable. Check kubectl describe pod for the exact error."
+            },
+            {
+                "id": 13,
+                "domain": "Troubleshooting",
+                "question": "After upgrading a cluster, several Pods show 'OOMKilled'. What is the immediate remediation?",
+                "options": [
+                    "Increase the namespace ResourceQuota",
+                    "Increase the Pod's memory limit or add more nodes to the cluster",
+                    "Restart the kubelet service",
+                    "Delete and recreate the Pods"
+                ],
+                "correct": 1,
+                "explanation": "OOMKilled means the container exceeded its memory limit. Fix: increase the memory limit in the Pod spec, or add more nodes if the node is under memory pressure. Also investigate for memory leaks."
+            },
+            {
+                "id": 14,
+                "domain": "Troubleshooting",
+                "question": "How do you run a temporary debug pod in a namespace to test network connectivity?",
+                "options": [
+                    "kubectl create pod debug --image=busybox",
+                    "kubectl run debug --image=busybox --rm -it -- sh",
+                    "kubectl exec <existing-pod> -- sh",
+                    "kubectl debug node/<node-name>"
+                ],
+                "correct": 1,
+                "explanation": "kubectl run with --rm (auto-delete) and -it (interactive terminal) creates a temporary Pod for debugging. The -- sh runs a shell. Use --restart=Never to prevent it from being rescheduled."
+            },
+            {
+                "id": 15,
+                "domain": "Cluster Architecture",
+                "question": "Which file does kubeadm use to store cluster configuration after initialization?",
+                "options": [
+                    "/etc/kubernetes/admin.conf",
+                    "ConfigMap 'kubeadm-config' in kube-system namespace",
+                    "/var/lib/kubelet/config.yaml",
+                    "/etc/kubernetes/manifests/kube-apiserver.yaml"
+                ],
+                "correct": 1,
+                "explanation": "kubeadm stores its configuration in a ConfigMap named 'kubeadm-config' in the kube-system namespace. This is used during upgrades: kubeadm reads this config with kubeadm upgrade plan."
+            },
+            {
+                "id": 16,
+                "domain": "Workloads & Scheduling",
+                "question": "You need to deploy an app with the guarantee that it will NEVER be evicted under memory pressure. Which QoS class achieves this?",
+                "options": [
+                    "BestEffort",
+                    "Burstable",
+                    "Guaranteed",
+                    "Priority"
+                ],
+                "correct": 2,
+                "explanation": "Guaranteed QoS requires memory requests == memory limits (and CPU too). These Pods are evicted last. BestEffort (no requests/limits) is evicted first. Burstable is in between."
+            },
+            {
+                "id": 17,
+                "domain": "Services & Networking",
+                "question": "Which command quickly tests if kube-proxy iptables rules are working for a Service named 'web' in the default namespace?",
+                "options": [
+                    "kubectl exec <pod> -- curl web.default.svc.cluster.local",
+                    "kubectl describe service web",
+                    "iptables -L -n | grep web",
+                    "kubectl get endpoints web"
+                ],
+                "correct": 0,
+                "explanation": "Running curl from inside a Pod against the Service DNS name tests the full networking path: DNS resolution → kube-proxy IP tables → Pod endpoint. If DNS resolves but curl fails, it may be a kube-proxy or NetworkPolicy issue."
+            },
+            {
+                "id": 18,
+                "domain": "Storage",
+                "question": "A StatefulSet needs each Pod to have its own PersistentVolumeClaim. How is this configured?",
+                "options": [
+                    "Create individual PVCs manually and reference them by name in each Pod",
+                    "Use volumeClaimTemplates in the StatefulSet spec",
+                    "Use a shared ReadWriteMany PVC",
+                    "Configure hostPath volumes instead"
+                ],
+                "correct": 1,
+                "explanation": "volumeClaimTemplates in a StatefulSet spec automatically creates a PVC for each Pod replica. The PVC name follows the pattern <template-name>-<pod-name>. These PVCs are NOT deleted when the StatefulSet is deleted."
+            },
+            {
+                "id": 19,
+                "domain": "Cluster Architecture",
+                "question": "What happens to running Pods when a node is drained with 'kubectl drain <node> --ignore-daemonsets'?",
+                "options": [
+                    "Pods are deleted immediately without rescheduling",
+                    "Pods are evicted and rescheduled on other available nodes",
+                    "Pods continue running but no new Pods are scheduled",
+                    "Pods are paused until the node is uncordoned"
+                ],
+                "correct": 1,
+                "explanation": "kubectl drain cordons the node (prevents new scheduling) then gracefully evicts existing Pods. The Pod controllers (Deployments, etc.) reschedule the Pods on other nodes. DaemonSet Pods are ignored with the flag."
+            },
+            {
+                "id": 20,
+                "domain": "Troubleshooting",
+                "question": "A Deployment has 3 replicas but only 1 Pod is running. The other 2 are Pending. What should you check?",
+                "options": [
+                    "Check if the Deployment manifest has errors",
+                    "Check node resources (kubectl describe node), Pod events, and any PodDisruptionBudgets",
+                    "Check if the namespace exists",
+                    "Restart the kube-controller-manager"
+                ],
+                "correct": 1,
+                "explanation": "Pending Pods mean the scheduler can't place them. Check: (1) kubectl describe pod for Events (Insufficient CPU/memory, taint not tolerated), (2) kubectl describe node for available capacity, (3) any resource quotas blocking scheduling."
+            }
+        ]
+    },
+    {
+        "id": "ckad",
+        "title": "CKAD — Certified Kubernetes Application Developer",
+        "slug": "ckad",
+        "description": "Practice exam for CKAD — 20 scenario-based questions covering all 5 domains",
+        "icon": "award",
+        "provider": "CNCF",
+        "level": "Intermediate",
+        "duration_minutes": 30,
+        "passing_score": 66,
+        "questions_count": 20,
+        "tags": [
+            "Kubernetes",
+            "CKAD",
+            "CNCF",
+            "DevOps",
+            "Development"
+        ],
+        "series_slug": "luyen-thi-ckad",
+        "domains": [
+            {
+                "name": "Domain 1: Application Design and Build",
+                "weight": 20,
+                "lessons": [
+                    {
+                        "title": "Bài 1: Multi-container Pods & Init Containers",
+                        "slug": "01-multi-container-pods"
+                    },
+                    {
+                        "title": "Bài 2: Jobs, CronJobs & Resources",
+                        "slug": "02-jobs-cronjobs-resources"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 2: Application Deployment",
+                "weight": 20,
+                "lessons": [
+                    {
+                        "title": "Bài 3: Rolling Updates, Rollbacks & Strategies",
+                        "slug": "03-rolling-updates-rollbacks"
+                    },
+                    {
+                        "title": "Bài 4: Helm & Kustomize",
+                        "slug": "04-helm-kustomize"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 3: Application Observability and Maintenance",
+                "weight": 15,
+                "lessons": [
+                    {
+                        "title": "Bài 5: Probes, Logging & Debugging",
+                        "slug": "05-probes-logging-debugging"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 4: Application Environment, Configuration & Security",
+                "weight": 25,
+                "lessons": [
+                    {
+                        "title": "Bài 6: ConfigMaps & Secrets",
+                        "slug": "06-configmaps-secrets"
+                    },
+                    {
+                        "title": "Bài 7: SecurityContext & Pod Security",
+                        "slug": "07-securitycontext-pod-security"
+                    },
+                    {
+                        "title": "Bài 8: Resource Requests, Limits & QoS",
+                        "slug": "08-resources-qos"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 5: Services & Networking",
+                "weight": 20,
+                "lessons": [
+                    {
+                        "title": "Bài 9: Services & Ingress",
+                        "slug": "09-services-ingress"
+                    },
+                    {
+                        "title": "Bài 10: Network Policies & Exam Strategy",
+                        "slug": "10-networkpolicies-exam-strategy"
+                    }
+                ]
+            }
+        ],
+        "questions": [
+            {
+                "id": 1,
+                "domain": "App Design and Build",
+                "question": "A Pod needs to wait for a database to be ready before starting the main application container. Which Kubernetes feature should you use?",
+                "options": [
+                    "Liveness probe",
+                    "Init container",
+                    "Readiness probe",
+                    "Sidecar container"
+                ],
+                "correct": 1,
+                "explanation": "Init containers run to completion before app containers start. Use an init container to check database connectivity (e.g., nslookup or nc -z db-host 5432). Only after it succeeds will the main container start."
+            },
+            {
+                "id": 2,
+                "domain": "App Design and Build",
+                "question": "Which sidecar pattern is used to translate the communication protocol of the main container to match external services?",
+                "options": [
+                    "Sidecar",
+                    "Ambassador",
+                    "Adapter",
+                    "Init"
+                ],
+                "correct": 2,
+                "explanation": "The Adapter pattern transforms the output of the main container to match a standard format expected by external systems (e.g., converting proprietary metrics to Prometheus format). Ambassador is for proxying outbound connections."
+            },
+            {
+                "id": 3,
+                "domain": "App Design and Build",
+                "question": "You need to run a batch job that should retry up to 4 times on failure. Which Job spec fields control this?",
+                "options": [
+                    "retries: 4 and failurePolicy: retry",
+                    "backoffLimit: 4",
+                    "completions: 4 and parallelism: 1",
+                    "restartPolicy: OnFailure and maxRetries: 4"
+                ],
+                "correct": 1,
+                "explanation": "backoffLimit specifies the number of retries before considering a Job failed. Default is 6. The restartPolicy should be Never or OnFailure. completions controls how many successful completions are needed."
+            },
+            {
+                "id": 4,
+                "domain": "App Deployment",
+                "question": "A Deployment is performing a rolling update. You spot a bug and need to stop it and go back to the previous version. Which commands achieve this?",
+                "options": [
+                    "kubectl delete deployment <name> && kubectl apply -f old-deployment.yaml",
+                    "kubectl rollout pause <deployment> && kubectl rollout undo deployment/<name>",
+                    "kubectl rollout undo deployment/<name>",
+                    "kubectl set image deployment/<name> container=old-image"
+                ],
+                "correct": 2,
+                "explanation": "kubectl rollout undo deployment/<name> reverts to the previous revision. You can also specify --to-revision=N to go to a specific version. Check history with kubectl rollout history deployment/<name>."
+            },
+            {
+                "id": 5,
+                "domain": "App Deployment",
+                "question": "In a RollingUpdate Deployment strategy, what does 'maxUnavailable: 1' mean?",
+                "options": [
+                    "Maximum 1 Pod can be created above the desired replicas during update",
+                    "Maximum 1 Pod can be unavailable at any time during the update",
+                    "The update fails if more than 1 Pod is unavailable",
+                    "Maximum 1 node can be updated at a time"
+                ],
+                "correct": 1,
+                "explanation": "maxUnavailable controls how many Pods can be down below the desired count during rolling updates. maxSurge controls how many extra Pods can be created above desired. These balance update speed vs availability."
+            },
+            {
+                "id": 6,
+                "domain": "App Observability",
+                "question": "A container is running but not serving traffic. The Pod is Ready=False. Which probe is MOST likely failing?",
+                "options": [
+                    "Startup probe",
+                    "Liveness probe",
+                    "Readiness probe",
+                    "Health probe"
+                ],
+                "correct": 2,
+                "explanation": "Readiness probe determines if a container is ready to accept traffic. A failing readiness probe removes the Pod from Service endpoints. Liveness probe triggers container restart. Startup probe guards slow-starting containers."
+            },
+            {
+                "id": 7,
+                "domain": "App Observability",
+                "question": "A container keeps restarting. The liveness probe is configured with initialDelaySeconds: 5 but the app takes 30s to start. What is the fix?",
+                "options": [
+                    "Increase the failureThreshold to 10",
+                    "Use a startup probe with failureThreshold * periodSeconds > 30s, or increase initialDelaySeconds to 35",
+                    "Disable the liveness probe",
+                    "Reduce the app startup time"
+                ],
+                "correct": 1,
+                "explanation": "Use a startup probe: it protects slow-starting containers by allowing more time only at startup. Once the startup probe succeeds, the liveness probe takes over. Alternatively, initialDelaySeconds >= 35 would also work but startup probe is cleaner."
+            },
+            {
+                "id": 8,
+                "domain": "App Environment, Config & Security",
+                "question": "You have a Secret named 'db-secret' with key 'password'. How do you inject it as an environment variable 'DB_PASSWORD' in a Pod?",
+                "options": [
+                    "env: [{name: DB_PASSWORD, value: $(db-secret.password)}]",
+                    "env: [{name: DB_PASSWORD, valueFrom: {secretKeyRef: {name: db-secret, key: password}}}]",
+                    "envFrom: [{secretRef: {name: db-secret}}]",
+                    "env: [{name: DB_PASSWORD, secret: db-secret}]"
+                ],
+                "correct": 1,
+                "explanation": "valueFrom.secretKeyRef injects a specific key from a Secret as an env var. envFrom.secretRef injects ALL keys from the Secret as env vars. The first creates DB_PASSWORD specifically from the Secret's 'password' key."
+            },
+            {
+                "id": 9,
+                "domain": "App Environment, Config & Security",
+                "question": "A container must run as user ID 1000 and cannot write to the root filesystem. Which SecurityContext settings achieve this?",
+                "options": [
+                    "runAsUser: 1000, readOnlyRootFilesystem: true",
+                    "userId: 1000, immutableFilesystem: true",
+                    "runAsNonRoot: true, disableWrite: true",
+                    "securityContext: {user: 1000, readonly: true}"
+                ],
+                "correct": 0,
+                "explanation": "runAsUser: 1000 sets the UID. readOnlyRootFilesystem: true prevents any writes to the container filesystem (use volume mounts for writable paths). These are container-level SecurityContext fields."
+            },
+            {
+                "id": 10,
+                "domain": "App Environment, Config & Security",
+                "question": "Which Pod Security Standard level prevents privilege escalation and restricts capabilities but is less restrictive than Restricted?",
+                "options": [
+                    "Privileged",
+                    "Baseline",
+                    "Restricted",
+                    "Limited"
+                ],
+                "correct": 1,
+                "explanation": "Baseline prevents known privilege escalations while allowing the default Docker/container configuration. Restricted is the most hardened. Privileged allows everything. Apply with: kubectl label namespace <ns> pod-security.kubernetes.io/enforce=baseline"
+            },
+            {
+                "id": 11,
+                "domain": "App Environment, Config & Security",
+                "question": "A Pod consumes 500m CPU but has no limit set. Which QoS class is assigned?",
+                "options": [
+                    "Guaranteed",
+                    "Burstable",
+                    "BestEffort",
+                    "Limited"
+                ],
+                "correct": 1,
+                "explanation": "Burstable: at least one container has CPU or memory request/limit set, but not all (or requests != limits). BestEffort: no requests or limits at all. Guaranteed: all containers have requests == limits for both CPU and memory."
+            },
+            {
+                "id": 12,
+                "domain": "Services & Networking",
+                "question": "You need to expose a Deployment externally on port 80 and route to container port 8080. Which Service spec is correct?",
+                "options": [
+                    "type: NodePort, port: 80, targetPort: 8080",
+                    "type: ClusterIP, port: 8080, targetPort: 80",
+                    "type: LoadBalancer, port: 80, targetPort: 8080",
+                    "type: ExternalName, port: 80"
+                ],
+                "correct": 2,
+                "explanation": "LoadBalancer exposes the Service externally. port: 80 is the Service port that clients connect to. targetPort: 8080 is the container port traffic is forwarded to. NodePort would also work but exposes a random high port."
+            },
+            {
+                "id": 13,
+                "domain": "Services & Networking",
+                "question": "An Ingress resource is created but returns 404 for all paths. What should you check FIRST?",
+                "options": [
+                    "Whether the Service backend exists and has endpoints",
+                    "Whether the node has enough CPU",
+                    "Whether the Ingress controller is installed and running",
+                    "Whether TLS certificates are valid"
+                ],
+                "correct": 2,
+                "explanation": "Without an Ingress controller, Ingress resources have no effect. Check: kubectl get pods -n ingress-nginx (or your controller namespace). Then verify the IngressClass matches your Ingress spec's ingressClassName."
+            },
+            {
+                "id": 14,
+                "domain": "Services & Networking",
+                "question": "You need to create a NetworkPolicy that allows only Pods with label 'role=frontend' to access Pods with label 'role=backend' on port 5432. Which spec is correct?",
+                "options": [
+                    "podSelector: {role: backend}, ingress: [{from: [{podSelector: {matchLabels: {role: frontend}}}], ports: [{port: 5432}]}]",
+                    "All traffic is allowed by default; no NetworkPolicy needed",
+                    "podSelector: {role: frontend}, egress: [{to: [{podSelector: {matchLabels: {role: backend}}}]}]",
+                    "Create two NetworkPolicies: one for ingress on backend, one for egress on frontend"
+                ],
+                "correct": 0,
+                "explanation": "The NetworkPolicy selects backend Pods (podSelector), then defines ingress rules allowing traffic from frontend Pods on port 5432. This is applied in the same namespace as the backend Pods."
+            },
+            {
+                "id": 15,
+                "domain": "App Design and Build",
+                "question": "A CronJob schedule '0 2 * * *' will run the job at what time?",
+                "options": [
+                    "Every 2 minutes",
+                    "Every 2 hours",
+                    "At 2:00 AM every day",
+                    "At 2:00 AM every Monday"
+                ],
+                "correct": 2,
+                "explanation": "Cron format: minute hour day-of-month month day-of-week. '0 2 * * *' = minute 0, hour 2, any day/month/weekday = 2:00 AM daily. Use crontab.guru to verify cron expressions."
+            },
+            {
+                "id": 16,
+                "domain": "App Deployment",
+                "question": "What is the difference between 'helm upgrade' and 'helm upgrade --install'?",
+                "options": [
+                    "No difference, both commands are identical",
+                    "--install creates the release if it doesn't exist, upgrade only updates existing releases",
+                    "--install skips the upgrade and only installs fresh",
+                    "--install uses the latest chart version automatically"
+                ],
+                "correct": 1,
+                "explanation": "helm upgrade requires the release to already exist. helm upgrade --install is idempotent: it installs if the release doesn't exist, upgrades if it does. This is ideal for CI/CD pipelines."
+            },
+            {
+                "id": 17,
+                "domain": "App Environment, Config & Security",
+                "question": "A ConfigMap key 'app.conf' contains a multi-line configuration file. How do you mount it in a Pod at /etc/app/app.conf?",
+                "options": [
+                    "Use envFrom: configMapRef",
+                    "Use a volume with configMap.items to map the key to a specific path, then volumeMount at /etc/app",
+                    "Use env.valueFrom.configMapKeyRef",
+                    "Copy the file into the container image"
+                ],
+                "correct": 1,
+                "explanation": "Mount a ConfigMap as a volume: volumes[].configMap.items maps specific keys to paths. Then volumeMounts mounts at /etc/app. The file will appear at /etc/app/app.conf. env injection is for env vars, not files."
+            },
+            {
+                "id": 18,
+                "domain": "App Observability",
+                "question": "You want to check resource usage of Pods in namespace 'production'. Which command shows CPU and memory consumption?",
+                "options": [
+                    "kubectl describe pod -n production",
+                    "kubectl top pod -n production",
+                    "kubectl get pod -n production -o wide",
+                    "kubectl logs -n production"
+                ],
+                "correct": 1,
+                "explanation": "kubectl top pod shows current CPU and memory usage per Pod (requires metrics-server). kubectl describe shows limits/requests but not actual usage. kubectl top node shows node-level usage."
+            },
+            {
+                "id": 19,
+                "domain": "App Design and Build",
+                "question": "Two containers in the same Pod need to share data in memory (not persisted to disk). Which volume type achieves this?",
+                "options": [
+                    "hostPath",
+                    "emptyDir with medium: Memory",
+                    "PersistentVolumeClaim",
+                    "configMap volume"
+                ],
+                "correct": 1,
+                "explanation": "emptyDir with medium: Memory creates a tmpfs (RAM-backed) volume. It's shared between all containers in the Pod and disappears when the Pod is removed. Default emptyDir uses disk storage."
+            },
+            {
+                "id": 20,
+                "domain": "Services & Networking",
+                "question": "You need a Service that doesn't have a cluster IP and returns the IPs of individual Pods directly. Which Service type achieves this?",
+                "options": [
+                    "ClusterIP with type: None",
+                    "Headless Service (clusterIP: None)",
+                    "NodePort",
+                    "ExternalName"
+                ],
+                "correct": 1,
+                "explanation": "A Headless Service (clusterIP: None) skips kube-proxy and returns Pod IPs directly via DNS. Used by StatefulSets for stable network identities and by clients that need direct Pod connections (e.g., databases, Cassandra)."
+            }
+        ]
     }
 ]

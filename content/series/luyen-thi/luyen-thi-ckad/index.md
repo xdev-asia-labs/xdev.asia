@@ -8,7 +8,7 @@ description: >-
   App Deployment (20%), Services & Networking (20%), App Observability (15%).
   10 bài học kèm bài tập thực hành terminal.
 
-featured_image: null
+featured_image: images/blog/luyen-thi-ckad-banner.png
 level: intermediate
 duration_hours: 28
 lesson_count: 10
