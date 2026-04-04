@@ -115,9 +115,9 @@ export default function LoginModal() {
                 <div className="px-8 py-4 bg-zinc-50 border-t border-zinc-100 text-center">
                     <p className="text-xs text-zinc-400">
                         Bằng việc đăng nhập, bạn đồng ý với{" "}
-                        <a href="/dieu-khoan-su-dung/" className="text-brand-600 hover:underline">Điều khoản</a>
+                        <a href="/pages/dieu-khoan-su-dung/" className="text-brand-600 hover:underline">Điều khoản</a>
                         {" "}và{" "}
-                        <a href="/chinh-sach-quyen-rieng-tu/" className="text-brand-600 hover:underline">Chính sách bảo mật</a>
+                        <a href="/pages/chinh-sach-quyen-rieng-tu/" className="text-brand-600 hover:underline">Chính sách bảo mật</a>
                     </p>
                 </div>
             </div>

@@ -17,6 +17,11 @@ course:
   slug: luyen-thi-aws-ml-specialty
 ---
 
+<div style="text-align: center; margin: 2rem 0;">
+<img src="/storage/uploads/2026/04/aws-mls-bai2-feature-engineering.png" alt="AWS ML Data Transformation Pipeline" style="max-width: 800px; width: 100%; border-radius: 12px;" />
+<p><em>Feature Engineering & Data Transformation: Glue, SageMaker Data Wrangler, và xử lý missing values</em></p>
+</div>
+
 <h2 id="overview"><strong>1. Data Transformation trong ML Pipeline</strong></h2>
 
 <p>Trước khi train model, raw data phải qua nhiều bước transformation. Đây là nguồn gốc của câu nói nổi tiếng: <em>"Garbage in, garbage out"</em>. Đề thi MLS-C01 thường hỏi kỹ thuật xử lý data và tools phù hợp.</p>

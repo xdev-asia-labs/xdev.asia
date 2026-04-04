@@ -307,6 +307,17 @@ function normalizeSeries(series: Series): Series {
   };
 }
 
+// Static content pages (content/pages/*.md)
+export function getStaticPage(slug: string): { title: string; content: string } | null {
+  type PageFrontmatter = { title: string; slug?: string };
+  const doc = readMdxDocument<PageFrontmatter>("pages", slug);
+  if (!doc) return null;
+  return {
+    title: doc.data.title,
+    content: renderMdxBodyToHtml(doc.content),
+  };
+}
+
 // Settings
 export function getSettings(): Settings {
   return readJSON<Settings>("settings.json");

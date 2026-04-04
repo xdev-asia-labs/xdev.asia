@@ -17,6 +17,11 @@ course:
   slug: luyen-thi-aws-ml-specialty
 ---
 
+<div style="text-align: center; margin: 2rem 0;">
+<img src="/storage/uploads/2026/04/aws-mls-bai1-data-ingestion.png" alt="AWS ML Data Repositories & Ingestion" style="max-width: 800px; width: 100%; border-radius: 12px;" />
+<p><em>Data Repositories & Ingestion: S3, Kinesis, Glue và Lake Formation trong ML pipeline</em></p>
+</div>
+
 <h2 id="overview"><strong>1. Tổng quan Data Engineering trong MLS-C01</strong></h2>
 
 <p>Domain Data Engineering chiếm <strong>20% đề thi MLS-C01</strong>. Đây là phần bắt buộc phải nắm vững — đề thi thường hỏi "Which service should be used to ingest/store/transform data for ML?"</p>
