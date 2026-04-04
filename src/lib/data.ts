@@ -9,6 +9,8 @@ import type {
     LessonSummary,
     Post,
     PostIndex,
+    Quiz,
+    QuizIndex,
     Review,
     Section,
     Series,
@@ -313,6 +315,21 @@ export function getSettings(): Settings {
 // Categories
 export function getCategories(): Category[] {
   return readJSON<Category[]>("categories.json");
+}
+
+// Quizzes (data/quizzes.json)
+export function getAllQuizzes(): QuizIndex[] {
+  const quizzes = readJSON<Quiz[]>("quizzes.json");
+  return quizzes.map(({ questions, ...rest }) => rest);
+}
+
+export function getQuiz(slug: string): Quiz | null {
+  const quizzes = readJSON<Quiz[]>("quizzes.json");
+  return quizzes.find((q) => q.slug === slug) || null;
+}
+
+export function getQuizSlugs(): string[] {
+  return readJSON<Quiz[]>("quizzes.json").map((q) => q.slug);
 }
 
 export function getBlogCategories(): Category[] {

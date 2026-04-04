@@ -1,5 +1,52 @@
 // Types matching the exported JSON data from Laravel
 
+export interface QuizQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correct: number;
+  explanation: string;
+  domain?: string;
+}
+
+export interface QuizDomain {
+  name: string;
+  weight?: number;
+  lessons: { title: string; slug: string }[];
+}
+
+export interface Quiz {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  icon: string;
+  provider: string;
+  level: string;
+  duration_minutes: number;
+  passing_score: number;
+  questions_count: number;
+  tags: string[];
+  series_slug?: string;
+  domains?: QuizDomain[];
+  questions: QuizQuestion[];
+}
+
+export interface QuizIndex {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  icon: string;
+  provider: string;
+  level: string;
+  duration_minutes: number;
+  passing_score: number;
+  questions_count: number;
+  tags: string[];
+  series_slug?: string;
+}
+
 export interface Author {
   id: string;
   name: string;

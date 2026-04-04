@@ -1,7 +1,7 @@
 [
   {
     "id": "019c9616-cat1-7001-a001-000000000001",
-    "name": "AI & Machine Learning",
+    "name": "AI & Học máy",
     "slug": "ai-machine-learning",
     "description": "Trí tuệ nhân tạo, học máy, deep learning và các mô hình ngôn ngữ lớn",
     "icon": "brain",
@@ -37,7 +37,7 @@
   },
   {
     "id": "019c9616-cat4-7004-a004-000000000004",
-    "name": "Database",
+    "name": "Cơ sở dữ liệu",
     "slug": "database",
     "description": "PostgreSQL, MySQL, MongoDB, thiết kế CSDL và tối ưu hiệu năng",
     "icon": "database",
@@ -49,7 +49,7 @@
   },
   {
     "id": "019c9616-cat5-7005-a005-000000000005",
-    "name": "Security",
+    "name": "Bảo mật",
     "slug": "security",
     "description": "Bảo mật ứng dụng, mã hóa dữ liệu, DevSecOps và compliance",
     "icon": "shield",
@@ -85,7 +85,7 @@
   },
   {
     "id": "019c9616-cat8-7008-a008-000000000008",
-    "name": "Cloud",
+    "name": "Điện toán đám mây",
     "slug": "cloud",
     "description": "AWS, GCP, Azure và các dịch vụ cloud computing",
     "icon": "cloud",
@@ -94,5 +94,17 @@
     "sort_order": 8,
     "posts_count": 0,
     "courses_count": 0
+  },
+  {
+    "id": "019c9616-cat9-7009-a009-000000000009",
+    "name": "Luyện thi chứng chỉ",
+    "slug": "luyen-thi",
+    "description": "Lộ trình ôn tập và thi thử các chứng chỉ AWS, Google Cloud, Azure",
+    "icon": "award",
+    "type": "course",
+    "parent_id": null,
+    "sort_order": 9,
+    "posts_count": 0,
+    "courses_count": 3
   }
 ]

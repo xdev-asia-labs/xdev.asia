@@ -1,0 +1,764 @@
+[
+    {
+        "id": "aws-ai-practitioner",
+        "title": "AWS Certified AI Practitioner (AIF-C01)",
+        "slug": "aws-ai-practitioner",
+        "description": "Practice exam for AWS Certified AI Practitioner — 20 questions covering all 5 domains",
+        "icon": "award",
+        "provider": "AWS",
+        "level": "Foundational",
+        "duration_minutes": 30,
+        "passing_score": 70,
+        "questions_count": 20,
+        "tags": [
+            "AWS",
+            "AI",
+            "Cloud",
+            "Bedrock",
+            "GenAI"
+        ],
+        "series_slug": "luyen-thi-aws-ai-practitioner",
+        "domains": [
+            {
+                "name": "Domain 1: Fundamentals of AI and ML",
+                "weight": 20,
+                "lessons": [
+                    {
+                        "title": "Bài 1: AI, ML & Deep Learning Concepts",
+                        "slug": "01-bai-1-ai-ml-deep-learning-concepts"
+                    },
+                    {
+                        "title": "Bài 2: ML Lifecycle & AWS AI Services",
+                        "slug": "02-bai-2-ml-lifecycle-aws-services"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 2: Fundamentals of Generative AI",
+                "weight": 24,
+                "lessons": [
+                    {
+                        "title": "Bài 3: Generative AI & Foundation Models",
+                        "slug": "03-bai-3-generative-ai-foundation-models"
+                    },
+                    {
+                        "title": "Bài 4: LLMs, Transformers & Multi-modal",
+                        "slug": "04-bai-4-llm-transformers-multimodal"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 3: Applications of Foundation Models",
+                "weight": 28,
+                "lessons": [
+                    {
+                        "title": "Bài 5: Prompt Engineering",
+                        "slug": "05-bai-5-prompt-engineering-techniques"
+                    },
+                    {
+                        "title": "Bài 6: RAG & Knowledge Bases",
+                        "slug": "06-bai-6-rag-vector-databases-knowledge-bases"
+                    },
+                    {
+                        "title": "Bài 7: Fine-tuning & Model Customization",
+                        "slug": "07-bai-7-fine-tuning-model-customization"
+                    },
+                    {
+                        "title": "Bài 8: Amazon Bedrock Deep Dive",
+                        "slug": "08-bai-8-amazon-bedrock-deep-dive"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 4: Guidelines for Responsible AI",
+                "weight": 14,
+                "lessons": [
+                    {
+                        "title": "Bài 9: Responsible AI — Fairness & Bias",
+                        "slug": "09-bai-9-responsible-ai-fairness-bias-transparency"
+                    },
+                    {
+                        "title": "Bài 10: AWS Responsible AI Tools",
+                        "slug": "10-bai-10-aws-responsible-ai-tools"
+                    }
+                ]
+            },
+            {
+                "name": "Domain 5: Security, Compliance & Governance",
+                "weight": 14,
+                "lessons": [
+                    {
+                        "title": "Bài 11: AI Security & Data Privacy",
+                        "slug": "11-bai-11-ai-security-data-privacy-compliance"
+                    },
+                    {
+                        "title": "Bài 12: Exam Strategy & Cheat Sheet",
+                        "slug": "12-bai-12-exam-strategy-cheat-sheet"
+                    }
+                ]
+            }
+        ],
+        "questions": [
+            {
+                "id": 1,
+                "domain": "Domain 2: Fundamentals of Generative AI",
+                "question": "What is a Foundation Model?",
+                "options": [
+                    "A model designed for only one specific task",
+                    "A large AI model pre-trained on broad data that can be adapted to many downstream tasks",
+                    "A model that only processes structured tabular data",
+                    "A model trained entirely using Reinforcement Learning"
+                ],
+                "correct": 1,
+                "explanation": "A Foundation Model is a large AI model pre-trained on vast, diverse datasets. It can be adapted to many downstream tasks through fine-tuning, RAG, or prompt engineering."
+            },
+            {
+                "id": 2,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "What is the PRIMARY purpose of Amazon Bedrock?",
+                "options": [
+                    "Managing relational databases",
+                    "Deploying containers on the cloud",
+                    "Accessing and using Foundation Models from multiple providers through a single API",
+                    "Monitoring cloud costs"
+                ],
+                "correct": 2,
+                "explanation": "Amazon Bedrock is a fully managed service that provides access to Foundation Models from multiple providers (Anthropic, Meta, Amazon, Mistral, etc.) through a single API for building generative AI applications."
+            },
+            {
+                "id": 3,
+                "domain": "Domain 1: Fundamentals of AI and ML",
+                "question": "How does Supervised Learning differ from Unsupervised Learning?",
+                "options": [
+                    "Supervised Learning does not require any data",
+                    "Supervised Learning uses labeled data to train the model",
+                    "Unsupervised Learning always produces more accurate results",
+                    "Supervised Learning can only be used for classification tasks"
+                ],
+                "correct": 1,
+                "explanation": "Supervised Learning uses labeled data (input-output pairs) to train models for classification or regression, while Unsupervised Learning discovers hidden patterns in unlabeled data (e.g., clustering)."
+            },
+            {
+                "id": 4,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "What problem does RAG (Retrieval-Augmented Generation) solve for LLMs?",
+                "options": [
+                    "It increases inference speed",
+                    "It reduces training costs",
+                    "It reduces hallucination by grounding responses in external knowledge sources",
+                    "It increases the context window size"
+                ],
+                "correct": 2,
+                "explanation": "RAG combines retrieval of relevant external data with generation, helping LLMs produce more accurate, fact-based answers by grounding responses in retrieved documents rather than relying solely on training knowledge."
+            },
+            {
+                "id": 5,
+                "domain": "Domain 2: Fundamentals of Generative AI",
+                "question": "A customer support chatbot gives inconsistent and overly creative answers to factual questions. Which inference parameter should be adjusted?",
+                "options": [
+                    "Increase temperature to 1.0",
+                    "Decrease temperature closer to 0",
+                    "Increase max tokens",
+                    "Increase top-k to 500"
+                ],
+                "correct": 1,
+                "explanation": "Lower temperature values (closer to 0) make the model more deterministic and focused, producing consistent and factual responses. Higher temperature values increase randomness and creativity."
+            },
+            {
+                "id": 6,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "Which prompting technique is MOST effective for improving a model's accuracy on complex mathematical reasoning tasks?",
+                "options": [
+                    "Zero-shot prompting",
+                    "Negative prompting",
+                    "Chain-of-Thought (CoT) prompting",
+                    "System prompting"
+                ],
+                "correct": 2,
+                "explanation": "Chain-of-Thought prompting instructs the model to reason step by step before giving a final answer. This significantly improves accuracy on math, logic, and multi-step reasoning tasks."
+            },
+            {
+                "id": 7,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "A company wants to build a Q&A assistant that answers questions from internal documents stored in Amazon S3. The documents are updated weekly. Which approach is MOST suitable?",
+                "options": [
+                    "Fine-tune a foundation model on the documents",
+                    "Use RAG with Amazon Bedrock Knowledge Bases",
+                    "Pre-train a custom model from scratch",
+                    "Use zero-shot prompting with a large context window"
+                ],
+                "correct": 1,
+                "explanation": "Amazon Bedrock Knowledge Bases provides managed RAG — it automatically chunks, embeds, and indexes S3 documents, retrieves relevant information per query, and stays current via auto-sync without model retraining."
+            },
+            {
+                "id": 8,
+                "domain": "Domain 2: Fundamentals of Generative AI",
+                "question": "Which Transformer architecture type is BEST suited for text generation tasks such as chatbots and content creation?",
+                "options": [
+                    "Encoder-only (e.g., BERT)",
+                    "Decoder-only (e.g., GPT, Claude)",
+                    "Encoder-Decoder (e.g., T5)",
+                    "Convolutional Neural Network (CNN)"
+                ],
+                "correct": 1,
+                "explanation": "Decoder-only architectures (like GPT, Claude, Llama) generate text autoregressively one token at a time and are the basis for most modern chatbots and text generators."
+            },
+            {
+                "id": 9,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "A retail company wants to build an AI assistant that can check inventory, process returns, and answer product questions from their catalog. Which Amazon Bedrock feature should they use?",
+                "options": [
+                    "Bedrock Guardrails",
+                    "Bedrock Knowledge Bases only",
+                    "Bedrock Agents with Action Groups and Knowledge Bases",
+                    "Bedrock Model Evaluation"
+                ],
+                "correct": 2,
+                "explanation": "Bedrock Agents can orchestrate multi-step tasks by calling APIs (action groups for inventory/returns) and retrieving information (knowledge bases for product catalog) — combining reasoning with actions."
+            },
+            {
+                "id": 10,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "Which technique allows fine-tuning a large language model while updating only a small fraction of the model's parameters?",
+                "options": [
+                    "Full fine-tuning",
+                    "LoRA (Low-Rank Adaptation)",
+                    "Continued pre-training",
+                    "RLHF (Reinforcement Learning from Human Feedback)"
+                ],
+                "correct": 1,
+                "explanation": "LoRA is a Parameter-Efficient Fine-Tuning (PEFT) technique that adds small trainable adapter matrices while freezing the original model weights — typically updating less than 1% of total parameters, reducing cost significantly."
+            },
+            {
+                "id": 11,
+                "domain": "Domain 4: Guidelines for Responsible AI",
+                "question": "What is the PRIMARY purpose of Amazon Bedrock Guardrails?",
+                "options": [
+                    "Accelerating model inference",
+                    "Implementing safety controls such as content filtering, denied topics, and PII detection for AI applications",
+                    "Compressing model size for deployment",
+                    "Managing billing and costs"
+                ],
+                "correct": 1,
+                "explanation": "Bedrock Guardrails implement safety controls including content filters (hate, violence, sexual), denied topics, word filters, PII detection/redaction, and contextual grounding checks — applied to both model inputs and outputs."
+            },
+            {
+                "id": 12,
+                "domain": "Domain 4: Guidelines for Responsible AI",
+                "question": "A hiring AI system consistently ranks male candidates higher than equally qualified female candidates. What is the MOST likely cause?",
+                "options": [
+                    "Measurement bias in data collection",
+                    "Selection bias in the training data reflecting historical hiring patterns",
+                    "The model's architecture is too complex",
+                    "The inference temperature is set too high"
+                ],
+                "correct": 1,
+                "explanation": "If training data contained historical hiring decisions that favored male candidates, the model would learn and reproduce that selection bias — the training data didn't represent the qualified population fairly."
+            },
+            {
+                "id": 13,
+                "domain": "Domain 4: Guidelines for Responsible AI",
+                "question": "Which AWS service can detect bias in ML model predictions and provide per-prediction explainability using SHAP values?",
+                "options": [
+                    "Amazon Rekognition",
+                    "Amazon SageMaker Clarify",
+                    "Amazon Bedrock Guardrails",
+                    "Amazon Comprehend"
+                ],
+                "correct": 1,
+                "explanation": "SageMaker Clarify provides pre-training bias detection (data analysis), post-training bias detection (prediction analysis across demographic groups), and model explainability through SHAP values."
+            },
+            {
+                "id": 14,
+                "domain": "Domain 4: Guidelines for Responsible AI",
+                "question": "A document processing application needs human review when AI-extracted data has low confidence. Which AWS service provides this human-in-the-loop capability?",
+                "options": [
+                    "Amazon SageMaker Ground Truth",
+                    "Amazon Augmented AI (A2I)",
+                    "Amazon Mechanical Turk directly",
+                    "Amazon Bedrock Agents"
+                ],
+                "correct": 1,
+                "explanation": "Amazon A2I provides human-in-the-loop workflows with built-in integration for Amazon Textract and Rekognition. It automatically triggers human review when AI confidence falls below a defined threshold."
+            },
+            {
+                "id": 15,
+                "domain": "Domain 5: Security, Compliance & Governance",
+                "question": "A financial services company wants to ensure Amazon Bedrock API calls do NOT traverse the public internet. What should they configure?",
+                "options": [
+                    "AWS Direct Connect only",
+                    "VPC endpoint (AWS PrivateLink) for Amazon Bedrock",
+                    "A VPN connection",
+                    "Amazon CloudFront distribution"
+                ],
+                "correct": 1,
+                "explanation": "A VPC interface endpoint (AWS PrivateLink) for Amazon Bedrock allows private connectivity from within a VPC without any traffic going through the public internet."
+            },
+            {
+                "id": 16,
+                "domain": "Domain 5: Security, Compliance & Governance",
+                "question": "According to the AWS Shared Responsibility Model, who is responsible for ensuring ML training data does not contain bias?",
+                "options": [
+                    "AWS",
+                    "The foundation model provider",
+                    "The customer",
+                    "Both AWS and the customer equally"
+                ],
+                "correct": 2,
+                "explanation": "Under the Shared Responsibility Model, customers are responsible for 'security IN the cloud' — including training data quality, bias detection, model selection, IAM, and ethical AI practices."
+            },
+            {
+                "id": 17,
+                "domain": "Domain 5: Security, Compliance & Governance",
+                "question": "A chatbot must NEVER reveal customer credit card numbers in responses. Which approach provides the STRONGEST guarantee?",
+                "options": [
+                    "Add 'never output credit card numbers' to the system prompt",
+                    "Fine-tune the model to avoid outputting PII",
+                    "Use Amazon Bedrock Guardrails with PII filters set to BLOCK",
+                    "Remove credit card numbers from the knowledge base"
+                ],
+                "correct": 2,
+                "explanation": "Bedrock Guardrails with PII filters provide programmatic detection and blocking of credit card numbers — this cannot be bypassed by prompt injection, unlike system prompts which are soft constraints."
+            },
+            {
+                "id": 18,
+                "domain": "Domain 5: Security, Compliance & Governance",
+                "question": "A company needs to discover which Amazon S3 buckets contain personally identifiable information (PII) before using the data for ML training. Which AWS service should they use?",
+                "options": [
+                    "Amazon Comprehend",
+                    "Amazon Macie",
+                    "Amazon Inspector",
+                    "AWS Config"
+                ],
+                "correct": 1,
+                "explanation": "Amazon Macie uses ML to automatically discover and classify sensitive data (including PII) stored in Amazon S3 buckets. Comprehend detects PII in text at runtime, but Macie is designed for S3-level data discovery."
+            },
+            {
+                "id": 19,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "A company wants to process 50,000 customer reviews overnight using a foundation model for sentiment analysis. Which Amazon Bedrock pricing model is MOST cost-effective?",
+                "options": [
+                    "On-Demand pricing",
+                    "Provisioned Throughput",
+                    "Batch Inference",
+                    "Free tier"
+                ],
+                "correct": 2,
+                "explanation": "Batch Inference is designed for large-scale, non-real-time workloads and offers up to 50% cost savings compared to on-demand pricing. Ideal for processing large datasets overnight."
+            },
+            {
+                "id": 20,
+                "domain": "Domain 3: Applications of Foundation Models",
+                "question": "A non-technical marketing team wants to experiment with generative AI applications without an AWS account or coding skills. Which AWS service should they use?",
+                "options": [
+                    "Amazon SageMaker Canvas",
+                    "Amazon Bedrock Console",
+                    "Amazon PartyRock",
+                    "Amazon Q Business"
+                ],
+                "correct": 2,
+                "explanation": "Amazon PartyRock is a free, no-code playground for generative AI that requires no AWS account. Users can build and share GenAI apps with drag-and-drop — ideal for experimentation and learning."
+            }
+        ]
+    },
+    {
+        "id": "aws-ml-specialty",
+        "title": "AWS Certified Machine Learning - Specialty",
+        "slug": "aws-ml-specialty",
+        "description": "Luyện thi chứng chỉ AWS ML Specialty — build, train, deploy ML trên AWS",
+        "icon": "award",
+        "provider": "AWS",
+        "level": "Chuyên gia",
+        "duration_minutes": 180,
+        "passing_score": 75,
+        "questions_count": 15,
+        "tags": [
+            "AWS",
+            "ML",
+            "SageMaker"
+        ],
+        "series_slug": "luyen-thi-aws-ml-specialty",
+        "questions": [
+            {
+                "id": 1,
+                "question": "SageMaker built-in algorithm nào phù hợp nhất cho bài toán phát hiện bất thường (anomaly detection)?",
+                "options": [
+                    "XGBoost",
+                    "Random Cut Forest",
+                    "BlazingText",
+                    "DeepAR"
+                ],
+                "correct": 1,
+                "explanation": "Random Cut Forest (RCF) là thuật toán unsupervised trong SageMaker, chuyên detect anomaly trong dữ liệu streaming hoặc time series."
+            },
+            {
+                "id": 2,
+                "question": "Feature Store trong SageMaker dùng để làm gì?",
+                "options": [
+                    "Lưu trữ mô hình đã train",
+                    "Quản lý và chia sẻ features giữa các team ML, đảm bảo consistency",
+                    "Giám sát endpoint inference",
+                    "Quản lý IAM policies"
+                ],
+                "correct": 1,
+                "explanation": "SageMaker Feature Store là kho lưu trữ features centralized, giúp các team ML chia sẻ features, tránh duplicate work, và đảm bảo tính nhất quán giữa training và inference."
+            },
+            {
+                "id": 3,
+                "question": "SageMaker sử dụng mode nào để train trên nhiều instance cùng lúc?",
+                "options": [
+                    "Pipe mode",
+                    "Distributed training mode",
+                    "File mode",
+                    "Batch mode"
+                ],
+                "correct": 1,
+                "explanation": "SageMaker hỗ trợ distributed training cho phép chia workload training ra nhiều instances (data parallelism hoặc model parallelism) để tăng tốc."
+            },
+            {
+                "id": 4,
+                "question": "SageMaker Model Monitor phát hiện loại drift nào?",
+                "options": [
+                    "Chỉ concept drift",
+                    "Data quality, model quality, bias drift, và feature attribution drift",
+                    "Chỉ data drift",
+                    "Chỉ bias drift"
+                ],
+                "correct": 1,
+                "explanation": "SageMaker Model Monitor phát hiện 4 loại: Data Quality (thay đổi schema/statistics), Model Quality (độ chính xác giảm), Bias Drift (bias thay đổi), Feature Attribution Drift (feature importance thay đổi)."
+            },
+            {
+                "id": 5,
+                "question": "Khi nào nên dùng SageMaker Inference Pipeline?",
+                "options": [
+                    "Khi cần chạy batch transform",
+                    "Khi cần chain nhiều bước xử lý (preprocessing → model → postprocessing) trong một endpoint",
+                    "Khi cần train nhiều model",
+                    "Khi cần A/B testing"
+                ],
+                "correct": 1,
+                "explanation": "Inference Pipeline cho phép chain tối đa 15 containers trong một endpoint — ví dụ: data preprocessing → feature engineering → model prediction → postprocessing."
+            },
+            {
+                "id": 6,
+                "question": "BlazingText trong SageMaker được dùng cho tác vụ nào?",
+                "options": [
+                    "Object detection",
+                    "Word2Vec và text classification",
+                    "Time series forecasting",
+                    "Recommender systems"
+                ],
+                "correct": 1,
+                "explanation": "BlazingText là implementation siêu nhanh của Word2Vec và nhận diện text classification. Nó hỗ trợ training trên multi-GPU với tốc độ rất cao."
+            },
+            {
+                "id": 7,
+                "question": "SageMaker Ground Truth được sử dụng để?",
+                "options": [
+                    "Deploy model lên production",
+                    "Tạo labeled datasets với hỗ trợ của human annotators và active learning",
+                    "Tối ưu hyperparameter",
+                    "Giám sát chi phí training"
+                ],
+                "correct": 1,
+                "explanation": "Ground Truth là dịch vụ data labeling, kết hợp human annotators (Amazon Mechanical Turk, private team, hoặc vendors) với active learning để giảm chi phí labeling."
+            },
+            {
+                "id": 8,
+                "question": "Elastic Inference trong SageMaker dùng để?",
+                "options": [
+                    "Tăng dung lượng storage",
+                    "Gắn GPU fractional vào instance để giảm chi phí inference",
+                    "Tự động scale số lượng model",
+                    "Nén model để deploy nhanh"
+                ],
+                "correct": 1,
+                "explanation": "Elastic Inference cho phép gắn GPU acceleration với chi phí thấp vào SageMaker endpoints hoặc notebook instances — chỉ trả tiền cho GPU resource thực sự dùng."
+            },
+            {
+                "id": 9,
+                "question": "Chiến lược nào giúp xử lý dữ liệu mất cân bằng (imbalanced dataset)?",
+                "options": [
+                    "Chỉ dùng accuracy làm metric",
+                    "SMOTE (oversampling), undersampling, class weights, hoặc ensemble methods",
+                    "Tăng learning rate",
+                    "Giảm số epoch training"
+                ],
+                "correct": 1,
+                "explanation": "Imbalanced data cần kỹ thuật đặc biệt: SMOTE tạo thêm sample cho class thiểu số, undersampling giảm class đa số, hoặc điều chỉnh class weights trong loss function."
+            },
+            {
+                "id": 10,
+                "question": "SageMaker Clarify dùng để?",
+                "options": [
+                    "Tối ưu hyperparameter",
+                    "Phát hiện bias trong dữ liệu và mô hình, giải thích dự đoán (explainability)",
+                    "Quản lý experiment",
+                    "Xây dựng data pipeline"
+                ],
+                "correct": 1,
+                "explanation": "SageMaker Clarify giúp phát hiện bias trong data và model, cung cấp feature importance (SHAP values), hỗ trợ Responsible AI và regulatory compliance."
+            },
+            {
+                "id": 11,
+                "question": "DeepAR trong SageMaker được dùng cho bài toán nào?",
+                "options": [
+                    "Image classification",
+                    "Dự báo chuỗi thời gian (time series forecasting)",
+                    "Text summarization",
+                    "Object detection"
+                ],
+                "correct": 1,
+                "explanation": "DeepAR là thuật toán RNN-based cho time series forecasting, đặc biệt hiệu quả khi có nhiều chuỗi thời gian liên quan (cold-start problem)."
+            },
+            {
+                "id": 12,
+                "question": "Multi-Model Endpoint trong SageMaker có ưu điểm gì?",
+                "options": [
+                    "Chỉ hỗ trợ GPU instances",
+                    "Host nhiều model trên cùng một endpoint, giảm chi phí khi có nhiều model ít traffic",
+                    "Tăng tốc training",
+                    "Chỉ support PyTorch"
+                ],
+                "correct": 1,
+                "explanation": "Multi-Model Endpoint cho phép host hàng trăm model trên cùng endpoint, load model on-demand — tiết kiệm chi phí rất lớn so với mỗi model một endpoint riêng."
+            },
+            {
+                "id": 13,
+                "question": "Khi nào nên dùng SageMaker Batch Transform thay vì Real-time Endpoint?",
+                "options": [
+                    "Khi cần inference nhanh, real-time",
+                    "Khi cần xử lý inference cho dataset lớn không cần response ngay lập tức",
+                    "Khi cần A/B testing",
+                    "Khi cần model auto-scaling"
+                ],
+                "correct": 1,
+                "explanation": "Batch Transform phù hợp khi cần inference lượng lớn dữ liệu, không cần response real-time — ví dụ: nightly scoring, preprocessing dataset lớn."
+            },
+            {
+                "id": 14,
+                "question": "SageMaker Autopilot là gì?",
+                "options": [
+                    "Tool deploy model tự động",
+                    "AutoML — tự động phân tích data, thử nhiều algorithms, và chọn model tốt nhất",
+                    "Tool giám sát endpoint",
+                    "Framework training distributed"
+                ],
+                "correct": 1,
+                "explanation": "SageMaker Autopilot là giải pháp AutoML, tự động phân tích data, feature engineering, thử nhiều algorithms/hyperparameters, và đề xuất model tốt nhất — kèm notebook giải thích."
+            },
+            {
+                "id": 15,
+                "question": "Pipe Mode trong SageMaker training có lợi ích gì?",
+                "options": [
+                    "Tăng kích thước model",
+                    "Stream dữ liệu trực tiếp từ S3 vào training container, không cần download toàn bộ trước",
+                    "Giảm thời gian deploy",
+                    "Tự động chọn algorithm"
+                ],
+                "correct": 1,
+                "explanation": "Pipe Mode stream dữ liệu từ S3 vào training container thay vì copy toàn bộ (File Mode) — giảm startup time và disk requirement, đặc biệt hiệu quả với dataset lớn."
+            }
+        ]
+    },
+    {
+        "id": "gcp-ml-engineer",
+        "title": "Google Cloud Professional ML Engineer",
+        "slug": "gcp-ml-engineer",
+        "description": "Luyện thi chứng chỉ Google Cloud Professional Machine Learning Engineer",
+        "icon": "award",
+        "provider": "Google Cloud",
+        "level": "Chuyên nghiệp",
+        "duration_minutes": 120,
+        "passing_score": 70,
+        "questions_count": 15,
+        "tags": [
+            "GCP",
+            "ML",
+            "Vertex AI"
+        ],
+        "series_slug": "luyen-thi-gcp-ml-engineer",
+        "questions": [
+            {
+                "id": 1,
+                "question": "Vertex AI Pipeline được xây dựng trên framework nào?",
+                "options": [
+                    "Apache Spark",
+                    "Kubeflow Pipelines / TFX",
+                    "Apache Airflow",
+                    "Jenkins"
+                ],
+                "correct": 1,
+                "explanation": "Vertex AI Pipelines dựa trên Kubeflow Pipelines SDK và TFX (TensorFlow Extended), cho phép orchestrate ML workflow trên Google Cloud."
+            },
+            {
+                "id": 2,
+                "question": "BigQuery ML cho phép làm gì đặc biệt?",
+                "options": [
+                    "Chỉ query dữ liệu",
+                    "Train và deploy ML model trực tiếp bằng SQL trong BigQuery",
+                    "Chỉ export dữ liệu sang CSV",
+                    "Quản lý Kubernetes cluster"
+                ],
+                "correct": 1,
+                "explanation": "BigQuery ML (BQML) cho phép data analysts train model ML bằng SQL quen thuộc ngay trong BigQuery — không cần viết Python hay setup infrastructure riêng."
+            },
+            {
+                "id": 3,
+                "question": "Vertex AI Feature Store khác gì so với lưu features trong database thông thường?",
+                "options": [
+                    "Không có gì khác",
+                    "Hỗ trợ serving features với low-latency, đảm bảo training-serving consistency, và feature versioning",
+                    "Chỉ hỗ trợ structured data",
+                    "Chỉ dùng được với TensorFlow"
+                ],
+                "correct": 1,
+                "explanation": "Feature Store chuyên biệt cho ML: serving features online (low-latency) và offline (batch), đảm bảo features đồng nhất giữa training và serving, hỗ trợ time-travel và monitoring."
+            },
+            {
+                "id": 4,
+                "question": "Khi nào nên dùng AutoML thay vì custom training trên Vertex AI?",
+                "options": [
+                    "Khi cần kiểm soát hoàn toàn architecture",
+                    "Khi team không có nhiều ML expertise hoặc cần baseline model nhanh",
+                    "Khi dataset rất lớn (>1TB)",
+                    "Khi cần distributed training"
+                ],
+                "correct": 1,
+                "explanation": "AutoML phù hợp khi cần model nhanh, team có ít ML expertise, hoặc cần baseline. Custom training khi cần kiểm soát architecture, thuật toán đặc thù, hoặc tối ưu sâu."
+            },
+            {
+                "id": 5,
+                "question": "Vertex AI Experiments dùng để?",
+                "options": [
+                    "Deploy model lên production",
+                    "Track, compare và reproduce ML experiments (hyperparameters, metrics, artifacts)",
+                    "Tạo dataset mới",
+                    "Quản lý IAM"
+                ],
+                "correct": 1,
+                "explanation": "Vertex AI Experiments cung cấp experiment tracking: log hyperparameters, metrics, model artifacts — cho phép compare nhiều runs và reproduce kết quả."
+            },
+            {
+                "id": 6,
+                "question": "TFX (TensorFlow Extended) bao gồm những component chính nào?",
+                "options": [
+                    "Chỉ có ExampleGen và Trainer",
+                    "ExampleGen, StatisticsGen, SchemaGen, ExampleValidator, Transform, Trainer, Evaluator, Pusher",
+                    "Chỉ có Trainer và Serving",
+                    "Chỉ có Transform và Evaluator"
+                ],
+                "correct": 1,
+                "explanation": "TFX là end-to-end ML platform gồm: ExampleGen (ingest), StatisticsGen + SchemaGen + ExampleValidator (validate), Transform (feature eng), Trainer, Tuner, Evaluator, Pusher (deploy)."
+            },
+            {
+                "id": 7,
+                "question": "Vertex AI Model Monitoring kiểm tra điều gì?",
+                "options": [
+                    "Chỉ monitor CPU/memory",
+                    "Skew (training-serving) và drift (prediction data thay đổi theo thời gian)",
+                    "Chỉ monitor latency",
+                    "Chỉ monitor cost"
+                ],
+                "correct": 1,
+                "explanation": "Model Monitoring phát hiện: training-serving skew (feature distribution khác nhau) và prediction drift (dữ liệu production drift khỏi baseline), trigger alert khi vượt threshold."
+            },
+            {
+                "id": 8,
+                "question": "Google Cloud AI Platform Prediction hỗ trợ chiến lược deploy nào?",
+                "options": [
+                    "Chỉ single model deployment",
+                    "Traffic splitting cho A/B testing và canary deployments",
+                    "Chỉ batch prediction",
+                    "Chỉ edge deployment"
+                ],
+                "correct": 1,
+                "explanation": "Vertex AI Prediction hỗ trợ traffic splitting: có thể route % traffic sang model versions khác nhau — phục vụ A/B testing, canary release, và progressive rollout."
+            },
+            {
+                "id": 9,
+                "question": "Dataflow trong ML pipeline đóng vai trò gì?",
+                "options": [
+                    "Training model",
+                    "Xử lý dữ liệu quy mô lớn (batch & streaming) cho data preprocessing/feature engineering",
+                    "Deploy model",
+                    "Monitor model"
+                ],
+                "correct": 1,
+                "explanation": "Dataflow (dựa trên Apache Beam) xử lý data ở scale lớn: ETL, feature engineering cho cả batch và streaming — bước tiền xử lý quan trọng trong ML pipeline."
+            },
+            {
+                "id": 10,
+                "question": "Vertex AI Matching Engine dùng cho bài toán nào?",
+                "options": [
+                    "Training model",
+                    "Tìm kiếm nearest neighbor (vector similarity search) ở quy mô lớn",
+                    "Data labeling",
+                    "Model serving thông thường"
+                ],
+                "correct": 1,
+                "explanation": "Matching Engine là managed approximate nearest neighbor (ANN) service — dùng cho similarity search, recommendation, RAG retrieval ở quy mô tỷ vectors."
+            },
+            {
+                "id": 11,
+                "question": "Vertex AI Workbench khác gì Colab Enterprise?",
+                "options": [
+                    "Giống hệt nhau",
+                    "Workbench là JupyterLab managed instances cho ML production, Colab Enterprise cho collaboration và exploration",
+                    "Workbench chỉ support R",
+                    "Colab Enterprise chỉ dùng miễn phí"
+                ],
+                "correct": 1,
+                "explanation": "Workbench cung cấp JupyterLab managed instances với tích hợp sâu vào GCP services (BigQuery, GCS) cho production ML. Colab Enterprise thiên về collaboration, sharing và exploration."
+            },
+            {
+                "id": 12,
+                "question": "Kỹ thuật nào giảm kích thước model để deploy trên edge devices?",
+                "options": [
+                    "Tăng layers",
+                    "Quantization, pruning, knowledge distillation",
+                    "Tăng batch size",
+                    "Dùng thêm GPU"
+                ],
+                "correct": 1,
+                "explanation": "Model compression: Quantization (giảm precision: FP32→INT8), Pruning (loại bỏ weights/neurons không quan trọng), Knowledge Distillation (teacher model dạy student model nhỏ hơn)."
+            },
+            {
+                "id": 13,
+                "question": "Vertex AI GenAI Studio dùng để?",
+                "options": [
+                    "Chỉ train model từ đầu",
+                    "Prototyping, testing, và tuning Foundation Models (PaLM, Gemini) trên Google Cloud",
+                    "Quản lý billing",
+                    "Giám sát network"
+                ],
+                "correct": 1,
+                "explanation": "GenAI Studio cung cấp UI và API để thử nghiệm Foundation Models, prompt design, tuning, và deploy — không cần ML expertise sâu."
+            },
+            {
+                "id": 14,
+                "question": "Khi data có nhiều missing values, chiến lược nào phù hợp?",
+                "options": [
+                    "Luôn xoá rows có missing values",
+                    "Tuỳ context: imputation (mean/median/mode, KNN, model-based), hoặc tạo indicator feature cho missingness",
+                    "Luôn fill bằng 0",
+                    "Bỏ qua và train trực tiếp"
+                ],
+                "correct": 1,
+                "explanation": "Xử lý missing values tuỳ thuộc vào pattern (MCAR/MAR/MNAR): imputation thống kê (mean/median), model-based (KNN, MICE), hoặc thêm feature indicator. Xoá rows chỉ khi missing ít và MCAR."
+            },
+            {
+                "id": 15,
+                "question": "Continuous Training (CT) trong MLOps là gì?",
+                "options": [
+                    "Train model chỉ một lần",
+                    "Tự động retrain model khi phát hiện trigger (data drift, schedule, hoặc performance degradation)",
+                    "Train model thủ công hàng tuần",
+                    "Chỉ dùng cho deep learning"
+                ],
+                "correct": 1,
+                "explanation": "Continuous Training tự động kích hoạt retrain pipeline khi: data mới đến (scheduled), data drift vượt threshold, hoặc model performance giảm — đảm bảo model luôn fresh."
+            }
+        ]
+    }
+]

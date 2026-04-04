@@ -66,10 +66,11 @@ export default function Footer() {
                         <h4 className="footer-heading">Khám phá</h4>
                         <ul className="space-y-2.5">
                             {[
-                                { href: "/blog/", label: "Blog" },
-                                { href: "/series/", label: "Series" },
-                                { href: "/showcase/", label: "Showcase" },
-                                { href: "/bookmarks/", label: "Bookmark" },
+                                { href: "/blog/", label: "Bài viết" },
+                                { href: "/series/", label: "Khoá học" },
+                                { href: "/showcase/", label: "Sản phẩm" },
+                                { href: "/luyen-thi/", label: "Luyện thi" },
+                                { href: "/bookmarks/", label: "Đã lưu" },
                                 { href: "/search/", label: "Tìm kiếm" },
                             ].map((link) => (
                                 <li key={link.href}>

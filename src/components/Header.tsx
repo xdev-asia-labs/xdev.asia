@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket, IconPlug } from "./Icons";
+import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket, IconPlug, IconAward } from "./Icons";
 import DarkModeToggle from "./DarkModeToggle";
 import UserMenu from "./UserMenu";
 
@@ -22,6 +22,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: 
     rocket: IconRocket,
     layers: IconServer,
     cloud: IconServer,
+    award: IconAward,
 };
 
 function TopicIcon({ icon, size = 16, className }: { icon: string; size?: number; className?: string }) {
@@ -42,9 +43,10 @@ export interface NavTopic {
    Main nav links
    ──────────────────────────────────────── */
 const navLinks = [
-    { href: "/blog/", label: "Blog" },
-    { href: "/series/", label: "Series" },
-    { href: "/showcase/", label: "Showcase" },
+    { href: "/blog/", label: "Bài viết" },
+    { href: "/series/", label: "Khoá học" },
+    { href: "/showcase/", label: "Sản phẩm" },
+    { href: "/luyen-thi/", label: "Luyện thi" },
 ];
 
 export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
