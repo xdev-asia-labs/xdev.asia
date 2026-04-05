@@ -9,7 +9,6 @@ import {
   getSeriesLessonSlugs,
   getAvailableTopics,
 } from "@/lib/data";
-import { getAllShowcaseItems } from "@/lib/showcase-server";
 
 const SITE_URL = "https://xdev.asia";
 
@@ -35,12 +34,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/showcase/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
     },
     {
       url: `${SITE_URL}/search/`,
@@ -105,15 +98,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  // Showcase pages
-  const showcaseItems = getAllShowcaseItems();
-  const showcasePages: MetadataRoute.Sitemap = showcaseItems.map((item) => ({
-    url: `${SITE_URL}/showcase/${item.data.slug}/`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
-
   return [
     ...staticPages,
     ...postPages,
@@ -121,6 +105,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...categoryPages,
     ...seriesPages,
     ...lessonPages,
-    ...showcasePages,
   ];
 }

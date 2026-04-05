@@ -45,7 +45,6 @@ export interface NavTopic {
 const navLinks = [
     { href: "/blog/", label: "Bài viết" },
     { href: "/series/", label: "Khoá học" },
-    { href: "/showcase/", label: "Sản phẩm" },
     { href: "/luyen-thi/", label: "Luyện thi" },
 ];
 

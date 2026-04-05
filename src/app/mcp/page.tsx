@@ -9,13 +9,12 @@ export const metadata: Metadata = {
 };
 
 const knowledgeTools = [
-    { name: "search_xdev_knowledge", desc: "Tìm kiếm toàn bộ knowledge base — series, blog, showcase", icon: "🔍" },
+    { name: "search_xdev_knowledge", desc: "Tìm kiếm toàn bộ knowledge base — series, blog", icon: "🔍" },
     { name: "list_series", desc: "Liệt kê 62 series, lọc theo 4 categories", icon: "📚" },
     { name: "list_lessons", desc: "Xem danh sách bài học trong bất kỳ series nào", icon: "📄" },
     { name: "read_series", desc: "Đọc overview & mục lục series", icon: "📖" },
     { name: "read_lesson", desc: "Đọc nội dung chi tiết từng bài học", icon: "📝" },
     { name: "list_blog_posts", desc: "Duyệt blog posts theo 8 chủ đề", icon: "✍️" },
-    { name: "list_showcases", desc: "Khám phá các sản phẩm & dự án", icon: "🚀" },
     { name: "read_content", desc: "Đọc bất kỳ file markdown nào", icon: "📂" },
     { name: "xdev_stats", desc: "Thống kê tổng quan nội dung", icon: "📊" },
 ];
@@ -227,12 +226,11 @@ export default function MCPPage() {
 
                         {/* Content Sources (below the server) */}
                         <div className="mt-8 flex justify-center">
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg">
                                 {[
                                     { icon: "📚", label: "62 Series" },
                                     { icon: "📄", label: "1.231 Lessons" },
                                     { icon: "✍️", label: "15 Blog Posts" },
-                                    { icon: "🚀", label: "7 Showcases" },
                                 ].map((item) => (
                                     <div key={item.label} className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-xs font-medium text-zinc-700 dark:text-zinc-300">
                                         <span>{item.icon}</span> {item.label}

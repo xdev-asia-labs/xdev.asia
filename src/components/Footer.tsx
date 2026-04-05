@@ -68,7 +68,6 @@ export default function Footer() {
                             {[
                                 { href: "/blog/", label: "Bài viết" },
                                 { href: "/series/", label: "Khoá học" },
-                                { href: "/showcase/", label: "Sản phẩm" },
                                 { href: "/luyen-thi/", label: "Luyện thi" },
                                 { href: "/bookmarks/", label: "Đã lưu" },
                                 { href: "/search/", label: "Tìm kiếm" },

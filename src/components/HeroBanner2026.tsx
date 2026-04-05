@@ -1,6 +1,6 @@
 import { AnimatedCounter } from "@/components/AnimatedBackground";
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
-import { IconArrowRight, IconBook, IconCode, IconRocket } from "@/components/Icons";
+import { IconArrowRight, IconBook, IconCode } from "@/components/Icons";
 import Link from "next/link";
 
 interface HeroBannerProps {
@@ -10,7 +10,6 @@ interface HeroBannerProps {
     profileLabel?: string;
     postCount: number;
     seriesCount: number;
-    projectCount: number;
 }
 
 export default function HeroBanner2026({
@@ -19,12 +18,10 @@ export default function HeroBanner2026({
     profileLabel = "Personal Tech Blog · 2026",
     postCount,
     seriesCount,
-    projectCount,
 }: HeroBannerProps) {
     const stats = [
         { value: postCount, label: "Bài viết", icon: IconCode },
         { value: seriesCount, label: "Series", icon: IconBook },
-        { value: projectCount, label: "Projects", icon: IconRocket },
     ];
 
     return (

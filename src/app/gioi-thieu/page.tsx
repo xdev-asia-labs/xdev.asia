@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts, getAllSeries, getSettings } from "@/lib/data";
-import { showcaseRepos } from "@/lib/showcase-server";
-import { IconGitHub, IconArrowRight, IconBook, IconCode, IconRocket } from "@/components/Icons";
+import { IconGitHub, IconArrowRight, IconBook, IconCode } from "@/components/Icons";
 
 const SITE_URL = "https://xdev.asia";
 
@@ -33,7 +32,6 @@ export default function AboutPage() {
     const settings = getSettings();
     const allPosts = getAllPosts();
     const allSeries = getAllSeries();
-    const projectCount = showcaseRepos.length;
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -53,7 +51,6 @@ export default function AboutPage() {
     const stats = [
         { label: "Bài viết", value: allPosts.length, icon: IconCode },
         { label: "Series", value: allSeries.length, icon: IconBook },
-        { label: "Dự án OSS", value: projectCount, icon: IconRocket },
     ];
 
     return (
@@ -105,7 +102,7 @@ export default function AboutPage() {
             {/* ─── Stats ─── */}
             <section className="py-10 lg:py-14">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                         {stats.map((stat) => (
                             <div
                                 key={stat.label}

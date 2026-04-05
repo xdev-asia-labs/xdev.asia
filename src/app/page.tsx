@@ -1,13 +1,11 @@
 import HeroBanner2026 from "@/components/HeroBanner2026";
-import { IconArrowRight, IconBook, IconBrain, IconCode, IconRocket } from "@/components/Icons";
+import { IconArrowRight, IconBook, IconBrain, IconCode } from "@/components/Icons";
 import NewsletterForm from "@/components/NewsletterForm";
 import PostCard from "@/components/PostCard";
 import ScrollReveal from "@/components/ScrollReveal";
 import SeriesCard from "@/components/SeriesCard";
-import { RepoCard } from "@/components/ShowcaseCard";
 import SkeletonImage from "@/components/SkeletonImage";
 import { formatDate, getAllPosts, getAllSeries, getSeriesByCategory, getSettings } from "@/lib/data";
-import { showcaseApps, showcaseRepos } from "@/lib/showcase-server";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -68,7 +66,6 @@ export default function Home() {
     const settings = getSettings();
     const profileName = settings.profile_name || "Duy Tran";
     const profileUrl = settings.profile_url || `${SITE_URL}/gioi-thieu/`;
-    const featuredRepos = showcaseRepos.slice(0, 3);
 
     const featuredPost = posts[0];
     const sidePosts = posts.slice(1);
@@ -106,7 +103,6 @@ export default function Home() {
                 profileLabel={settings.profile_label || "Personal Tech Blog · 2026"}
                 postCount={allPosts.length}
                 seriesCount={allSeriesItems.length}
-                projectCount={showcaseApps.length + showcaseRepos.length}
             />
 
             {/* ─── AI & Machine Learning — Dark accent section ─── */}
@@ -299,39 +295,6 @@ export default function Home() {
                                 <div key={post.id} className="bento-small">
                                     <PostCard post={post} />
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
-
-            {/* ─── Open Source ─── */}
-            {featuredRepos.length > 0 && (
-                <section className="py-14 lg:py-18">
-                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <ScrollReveal>
-                            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                                <div>
-                                    <div className="section-label">
-                                        <IconRocket size={14} />
-                                        Open Source
-                                    </div>
-                                    <h2 className="section-title">Open Source Projects</h2>
-                                    <p className="section-subtitle">
-                                        Các dự án mã nguồn mở mình đã xây dựng.
-                                    </p>
-                                </div>
-                                <Link href="/showcase/" className="link-brand shrink-0 self-start md:self-auto">
-                                    Xem tất cả
-                                    <IconArrowRight size={14} />
-                                </Link>
-                            </div>
-                        </ScrollReveal>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {featuredRepos.map((repo, index) => (
-                                <ScrollReveal key={repo.id} delay={index * 100}>
-                                    <RepoCard repo={repo} />
-                                </ScrollReveal>
                             ))}
                         </div>
                     </div>
