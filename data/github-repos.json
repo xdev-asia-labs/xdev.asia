@@ -11,10 +11,10 @@
     "default_branch": "main",
     "html_url": "https://github.com/xdev-asia-labs/xClaw",
     "updated_at": "2026-04-01T07:08:46Z",
-    "fetched_at": "2026-04-03T05:21:14.617Z"
+    "fetched_at": "2026-04-04T20:18:41.202Z"
   },
   "xdev-asia": {
-    "description": "",
+    "description": "Xin chào, mình là Duy Tran Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế",
     "stars": 0,
     "forks": 0,
     "language": "TypeScript",
@@ -24,8 +24,8 @@
     "archived": false,
     "default_branch": "main",
     "html_url": "https://github.com/xdev-asia-labs/xdev.asia",
-    "updated_at": "2026-04-03T05:10:38Z",
-    "fetched_at": "2026-04-03T05:21:14.710Z"
+    "updated_at": "2026-04-04T20:15:26Z",
+    "fetched_at": "2026-04-04T20:18:42.117Z"
   },
   "autox": {
     "description": "Open-source AI Agent platform with Gateway architecture, multi-channel support (Telegram, Discord), drag-and-drop Workflow Builder, and CLI interface",
@@ -39,6 +39,6 @@
     "default_branch": "main",
     "html_url": "https://github.com/xdev-asia-labs/xClaw",
     "updated_at": "2026-04-01T07:08:46Z",
-    "fetched_at": "2026-04-03T05:21:14.771Z"
+    "fetched_at": "2026-04-04T20:18:42.441Z"
   }
 }

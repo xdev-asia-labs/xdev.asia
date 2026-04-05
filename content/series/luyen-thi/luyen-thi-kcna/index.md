@@ -43,7 +43,7 @@ tags:
 - name: Chứng chỉ
   slug: chung-chi
 - name: DevOps
-    slug: devops
+  slug: devops
 
 quiz_slug: kcna
 
