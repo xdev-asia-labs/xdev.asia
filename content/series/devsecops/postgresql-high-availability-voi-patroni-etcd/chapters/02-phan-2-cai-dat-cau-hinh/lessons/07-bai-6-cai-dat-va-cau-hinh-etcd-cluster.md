@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-7951" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-7951)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="785" cy="85" r="28" fill="#fb923c" opacity="0.1"/>
+    <circle cx="970" cy="190" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="655" cy="35" r="18" fill="#fb923c" opacity="0.1"/>
+    <circle cx="840" cy="140" r="13" fill="#fb923c" opacity="0.05"/>
+    <circle cx="1025" cy="245" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <line x1="600" y1="155" x2="1100" y2="235" stroke="#fb923c" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="185" x2="1050" y2="255" stroke="#fb923c" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="980.9807621135332,140 980.9807621135332,170 955,185 929.0192378864668,170 929.0192378864668,140 955,125" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fb923c"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fb923c" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fb923c">🔒 DevSecOps — Bài 6</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 6: Cài đặt và cấu hình etcd cluster</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 2: Cài đặt &amp; Cấu hình</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Hiểu vai trò của etcd trong Patroni architecture</li><li>Download và cài đặt etcd trên 3 nodes</li><li>Cấu hình etcd cluster với Raft consensus</li><li>Tạo systemd service cho etcd</li><li>Kiểm tra health của etcd cluster</li><li>Sử dụng etcdctl commands cơ bản</li></ul><h2 id="1-gi%E1%BB%9Bi-thi%E1%BB%87u-etcd">1. Giới thiệu etcd</h2><h3 id="11-etcd-l%C3%A0-g%C3%AC">1.1. etcd là gì?</h3><p>etcd là distributed, reliable key-value store sử dụng Raft consensus algorithm. Được CoreOS phát triển và hiện là project của CNCF (Cloud Native Computing Foundation).</p><p><strong>Đặc điểm chính</strong>:</p><ul><li>🔐&nbsp;<strong>Strongly consistent</strong>: Đảm bảo consistency với Raft</li><li>🚀&nbsp;<strong>Fast</strong>: Sub-millisecond latency cho reads</li><li>🔄&nbsp;<strong>Distributed</strong>: Chạy multi-node cluster với quorum</li><li>📡&nbsp;<strong>Watch mechanism</strong>: Real-time notifications cho changes</li><li>🔒&nbsp;<strong>TTL support</strong>: Automatic key expiration (cho leader locks)</li><li>🌐&nbsp;<strong>gRPC + HTTP API</strong>: Easy integration</li></ul><h3 id="12-etcd-trong-patroni-architecture">1.2. etcd trong Patroni Architecture</h3><pre><code>┌──────────────────────────────────┐
 │      etcd Cluster (3 nodes)      │
 │  ┌─────┐   ┌─────┐   ┌─────┐    │

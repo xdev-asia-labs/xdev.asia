@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-8943" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-8943)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="905" cy="185" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="710" cy="150" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="1015" cy="115" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="820" cy="80" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="625" cy="45" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <line x1="600" y1="115" x2="1100" y2="195" stroke="#fb923c" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="145" x2="1050" y2="215" stroke="#fb923c" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="940.9807621135332,100 940.9807621135332,130 915,145 889.0192378864668,130 889.0192378864668,100.00000000000001 915,85" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fb923c"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fb923c" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fb923c">🔒 DevSecOps — Bài 17</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 17: Monitoring Patroni Cluster</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 4: Backup, Monitoring &amp; Tuning</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Hiểu các metrics quan trọng của PostgreSQL HA cluster</li><li>Setup Prometheus + Grafana để monitor</li><li>Cấu hình postgres_exporter và patroni_exporter</li><li>Tạo dashboards và alerting rules</li><li>Monitor etcd cluster health</li><li>Implement best practices cho observability</li></ul><h2 id="1-why-monitoring-matters">1. Why Monitoring Matters</h2><h3 id="11-monitoring-goals">1.1. Monitoring goals</h3><p><strong>Visibility</strong>:</p><pre><code class="language-text">✅ Know cluster health in real-time
 ✅ Detect issues before users notice
 ✅ Track performance trends

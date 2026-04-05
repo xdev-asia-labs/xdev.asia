@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-6466" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-6466)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="768" cy="234" r="16" fill="#fbbf24" opacity="0.09"/>
+    <circle cx="936" cy="42" r="20" fill="#fbbf24" opacity="0.13"/>
+    <circle cx="604" cy="110" r="24" fill="#fbbf24" opacity="0.07"/>
+    <circle cx="772" cy="178" r="28" fill="#fbbf24" opacity="0.11"/>
+    <circle cx="940" cy="246" r="32" fill="#fbbf24" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <line x1="600" y1="214" x2="1100" y2="294" stroke="#fbbf24" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="244" x2="1050" y2="314" stroke="#fbbf24" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="989.1147367097487,149.5 989.1147367097487,178.5 964,193 938.8852632902513,178.5 938.8852632902513,149.5 964,135" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fbbf24"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fbbf24" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fbbf24">🔒 DevSecOps — Bài 13</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 13: Automatic Failover</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 3: Quản lý Cluster</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Hiểu cơ chế phát hiện lỗi trong Patroni</li><li>Nắm rõ leader election process</li><li>Theo dõi failover timeline chi tiết</li><li>Test automatic failover trong nhiều scenarios</li><li>Troubleshoot failover issues</li><li>Optimize failover speed</li></ul><h2 id="1-automatic-failover-overview">1. Automatic Failover Overview</h2><h3 id="11-failover-l%C3%A0-g%C3%AC">1.1. Failover là gì?</h3><p><strong>Automatic Failover</strong>&nbsp;= Quá trình&nbsp;<strong>tự động</strong>&nbsp;promote một replica lên làm primary khi primary hiện tại&nbsp;<strong>fails</strong>.</p><p><strong>Đặc điểm</strong>:</p><ul><li>⚡&nbsp;<strong>Tự động</strong>: Không cần can thiệp manual</li><li>🚨&nbsp;<strong>Unplanned</strong>: Xảy ra do sự cố</li><li>⏱️&nbsp;<strong>Fast</strong>: 30-60 giây (configurable)</li><li>🎯&nbsp;<strong>Goal</strong>: Minimize downtime</li></ul><p><strong>Khi nào xảy ra failover?</strong></p><ul><li>Primary server crashes</li><li>PostgreSQL process dies</li><li>Network partition</li><li>Hardware failure</li><li>DCS connection lost</li><li>Disk full</li></ul><h3 id="12-failover-vs-replication">1.2. Failover vs Replication</h3><pre><code class="language-text">WITHOUT Patroni (Manual Failover):
 1. Primary fails
 2. DBA gets paged

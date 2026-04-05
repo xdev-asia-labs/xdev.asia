@@ -18,6 +18,76 @@ course:
   slug: hashicorp-vault-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-6200" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-6200)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="795" cy="55" r="18" fill="#fb923c" opacity="0.1"/>
+    <circle cx="990" cy="150" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="685" cy="245" r="28" fill="#fb923c" opacity="0.1"/>
+    <circle cx="880" cy="80" r="33" fill="#fb923c" opacity="0.05"/>
+    <circle cx="1075" cy="175" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <line x1="600" y1="185" x2="1100" y2="265" stroke="#fb923c" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="215" x2="1050" y2="285" stroke="#fb923c" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="969.6410161513776,115 969.6410161513776,155 935,175 900.3589838486224,155 900.3589838486224,115.00000000000001 935,95" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fb923c"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fb923c" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fb923c">🔒 DevSecOps — Bài 11</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 11: Auth Methods cơ bản - Token,</tspan>
+      <tspan x="60" dy="42">Userpass và AppRole</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">HashiCorp Vault từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 3: Auth Methods - Xác thực và Ủy quyền</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-auth-methods-overview"><strong>1. Auth Methods Overview</strong></h2>
 
 <p><strong>Auth Methods</strong> là cơ chế Vault sử dụng để xác thực (authenticate) clients — xác định "bạn là ai" trước khi cho phép truy cập secrets. Mỗi auth method được enable tại một path riêng và trả về một <strong>Vault token</strong> sau khi xác thực thành công.</p>

@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-843" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-843)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="945" cy="125" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="790" cy="70" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="635" cy="275" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="980" cy="220" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="825" cy="165" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <line x1="600" y1="235" x2="1100" y2="315" stroke="#fb923c" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="265" x2="1050" y2="335" stroke="#fb923c" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1060.9807621135333,220 1060.9807621135333,250 1035,265 1009.0192378864668,250 1009.0192378864668,220 1035,205" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fb923c"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fb923c" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fb923c">🔒 DevSecOps — Bài 5</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 5: Cài đặt PostgreSQL</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 2: Cài đặt &amp; Cấu hình</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Cài đặt PostgreSQL từ package repository</li><li>Hiểu cách cài đặt PostgreSQL từ source (optional)</li><li>Cấu hình&nbsp;<code>postgresql.conf</code>&nbsp;cơ bản cho HA</li><li>Hiểu về&nbsp;<code>pg_hba.conf</code>&nbsp;và authentication</li><li>Chuẩn bị PostgreSQL trên 3 nodes cho Patroni cluster</li></ul><h2 id="1-c%C3%A0i-%C4%91%E1%BA%B7t-postgresql-t%E1%BB%AB-package-repository">1. Cài đặt PostgreSQL từ Package Repository</h2><h3 id="11-chu%E1%BA%A9n-b%E1%BB%8B">1.1. Chuẩn bị</h3><p>Trước khi cài đặt PostgreSQL, cần setup package repository chính thức của PostgreSQL (PGDG - PostgreSQL Global Development Group).</p><p><strong>Ưu điểm của PGDG repository</strong>:</p><ul><li>✅ Phiên bản PostgreSQL mới nhất</li><li>✅ Cập nhật bảo mật nhanh chóng</li><li>✅ Nhiều extensions có sẵn</li><li>✅ Support nhiều distros</li></ul><h3 id="12-c%C3%A0i-%C4%91%E1%BA%B7t-tr%C3%AAn-ubuntudebian">1.2. Cài đặt trên Ubuntu/Debian</h3><h4 id="b%C6%B0%E1%BB%9Bc-1-th%C3%AAm-pgdg-repository">Bước 1: Thêm PGDG repository</h4><pre><code class="language-bash"># Import repository signing key
 sudo apt install -y wget gnupg2
 

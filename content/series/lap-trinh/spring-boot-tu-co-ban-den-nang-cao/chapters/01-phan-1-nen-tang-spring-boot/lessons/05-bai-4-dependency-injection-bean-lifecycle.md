@@ -17,6 +17,76 @@ course:
   slug: spring-boot-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-5325" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121a2b"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-5325)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="635" cy="255" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="670" cy="70" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="705" cy="145" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="740" cy="220" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="775" cy="35" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <line x1="600" y1="105" x2="1100" y2="185" stroke="#fb923c" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="135" x2="1050" y2="205" stroke="#fb923c" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1039.6410161513775,185 1039.6410161513775,225 1005,245 970.3589838486224,225 970.3589838486224,185 1005,165" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fb923c"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fb923c" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fb923c">💻 Lập trình — Bài 3</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 4: Dependency Injection &amp; Bean</tspan>
+      <tspan x="60" dy="42">Lifecycle</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Spring Boot 4: Từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 1: Nền tảng Spring Boot</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ## Giới thiệu
 
 Dependency Injection (DI) là trái tim của Spring Framework. Hiểu sâu về DI và Bean Lifecycle sẽ giúp bạn thiết kế ứng dụng dễ test, dễ mở rộng và dễ maintain. Bài này sẽ đi sâu vào các kiểu injection, bean scopes và lifecycle hooks.

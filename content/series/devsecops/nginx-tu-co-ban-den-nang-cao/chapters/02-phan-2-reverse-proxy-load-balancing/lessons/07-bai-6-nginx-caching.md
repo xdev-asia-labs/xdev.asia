@@ -17,6 +17,76 @@ course:
   title: Nginx từ Cơ bản đến Nâng cao
   slug: nginx-tu-co-ban-den-nang-cao
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-3423" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-3423)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="730" cy="40" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="860" cy="130" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="990" cy="220" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="620" cy="50" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="750" cy="140" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <line x1="600" y1="240" x2="1100" y2="320" stroke="#38bdf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="270" x2="1050" y2="340" stroke="#38bdf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1020.3108891324554,172.5 1020.3108891324554,207.5 990,225 959.6891108675446,207.5 959.6891108675446,172.5 990,155" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#38bdf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#38bdf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#38bdf8">🔒 DevSecOps — Bài 6</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 6: NGINX CACHING</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Nginx từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 2: Reverse Proxy &amp; Load Balancing</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="tags"><strong>TAGS</strong></h2><p><code>#Nginx</code> <code>#Caching</code> <code>#ProxyCache</code> <code>#FastCGI</code> <code>#BrowserCache</code> <code>#CacheControl</code> <code>#Expires</code> <code>#Performance</code> <code>#Optimization</code> <code>#CDN</code> <code>#CachePurging</code> <code>#CacheBypass</code> <code>#WebPerformance</code> <code>#StaticContent</code> <code>#DynamicContent</code> <code>#Tutorial</code> <code>#Production</code> <code>#BestPractices</code> <code>#DevOps</code> <code>#Infrastructure</code></p><hr><h2 id="1-browser-caching-v%E1%BB%9Bi-expires-v%C3%A0-cache-control-headers"><strong>1. Browser Caching với Expires và Cache-Control Headers</strong></h2><p>Browser caching lưu trữ files tại client browser, giảm số requests đến server và tăng tốc độ load.</p><h3 id="11-expires-header"><strong>1.1. Expires Header</strong></h3><p>Expires header chỉ định thời điểm cụ thể khi cache hết hạn.</p><p><strong>Cú pháp cơ bản:</strong></p><pre><code class="language-nginx">location ~* \.(jpg|jpeg|png|gif|ico)$ {
     expires 30d;  # Cache 30 ngày
 }

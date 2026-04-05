@@ -17,6 +17,76 @@ course:
   title: Nginx từ Cơ bản đến Nâng cao
   slug: nginx-tu-co-ban-den-nang-cao
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-4663" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-4663)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="653" cy="49" r="16" fill="#c084fc" opacity="0.14"/>
+    <circle cx="706" cy="142" r="35" fill="#c084fc" opacity="0.13"/>
+    <circle cx="759" cy="235" r="24" fill="#c084fc" opacity="0.12000000000000001"/>
+    <circle cx="812" cy="68" r="13" fill="#c084fc" opacity="0.11"/>
+    <circle cx="865" cy="161" r="32" fill="#c084fc" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <line x1="600" y1="219" x2="1100" y2="299" stroke="#c084fc" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="249" x2="1050" y2="319" stroke="#c084fc" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="948.444863728671,102 948.444863728671,136 919,153 889.555136271329,136 889.555136271329,102.00000000000001 919,85" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#c084fc"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#c084fc" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#c084fc">🔒 DevSecOps — Bài 2</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 2: Cấu hình Cơ bản Nginx</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Nginx từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 1: Cơ bản</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-c%C3%BA-ph%C3%A1p-file-c%E1%BA%A5u-h%C3%ACnh-nginxconf"><strong>1. Cú pháp file cấu hình nginx.conf</strong></h2><p>File <code>nginx.conf</code> là trái tim của Nginx, nơi định nghĩa toàn bộ cách hoạt động của web server. Hiểu rõ cú pháp cấu hình là bước đầu tiên để làm chủ Nginx.</p><h3 id="11-c%E1%BA%A5u-tr%C3%BAc-c%C6%A1-b%E1%BA%A3n"><strong>1.1. Cấu trúc cơ bản</strong></h3><pre><code class="language-nginx"># Directive đơn giản (simple directive)
 worker_processes 4;
 

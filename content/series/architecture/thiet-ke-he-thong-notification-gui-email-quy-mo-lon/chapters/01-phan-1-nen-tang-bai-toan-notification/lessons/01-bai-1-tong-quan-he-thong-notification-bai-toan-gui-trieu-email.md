@@ -15,6 +15,76 @@ course:
   slug: thiet-ke-he-thong-notification-gui-email-quy-mo-lon
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-6379" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-6379)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="873" cy="169" r="16" fill="#c084fc" opacity="0.14"/>
+    <circle cx="646" cy="42" r="35" fill="#c084fc" opacity="0.13"/>
+    <circle cx="919" cy="175" r="24" fill="#c084fc" opacity="0.12000000000000001"/>
+    <circle cx="692" cy="48" r="13" fill="#c084fc" opacity="0.11"/>
+    <circle cx="965" cy="181" r="32" fill="#c084fc" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <line x1="600" y1="179" x2="1100" y2="259" stroke="#c084fc" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="209" x2="1050" y2="279" stroke="#c084fc" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1008.444863728671,162 1008.444863728671,196 979,213 949.555136271329,196 949.555136271329,162 979,145" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#c084fc"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#c084fc" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#c084fc">🏗️ Kiến trúc — Bài 1</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 1: Tổng quan hệ thống Notification —</tspan>
+      <tspan x="60" dy="42">Bài toán gửi triệu email</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Thiết kế Hệ thống Notification gửi hàng triệu Email</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 1: Nền tảng — Hiểu bài toán Notification quy mô lớn</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ## Giới thiệu
 
 Hãy tưởng tượng bạn là kỹ sư tại một công ty e-commerce có 10 triệu users. Mỗi tháng, marketing team muốn gửi newsletter cho toàn bộ user base. Mỗi khi có flash sale, hàng triệu email cần được gửi trong vài giờ. Làm sao bạn thiết kế hệ thống để handle khối lượng này?

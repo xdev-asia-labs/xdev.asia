@@ -17,6 +17,76 @@ course:
   slug: spring-boot-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-3124" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121a2b"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-3124)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="982" cy="176" r="10" fill="#f87171" opacity="0.11"/>
+    <circle cx="864" cy="138" r="26" fill="#f87171" opacity="0.07"/>
+    <circle cx="746" cy="100" r="12" fill="#f87171" opacity="0.13"/>
+    <circle cx="628" cy="62" r="28" fill="#f87171" opacity="0.09"/>
+    <circle cx="1010" cy="284" r="14" fill="#f87171" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <line x1="600" y1="236" x2="1100" y2="316" stroke="#f87171" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="266" x2="1050" y2="336" stroke="#f87171" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1062.8467875173176,220.5 1062.8467875173176,251.5 1036,267 1009.1532124826824,251.5 1009.1532124826824,220.5 1036,205" fill="none" stroke="#f87171" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f87171"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#f87171" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f87171">💻 Lập trình — Bài 6</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 7: Spring Data JPA — Entity,</tspan>
+      <tspan x="60" dy="42">Repository &amp; Query Methods</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Spring Boot 4: Từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 2: Xây dựng REST API</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ## Giới thiệu
 
 Spring Data JPA là abstraction layer phổ biến nhất để tương tác với relational database trong Spring Boot. Nó giảm thiểu boilerplate code cho data access layer và cung cấp powerful query capabilities. Bài này sẽ hướng dẫn từ Entity mapping đến advanced queries.

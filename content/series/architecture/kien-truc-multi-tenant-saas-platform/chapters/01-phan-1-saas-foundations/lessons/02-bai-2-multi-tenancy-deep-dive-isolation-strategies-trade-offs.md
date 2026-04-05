@@ -15,6 +15,76 @@ course:
   slug: kien-truc-multi-tenant-saas-platform
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-6649" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-6649)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="677" cy="201" r="10" fill="#a78bfa" opacity="0.060000000000000005"/>
+    <circle cx="754" cy="258" r="11" fill="#a78bfa" opacity="0.07"/>
+    <circle cx="831" cy="55" r="12" fill="#a78bfa" opacity="0.08"/>
+    <circle cx="908" cy="112" r="13" fill="#a78bfa" opacity="0.09"/>
+    <circle cx="985" cy="169" r="14" fill="#a78bfa" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <line x1="600" y1="71" x2="1100" y2="151" stroke="#a78bfa" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="101" x2="1050" y2="171" stroke="#a78bfa" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1043.5166604983954,208 1043.5166604983954,234 1021,247 998.4833395016046,234 998.4833395016046,208 1021,195" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#a78bfa"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#a78bfa" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#a78bfa">🏗️ Kiến trúc — Bài 2</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 2: Multi-tenancy Deep Dive - Isolation</tspan>
+      <tspan x="60" dy="42">Strategies &amp; Trade-offs</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Kiến trúc Multi-tenant SaaS Platform</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 1: SaaS Foundations</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ![Bài 2: Multi-tenancy Deep Dive - Isolation Strategies & Trade-offs](/storage/uploads/2026/03/saas-bai-2-diagram.png)
 
 ## Giới thiệu

@@ -17,6 +17,75 @@ course:
   slug: hl7-fhir-chuan-du-lieu-y-te-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-7442" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-7442)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="1006" cy="208" r="24" fill="#2dd4bf" opacity="0.13"/>
+    <circle cx="912" cy="94" r="32" fill="#2dd4bf" opacity="0.11"/>
+    <circle cx="818" cy="240" r="10" fill="#2dd4bf" opacity="0.09"/>
+    <circle cx="724" cy="126" r="18" fill="#2dd4bf" opacity="0.07"/>
+    <circle cx="630" cy="272" r="26" fill="#2dd4bf" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <line x1="600" y1="188" x2="1100" y2="268" stroke="#2dd4bf" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="218" x2="1050" y2="288" stroke="#2dd4bf" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="975.2390923627308,116.5 975.2390923627308,159.5 938,181 900.7609076372692,159.5 900.7609076372692,116.50000000000001 938,95" fill="none" stroke="#2dd4bf" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#2dd4bf"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#2dd4bf" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#2dd4bf">🏗️ Kiến trúc — Bài 14</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 14: FHIR Documents và Messaging</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">HL7 FHIR - Chuẩn Dữ liệu Y tế từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 5: Tích hợp, Messaging và Security</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-fhir-exchange-paradigms"><strong>1. Ba Paradigm trao đổi dữ liệu trong FHIR</strong></h2>
 
 <table>

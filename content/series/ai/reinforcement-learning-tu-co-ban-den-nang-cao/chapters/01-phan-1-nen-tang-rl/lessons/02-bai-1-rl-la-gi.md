@@ -15,6 +15,76 @@ course:
   slug: reinforcement-learning-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-1020" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-1020)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="1074" cy="192" r="32" fill="#f472b6" opacity="0.07"/>
+    <circle cx="1048" cy="246" r="14" fill="#f472b6" opacity="0.09"/>
+    <circle cx="1022" cy="40" r="26" fill="#f472b6" opacity="0.11"/>
+    <circle cx="996" cy="94" r="8" fill="#f472b6" opacity="0.13"/>
+    <circle cx="970" cy="148" r="20" fill="#f472b6" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <line x1="600" y1="152" x2="1100" y2="232" stroke="#f472b6" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="182" x2="1050" y2="252" stroke="#f472b6" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1025.38268590218,188.5 1025.38268590218,215.5 1002,229 978.6173140978201,215.5 978.6173140978201,188.5 1002,175" fill="none" stroke="#f472b6" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f472b6"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="99" height="28" rx="14" fill="#f472b6" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f472b6">🧠 AI &amp; ML — Bài 0</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 1: Reinforcement Learning là gì? —</tspan>
+      <tspan x="60" dy="42">Agent, Environment &amp; Reward</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Reinforcement Learning: Từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 1: Nền tảng RL — Markov Decision Process &amp; Tabular Methods</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ## Giới thiệu
 
 **Reinforcement Learning (RL)** là paradigm thứ ba của Machine Learning — agent học cách hành động trong environment để maximize cumulative reward.

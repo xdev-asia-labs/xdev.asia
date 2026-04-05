@@ -17,6 +17,76 @@ course:
   title: Nginx từ Cơ bản đến Nâng cao
   slug: nginx-tu-co-ban-den-nang-cao
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-155" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-155)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="689" cy="217" r="12" fill="#818cf8" opacity="0.12000000000000001"/>
+    <circle cx="778" cy="106" r="29" fill="#818cf8" opacity="0.09"/>
+    <circle cx="867" cy="255" r="16" fill="#818cf8" opacity="0.060000000000000005"/>
+    <circle cx="956" cy="144" r="33" fill="#818cf8" opacity="0.13"/>
+    <circle cx="1045" cy="33" r="20" fill="#818cf8" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <line x1="600" y1="247" x2="1100" y2="327" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="277" x2="1050" y2="347" stroke="#818cf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="983.3730669589464,126 983.3730669589464,168 947,189 910.6269330410536,168 910.6269330410536,126.00000000000001 947,105" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#818cf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#818cf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#818cf8">🔒 DevSecOps — Bài 5</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 5: Load Balancing</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Nginx từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 2: Reverse Proxy &amp; Load Balancing</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-c%C3%A1c-thu%E1%BA%ADt-to%C3%A1n-load-balancing"><strong>1. Các Thuật toán Load Balancing</strong></h2><p>Load balancing là kỹ thuật phân phối traffic đến nhiều servers để tối ưu hóa resource usage, tăng throughput, giảm latency và đảm bảo high availability.</p><h3 id="11-round-robin-m%E1%BA%B7c-%C4%91%E1%BB%8Bnh"><strong>1.1. Round-Robin (Mặc định)</strong></h3><p>Round-robin phân phối requests tuần tự đến từng server theo vòng lặp.</p><p><strong>Cấu hình:</strong></p><pre><code class="language-nginx">upstream backend {
     # Round-robin là mặc định, không cần khai báo
     server backend1.example.com;

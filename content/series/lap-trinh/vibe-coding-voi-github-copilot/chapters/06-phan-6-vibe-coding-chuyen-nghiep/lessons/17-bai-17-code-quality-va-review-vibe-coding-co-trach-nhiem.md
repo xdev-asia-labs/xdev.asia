@@ -17,6 +17,76 @@ course:
   slug: vibe-coding-voi-github-copilot
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-6972" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121a2b"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-6972)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="990" cy="120" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="880" cy="150" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="770" cy="180" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="660" cy="210" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="1050" cy="240" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <line x1="600" y1="220" x2="1100" y2="300" stroke="#38bdf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="250" x2="1050" y2="320" stroke="#38bdf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1050.3108891324553,202.5 1050.3108891324553,237.5 1020,255 989.6891108675446,237.5 989.6891108675446,202.5 1020,185" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#38bdf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#38bdf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#38bdf8">💻 Lập trình — Bài 17</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 17: Code Quality &amp; Review — Vibe</tspan>
+      <tspan x="60" dy="42">Coding có trách nhiệm</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Vibe Coding với GitHub Copilot: Từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 6: Vibe Coding chuyên nghiệp — Quality, Security &amp; Production</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-van-de-chat-luong"><strong>1. Vấn đề chất lượng trong Vibe Coding</strong></h2>
 
 <p>Andrej Karpathy khi giới thiệu Vibe Coding đã nói: <em>"I just see things, say things, run things, and copy-paste things, and it mostly works."</em> Nhưng <strong>"mostly works"</strong> không đủ cho production code.</p>

@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-3503" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-3503)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="1014" cy="112" r="12" fill="#f472b6" opacity="0.07"/>
+    <circle cx="928" cy="226" r="14" fill="#f472b6" opacity="0.09"/>
+    <circle cx="842" cy="80" r="16" fill="#f472b6" opacity="0.11"/>
+    <circle cx="756" cy="194" r="18" fill="#f472b6" opacity="0.13"/>
+    <circle cx="670" cy="48" r="20" fill="#f472b6" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <line x1="600" y1="172" x2="1100" y2="252" stroke="#f472b6" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="202" x2="1050" y2="272" stroke="#f472b6" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1045.38268590218,208.5 1045.38268590218,235.5 1022,249 998.6173140978201,235.5 998.6173140978201,208.5 1022,195" fill="none" stroke="#f472b6" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f472b6"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#f472b6" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f472b6">🔒 DevSecOps — Bài 7</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 7: Cài đặt Patroni</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 2: Cài đặt &amp; Cấu hình</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Cài đặt Python và các dependencies cần thiết</li><li>Cài đặt Patroni qua pip</li><li>Hiểu cấu trúc file&nbsp;<code>patroni.yml</code></li><li>Tạo systemd service cho Patroni</li><li>Cài đặt Patroni trên 3 nodes</li></ul><h2 id="1-gi%E1%BB%9Bi-thi%E1%BB%87u">1. Giới thiệu</h2><p>Patroni là một Python application, do đó cần Python runtime và các dependencies. Trong bài này, chúng ta sẽ:</p><ol><li>Cài đặt Python 3 và pip</li><li>Cài đặt Patroni package</li><li>Cấu hình Patroni</li><li>Tạo systemd service để quản lý Patroni daemon</li></ol><p><strong>Kiến trúc mục tiêu</strong>:</p><pre><code class="language-text">┌──────────────────────────────────┐
 │      etcd Cluster (3 nodes)      │
 │         ✅ RUNNING                │

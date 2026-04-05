@@ -17,6 +17,76 @@ course:
   slug: hl7-fhir-chuan-du-lieu-y-te-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-1779" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-1779)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="973" cy="69" r="26" fill="#c084fc" opacity="0.14"/>
+    <circle cx="846" cy="82" r="35" fill="#c084fc" opacity="0.13"/>
+    <circle cx="719" cy="95" r="14" fill="#c084fc" opacity="0.12000000000000001"/>
+    <circle cx="1092" cy="108" r="23" fill="#c084fc" opacity="0.11"/>
+    <circle cx="965" cy="121" r="32" fill="#c084fc" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <line x1="600" y1="79" x2="1100" y2="159" stroke="#c084fc" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="109" x2="1050" y2="179" stroke="#c084fc" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1058.444863728671,212 1058.444863728671,246 1029,263 999.555136271329,246 999.555136271329,212 1029,195" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#c084fc"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#c084fc" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#c084fc">🏗️ Kiến trúc — Bài 2</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 2: Tổng quan FHIR R5 - Kiến trúc và</tspan>
+      <tspan x="60" dy="42">nguyên tắc thiết kế</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">HL7 FHIR - Chuẩn Dữ liệu Y tế từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 1: Nền tảng HL7 và FHIR</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-kien-truc-tong-the-fhir"><strong>1. Kiến trúc tổng thể FHIR</strong></h2>
 
 <p>FHIR được thiết kế như một <strong>platform</strong> — không chỉ là một chuẩn dữ liệu mà là cả một hệ sinh thái hoàn chỉnh cho trao đổi thông tin y tế. Kiến trúc FHIR bao gồm các tầng sau:</p>

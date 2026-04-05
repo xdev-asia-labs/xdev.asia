@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-5696" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-5696)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="1024" cy="102" r="12" fill="#f472b6" opacity="0.07"/>
+    <circle cx="948" cy="126" r="14" fill="#f472b6" opacity="0.09"/>
+    <circle cx="872" cy="150" r="16" fill="#f472b6" opacity="0.11"/>
+    <circle cx="796" cy="174" r="18" fill="#f472b6" opacity="0.13"/>
+    <circle cx="720" cy="198" r="20" fill="#f472b6" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <line x1="600" y1="202" x2="1100" y2="282" stroke="#f472b6" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="232" x2="1050" y2="302" stroke="#f472b6" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="934.0429399400242,83.5 934.0429399400242,120.5 902,139 869.9570600599758,120.5 869.9570600599758,83.50000000000001 902,65" fill="none" stroke="#f472b6" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f472b6"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#f472b6" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f472b6">🔒 DevSecOps — Bài 19</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 19: Logging và Troubleshooting</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 4: Backup, Monitoring &amp; Tuning</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h1 id="b%C3%A0i-19-logging-v%C3%A0-troubleshooting">Bài 19: Logging và Troubleshooting</h1><h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Hiểu và phân tích PostgreSQL logs</li><li>Debug Patroni issues qua logs</li><li>Troubleshoot etcd cluster problems</li><li>Identify và fix common HA issues</li><li>Use debugging tools effectively</li><li>Build troubleshooting runbooks</li></ul><h2 id="1-postgresql-logging">1. PostgreSQL Logging</h2><h3 id="11-configure-logging">1.1. Configure logging</h3><pre><code class="language-sql">-- Essential logging settings
 ALTER SYSTEM SET logging_collector = on;
 ALTER SYSTEM SET log_directory = 'log';

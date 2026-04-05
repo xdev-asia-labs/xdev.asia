@@ -15,6 +15,76 @@ course:
   slug: kien-truc-edtech-lms-platform
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-2196" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-2196)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="1003" cy="39" r="26" fill="#c084fc" opacity="0.14"/>
+    <circle cx="906" cy="42" r="35" fill="#c084fc" opacity="0.13"/>
+    <circle cx="809" cy="45" r="14" fill="#c084fc" opacity="0.12000000000000001"/>
+    <circle cx="712" cy="48" r="23" fill="#c084fc" opacity="0.11"/>
+    <circle cx="615" cy="51" r="32" fill="#c084fc" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <line x1="600" y1="69" x2="1100" y2="149" stroke="#c084fc" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="99" x2="1050" y2="169" stroke="#c084fc" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1007.1051177665153,147 1007.1051177665153,191 969,213 930.8948822334847,191 930.8948822334847,147 969,125" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#c084fc"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#c084fc" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#c084fc">🏗️ Kiến trúc — Bài 8</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 8: Assessment Engine - Question Bank &amp;</tspan>
+      <tspan x="60" dy="42">Quiz System</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Kiến trúc EdTech &amp; LMS Platform</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 3: Assessment &amp; Gamification</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ![Bài 8: Assessment Engine - Question Bank & Quiz System](/storage/uploads/2026/03/edtech-bai-8-diagram.png)
 
 ## Giới thiệu

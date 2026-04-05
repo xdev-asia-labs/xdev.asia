@@ -15,6 +15,76 @@ course:
   slug: reinforcement-learning-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-3446" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-3446)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="956" cy="118" r="24" fill="#2dd4bf" opacity="0.13"/>
+    <circle cx="812" cy="234" r="32" fill="#2dd4bf" opacity="0.11"/>
+    <circle cx="668" cy="90" r="10" fill="#2dd4bf" opacity="0.09"/>
+    <circle cx="1024" cy="206" r="18" fill="#2dd4bf" opacity="0.07"/>
+    <circle cx="880" cy="62" r="26" fill="#2dd4bf" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <line x1="600" y1="138" x2="1100" y2="218" stroke="#2dd4bf" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="168" x2="1050" y2="238" stroke="#2dd4bf" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="966.5788383248864,121.5 966.5788383248864,154.5 938,171 909.4211616751136,154.5 909.4211616751135,121.50000000000001 938,105" fill="none" stroke="#2dd4bf" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#2dd4bf"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="99" height="28" rx="14" fill="#2dd4bf" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#2dd4bf">🧠 AI &amp; ML — Bài 5</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 6: Policy Gradient — REINFORCE &amp;</tspan>
+      <tspan x="60" dy="42">Actor-Critic</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Reinforcement Learning: Từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 2: Deep Reinforcement Learning — Neural Networks meet RL</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ## Giới thiệu
 
 **Policy Gradient** methods trực tiếp optimize policy π(a|s;θ) — thay vì học value function rồi derive policy. Ưu điểm: handle continuous actions, stochastic policies, và convergence guarantees.

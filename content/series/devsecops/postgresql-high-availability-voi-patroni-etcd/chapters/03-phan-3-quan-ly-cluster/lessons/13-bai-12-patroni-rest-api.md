@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-9781" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-9781)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="732" cy="206" r="10" fill="#f87171" opacity="0.11"/>
+    <circle cx="864" cy="178" r="26" fill="#f87171" opacity="0.07"/>
+    <circle cx="996" cy="150" r="12" fill="#f87171" opacity="0.13"/>
+    <circle cx="628" cy="122" r="28" fill="#f87171" opacity="0.09"/>
+    <circle cx="760" cy="94" r="14" fill="#f87171" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <line x1="600" y1="86" x2="1100" y2="166" stroke="#f87171" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="116" x2="1050" y2="186" stroke="#f87171" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1071.507041555162,215.5 1071.507041555162,256.5 1036,277 1000.492958444838,256.5 1000.492958444838,215.5 1036,195" fill="none" stroke="#f87171" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f87171"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#f87171" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f87171">🔒 DevSecOps — Bài 12</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 12: Patroni REST API</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 3: Quản lý Cluster</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Hiểu Patroni REST API và endpoints</li><li>Sử dụng REST API cho health checks</li><li>Integrate với load balancers (HAProxy, Nginx)</li><li>Query cluster status và configuration</li><li>Implement custom monitoring</li><li>Secure REST API endpoints</li></ul><h2 id="1-rest-api-overview">1. REST API Overview</h2><h3 id="11-rest-api-l%C3%A0-g%C3%AC">1.1. REST API là gì?</h3><p>Patroni exposes&nbsp;<strong>HTTP REST API</strong>&nbsp;trên mỗi node để:</p><ul><li>🔍&nbsp;<strong>Health checks</strong>: Load balancers check node health</li><li>📊&nbsp;<strong>Monitoring</strong>: External systems query cluster state</li><li>⚙️&nbsp;<strong>Management</strong>: Read configuration, cluster topology</li><li>🔄&nbsp;<strong>Automation</strong>: Integration với CI/CD, orchestration tools</li></ul><h3 id="12-api-configuration">1.2. API Configuration</h3><p><strong>In patroni.yml</strong>:</p><pre><code class="language-yaml">restapi:
   listen: 0.0.0.0:8008        # Listen address and port
   connect_address: 10.0.1.11:8008  # Advertised address

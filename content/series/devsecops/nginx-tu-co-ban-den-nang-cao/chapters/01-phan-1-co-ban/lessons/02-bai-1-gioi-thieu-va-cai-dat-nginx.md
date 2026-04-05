@@ -17,6 +17,76 @@ course:
   title: Nginx từ Cơ bản đến Nâng cao
   slug: nginx-tu-co-ban-den-nang-cao
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-9501" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-9501)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="862" cy="176" r="20" fill="#f87171" opacity="0.11"/>
+    <circle cx="624" cy="138" r="26" fill="#f87171" opacity="0.07"/>
+    <circle cx="886" cy="100" r="32" fill="#f87171" opacity="0.13"/>
+    <circle cx="648" cy="62" r="8" fill="#f87171" opacity="0.09"/>
+    <circle cx="910" cy="284" r="14" fill="#f87171" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <line x1="600" y1="176" x2="1100" y2="256" stroke="#f87171" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="206" x2="1050" y2="276" stroke="#f87171" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1052.8467875173176,210.5 1052.8467875173176,241.5 1026,257 999.1532124826824,241.5 999.1532124826824,210.5 1026,195" fill="none" stroke="#f87171" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f87171"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#f87171" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f87171">🔒 DevSecOps — Bài 1</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 1: Giới thiệu và Cài đặt Nginx</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Nginx từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 1: Cơ bản</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-nginx-l%C3%A0-g%C3%AC"><strong>1. Nginx là gì?</strong></h2><p>Nginx (phát âm là "engine-x") là một web server mã nguồn mở, mạnh mẽ và hiệu suất cao, được phát triển bởi Igor Sysoev vào năm 2004. Ban đầu được tạo ra để giải quyết vấn đề C10K (xử lý 10,000 kết nối đồng thời), Nginx đã nhanh chóng trở thành một trong những web server phổ biến nhất thế giới.</p><p>Nginx không chỉ là web server mà còn có thể hoạt động như:</p><ul><li><strong>Reverse proxy server</strong></li><li><strong>Load balancer</strong></li><li><strong>HTTP cache</strong></li><li><strong>Mail proxy server</strong></li><li><strong>API Gateway</strong></li></ul><h3 id="ki%E1%BA%BFn-tr%C3%BAc-event-driven-v%C3%A0-non-blocking-io"><strong>Kiến trúc Event-driven và Non-blocking I/O</strong></h3><p>Điểm mạnh lớn nhất của Nginx nằm ở kiến trúc của nó. Khác với mô hình truyền thống, Nginx sử dụng kiến trúc <strong>event-driven</strong> và <strong>non-blocking I/O</strong> (asynchronous).</p><p><strong>Cách hoạt động:</strong></p><ol><li><strong>Master Process</strong>: Một tiến trình chính đọc và đánh giá cấu hình, quản lý worker processes</li><li><strong>Worker Processes</strong>: Nhiều tiến trình worker xử lý các kết nối thực tế</li><li><strong>Event Loop</strong>: Mỗi worker process sử dụng event loop để xử lý hàng nghìn kết nối đồng thời</li></ol><p><strong>Non-blocking I/O</strong> có nghĩa là:</p><ul><li>Khi một worker process đang chờ I/O (đọc file, database query, network request), nó không bị "block" mà có thể xử lý các request khác</li><li>Một worker process có thể xử lý hàng nghìn kết nối cùng lúc</li><li>Tiết kiệm tài nguyên CPU và RAM đáng kể</li></ul><p><strong>Ví dụ minh họa:</strong></p><pre><code>Apache (Blocking):
 Request 1 → Thread 1 → Đợi đọc file (blocked) → Hoàn thành
 Request 2 → Thread 2 → Đợi đọc file (blocked) → Hoàn thành

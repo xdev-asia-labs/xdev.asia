@@ -16,6 +16,75 @@ course:
   slug: nestjs-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-9210" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121a2b"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-9210)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="1020" cy="90" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="940" cy="110" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="860" cy="130" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="780" cy="150" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="700" cy="170" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <line x1="600" y1="110" x2="1100" y2="190" stroke="#38bdf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="140" x2="1050" y2="210" stroke="#38bdf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="981.650635094611,147.5 981.650635094611,172.5 960,185 938.349364905389,172.5 938.349364905389,147.5 960,135" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#38bdf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#38bdf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#38bdf8">💻 Lập trình — Bài 18</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 18: Testing trong NestJS</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">NestJS: Từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 5: Microservices, Testing &amp; Production</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-setup"><strong>1. Testing trong NestJS</strong></h2>
 
 <p>NestJS tích hợp sẵn Jest và cung cấp <code>@nestjs/testing</code> package cho testing module.</p>

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getLesson, getSeriesLessonSlugs, getSeries, formatDuration } from "@/lib/data";
+import { getLesson, getSeriesLessonSlugs, getSeries, formatDuration, resolveSeriesCompoundSlug } from "@/lib/data";
 import ContentRenderer from "@/components/ContentRenderer";
 import { IconChevronRight, IconClock } from "@/components/Icons";
 import { LessonCheckbox, SeriesProgressBar } from "@/components/SeriesProgress";
 
 export const dynamicParams = false;
+
+const SITE_URL = "https://xdev.asia";
 
 export function generateStaticParams() {
     return getSeriesLessonSlugs().map(({ seriesSlug, lessonSlug }) => ({
@@ -23,9 +25,47 @@ export async function generateMetadata({
     const { seriesSlug, lessonSlug } = await params;
     const lesson = getLesson(seriesSlug, lessonSlug);
     if (!lesson) return {};
+
+    const series = getSeries(seriesSlug);
+    const canonicalUrl = `${SITE_URL}/lessons/${seriesSlug}/${lessonSlug}/`;
+    const compoundSlug = resolveSeriesCompoundSlug(seriesSlug);
+    const imageUrl = `${SITE_URL}/images/og/lessons/${compoundSlug}/${lessonSlug}.png`;
+    const description = lesson.description || lesson.title;
+
     return {
         title: `${lesson.title} — ${lesson.course.title}`,
-        description: lesson.description || lesson.title,
+        description,
+        alternates: {
+            canonical: canonicalUrl,
+        },
+        openGraph: {
+            title: lesson.title,
+            description,
+            url: canonicalUrl,
+            siteName: "xDev Asia",
+            locale: "vi_VN",
+            type: "article",
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: lesson.title,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: lesson.title,
+            description,
+            images: [imageUrl],
+        },
+        robots: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
     };
 }
 
@@ -39,7 +79,7 @@ export default async function LessonPage({
     if (!lesson) notFound();
 
     const series = getSeries(seriesSlug);
-    const categorySlug = series?.category?.slug || "uncategorized";
+    const categorySlug = series?.category?.slug || "ai";
     const categoryName = series?.category?.name || "Series";
 
     // Flat list of all lessons across sections for prev/next nav
@@ -50,8 +90,64 @@ export default async function LessonPage({
     const prevLesson = currentIdx > 0 ? allLessons[currentIdx - 1] : null;
     const nextLesson = currentIdx < allLessons.length - 1 ? allLessons[currentIdx + 1] : null;
 
+    const canonicalUrl = `${SITE_URL}/lessons/${seriesSlug}/${lessonSlug}/`;
+    const compoundSlug = resolveSeriesCompoundSlug(seriesSlug);
+    const imageUrl = `${SITE_URL}/images/og/lessons/${compoundSlug}/${lessonSlug}.png`;
+
+    const articleJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: lesson.title,
+        description: lesson.description || lesson.title,
+        image: imageUrl,
+        author: {
+            "@type": "Organization",
+            name: "xDev Asia",
+            url: SITE_URL,
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "xDev Asia",
+            url: SITE_URL,
+            logo: {
+                "@type": "ImageObject",
+                url: `${SITE_URL}/images/logo/logo-vertical-light.png`,
+            },
+        },
+        mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": canonicalUrl,
+        },
+        isPartOf: {
+            "@type": "Course",
+            name: lesson.course.title,
+            url: `${SITE_URL}/series/${categorySlug}/${seriesSlug}/`,
+        },
+        inLanguage: "vi",
+    };
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Trang chủ", item: SITE_URL },
+            { "@type": "ListItem", position: 2, name: "Series", item: `${SITE_URL}/series/` },
+            { "@type": "ListItem", position: 3, name: categoryName, item: `${SITE_URL}/series/${categorySlug}/` },
+            { "@type": "ListItem", position: 4, name: lesson.course.title, item: `${SITE_URL}/series/${categorySlug}/${seriesSlug}/` },
+            { "@type": "ListItem", position: 5, name: lesson.title, item: canonicalUrl },
+        ],
+    };
+
     return (
         <div className="min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+            />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 {/* Breadcrumb */}
                 <nav className="flex items-center gap-2 text-xs font-medium text-zinc-500 mb-8">
@@ -171,9 +267,9 @@ export default async function LessonPage({
                                                     return (
                                                         <li key={l.id} className="border-b border-zinc-50">
                                                             <div className={`flex items-start gap-3 px-5 py-3 text-[13px] transition-colors ${isActive
-                                                                    ? "bg-brand-50 text-brand-600 font-semibold"
-                                                                    : "text-zinc-500 hover:bg-brand-50/50 hover:text-zinc-800"
-                                                                    }`}>
+                                                                ? "bg-brand-50 text-brand-600 font-semibold"
+                                                                : "text-zinc-500 hover:bg-brand-50/50 hover:text-zinc-800"
+                                                                }`}>
                                                                 <div className="mt-0.5">
                                                                     <LessonCheckbox seriesSlug={seriesSlug} lessonSlug={l.slug} />
                                                                 </div>

@@ -17,6 +17,76 @@ course:
   slug: deploy-microservices-on-premises-voi-kubernetes-ha
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-3887" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-3887)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="971" cy="243" r="24" fill="#34d399" opacity="0.08"/>
+    <circle cx="842" cy="54" r="17" fill="#34d399" opacity="0.11"/>
+    <circle cx="713" cy="125" r="10" fill="#34d399" opacity="0.14"/>
+    <circle cx="1084" cy="196" r="33" fill="#34d399" opacity="0.07"/>
+    <circle cx="955" cy="267" r="26" fill="#34d399" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <line x1="600" y1="233" x2="1100" y2="313" stroke="#34d399" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="263" x2="1050" y2="333" stroke="#34d399" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1007.2487113059643,169 1007.2487113059643,197 983,211 958.7512886940357,197 958.7512886940357,169 983,155" fill="none" stroke="#34d399" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#34d399"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#34d399" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#34d399">🔒 DevSecOps — Bài 12</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">BÀI 12: CÀI ĐẶT ROOK-CEPH OPERATOR VÀ</tspan>
+      <tspan x="60" dy="42">CEPHCLUSTER</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Deploy Microservices On-Premises với Kubernetes HA</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 3: Distributed Storage — Rook-Ceph</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="muc-tieu-bai-hoc">🎯 MỤC TIÊU BÀI HỌC</h2>
 <p>Sau khi hoàn thành bài học này, bạn sẽ:</p>
 <ul>

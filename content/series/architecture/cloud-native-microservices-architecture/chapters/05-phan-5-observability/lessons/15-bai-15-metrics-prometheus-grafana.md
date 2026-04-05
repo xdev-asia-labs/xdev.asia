@@ -17,6 +17,75 @@ course:
   slug: cloud-native-microservices-architecture
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-334" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-334)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="819" cy="87" r="22" fill="#818cf8" opacity="0.12000000000000001"/>
+    <circle cx="1038" cy="106" r="29" fill="#818cf8" opacity="0.09"/>
+    <circle cx="757" cy="125" r="36" fill="#818cf8" opacity="0.060000000000000005"/>
+    <circle cx="976" cy="144" r="13" fill="#818cf8" opacity="0.13"/>
+    <circle cx="695" cy="163" r="20" fill="#818cf8" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <line x1="600" y1="137" x2="1100" y2="217" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="167" x2="1050" y2="237" stroke="#818cf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="964.712812921102,121 964.712812921102,153 937,169 909.287187078898,153 909.287187078898,121.00000000000001 937,105" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#818cf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#818cf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#818cf8">🏗️ Kiến trúc — Bài 15</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 15: Metrics — Prometheus &amp; Grafana</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Cloud Native Microservices Architecture</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 5: Observability — Ba trụ cột</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ![Bài 15: Metrics — Prometheus & Grafana](/storage/uploads/2026/03/cn-bai-15-diagram.png)
 
 ## Giới thiệu

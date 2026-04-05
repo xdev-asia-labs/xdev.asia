@@ -16,6 +16,75 @@ course:
   slug: golang-tu-co-ban-den-nang-cao
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-4143" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121a2b"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-4143)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="899" cy="287" r="32" fill="#818cf8" opacity="0.12000000000000001"/>
+    <circle cx="698" cy="286" r="29" fill="#818cf8" opacity="0.09"/>
+    <circle cx="997" cy="285" r="26" fill="#818cf8" opacity="0.060000000000000005"/>
+    <circle cx="796" cy="284" r="23" fill="#818cf8" opacity="0.13"/>
+    <circle cx="1095" cy="283" r="20" fill="#818cf8" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <line x1="600" y1="77" x2="1100" y2="157" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="107" x2="1050" y2="177" stroke="#818cf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="954.712812921102,111 954.712812921102,143 927,159 899.287187078898,143 899.287187078898,111.00000000000001 927,95" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#818cf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#818cf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#818cf8">💻 Lập trình — Bài 13</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 13: WebSockets &amp; Real-time</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Golang: Từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 4: Advanced Features</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-websocket-fundamentals"><strong>1. WebSocket Fundamentals</strong></h2>
 
 <p>WebSocket cung cấp kết nối full-duplex giữa client và server trên một TCP connection duy nhất. Khác với HTTP request/response, WebSocket cho phép server chủ động push data đến client.</p>

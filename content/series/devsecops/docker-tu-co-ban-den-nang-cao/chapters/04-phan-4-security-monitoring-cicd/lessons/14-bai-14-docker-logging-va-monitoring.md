@@ -16,6 +16,76 @@ course:
   title: Docker từ Cơ bản đến Nâng cao
   slug: docker-tu-co-ban-den-nang-cao
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-7894" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-7894)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="906" cy="228" r="34" fill="#2dd4bf" opacity="0.13"/>
+    <circle cx="712" cy="34" r="32" fill="#2dd4bf" opacity="0.11"/>
+    <circle cx="1018" cy="100" r="30" fill="#2dd4bf" opacity="0.09"/>
+    <circle cx="824" cy="166" r="28" fill="#2dd4bf" opacity="0.07"/>
+    <circle cx="630" cy="232" r="26" fill="#2dd4bf" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#2dd4bf" opacity="0.15"/>
+    <line x1="600" y1="88" x2="1100" y2="168" stroke="#2dd4bf" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="118" x2="1050" y2="188" stroke="#2dd4bf" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1025.2390923627308,166.5 1025.2390923627308,209.5 988,231 950.7609076372692,209.5 950.7609076372692,166.5 988,145" fill="none" stroke="#2dd4bf" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#2dd4bf"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#2dd4bf" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#2dd4bf">🔒 DevSecOps — Bài 14</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 14: Docker Logging và Monitoring</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Docker từ Cơ bản đến Nâng cao</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 4: Security, Monitoring và CI/CD</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="1-docker-logging"><strong>1. Docker Logging</strong></h2>
 <p>Docker capture stdout và stderr của container process và lưu trữ thông qua logging drivers.</p>
 

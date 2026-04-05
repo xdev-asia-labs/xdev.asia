@@ -15,6 +15,75 @@ course:
   slug: thiet-ke-he-thong-microservices-micro-frontend
 ---
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-2107" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-2107)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="703" cy="99" r="16" fill="#c084fc" opacity="0.14"/>
+    <circle cx="806" cy="122" r="35" fill="#c084fc" opacity="0.13"/>
+    <circle cx="909" cy="145" r="24" fill="#c084fc" opacity="0.12000000000000001"/>
+    <circle cx="1012" cy="168" r="13" fill="#c084fc" opacity="0.11"/>
+    <circle cx="615" cy="191" r="32" fill="#c084fc" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#c084fc" opacity="0.15"/>
+    <line x1="600" y1="69" x2="1100" y2="149" stroke="#c084fc" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="99" x2="1050" y2="169" stroke="#c084fc" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="957.1051177665153,97 957.1051177665153,141 919,163 880.8948822334847,141 880.8948822334847,97.00000000000001 919,75" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#c084fc"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#c084fc" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#c084fc">🏗️ Kiến trúc — Bài 17</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 17: BFF Pattern — Backend for Frontend</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Thiết kế hệ thống Microservices &amp; Micro Frontend — Từ cơ bản đến Production</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 6: API Gateway &amp; BFF Layer</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 ## Giới thiệu
 
 Backend for Frontend (BFF) là pattern đặt một **backend layer riêng** cho mỗi frontend client. BFF aggregates data từ nhiều microservices, transform thành format phù hợp cho frontend cụ thể.

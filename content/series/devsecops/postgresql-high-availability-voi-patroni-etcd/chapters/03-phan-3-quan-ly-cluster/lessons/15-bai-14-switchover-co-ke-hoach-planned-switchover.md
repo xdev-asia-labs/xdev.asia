@@ -15,6 +15,77 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-9837" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-9837)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="639" cy="167" r="32" fill="#818cf8" opacity="0.12000000000000001"/>
+    <circle cx="678" cy="126" r="29" fill="#818cf8" opacity="0.09"/>
+    <circle cx="717" cy="85" r="26" fill="#818cf8" opacity="0.060000000000000005"/>
+    <circle cx="756" cy="44" r="23" fill="#818cf8" opacity="0.13"/>
+    <circle cx="795" cy="263" r="20" fill="#818cf8" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <line x1="600" y1="97" x2="1100" y2="177" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="127" x2="1050" y2="197" stroke="#818cf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1074.712812921102,231 1074.712812921102,263 1047,279 1019.287187078898,263 1019.287187078898,231 1047,215" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#818cf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#818cf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#818cf8">🔒 DevSecOps — Bài 14</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 14: Switchover có kế hoạch (Planned</tspan>
+      <tspan x="60" dy="42">Switchover)</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 3: Quản lý Cluster</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Phân biệt switchover vs failover</li><li>Thực hiện planned switchover an toàn</li><li>Hiểu graceful vs immediate switchover</li><li>Minimize downtime trong maintenance</li><li>Automate switchover cho rolling updates</li><li>Handle switchover trong production</li></ul><h2 id="1-switchover-overview">1. Switchover Overview</h2><h3 id="11-switchover-l%C3%A0-g%C3%AC">1.1. Switchover là gì?</h3><p><strong>Switchover</strong>&nbsp;=&nbsp;<strong>Có kế hoạch</strong>&nbsp;promote một replica lên làm primary.</p><p><strong>So sánh với Failover</strong>:</p>
 <!--kg-card-begin: html-->
 <table class="sc-jTzLTM pLVjq" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word; font-size: 14px; line-height: 1.6; border-collapse: collapse; color: rgb(212, 212, 212); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(30, 30, 30); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><thead><tr><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">Aspect</th><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">Failover</th><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">Switchover</th></tr></thead><tbody><tr><td style="padding: 5px 10px;"><strong class="sc-jzJRlG fjmzee" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word;">Trigger</strong></td><td style="padding: 5px 10px;">Primary failure (unplanned)</td><td style="padding: 5px 10px;">Manual/scheduled (planned)</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><strong class="sc-jzJRlG fjmzee" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word;">Downtime</strong></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">30-60 seconds</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">0-10 seconds</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><strong class="sc-jzJRlG fjmzee" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word;">Data loss</strong></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">Possible (if async)</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">Zero (controlled)</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><strong class="sc-jzJRlG fjmzee" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word;">Control</strong></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">Automatic</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">Manual/scripted</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><strong class="sc-jzJRlG fjmzee" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word;">Timing</strong></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">Unpredictable</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">Scheduled</td></tr></tbody></table>

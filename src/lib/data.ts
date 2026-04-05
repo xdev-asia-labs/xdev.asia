@@ -61,7 +61,7 @@ function getSeriesSlugMap(): Map<string, string> {
   return map;
 }
 
-function resolveSeriesCompoundSlug(seriesSlug: string): string {
+export function resolveSeriesCompoundSlug(seriesSlug: string): string {
   return getSeriesSlugMap().get(seriesSlug) || seriesSlug;
 }
 

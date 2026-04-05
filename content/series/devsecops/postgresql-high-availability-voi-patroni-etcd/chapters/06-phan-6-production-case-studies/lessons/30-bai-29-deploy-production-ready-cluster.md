@@ -15,6 +15,76 @@ course:
   title: PostgreSQL High Availability với Patroni & etcd
   slug: postgresql-high-availability-voi-patroni-etcd
 ---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-8705" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-8705)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="739" cy="127" r="12" fill="#818cf8" opacity="0.12000000000000001"/>
+    <circle cx="878" cy="246" r="29" fill="#818cf8" opacity="0.09"/>
+    <circle cx="1017" cy="105" r="16" fill="#818cf8" opacity="0.060000000000000005"/>
+    <circle cx="656" cy="224" r="33" fill="#818cf8" opacity="0.13"/>
+    <circle cx="795" cy="83" r="20" fill="#818cf8" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#818cf8" opacity="0.15"/>
+    <line x1="600" y1="97" x2="1100" y2="177" stroke="#818cf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="127" x2="1050" y2="197" stroke="#818cf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="974.712812921102,131 974.712812921102,163 947,179 919.287187078898,163 919.287187078898,131 947,115" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#818cf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#818cf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#818cf8">🔒 DevSecOps — Bài 29</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Bài 29: Deploy Production-ready Cluster</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL High Availability với Patroni &amp; etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Phần 6: Production &amp; Case Studies</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
 <h2 id="m%E1%BB%A5c-ti%C3%AAu">Mục tiêu</h2><p>Sau bài học này, bạn sẽ:</p><ul><li>Deploy complete production-ready PostgreSQL HA cluster</li><li>Implement all best practices learned in this course</li><li>Create comprehensive operational documentation</li><li>Perform final validation and handoff</li><li>Complete capstone assessment</li></ul><h2 id="1-pre-deployment-checklist">1. Pre-Deployment Checklist</h2><h3 id="11-infrastructure-readiness">1.1. Infrastructure readiness</h3><pre><code class="language-text">☐ Hardware/VMs provisioned
   ☐ 3+ PostgreSQL nodes (Leader + 2 Replicas minimum)
   ☐ 3 etcd nodes (can co-locate with PostgreSQL)
