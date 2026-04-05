@@ -16,10 +16,8 @@ const outputPath = path.join(__dirname, "..", "data", "github-repos.json");
 
 const REPOS = [
   { slug: "xclaw", repo: "tdduydev/xclaw" },
-  { slug: "x-postgres-backup", repo: "tdduydev/x-postgres-backup" },
   { slug: "xdev-asia", repo: "tdduydev/xdev.asia" },
   { slug: "autox", repo: "tdduydev/autox" },
-  { slug: "x-lms", repo: "tdduydev/x-lms" },
 ];
 
 const LANGUAGE_COLORS = {

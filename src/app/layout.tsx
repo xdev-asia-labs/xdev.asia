@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/components/AuthProvider";
 import Footer from "@/components/Footer";
+import CommunityBanner from "@/components/CommunityBanner";
 import GlobalChatbot from "@/components/GlobalChatbot";
 import type { NavTopic } from "@/components/Header";
 import Header from "@/components/Header";
@@ -54,6 +55,7 @@ export default function RootLayout({
           <main id="main-content" className="flex-1">{children}</main>
           <Footer />
           <LoginModal />
+          <CommunityBanner />
           <GlobalChatbot siteContext={siteContextJson} />
         </AuthProvider>
         <Script
