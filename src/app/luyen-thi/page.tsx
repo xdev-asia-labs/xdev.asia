@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { getAllQuizzes, getSeriesByCategory } from "@/lib/data";
 import { IconAward, IconClock, IconArrowRight, IconBook } from "@/components/Icons";
@@ -75,6 +76,19 @@ export default function LuyenThiPage() {
                             key={quiz.id}
                             className="flex flex-col bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 overflow-hidden hover:shadow-lg hover:shadow-brand-500/5 transition-all duration-300"
                         >
+                            {/* Banner image */}
+                            {series?.featured_image && (
+                                <div className="relative w-full aspect-[16/9] bg-zinc-100 dark:bg-zinc-800">
+                                    <Image
+                                        src={`/${series.featured_image}`}
+                                        alt={quiz.title}
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 1024px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                                    />
+                                </div>
+                            )}
+
                             {/* Header with provider & level */}
                             <div className="px-6 pt-6 pb-4">
                                 <div className="flex items-center gap-2 mb-3">

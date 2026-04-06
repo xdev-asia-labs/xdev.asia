@@ -122,6 +122,17 @@ export default function Footer() {
                     <p className="text-xs" style={{ color: "rgba(148, 163, 184, 0.6)" }}>
                         &copy; {new Date().getFullYear()} {siteName}. All rights reserved.
                     </p>
+                    <div className="flex items-center gap-4">
+                        {[
+                            { href: "/pages/chinh-sach-quyen-rieng-tu/", label: "Chính sách quyền riêng tư" },
+                            { href: "/pages/dieu-khoan-su-dung/", label: "Điều khoản sử dụng" },
+                            { href: "/pages/xoa-du-lieu-nguoi-dung/", label: "Xoá dữ liệu" },
+                        ].map((link) => (
+                            <Link key={link.href} href={link.href} className="text-xs transition-colors" style={{ color: "rgba(148, 163, 184, 0.6)" }}>
+                                {link.label}
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             </div>
         </footer>
