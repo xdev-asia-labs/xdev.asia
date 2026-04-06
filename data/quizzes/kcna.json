@@ -1,0 +1,317 @@
+{
+    "id": "kcna",
+    "title": "KCNA — Kubernetes and Cloud Native Associate",
+    "slug": "kcna",
+    "description": "Practice exam for KCNA — 20 questions covering all 5 domains",
+    "icon": "award",
+    "provider": "CNCF",
+    "level": "Foundational",
+    "duration_minutes": 30,
+    "passing_score": 75,
+    "questions_count": 20,
+    "tags": ["Kubernetes", "CNCF", "Cloud Native", "DevOps"],
+    "series_slug": "luyen-thi-kcna",
+    "domains": [
+        {
+            "name": "Domain 1: Kubernetes Fundamentals",
+            "weight": 46,
+            "lessons": [
+                { "title": "Bài 1: Kubernetes Architecture & Core Components", "slug": "01-kien-truc-kubernetes" },
+                { "title": "Bài 2: Pods, Workloads & Controllers", "slug": "02-pods-workloads-controllers" },
+                { "title": "Bài 3: Services, Networking & Storage", "slug": "03-services-networking-storage" },
+                { "title": "Bài 4: RBAC & Security Basics", "slug": "04-rbac-security" }
+            ]
+        },
+        {
+            "name": "Domain 2: Container Orchestration",
+            "weight": 22,
+            "lessons": [
+                { "title": "Bài 5: Container Runtimes & OCI Standards", "slug": "05-container-runtimes-oci" },
+                { "title": "Bài 6: Container Orchestration Patterns", "slug": "06-orchestration-patterns" }
+            ]
+        },
+        {
+            "name": "Domain 3: Cloud Native Architecture",
+            "weight": 16,
+            "lessons": [
+                { "title": "Bài 7: Cloud Native Architecture & Design Patterns", "slug": "07-cloud-native-architecture" }
+            ]
+        },
+        {
+            "name": "Domain 4: Cloud Native Observability",
+            "weight": 8,
+            "lessons": [
+                { "title": "Bài 8: Cloud Native Observability", "slug": "08-observability" }
+            ]
+        },
+        {
+            "name": "Domain 5: Application Delivery",
+            "weight": 8,
+            "lessons": [
+                { "title": "Bài 9: Application Delivery — Helm, GitOps & CI/CD", "slug": "09-helm-gitops-cicd" }
+            ]
+        }
+    ],
+    "questions": [
+        {
+            "id": 1,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "Which component is the ONLY point of access for the Kubernetes API in the control plane?",
+            "options": [
+                "etcd",
+                "kube-scheduler",
+                "kube-apiserver",
+                "kube-controller-manager"
+            ],
+            "correct": 2,
+            "explanation": "kube-apiserver is the central management entity and the only component that communicates directly with etcd. All other components and external users interact with the cluster through the API server."
+        },
+        {
+            "id": 2,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "What is the purpose of etcd in a Kubernetes cluster?",
+            "options": [
+                "Scheduling pods onto nodes",
+                "Managing container networking",
+                "Storing all cluster data as a consistent key-value store",
+                "Running health checks on pods"
+            ],
+            "correct": 2,
+            "explanation": "etcd is a consistent, distributed key-value store used as Kubernetes' backing store for all cluster data, including configuration, state, and metadata."
+        },
+        {
+            "id": 3,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "Which workload resource ensures exactly one pod runs on every node in the cluster?",
+            "options": [
+                "Deployment",
+                "ReplicaSet",
+                "DaemonSet",
+                "StatefulSet"
+            ],
+            "correct": 2,
+            "explanation": "A DaemonSet ensures that a copy of a pod runs on all (or a subset of) nodes. Common use cases include log collection agents, monitoring daemons, and network plugins."
+        },
+        {
+            "id": 4,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "What is the difference between a ConfigMap and a Secret in Kubernetes?",
+            "options": [
+                "ConfigMaps can only store files, Secrets store key-value pairs",
+                "Secrets are encrypted at rest by default, ConfigMaps are not",
+                "Secrets are base64-encoded and intended for sensitive data, ConfigMaps are for non-sensitive configuration",
+                "There is no difference, they are interchangeable"
+            ],
+            "correct": 2,
+            "explanation": "Secrets are base64-encoded and designed for sensitive data like passwords and tokens. ConfigMaps hold non-sensitive configuration. Note: Secrets are NOT encrypted by default — encryption at rest must be configured separately."
+        },
+        {
+            "id": 5,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "Which Kubernetes Service type exposes a service on a static port on each node's IP?",
+            "options": [
+                "ClusterIP",
+                "NodePort",
+                "LoadBalancer",
+                "ExternalName"
+            ],
+            "correct": 1,
+            "explanation": "NodePort exposes the Service on each node's IP at a static port (range 30000-32767). External traffic can reach the service via <NodeIP>:<NodePort>."
+        },
+        {
+            "id": 6,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "What does a NetworkPolicy control?",
+            "options": [
+                "DNS resolution between pods",
+                "Resource limits for containers",
+                "Ingress and egress traffic to/from pods at the IP address or port level",
+                "TLS certificate management"
+            ],
+            "correct": 2,
+            "explanation": "NetworkPolicies are used to control the flow of traffic between pods and/or external endpoints at the network level. They allow you to specify ingress and egress rules based on pod labels, namespaces, and IP blocks."
+        },
+        {
+            "id": 7,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "Which object grants permissions within a specific namespace?",
+            "options": [
+                "ClusterRole",
+                "Role",
+                "ClusterRoleBinding",
+                "ServiceAccount"
+            ],
+            "correct": 1,
+            "explanation": "A Role defines permissions (rules) within a specific namespace. A ClusterRole defines permissions cluster-wide. RoleBinding binds a Role to subjects within a namespace."
+        },
+        {
+            "id": 8,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "What happens when a Pod's liveness probe fails repeatedly?",
+            "options": [
+                "The pod is moved to another node",
+                "The container is restarted by the kubelet",
+                "The pod is deleted permanently",
+                "Kubernetes sends an alert notification"
+            ],
+            "correct": 1,
+            "explanation": "When a liveness probe fails beyond the configured failureThreshold, the kubelet restarts the container. This helps recover from situations where the application is running but stuck or deadlocked."
+        },
+        {
+            "id": 9,
+            "domain": "Domain 1: Kubernetes Fundamentals",
+            "question": "Which component on a worker node is responsible for maintaining network rules and enabling Service communication?",
+            "options": [
+                "kubelet",
+                "kube-proxy",
+                "container runtime",
+                "CoreDNS"
+            ],
+            "correct": 1,
+            "explanation": "kube-proxy runs on each node and maintains network rules (using iptables or IPVS) that allow network communication to pods from inside or outside the cluster through Services."
+        },
+        {
+            "id": 10,
+            "domain": "Domain 2: Container Orchestration",
+            "question": "What is the OCI (Open Container Initiative) responsible for?",
+            "options": [
+                "Managing Kubernetes releases",
+                "Defining industry standards for container image formats and runtimes",
+                "Providing a managed container service",
+                "Developing the Docker engine"
+            ],
+            "correct": 1,
+            "explanation": "The OCI defines open industry standards around container image format (Image Spec) and runtime (Runtime Spec), ensuring interoperability between different container tools and platforms."
+        },
+        {
+            "id": 11,
+            "domain": "Domain 2: Container Orchestration",
+            "question": "Which container runtime is the default in modern Kubernetes (v1.24+)?",
+            "options": [
+                "Docker",
+                "rkt",
+                "containerd",
+                "LXC"
+            ],
+            "correct": 2,
+            "explanation": "Since Kubernetes v1.24, dockershim was removed. containerd and CRI-O are the primary CRI-compliant container runtimes. containerd is the most widely used default runtime."
+        },
+        {
+            "id": 12,
+            "domain": "Domain 2: Container Orchestration",
+            "question": "What is the purpose of a Horizontal Pod Autoscaler (HPA)?",
+            "options": [
+                "Increasing node count in the cluster",
+                "Automatically adjusting the number of pod replicas based on observed metrics",
+                "Vertically scaling container CPU and memory",
+                "Balancing traffic across services"
+            ],
+            "correct": 1,
+            "explanation": "HPA automatically scales the number of pod replicas in a Deployment, ReplicaSet, or StatefulSet based on observed CPU utilization, memory, or custom metrics."
+        },
+        {
+            "id": 13,
+            "domain": "Domain 2: Container Orchestration",
+            "question": "What does 'kubectl drain <node>' do?",
+            "options": [
+                "Deletes the node from the cluster",
+                "Stops the kubelet service on the node",
+                "Safely evicts all pods from the node and marks it as unschedulable",
+                "Restarts all pods on the node"
+            ],
+            "correct": 2,
+            "explanation": "kubectl drain safely evicts all pods from a node (respecting PodDisruptionBudgets), marks the node as unschedulable (cordon), and is typically used before maintenance or upgrades."
+        },
+        {
+            "id": 14,
+            "domain": "Domain 3: Cloud Native Architecture",
+            "question": "Which methodology defines best practices for building cloud-native applications?",
+            "options": [
+                "Waterfall methodology",
+                "12-Factor App",
+                "ITIL framework",
+                "TOGAF"
+            ],
+            "correct": 1,
+            "explanation": "The 12-Factor App methodology provides guidelines for building modern, cloud-native applications that are portable, scalable, and suitable for deployment on cloud platforms."
+        },
+        {
+            "id": 15,
+            "domain": "Domain 3: Cloud Native Architecture",
+            "question": "What is a Service Mesh?",
+            "options": [
+                "A Kubernetes networking plugin (CNI)",
+                "A dedicated infrastructure layer for handling service-to-service communication with observability, security, and traffic management",
+                "A load balancer for external traffic",
+                "A container orchestration platform"
+            ],
+            "correct": 1,
+            "explanation": "A service mesh (e.g., Istio, Linkerd) provides a dedicated infrastructure layer for managing service-to-service communication, including features like mTLS, traffic routing, retries, circuit breaking, and observability."
+        },
+        {
+            "id": 16,
+            "domain": "Domain 3: Cloud Native Architecture",
+            "question": "Which architectural pattern breaks an application into small, independently deployable services?",
+            "options": [
+                "Monolithic architecture",
+                "Microservices architecture",
+                "Serverless architecture",
+                "Event-driven architecture"
+            ],
+            "correct": 1,
+            "explanation": "Microservices architecture decomposes an application into small, loosely coupled services that can be developed, deployed, and scaled independently."
+        },
+        {
+            "id": 17,
+            "domain": "Domain 4: Cloud Native Observability",
+            "question": "Which tool is the de facto standard for metrics collection and monitoring in cloud-native environments?",
+            "options": [
+                "Elasticsearch",
+                "Prometheus",
+                "Fluentd",
+                "Jaeger"
+            ],
+            "correct": 1,
+            "explanation": "Prometheus is the CNCF graduated project that has become the standard for metrics collection, storage, and alerting in cloud-native environments. It uses a pull-based model and PromQL for querying."
+        },
+        {
+            "id": 18,
+            "domain": "Domain 4: Cloud Native Observability",
+            "question": "What are the three pillars of observability?",
+            "options": [
+                "CPU, Memory, Disk",
+                "Logs, Metrics, Traces",
+                "Alerts, Dashboards, Reports",
+                "Latency, Throughput, Errors"
+            ],
+            "correct": 1,
+            "explanation": "The three pillars of observability are Logs (event records), Metrics (numerical measurements over time), and Traces (distributed request flows). Together they provide full visibility into system behavior."
+        },
+        {
+            "id": 19,
+            "domain": "Domain 5: Application Delivery",
+            "question": "What is GitOps?",
+            "options": [
+                "Using Git as a CI/CD pipeline runner",
+                "A practice where Git repositories are the single source of truth for declarative infrastructure and application deployment",
+                "A Git branching strategy for microservices",
+                "Using GitHub Actions exclusively for deployments"
+            ],
+            "correct": 1,
+            "explanation": "GitOps uses Git as the single source of truth for declarative infrastructure and applications. Changes are made via pull requests, and an operator (e.g., ArgoCD, Flux) ensures the cluster state matches the desired state in Git."
+        },
+        {
+            "id": 20,
+            "domain": "Domain 5: Application Delivery",
+            "question": "What is a Helm Chart?",
+            "options": [
+                "A Kubernetes monitoring dashboard",
+                "A collection of files that describe a related set of Kubernetes resources for packaging and deployment",
+                "A security scanning tool for containers",
+                "A CI/CD pipeline configuration"
+            ],
+            "correct": 1,
+            "explanation": "A Helm Chart is a package of pre-configured Kubernetes resources. It includes templates, default values, and metadata, allowing users to deploy complex applications with a single command (helm install)."
+        }
+    ]
+}

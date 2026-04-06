@@ -1,0 +1,319 @@
+{
+    "id": "cka",
+    "title": "CKA — Certified Kubernetes Administrator",
+    "slug": "cka",
+    "description": "Practice exam for CKA — 20 questions covering all 5 domains",
+    "icon": "award",
+    "provider": "CNCF",
+    "level": "Professional",
+    "duration_minutes": 45,
+    "passing_score": 66,
+    "questions_count": 20,
+    "tags": ["Kubernetes", "CKA", "CNCF", "DevOps", "Linux Foundation"],
+    "series_slug": "luyen-thi-cka",
+    "domains": [
+        {
+            "name": "Domain 1: Cluster Architecture, Installation & Configuration",
+            "weight": 25,
+            "lessons": [
+                { "title": "Bài 1: Kubernetes Architecture & kubeadm Cluster Setup", "slug": "01-kien-truc-cka-kubeadm" },
+                { "title": "Bài 2: Cluster Upgrade với kubeadm", "slug": "02-cluster-upgrade-kubeadm" },
+                { "title": "Bài 3: RBAC — Role-Based Access Control", "slug": "03-rbac-cka" }
+            ]
+        },
+        {
+            "name": "Domain 2: Workloads & Scheduling",
+            "weight": 15,
+            "lessons": [
+                { "title": "Bài 4: Deployments, DaemonSets & StatefulSets", "slug": "04-deployments-daemonsets-statefulsets" },
+                { "title": "Bài 5: Scheduling — Taints, Tolerations & Affinity", "slug": "05-scheduling-taints-affinity" }
+            ]
+        },
+        {
+            "name": "Domain 3: Services & Networking",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 6: Services, Endpoints & CoreDNS", "slug": "06-services-endpoints-coredns" },
+                { "title": "Bài 7: Ingress, Network Policies & CNI", "slug": "07-ingress-networkpolicies-cni" }
+            ]
+        },
+        {
+            "name": "Domain 4: Storage",
+            "weight": 10,
+            "lessons": [
+                { "title": "Bài 8: Persistent Volumes, PVCs & StorageClass", "slug": "08-persistent-volumes-storageclass" }
+            ]
+        },
+        {
+            "name": "Domain 5: Troubleshooting",
+            "weight": 30,
+            "lessons": [
+                { "title": "Bài 9: etcd Backup & Restore", "slug": "09-etcd-backup-restore" },
+                { "title": "Bài 10: Troubleshooting Nodes & Cluster", "slug": "10-troubleshooting-nodes" },
+                { "title": "Bài 11: Troubleshooting Workloads", "slug": "11-troubleshooting-workloads" }
+            ]
+        }
+    ],
+    "questions": [
+        {
+            "id": 1,
+            "domain": "Domain 1: Cluster Architecture, Installation & Configuration",
+            "question": "You need to upgrade a Kubernetes cluster from v1.29 to v1.30 using kubeadm. What is the CORRECT order of operations?",
+            "options": [
+                "Upgrade worker nodes first, then upgrade control plane",
+                "Upgrade kubeadm on control plane, run kubeadm upgrade plan/apply, upgrade kubelet and kubectl, then upgrade worker nodes",
+                "Upgrade kubelet on all nodes simultaneously",
+                "Upgrade kubectl first, then kubeadm, then kubelet"
+            ],
+            "correct": 1,
+            "explanation": "The correct upgrade order is: upgrade kubeadm → run kubeadm upgrade plan → kubeadm upgrade apply on the control plane → upgrade kubelet and kubectl on control plane → then repeat for each worker node (drain, upgrade kubeadm/kubelet, uncordon)."
+        },
+        {
+            "id": 2,
+            "domain": "Domain 1: Cluster Architecture, Installation & Configuration",
+            "question": "Which kubectl command checks if a user has permission to create deployments in the 'production' namespace?",
+            "options": [
+                "kubectl get roles -n production",
+                "kubectl auth can-i create deployments -n production",
+                "kubectl describe clusterrole admin",
+                "kubectl check-access deployments -n production"
+            ],
+            "correct": 1,
+            "explanation": "kubectl auth can-i checks whether an action is allowed. 'kubectl auth can-i create deployments -n production' checks if the current user can create deployments in the production namespace."
+        },
+        {
+            "id": 3,
+            "domain": "Domain 1: Cluster Architecture, Installation & Configuration",
+            "question": "A RoleBinding binds a ClusterRole to a user in namespace 'dev'. What is the scope of the permissions?",
+            "options": [
+                "Cluster-wide, because ClusterRole is cluster-scoped",
+                "Limited to the 'dev' namespace only",
+                "All namespaces except 'dev'",
+                "It will result in an error — ClusterRole cannot be used with RoleBinding"
+            ],
+            "correct": 1,
+            "explanation": "When a RoleBinding references a ClusterRole, the permissions are scoped to the RoleBinding's namespace only. This is a common pattern to reuse a set of permissions defined in a ClusterRole across multiple namespaces."
+        },
+        {
+            "id": 4,
+            "domain": "Domain 1: Cluster Architecture, Installation & Configuration",
+            "question": "What is the Kubernetes version skew policy for kubelet relative to kube-apiserver?",
+            "options": [
+                "kubelet must be the exact same version as kube-apiserver",
+                "kubelet can be up to 3 minor versions older than kube-apiserver",
+                "kubelet can be up to 2 minor versions older than kube-apiserver, but not newer",
+                "There is no version requirement between kubelet and kube-apiserver"
+            ],
+            "correct": 2,
+            "explanation": "kubelet may be up to two minor versions older than kube-apiserver but must not be newer. For example, kube-apiserver 1.30 supports kubelet 1.28, 1.29, and 1.30."
+        },
+        {
+            "id": 5,
+            "domain": "Domain 2: Workloads & Scheduling",
+            "question": "A pod is in 'Pending' state. kubectl describe shows 'insufficient cpu'. What is the MOST likely cause?",
+            "options": [
+                "The container image is too large",
+                "No node has enough allocatable CPU to satisfy the pod's resource requests",
+                "The pod has a failed liveness probe",
+                "The pod's service account doesn't have sufficient permissions"
+            ],
+            "correct": 1,
+            "explanation": "When a pod is Pending with 'insufficient cpu', it means the scheduler cannot find a node with enough available CPU resources to satisfy the pod's resource requests. Solutions include adding nodes, reducing requests, or removing resource-heavy pods."
+        },
+        {
+            "id": 6,
+            "domain": "Domain 2: Workloads & Scheduling",
+            "question": "How do you ensure a pod is scheduled ONLY on nodes with the label 'disk=ssd'?",
+            "options": [
+                "Use a taint on the nodes with disk=ssd",
+                "Use nodeSelector with disk: ssd in the pod spec",
+                "Use a PodDisruptionBudget",
+                "Use podAntiAffinity"
+            ],
+            "correct": 1,
+            "explanation": "nodeSelector is the simplest way to constrain pods to nodes with specific labels. Adding 'nodeSelector: { disk: ssd }' to the pod spec ensures the pod is only scheduled on nodes with that label."
+        },
+        {
+            "id": 7,
+            "domain": "Domain 2: Workloads & Scheduling",
+            "question": "What is the effect of adding a taint 'key=value:NoSchedule' to a node?",
+            "options": [
+                "All existing pods without a matching toleration are evicted immediately",
+                "No new pods will be scheduled on the node unless they have a matching toleration",
+                "The node is removed from the cluster",
+                "All pods on the node are restarted"
+            ],
+            "correct": 1,
+            "explanation": "NoSchedule prevents new pods without a matching toleration from being scheduled on the node. Existing pods are NOT affected. Use NoExecute to also evict existing non-tolerating pods."
+        },
+        {
+            "id": 8,
+            "domain": "Domain 3: Services & Networking",
+            "question": "What is the DNS format for resolving a Service named 'my-svc' in namespace 'my-ns'?",
+            "options": [
+                "my-svc.my-ns",
+                "my-svc.my-ns.svc.cluster.local",
+                "my-ns.my-svc.cluster.local",
+                "svc.my-svc.my-ns.cluster.local"
+            ],
+            "correct": 1,
+            "explanation": "Kubernetes DNS follows the format: <service-name>.<namespace>.svc.cluster.local. Within the same namespace, you can use just the service name. Across namespaces, use <service-name>.<namespace>."
+        },
+        {
+            "id": 9,
+            "domain": "Domain 3: Services & Networking",
+            "question": "An Ingress resource routes traffic to a backend service. The Ingress controller pod is running but rules are not taking effect. What should you check FIRST?",
+            "options": [
+                "Whether the Ingress has the correct ingressClassName",
+                "Whether etcd is healthy",
+                "Whether the node has enough memory",
+                "Whether kube-scheduler is running"
+            ],
+            "correct": 0,
+            "explanation": "If Ingress rules are not working despite the controller running, the first check should be ingressClassName. In Kubernetes 1.22+, Ingress resources need to specify the correct IngressClass to be picked up by the right controller."
+        },
+        {
+            "id": 10,
+            "domain": "Domain 3: Services & Networking",
+            "question": "You created a NetworkPolicy with an empty podSelector {}. What is the effect?",
+            "options": [
+                "It selects no pods in the namespace",
+                "It selects all pods in the namespace",
+                "It causes a validation error",
+                "It applies to the entire cluster"
+            ],
+            "correct": 1,
+            "explanation": "An empty podSelector {} selects ALL pods in the namespace. A NetworkPolicy with spec.podSelector: {} and no ingress/egress rules effectively creates a default-deny policy for all pods in that namespace."
+        },
+        {
+            "id": 11,
+            "domain": "Domain 3: Services & Networking",
+            "question": "Which kube-proxy mode is MOST performant for large clusters with many Services?",
+            "options": [
+                "userspace mode",
+                "iptables mode",
+                "IPVS mode",
+                "nftables mode"
+            ],
+            "correct": 2,
+            "explanation": "IPVS (IP Virtual Server) mode uses hash tables for Service-to-Pod mapping, providing O(1) lookup performance regardless of the number of Services, making it much more efficient than iptables for large clusters."
+        },
+        {
+            "id": 12,
+            "domain": "Domain 4: Storage",
+            "question": "A PersistentVolume has reclaimPolicy set to 'Retain'. What happens when the associated PVC is deleted?",
+            "options": [
+                "The PV and its data are automatically deleted",
+                "The PV remains with its data intact but it becomes 'Released' and cannot be bound to a new PVC without manual intervention",
+                "The PV is immediately available for a new PVC to claim",
+                "The data is archived to an object store"
+            ],
+            "correct": 1,
+            "explanation": "With Retain policy, when the PVC is deleted, the PV enters 'Released' state. The data is preserved, but the PV cannot be rebound automatically. An admin must manually clean up and reconfigure the PV for reuse."
+        },
+        {
+            "id": 13,
+            "domain": "Domain 4: Storage",
+            "question": "Which access mode allows a PersistentVolume to be mounted as read-write by multiple nodes simultaneously?",
+            "options": [
+                "ReadWriteOnce (RWO)",
+                "ReadOnlyMany (ROX)",
+                "ReadWriteMany (RWX)",
+                "ReadWriteOncePod (RWOP)"
+            ],
+            "correct": 2,
+            "explanation": "ReadWriteMany (RWX) allows the volume to be mounted as read-write by many nodes simultaneously. This is commonly supported by network file systems like NFS, CephFS, and cloud-native shared file storage."
+        },
+        {
+            "id": 14,
+            "domain": "Domain 5: Troubleshooting",
+            "question": "You need to take a snapshot of etcd for backup. Which tool and flags are required?",
+            "options": [
+                "kubectl backup etcd --output=/backup/snapshot.db",
+                "etcdctl snapshot save /backup/snapshot.db --endpoints --cacert --cert --key",
+                "kubeadm backup etcd --snapshot-dir=/backup",
+                "etcdctl backup --data-dir=/var/lib/etcd"
+            ],
+            "correct": 1,
+            "explanation": "etcdctl snapshot save is the correct command. It requires TLS flags: --endpoints (etcd address), --cacert (CA certificate), --cert (server certificate), and --key (server key), all found in the etcd pod manifest."
+        },
+        {
+            "id": 15,
+            "domain": "Domain 5: Troubleshooting",
+            "question": "A node shows 'NotReady' status. Which is the FIRST thing to check?",
+            "options": [
+                "Check if kube-proxy is running",
+                "Check if kubelet is running on the node (systemctl status kubelet)",
+                "Check if CoreDNS pods are healthy",
+                "Check if the container images are cached"
+            ],
+            "correct": 1,
+            "explanation": "A NotReady node typically means kubelet is not communicating with the API server. The first step is to SSH into the node and check kubelet status with 'systemctl status kubelet', then check logs with 'journalctl -u kubelet'."
+        },
+        {
+            "id": 16,
+            "domain": "Domain 5: Troubleshooting",
+            "question": "A pod is in CrashLoopBackOff state. Which command is MOST useful to diagnose the issue?",
+            "options": [
+                "kubectl get events",
+                "kubectl logs <pod-name> --previous",
+                "kubectl describe node",
+                "kubectl top pod"
+            ],
+            "correct": 1,
+            "explanation": "kubectl logs <pod-name> --previous shows logs from the previous crashed container instance. This reveals the actual error (e.g., application error, missing config) that caused the crash."
+        },
+        {
+            "id": 17,
+            "domain": "Domain 5: Troubleshooting",
+            "question": "A Deployment's pods cannot reach a ClusterIP Service. The Service has endpoints. What should you check?",
+            "options": [
+                "Whether the Service has the correct selector matching the pod labels",
+                "Whether there's a NetworkPolicy blocking traffic between the source pods and the Service",
+                "Whether the Deployment has enough replicas",
+                "Whether the node has sufficient disk space"
+            ],
+            "correct": 1,
+            "explanation": "If the Service has endpoints (backends are matched), but pods can't reach it, a NetworkPolicy may be blocking traffic. Check for NetworkPolicies in both the source and destination namespaces that could restrict ingress or egress."
+        },
+        {
+            "id": 18,
+            "domain": "Domain 5: Troubleshooting",
+            "question": "After restoring etcd from a snapshot, the API server shows stale data. What is the MOST likely cause?",
+            "options": [
+                "The snapshot file was corrupted",
+                "The etcd data-dir was not updated to point to the restored snapshot location",
+                "kube-apiserver needs a version upgrade",
+                "CoreDNS needs to be restarted"
+            ],
+            "correct": 1,
+            "explanation": "After restoring, you must update the etcd pod manifest (or systemd unit) to point --data-dir to the new restored directory. If the old data-dir is still being used, etcd will serve stale data."
+        },
+        {
+            "id": 19,
+            "domain": "Domain 5: Troubleshooting",
+            "question": "A pod is stuck in 'ImagePullBackOff' state. Which is NOT a possible cause?",
+            "options": [
+                "The image name or tag is incorrect",
+                "The container registry requires authentication and no imagePullSecret is configured",
+                "The node has insufficient CPU resources",
+                "Network connectivity to the registry is blocked"
+            ],
+            "correct": 2,
+            "explanation": "ImagePullBackOff indicates the kubelet cannot pull the container image. This can be due to wrong image name, missing registry credentials, or network issues — but NOT CPU resources. CPU issues cause Pending state, not ImagePullBackOff."
+        },
+        {
+            "id": 20,
+            "domain": "Domain 5: Troubleshooting",
+            "question": "How would you check which static pod manifests are being used on a node?",
+            "options": [
+                "kubectl get staticpods",
+                "Check the directory specified by kubelet's --pod-manifest-path flag (default: /etc/kubernetes/manifests/)",
+                "kubectl describe node | grep StaticPods",
+                "etcdctl get /registry/pods"
+            ],
+            "correct": 1,
+            "explanation": "Static pods are defined by manifest files in the directory configured via --pod-manifest-path (default /etc/kubernetes/manifests/). kubelet watches this directory and automatically creates/deletes pods based on these manifests."
+        }
+    ]
+}

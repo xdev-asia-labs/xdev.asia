@@ -2,199 +2,707 @@
     "id": "gcp-ml-engineer",
     "title": "Google Cloud Professional ML Engineer",
     "slug": "gcp-ml-engineer",
-    "description": "Luyện thi chứng chỉ Google Cloud Professional Machine Learning Engineer",
+    "description": "Practice exam for Google Cloud Professional Machine Learning Engineer — 50 questions covering all domains",
     "icon": "award",
     "provider": "Google Cloud",
-    "level": "Chuyên nghiệp",
+    "level": "Professional",
     "duration_minutes": 120,
     "passing_score": 70,
-    "questions_count": 15,
-    "tags": [
-        "GCP",
-        "ML",
-        "Vertex AI"
-    ],
+    "questions_count": 50,
+    "tags": ["GCP", "ML", "Vertex AI", "BigQuery ML", "MLOps", "TFX"],
     "series_slug": "luyen-thi-gcp-ml-engineer",
+    "domains": [
+        {
+            "name": "Domain 1: ML Problem Framing & Architecture",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 1: Framing ML Problems — Supervised, Unsupervised, RL", "slug": "bai-1-framing-ml-problems" },
+                { "title": "Bài 2: GCP AI/ML Ecosystem Overview", "slug": "bai-2-gcp-ai-ml-ecosystem" }
+            ]
+        },
+        {
+            "name": "Domain 2: Data Engineering & Feature Engineering",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 3: Data Pipeline — Dataflow, Pub/Sub, Dataproc", "slug": "bai-3-data-pipeline" },
+                { "title": "Bài 4: Feature Engineering & Vertex AI Feature Store", "slug": "bai-4-feature-engineering" }
+            ]
+        },
+        {
+            "name": "Domain 3: Model Development on Vertex AI",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 5: Vertex AI Training — Custom & AutoML", "slug": "bai-5-vertex-ai-training" },
+                { "title": "Bài 6: BigQuery ML & TensorFlow on GCP", "slug": "bai-6-bigquery-ml-tensorflow" }
+            ]
+        },
+        {
+            "name": "Domain 4: Model Deployment & MLOps",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 7: Model Deployment & Prediction", "slug": "bai-7-model-deployment" },
+                { "title": "Bài 8: Vertex AI Pipelines & MLOps", "slug": "bai-8-vertex-ai-pipelines-mlops" }
+            ]
+        },
+        {
+            "name": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 9: Responsible AI & Security", "slug": "bai-9-responsible-ai" },
+                { "title": "Bài 10: Cheat Sheet & Chiến lược thi", "slug": "bai-10-cheat-sheet-chien-luoc-thi" }
+            ]
+        }
+    ],
     "questions": [
         {
             "id": 1,
-            "question": "Vertex AI Pipeline được xây dựng trên framework nào?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "A retail company wants to predict which customers will churn in the next 30 days. They have 2 years of historical data with labels. Which ML approach is MOST appropriate?",
             "options": [
-                "Apache Spark",
-                "Kubeflow Pipelines / TFX",
-                "Apache Airflow",
-                "Jenkins"
+                "Unsupervised clustering to group similar customers",
+                "Supervised binary classification using historical churn labels",
+                "Reinforcement learning to learn optimal retention actions",
+                "Anomaly detection on transaction patterns"
             ],
             "correct": 1,
-            "explanation": "Vertex AI Pipelines dựa trên Kubeflow Pipelines SDK và TFX (TensorFlow Extended), cho phép orchestrate ML workflow trên Google Cloud."
+            "explanation": "This is a classic supervised binary classification problem — predicting a binary outcome (churn/no-churn) using labeled historical data. The target variable is clearly defined and data is available."
         },
         {
             "id": 2,
-            "question": "BigQuery ML cho phép làm gì đặc biệt?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "A team wants to build a product recommendation system but has NO historical interaction data. Which approach should they start with?",
             "options": [
-                "Chỉ query dữ liệu",
-                "Train và deploy ML model trực tiếp bằng SQL trong BigQuery",
-                "Chỉ export dữ liệu sang CSV",
-                "Quản lý Kubernetes cluster"
+                "Collaborative filtering",
+                "Content-based filtering using product attributes",
+                "Matrix factorization",
+                "Deep neural collaborative filtering"
             ],
             "correct": 1,
-            "explanation": "BigQuery ML (BQML) cho phép data analysts train model ML bằng SQL quen thuộc ngay trong BigQuery — không cần viết Python hay setup infrastructure riêng."
+            "explanation": "Without user-item interaction data (cold start problem), collaborative filtering won't work. Content-based filtering uses product attributes (category, description, price) to recommend similar items — it doesn't require interaction history."
         },
         {
             "id": 3,
-            "question": "Vertex AI Feature Store khác gì so với lưu features trong database thông thường?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "Which GCP service should you use for a simple image classification task when you have limited ML expertise and a small labeled dataset?",
             "options": [
-                "Không có gì khác",
-                "Hỗ trợ serving features với low-latency, đảm bảo training-serving consistency, và feature versioning",
-                "Chỉ hỗ trợ structured data",
-                "Chỉ dùng được với TensorFlow"
+                "Vertex AI Custom Training with a custom TensorFlow model",
+                "Vertex AI AutoML Vision",
+                "Cloud Vision API (pre-trained)",
+                "BigQuery ML"
             ],
             "correct": 1,
-            "explanation": "Feature Store chuyên biệt cho ML: serving features online (low-latency) và offline (batch), đảm bảo features đồng nhất giữa training và serving, hỗ trợ time-travel và monitoring."
+            "explanation": "AutoML Vision is ideal for custom image classification when you have labeled data but limited ML expertise. Cloud Vision API only supports pre-defined labels. Custom training requires significant ML knowledge."
         },
         {
             "id": 4,
-            "question": "Khi nào nên dùng AutoML thay vì custom training trên Vertex AI?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "A company needs to extract text from scanned documents and receipts. Which GCP service is MOST appropriate?",
             "options": [
-                "Khi cần kiểm soát hoàn toàn architecture",
-                "Khi team không có nhiều ML expertise hoặc cần baseline model nhanh",
-                "Khi dataset rất lớn (>1TB)",
-                "Khi cần distributed training"
+                "Cloud Natural Language API",
+                "Document AI",
+                "Cloud Vision API OCR only",
+                "Vertex AI AutoML Text"
             ],
             "correct": 1,
-            "explanation": "AutoML phù hợp khi cần model nhanh, team có ít ML expertise, hoặc cần baseline. Custom training khi cần kiểm soát architecture, thuật toán đặc thù, hoặc tối ưu sâu."
+            "explanation": "Document AI is purpose-built for extracting structured data from documents (invoices, receipts, forms). It goes beyond simple OCR by understanding document structure, key-value pairs, and tables."
         },
         {
             "id": 5,
-            "question": "Vertex AI Experiments dùng để?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "When framing an ML problem, which metric is MOST important to align with stakeholders FIRST?",
             "options": [
-                "Deploy model lên production",
-                "Track, compare và reproduce ML experiments (hyperparameters, metrics, artifacts)",
-                "Tạo dataset mới",
-                "Quản lý IAM"
+                "Model accuracy on test set",
+                "AUC-ROC curve",
+                "Business KPI that the model is expected to improve",
+                "F1 score"
             ],
-            "correct": 1,
-            "explanation": "Vertex AI Experiments cung cấp experiment tracking: log hyperparameters, metrics, model artifacts — cho phép compare nhiều runs và reproduce kết quả."
+            "correct": 2,
+            "explanation": "The first step in framing is defining how ML success maps to business outcomes. ML metrics (accuracy, AUC) are proxies — stakeholders care about business KPIs (revenue, cost reduction, customer satisfaction)."
         },
         {
             "id": 6,
-            "question": "TFX (TensorFlow Extended) bao gồm những component chính nào?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "A fraud detection system needs to catch 99% of fraud even if some legitimate transactions are flagged. Which metric should be optimized?",
             "options": [
-                "Chỉ có ExampleGen và Trainer",
-                "ExampleGen, StatisticsGen, SchemaGen, ExampleValidator, Transform, Trainer, Evaluator, Pusher",
-                "Chỉ có Trainer và Serving",
-                "Chỉ có Transform và Evaluator"
+                "Precision",
+                "Recall (Sensitivity)",
+                "Accuracy",
+                "Specificity"
             ],
             "correct": 1,
-            "explanation": "TFX là end-to-end ML platform gồm: ExampleGen (ingest), StatisticsGen + SchemaGen + ExampleValidator (validate), Transform (feature eng), Trainer, Tuner, Evaluator, Pusher (deploy)."
+            "explanation": "Recall = TP/(TP+FN) measures the fraction of actual positives correctly identified. 99% recall means catching 99% of fraud. Precision would prioritize minimizing false alarms instead."
         },
         {
             "id": 7,
-            "question": "Vertex AI Model Monitoring kiểm tra điều gì?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "Which GCP service decision is correct?",
             "options": [
-                "Chỉ monitor CPU/memory",
-                "Skew (training-serving) và drift (prediction data thay đổi theo thời gian)",
-                "Chỉ monitor latency",
-                "Chỉ monitor cost"
+                "Use BigQuery ML when you need custom PyTorch architectures",
+                "Use Vertex AI Custom Training when you need full control over training code, framework, and infrastructure",
+                "Use AutoML when you need to implement a custom loss function",
+                "Use Cloud Vision API when you need to classify images into custom categories"
             ],
             "correct": 1,
-            "explanation": "Model Monitoring phát hiện: training-serving skew (feature distribution khác nhau) và prediction drift (dữ liệu production drift khỏi baseline), trigger alert khi vượt threshold."
+            "explanation": "Vertex AI Custom Training gives full control: any framework (TF, PyTorch, XGBoost), custom code, custom containers, distributed training, GPU/TPU selection. AutoML and BigQuery ML have constraints on customization."
         },
         {
             "id": 8,
-            "question": "Google Cloud AI Platform Prediction hỗ trợ chiến lược deploy nào?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "A time series forecasting model needs to predict daily sales for 1,000 products. Which GCP approach is MOST scalable?",
             "options": [
-                "Chỉ single model deployment",
-                "Traffic splitting cho A/B testing và canary deployments",
-                "Chỉ batch prediction",
-                "Chỉ edge deployment"
+                "Train 1,000 individual ARIMA models in Cloud Functions",
+                "Use Vertex AI Forecasting (AutoML) which handles multiple time series natively",
+                "Use a single linear regression model for all products",
+                "Use BigQuery ML's ARIMA_PLUS with a single query"
             ],
             "correct": 1,
-            "explanation": "Vertex AI Prediction hỗ trợ traffic splitting: có thể route % traffic sang model versions khác nhau — phục vụ A/B testing, canary release, và progressive rollout."
+            "explanation": "Vertex AI Forecasting (AutoML) is designed for large-scale time series: it handles thousands of series, automatically selects algorithms, and manages training/serving. BigQuery ML ARIMA_PLUS is also viable but AutoML handles more complexity."
         },
         {
             "id": 9,
-            "question": "Dataflow trong ML pipeline đóng vai trò gì?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "A model achieves 99.5% accuracy on a fraud dataset where only 0.5% of transactions are fraud. What is the problem?",
             "options": [
-                "Training model",
-                "Xử lý dữ liệu quy mô lớn (batch & streaming) cho data preprocessing/feature engineering",
-                "Deploy model",
-                "Monitor model"
+                "The model is overfitting",
+                "The high accuracy is misleading — the model may just predict 'not fraud' for everything (class imbalance)",
+                "The model needs more training data",
+                "The learning rate is too high"
             ],
             "correct": 1,
-            "explanation": "Dataflow (dựa trên Apache Beam) xử lý data ở scale lớn: ETL, feature engineering cho cả batch và streaming — bước tiền xử lý quan trọng trong ML pipeline."
+            "explanation": "With 99.5% negative class, a model that always predicts 'not fraud' gets 99.5% accuracy. This is the class imbalance problem. Use precision, recall, F1, AUC-PR instead of accuracy for imbalanced datasets."
         },
         {
             "id": 10,
-            "question": "Vertex AI Matching Engine dùng cho bài toán nào?",
+            "domain": "Domain 1: ML Problem Framing & Architecture",
+            "question": "Which is NOT a valid reason to choose ML over a rule-based system?",
             "options": [
-                "Training model",
-                "Tìm kiếm nearest neighbor (vector similarity search) ở quy mô lớn",
-                "Data labeling",
-                "Model serving thông thường"
+                "The problem involves complex patterns that are hard to specify manually",
+                "The relationships in data change over time requiring adaptation",
+                "A simple if-else logic with 5 rules can solve the problem with 99% accuracy",
+                "The input data is unstructured (images, text, audio)"
             ],
-            "correct": 1,
-            "explanation": "Matching Engine là managed approximate nearest neighbor (ANN) service — dùng cho similarity search, recommendation, RAG retrieval ở quy mô tỷ vectors."
+            "correct": 2,
+            "explanation": "If simple rules achieve 99% accuracy, ML adds unnecessary complexity. ML should be chosen when rules are too complex, patterns evolve over time, or data is unstructured — not when simple heuristics already work."
         },
         {
             "id": 11,
-            "question": "Vertex AI Workbench khác gì Colab Enterprise?",
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "You need to build a real-time feature engineering pipeline that processes streaming events and writes to Feature Store. Which GCP architecture is correct?",
             "options": [
-                "Giống hệt nhau",
-                "Workbench là JupyterLab managed instances cho ML production, Colab Enterprise cho collaboration và exploration",
-                "Workbench chỉ support R",
-                "Colab Enterprise chỉ dùng miễn phí"
+                "Cloud Storage → Dataproc Batch → Feature Store",
+                "Pub/Sub → Dataflow Streaming → Vertex AI Feature Store",
+                "Cloud Functions → BigQuery → Feature Store",
+                "Pub/Sub → Cloud Composer → Feature Store"
             ],
             "correct": 1,
-            "explanation": "Workbench cung cấp JupyterLab managed instances với tích hợp sâu vào GCP services (BigQuery, GCS) cho production ML. Colab Enterprise thiên về collaboration, sharing và exploration."
+            "explanation": "Pub/Sub ingests streaming events, Dataflow (Apache Beam) processes them in real-time for feature computation, and writes to Vertex AI Feature Store for online serving with low latency."
         },
         {
             "id": 12,
-            "question": "Kỹ thuật nào giảm kích thước model để deploy trên edge devices?",
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "What is the PRIMARY advantage of Vertex AI Feature Store over storing features in a regular database?",
             "options": [
-                "Tăng layers",
-                "Quantization, pruning, knowledge distillation",
-                "Tăng batch size",
-                "Dùng thêm GPU"
+                "Lower storage cost",
+                "Training-serving consistency — same features used during training are served in production with low-latency online serving",
+                "Better SQL query performance",
+                "Automatic model training"
             ],
             "correct": 1,
-            "explanation": "Model compression: Quantization (giảm precision: FP32→INT8), Pruning (loại bỏ weights/neurons không quan trọng), Knowledge Distillation (teacher model dạy student model nhỏ hơn)."
+            "explanation": "Feature Store ensures training-serving consistency: features computed for training are exactly the same as those served online. It provides both batch (offline) and online serving modes with feature monitoring."
         },
         {
             "id": 13,
-            "question": "Vertex AI GenAI Studio dùng để?",
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "When should you use Dataflow over Dataproc for data processing?",
             "options": [
-                "Chỉ train model từ đầu",
-                "Prototyping, testing, và tuning Foundation Models (PaLM, Gemini) trên Google Cloud",
-                "Quản lý billing",
-                "Giám sát network"
+                "When you need to run existing Spark/Hadoop jobs",
+                "When you need a serverless, auto-scaling pipeline for both batch and streaming with Apache Beam",
+                "When you need to use PySpark",
+                "When you already have a Hadoop cluster"
             ],
             "correct": 1,
-            "explanation": "GenAI Studio cung cấp UI và API để thử nghiệm Foundation Models, prompt design, tuning, và deploy — không cần ML expertise sâu."
+            "explanation": "Dataflow is serverless (no cluster management), auto-scales, and uses Apache Beam for unified batch/streaming. Dataproc is for migrating existing Spark/Hadoop workloads that require a managed cluster."
         },
         {
             "id": 14,
-            "question": "Khi data có nhiều missing values, chiến lược nào phù hợp?",
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "A dataset has a categorical feature 'city' with 10,000 unique values. What is the BEST encoding strategy for a deep learning model?",
             "options": [
-                "Luôn xoá rows có missing values",
-                "Tuỳ context: imputation (mean/median/mode, KNN, model-based), hoặc tạo indicator feature cho missingness",
-                "Luôn fill bằng 0",
-                "Bỏ qua và train trực tiếp"
+                "One-hot encoding (creates 10,000 sparse columns)",
+                "Embedding layer that learns dense vector representations",
+                "Label encoding (assign integer 0-9999)",
+                "Remove the feature entirely"
             ],
             "correct": 1,
-            "explanation": "Xử lý missing values tuỳ thuộc vào pattern (MCAR/MAR/MNAR): imputation thống kê (mean/median), model-based (KNN, MICE), hoặc thêm feature indicator. Xoá rows chỉ khi missing ít và MCAR."
+            "explanation": "High-cardinality categorical features should use embeddings in deep learning — the model learns a dense, low-dimensional representation. One-hot creates extremely sparse, high-dimensional input. Label encoding implies false ordinal relationships."
         },
         {
             "id": 15,
-            "question": "Continuous Training (CT) trong MLOps là gì?",
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "You need to compute aggregate features (e.g., average order value per customer over 30 days) for training. Which tool is MOST efficient?",
             "options": [
-                "Train model chỉ một lần",
-                "Tự động retrain model khi phát hiện trigger (data drift, schedule, hoặc performance degradation)",
-                "Train model thủ công hàng tuần",
-                "Chỉ dùng cho deep learning"
+                "Vertex AI Workbench with pandas",
+                "BigQuery SQL window functions, then export to Feature Store",
+                "Cloud Functions processing individual records",
+                "Dataproc with MapReduce"
             ],
             "correct": 1,
-            "explanation": "Continuous Training tự động kích hoạt retrain pipeline khi: data mới đến (scheduled), data drift vượt threshold, hoặc model performance giảm — đảm bảo model luôn fresh."
+            "explanation": "BigQuery excels at large-scale aggregate computations using SQL window/analytic functions. Results can be exported to Feature Store for serving. More efficient than processing row-by-row in notebooks."
+        },
+        {
+            "id": 16,
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "What does the TFX Transform component do?",
+            "options": [
+                "Trains the model",
+                "Applies feature transformations consistently during training AND serving using a saved transform graph",
+                "Validates the input data schema",
+                "Deploys the model to an endpoint"
+            ],
+            "correct": 1,
+            "explanation": "TFX Transform uses tf.Transform to create a transform graph that is applied both during training and serving — preventing training-serving skew in feature engineering (normalization, bucketization, vocabulary mapping, etc.)."
+        },
+        {
+            "id": 17,
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "How should you handle missing values in a feature used for a gradient boosted tree model (XGBoost)?",
+            "options": [
+                "Always impute with mean",
+                "Always drop rows",
+                "XGBoost handles missing values natively — it learns the best direction for missing values at each split",
+                "Replace with -999 to signal missingness"
+            ],
+            "correct": 2,
+            "explanation": "XGBoost natively handles missing values by learning the optimal split direction for missing entries during training. Forcing imputation may actually reduce performance. This is a key advantage of tree-based models."
+        },
+        {
+            "id": 18,
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "Pub/Sub guarantees at-least-once delivery. How does this affect an ML data pipeline?",
+            "options": [
+                "It has no impact on ML pipelines",
+                "Dataflow must handle duplicate messages to avoid counting features incorrectly",
+                "It guarantees exactly-once processing automatically",
+                "It means messages can be lost"
+            ],
+            "correct": 1,
+            "explanation": "At-least-once delivery means messages can be delivered multiple times. Without deduplication in Dataflow (using unique message IDs or idempotent operations), features like counts or sums can be inflated by duplicate processing."
+        },
+        {
+            "id": 19,
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "A feature has a right-skewed distribution (e.g., income). Which transformation is MOST appropriate before using it in a linear model?",
+            "options": [
+                "Min-max scaling to [0, 1]",
+                "Log transformation to reduce skewness, then standardization",
+                "One-hot encoding",
+                "No transformation needed"
+            ],
+            "correct": 1,
+            "explanation": "Right-skewed features benefit from log transformation (or Box-Cox) to make the distribution more normal-like, improving linear model performance. Standardization after log-transform ensures zero mean and unit variance."
+        },
+        {
+            "id": 20,
+            "domain": "Domain 2: Data Engineering & Feature Engineering",
+            "question": "Which Cloud Composer (Airflow) role is appropriate in an ML pipeline?",
+            "options": [
+                "Training the model directly",
+                "Orchestrating the end-to-end workflow: data ingestion → preprocessing → training → evaluation → deployment",
+                "Serving real-time predictions",
+                "Storing features"
+            ],
+            "correct": 1,
+            "explanation": "Cloud Composer (managed Apache Airflow) orchestrates ML pipeline tasks: scheduling data extraction, triggering Dataflow jobs, launching Vertex AI training, evaluating results, and conditional deployment — but doesn't execute ML compute itself."
+        },
+        {
+            "id": 21,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "You need to train a custom PyTorch model on Vertex AI with 4 GPUs. Which approach is correct?",
+            "options": [
+                "Use AutoML with a custom container",
+                "Use Vertex AI Custom Training Job with a pre-built PyTorch container and specify 4 GPUs in machine config",
+                "Use BigQuery ML with PyTorch",
+                "Use Cloud Functions with GPU support"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Custom Training supports pre-built containers for PyTorch (and TensorFlow, XGBoost, sklearn). You specify GPU type and count in the worker pool config. Distributed training is also supported with multiple workers."
+        },
+        {
+            "id": 22,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "When should you use Vertex AI AutoML vs Custom Training?",
+            "options": [
+                "AutoML when you need to implement a custom loss function",
+                "Custom Training when you just need a quick baseline with minimal ML knowledge",
+                "AutoML when you have tabular/image/text data and want a strong model with minimal code",
+                "AutoML for any production model"
+            ],
+            "correct": 2,
+            "explanation": "AutoML excels when: data fits standard types (tabular, image, text, video), you want a strong baseline fast, or the team has limited ML expertise. Custom Training when: custom architecture, custom loss/metrics, specific frameworks, or research-level requirements."
+        },
+        {
+            "id": 23,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "Which BigQuery ML statement creates and trains a logistic regression model?",
+            "options": [
+                "CREATE MODEL dataset.model OPTIONS(model_type='logistic_reg') AS SELECT ...",
+                "TRAIN MODEL dataset.model USING logistic_regression SELECT ...",
+                "CREATE ML_MODEL dataset.model AS LOGISTIC_REGRESSION SELECT ...",
+                "BUILD MODEL dataset.model OPTIONS(type='classification') AS SELECT ..."
+            ],
+            "correct": 0,
+            "explanation": "BigQuery ML uses CREATE MODEL with OPTIONS to specify model type. 'CREATE MODEL my_dataset.my_model OPTIONS(model_type='logistic_reg') AS SELECT features, label FROM ...' trains the model using SQL."
+        },
+        {
+            "id": 24,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "What is the purpose of Vertex AI Hyperparameter Tuning?",
+            "options": [
+                "To automatically select the best features",
+                "To systematically search for the best hyperparameters (learning rate, batch size, etc.) using Bayesian optimization or grid search",
+                "To clean the training data",
+                "To deploy multiple model versions"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Hyperparameter Tuning uses Vizier (Google's black-box optimization service) to search for optimal hyperparameters. It supports Bayesian optimization, grid search, and random search strategies."
+        },
+        {
+            "id": 25,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "A model has high training accuracy but low test accuracy. What does this indicate?",
+            "options": [
+                "Underfitting",
+                "Overfitting — the model memorized training data but doesn't generalize",
+                "The model needs more features",
+                "The learning rate is too low"
+            ],
+            "correct": 1,
+            "explanation": "High train / low test performance = overfitting. Solutions: more training data, regularization (L1/L2, dropout), simpler model, early stopping, cross-validation, or data augmentation."
+        },
+        {
+            "id": 26,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "Which technique is MOST effective for improving model performance on a small image dataset (<1,000 images)?",
+            "options": [
+                "Training a very deep custom CNN from scratch",
+                "Transfer learning — fine-tuning a pre-trained model (e.g., ResNet, EfficientNet) on your dataset",
+                "Using simpler models like logistic regression on raw pixels",
+                "Increasing the learning rate"
+            ],
+            "correct": 1,
+            "explanation": "Transfer learning leverages knowledge from models pre-trained on large datasets (ImageNet). Fine-tuning the last few layers on your small dataset typically achieves much better results than training from scratch."
+        },
+        {
+            "id": 27,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "When training on Vertex AI, what is the difference between pre-built containers and custom containers?",
+            "options": [
+                "Pre-built containers are faster to train",
+                "Pre-built containers include common frameworks (TF, PyTorch, XGBoost, sklearn); custom containers let you install any dependencies and use any framework",
+                "Custom containers can only be used with AutoML",
+                "There is no difference"
+            ],
+            "correct": 1,
+            "explanation": "Pre-built containers are maintained by Google with popular ML frameworks pre-installed. Custom containers allow you to define your own Docker image with any dependencies, frameworks, or custom code."
+        },
+        {
+            "id": 28,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "Which BigQuery ML model type should you use for customer segmentation WITHOUT labels?",
+            "options": [
+                "logistic_reg",
+                "kmeans",
+                "linear_reg",
+                "boosted_tree_classifier"
+            ],
+            "correct": 1,
+            "explanation": "Customer segmentation without labels is an unsupervised learning problem. K-means clustering (model_type='kmeans') groups similar customers into clusters based on feature similarity."
+        },
+        {
+            "id": 29,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "Which regularization technique randomly disables neurons during training to prevent co-adaptation?",
+            "options": [
+                "L1 regularization (Lasso)",
+                "L2 regularization (Ridge)",
+                "Dropout",
+                "Batch normalization"
+            ],
+            "correct": 2,
+            "explanation": "Dropout randomly sets a fraction of neurons to zero during each training step, forcing the network to learn redundant representations. This prevents neurons from co-adapting and reduces overfitting."
+        },
+        {
+            "id": 30,
+            "domain": "Domain 3: Model Development on Vertex AI",
+            "question": "You want to track and compare multiple training experiments on Vertex AI. Which feature should you use?",
+            "options": [
+                "Vertex AI Endpoints",
+                "Vertex AI Experiments with Vertex AI TensorBoard",
+                "Vertex AI Feature Store",
+                "Vertex AI Model Registry only"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Experiments logs hyperparameters, metrics, and artifacts for each run. Combined with Vertex AI TensorBoard, you can visualize training curves and compare runs side by side."
+        },
+        {
+            "id": 31,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "You deployed a model to a Vertex AI Endpoint. How do you perform an A/B test between model v1 and v2?",
+            "options": [
+                "Deploy to two separate endpoints and use a load balancer",
+                "Use traffic splitting on a single endpoint — route 90% to v1 and 10% to v2",
+                "Deploy v2 to a Cloud Function",
+                "Use Cloud CDN for routing"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Endpoints support traffic splitting: deploy multiple model versions to the same endpoint and configure traffic percentages. This enables A/B testing and canary deployments natively."
+        },
+        {
+            "id": 32,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "What is the difference between online prediction and batch prediction on Vertex AI?",
+            "options": [
+                "Online is cheaper than batch",
+                "Online returns predictions synchronously with low latency via an endpoint; batch processes large datasets asynchronously and writes results to storage",
+                "Batch prediction is more accurate",
+                "Online prediction can only handle images"
+            ],
+            "correct": 1,
+            "explanation": "Online prediction uses a deployed endpoint for real-time, synchronous, low-latency responses. Batch prediction accepts input files (CSV, JSONL, BigQuery), processes them asynchronously, and writes output to GCS or BigQuery."
+        },
+        {
+            "id": 33,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "Vertex AI Model Monitoring detects 'training-serving skew' on a feature. What does this mean?",
+            "options": [
+                "The model's accuracy has decreased",
+                "The feature's distribution in production serving requests differs significantly from training data distribution",
+                "The model is serving stale predictions",
+                "The endpoint is experiencing high latency"
+            ],
+            "correct": 1,
+            "explanation": "Training-serving skew means the statistical distribution of a feature during inference is significantly different from training time. This can cause degraded model performance and may indicate data pipeline issues or real-world distribution shifts."
+        },
+        {
+            "id": 34,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "Which TFX component evaluates a trained model against baseline and decides whether to deploy?",
+            "options": [
+                "Trainer",
+                "Evaluator (with TFMA — TensorFlow Model Analysis)",
+                "Pusher",
+                "ExampleValidator"
+            ],
+            "correct": 1,
+            "explanation": "The Evaluator component uses TFMA (TensorFlow Model Analysis) to compute metrics, compare against a baseline model, and produce a 'blessed' or 'not blessed' decision. Only blessed models proceed to Pusher for deployment."
+        },
+        {
+            "id": 35,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "Vertex AI Pipelines are built on which open-source framework?",
+            "options": [
+                "Apache Airflow",
+                "Kubeflow Pipelines (KFP) SDK",
+                "Apache Spark",
+                "Luigi"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Pipelines uses the Kubeflow Pipelines (KFP) v2 SDK for pipeline definition. It also supports TFX pipelines. The pipeline runs on Google's serverless infrastructure — no Kubernetes cluster management required."
+        },
+        {
+            "id": 36,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "A model endpoint needs to handle spiky traffic (many requests during business hours, near zero at night). Which configuration is BEST?",
+            "options": [
+                "Set a fixed number of replicas to handle peak load",
+                "Configure autoscaling with min replicas=1 and scaling based on CPU utilization or request count",
+                "Use batch prediction instead",
+                "Deploy to Cloud Run instead of Vertex AI"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Endpoints support autoscaling based on metrics like CPU utilization or traffic. Setting min replicas ensures availability while auto-scaling up for peaks and down during quiet periods optimizes cost."
+        },
+        {
+            "id": 37,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "In an MLOps CI/CD pipeline, what should trigger model retraining?",
+            "options": [
+                "Only manual trigger by data scientists",
+                "Data drift detected, scheduled cadence, code changes, or model performance degradation",
+                "Only when new features are added",
+                "Every time new data arrives regardless of quantity"
+            ],
+            "correct": 1,
+            "explanation": "Continuous Training triggers include: data drift or concept drift exceeding thresholds, scheduled retraining (daily/weekly), code changes (new features/model architecture), or performance monitoring alerts showing degradation."
+        },
+        {
+            "id": 38,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "What is the purpose of Vertex AI Model Registry?",
+            "options": [
+                "To store training data",
+                "To manage model versions, track lineage, and organize models with metadata for governance",
+                "To run inference",
+                "To create features"
+            ],
+            "correct": 1,
+            "explanation": "Model Registry provides a central repository for model versioning, metadata management, lineage tracking (which data/pipeline produced which model), and governance — essential for production ML."
+        },
+        {
+            "id": 39,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "You need to deploy a model for inference at the edge (on-device). Which GCP approach is correct?",
+            "options": [
+                "Deploy to Vertex AI Endpoint and call from the edge",
+                "Export the model, optimize with TFLite or ONNX, deploy via Edge Manager",
+                "Use BigQuery ML for edge inference",
+                "Use Dataflow for edge processing"
+            ],
+            "correct": 1,
+            "explanation": "Edge deployment requires model optimization (TFLite for TensorFlow, ONNX for framework-agnostic) to reduce model size and latency. Vertex AI supports edge deployment with model optimization tools."
+        },
+        {
+            "id": 40,
+            "domain": "Domain 4: Model Deployment & MLOps",
+            "question": "Which tool in the Vertex AI ecosystem provides experiment tracking with visualization of training curves?",
+            "options": [
+                "Vertex AI Feature Store",
+                "Vertex AI TensorBoard",
+                "Vertex AI Matching Engine",
+                "Cloud Monitoring"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI TensorBoard is a managed TensorBoard instance that visualizes training metrics (loss curves, accuracy), model graphs, embeddings, and profiling data. It integrates with Vertex AI Experiments."
+        },
+        {
+            "id": 41,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "Which Google Cloud service provides model explainability with feature attributions for Vertex AI predictions?",
+            "options": [
+                "Cloud Audit Logs",
+                "Vertex Explainable AI (using Integrated Gradients, SHAP, or sampled Shapley)",
+                "Cloud DLP",
+                "Security Command Center"
+            ],
+            "correct": 1,
+            "explanation": "Vertex Explainable AI provides feature attributions for predictions using methods like Integrated Gradients (for neural networks), sampled Shapley, and XRAI (for image models) — showing which features most influenced each prediction."
+        },
+        {
+            "id": 42,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "A loan approval model is observed to have significantly different approval rates across racial groups. Which Responsible AI principle is being violated?",
+            "options": [
+                "Privacy",
+                "Fairness — the model shows demographic bias",
+                "Transparency",
+                "Accountability"
+            ],
+            "correct": 1,
+            "explanation": "Fairness requires that ML systems don't create or reinforce bias against protected groups. Disparate approval rates across racial groups indicate bias that must be investigated using fairness metrics and mitigated."
+        },
+        {
+            "id": 43,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "How should you protect Vertex AI training data at rest in Google Cloud Storage?",
+            "options": [
+                "Rely on default encryption only",
+                "Use Customer-Managed Encryption Keys (CMEK) with Cloud KMS for additional control",
+                "Encrypt data manually before upload and decrypt in training code",
+                "Use a VPN connection"
+            ],
+            "correct": 1,
+            "explanation": "GCS encrypts at rest by default (Google-managed keys). CMEK gives you control over encryption keys via Cloud KMS — you can rotate, disable, or revoke keys. This is required for compliance-sensitive ML workloads."
+        },
+        {
+            "id": 44,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "How do you restrict which users can deploy models to Vertex AI Endpoints in a production project?",
+            "options": [
+                "Use service account keys shared across the team",
+                "Use IAM roles — grant roles/aiplatform.user for training but only roles/aiplatform.admin or custom roles for deployment",
+                "Use IP allowlisting",
+                "Restrict by VPC network"
+            ],
+            "correct": 1,
+            "explanation": "IAM roles control who can perform what actions. Separation of duties: data scientists get training permissions, while only authorized users/service accounts get deployment permissions. Custom IAM roles allow fine-grained control."
+        },
+        {
+            "id": 45,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "What is VPC Service Controls (VPC-SC) used for in ML workloads?",
+            "options": [
+                "Speeding up network traffic",
+                "Creating a security perimeter around GCP services to prevent data exfiltration from Vertex AI, BigQuery, GCS",
+                "Managing DNS resolution",
+                "Load balancing inference traffic"
+            ],
+            "correct": 1,
+            "explanation": "VPC-SC creates a security perimeter (service perimeter) that restricts data movement in/out of specified GCP services. This prevents exfiltration of sensitive ML data from BigQuery, GCS, and Vertex AI."
+        },
+        {
+            "id": 46,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "Differential privacy in ML training means:",
+            "options": [
+                "Encrypting the model weights",
+                "Adding calibrated noise during training so the model doesn't memorize or reveal individual training examples",
+                "Using private VPCs for training",
+                "Restricting access to training logs"
+            ],
+            "correct": 1,
+            "explanation": "Differential privacy adds mathematical noise to gradient updates during training, ensuring no individual training record can be reconstructed or inferred from the model — protecting user privacy while maintaining model utility."
+        },
+        {
+            "id": 47,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "Federated Learning allows:",
+            "options": [
+                "Training one large model on a single GPU",
+                "Training a shared model across multiple devices/organizations without centralizing raw data",
+                "Faster inference on edge devices",
+                "Real-time feature serving"
+            ],
+            "correct": 1,
+            "explanation": "Federated Learning trains a model across decentralized data sources (devices, hospitals, organizations). Each participant trains locally and shares model updates (not raw data), preserving data privacy."
+        },
+        {
+            "id": 48,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "Which tool helps detect PII (Personally Identifiable Information) in text data before using it for ML training?",
+            "options": [
+                "Vertex AI Feature Store",
+                "Cloud Data Loss Prevention (Cloud DLP)",
+                "Cloud Armor",
+                "Cloud IDS"
+            ],
+            "correct": 1,
+            "explanation": "Cloud DLP inspects, classifies, and de-identifies sensitive data (PII, PHI) in text, images, and structured data. Use it to scan training data for PII before feeding it into ML pipelines."
+        },
+        {
+            "id": 49,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "During the exam, you see a question about choosing between Dataflow, Dataproc, and Cloud Composer. Which decision framework is correct?",
+            "options": [
+                "Always choose Dataflow because it's serverless",
+                "Dataflow for new batch/streaming pipelines (Apache Beam); Dataproc for existing Spark/Hadoop migrations; Cloud Composer for workflow orchestration (Airflow)",
+                "Always choose Dataproc because it's cheaper",
+                "Cloud Composer for all data processing"
+            ],
+            "correct": 1,
+            "explanation": "Decision framework: Dataflow = serverless Apache Beam for new ETL (batch/streaming). Dataproc = managed Spark/Hadoop for existing workloads. Cloud Composer = managed Airflow for orchestrating multi-step workflows (not data processing itself)."
+        },
+        {
+            "id": 50,
+            "domain": "Domain 5: Responsible AI, Security & Exam Strategy",
+            "question": "A Vertex AI model is making predictions that seem incorrect but there are no alerts. What should you add to your monitoring setup?",
+            "options": [
+                "More prediction logs in Cloud Logging only",
+                "Vertex AI Model Monitoring with skew/drift detection thresholds and alerting to Cloud Monitoring",
+                "Increase the number of endpoint replicas",
+                "Add more training data"
+            ],
+            "correct": 1,
+            "explanation": "Vertex AI Model Monitoring should be configured with: (1) training-serving skew detection, (2) prediction drift detection, (3) threshold configurations per feature, and (4) alerting via Cloud Monitoring for proactive issue detection."
         }
     ]
 }

@@ -1,0 +1,318 @@
+{
+    "id": "ckad",
+    "title": "CKAD — Certified Kubernetes Application Developer",
+    "slug": "ckad",
+    "description": "Practice exam for CKAD — 20 questions covering all 5 domains",
+    "icon": "award",
+    "provider": "CNCF",
+    "level": "Professional",
+    "duration_minutes": 45,
+    "passing_score": 66,
+    "questions_count": 20,
+    "tags": ["Kubernetes", "CKAD", "CNCF", "DevOps", "Linux Foundation"],
+    "series_slug": "luyen-thi-ckad",
+    "domains": [
+        {
+            "name": "Domain 1: Application Design and Build",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 1: Container Images & Multi-stage Builds", "slug": "01-container-images-multi-stage" },
+                { "title": "Bài 2: Pod Design — Labels, Selectors, Annotations", "slug": "02-pod-design-labels-selectors" }
+            ]
+        },
+        {
+            "name": "Domain 2: Application Deployment",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 3: Deployments, Rolling Updates & Rollbacks", "slug": "03-deployments-rolling-updates" },
+                { "title": "Bài 4: Helm Basics — Charts, Releases, Repositories", "slug": "04-helm-basics" }
+            ]
+        },
+        {
+            "name": "Domain 3: Application Observability and Maintenance",
+            "weight": 15,
+            "lessons": [
+                { "title": "Bài 5: Probes — Liveness, Readiness, Startup", "slug": "05-probes-liveness-readiness" },
+                { "title": "Bài 6: Logging, Monitoring & Debugging", "slug": "06-logging-monitoring-debugging" }
+            ]
+        },
+        {
+            "name": "Domain 4: Application Environment, Configuration and Security",
+            "weight": 25,
+            "lessons": [
+                { "title": "Bài 7: ConfigMaps & Secrets", "slug": "07-configmaps-secrets" },
+                { "title": "Bài 8: ServiceAccounts & Security Contexts", "slug": "08-serviceaccounts-security" },
+                { "title": "Bài 9: Resource Requests, Limits & LimitRanges", "slug": "09-resource-requests-limits" }
+            ]
+        },
+        {
+            "name": "Domain 5: Services and Networking",
+            "weight": 20,
+            "lessons": [
+                { "title": "Bài 10: Services, Ingress & Network Policies", "slug": "10-services-ingress-networkpolicies" }
+            ]
+        }
+    ],
+    "questions": [
+        {
+            "id": 1,
+            "domain": "Domain 1: Application Design and Build",
+            "question": "Which Dockerfile instruction is used to set the command that runs when the container starts, and CAN be overridden by the user at runtime?",
+            "options": [
+                "ENTRYPOINT",
+                "CMD",
+                "RUN",
+                "EXPOSE"
+            ],
+            "correct": 1,
+            "explanation": "CMD sets the default command for the container, which can be overridden by passing arguments to docker run or in the Kubernetes pod spec's command/args fields. ENTRYPOINT sets the main executable and is harder to override."
+        },
+        {
+            "id": 2,
+            "domain": "Domain 1: Application Design and Build",
+            "question": "What is the benefit of a multi-stage Docker build?",
+            "options": [
+                "It allows running multiple containers in a single pod",
+                "It reduces the final image size by separating build-time dependencies from runtime",
+                "It enables horizontal pod autoscaling",
+                "It automatically creates Kubernetes manifests"
+            ],
+            "correct": 1,
+            "explanation": "Multi-stage builds use multiple FROM instructions. Build tools and dependencies stay in earlier stages while only the compiled artifact is copied to the final, minimal runtime image — significantly reducing image size."
+        },
+        {
+            "id": 3,
+            "domain": "Domain 1: Application Design and Build",
+            "question": "You want to select all pods with label 'app=web' AND 'tier=frontend'. Which label selector syntax is correct?",
+            "options": [
+                "app=web || tier=frontend",
+                "app=web,tier=frontend",
+                "app=web AND tier=frontend",
+                "app=web;tier=frontend"
+            ],
+            "correct": 1,
+            "explanation": "In Kubernetes, multiple label selectors are comma-separated. 'app=web,tier=frontend' selects pods that have BOTH labels. This is used in kubectl: 'kubectl get pods -l app=web,tier=frontend'."
+        },
+        {
+            "id": 4,
+            "domain": "Domain 1: Application Design and Build",
+            "question": "How do you create a CronJob that runs every day at 3:00 AM?",
+            "options": [
+                "schedule: '3 0 * * *'",
+                "schedule: '0 3 * * *'",
+                "schedule: '* * 3 * *'",
+                "schedule: 'daily 3:00'"
+            ],
+            "correct": 1,
+            "explanation": "Cron format is: minute hour day-of-month month day-of-week. '0 3 * * *' means at minute 0, hour 3 (3:00 AM), every day of month, every month, every day of week."
+        },
+        {
+            "id": 5,
+            "domain": "Domain 2: Application Deployment",
+            "question": "A Deployment with 4 replicas uses the RollingUpdate strategy with maxSurge=1 and maxUnavailable=0. How many pods exist during an update?",
+            "options": [
+                "Exactly 4 pods at all times",
+                "Up to 5 pods (4 desired + 1 surge)",
+                "Between 3 and 5 pods",
+                "Up to 8 pods (doubled)"
+            ],
+            "correct": 1,
+            "explanation": "maxSurge=1 allows one extra pod above the desired count (4+1=5). maxUnavailable=0 means all 4 desired pods must remain available. So Kubernetes creates a new pod first, waits for it to be ready, then terminates an old one."
+        },
+        {
+            "id": 6,
+            "domain": "Domain 2: Application Deployment",
+            "question": "How do you rollback a Deployment named 'web-app' to its previous version?",
+            "options": [
+                "kubectl rollback deployment web-app",
+                "kubectl rollout undo deployment web-app",
+                "kubectl revert deployment web-app",
+                "kubectl apply --previous deployment web-app"
+            ],
+            "correct": 1,
+            "explanation": "kubectl rollout undo deployment <name> rolls back to the previous revision. You can also specify a revision with --to-revision=N. Use 'kubectl rollout history' to view available revisions."
+        },
+        {
+            "id": 7,
+            "domain": "Domain 2: Application Deployment",
+            "question": "You installed a Helm chart with 'helm install my-release bitnami/nginx'. How do you update the release with new values?",
+            "options": [
+                "helm update my-release bitnami/nginx -f values.yaml",
+                "helm upgrade my-release bitnami/nginx -f values.yaml",
+                "helm apply my-release bitnami/nginx -f values.yaml",
+                "helm install --upgrade my-release bitnami/nginx -f values.yaml"
+            ],
+            "correct": 1,
+            "explanation": "helm upgrade is used to update an existing release with new chart versions or values. The -f flag specifies a custom values file. Use --install flag to install if the release doesn't exist yet."
+        },
+        {
+            "id": 8,
+            "domain": "Domain 2: Application Deployment",
+            "question": "What does a Blue-Green deployment strategy ensure?",
+            "options": [
+                "Traffic is gradually shifted from old to new version",
+                "Two complete environments exist, and traffic is switched entirely from one to the other",
+                "Only one pod is updated at a time",
+                "The deployment is paused until manually approved"
+            ],
+            "correct": 1,
+            "explanation": "Blue-Green deployment maintains two identical environments (Blue=current, Green=new). Once the Green environment is verified, traffic is switched entirely to Green. This enables instant rollback by switching back to Blue."
+        },
+        {
+            "id": 9,
+            "domain": "Domain 3: Application Observability and Maintenance",
+            "question": "A pod's readinessProbe fails. What is the consequence?",
+            "options": [
+                "The pod is restarted",
+                "The pod is removed from the Service's endpoints (stops receiving traffic)",
+                "The pod is deleted and a new one is created",
+                "The node is marked as NotReady"
+            ],
+            "correct": 1,
+            "explanation": "When a readinessProbe fails, the pod is removed from Service endpoints and stops receiving traffic. Unlike livenessProbe, a failed readinessProbe does NOT restart the pod — it just marks it as not ready to serve."
+        },
+        {
+            "id": 10,
+            "domain": "Domain 3: Application Observability and Maintenance",
+            "question": "Which probe type should you use for a container that takes a long time to start up?",
+            "options": [
+                "livenessProbe with a high initialDelaySeconds",
+                "readinessProbe with failureThreshold=100",
+                "startupProbe",
+                "execProbe"
+            ],
+            "correct": 2,
+            "explanation": "startupProbe is specifically designed for slow-starting containers. When defined, it disables liveness and readiness checks until the container starts successfully. This prevents premature restarts by the livenessProbe."
+        },
+        {
+            "id": 11,
+            "domain": "Domain 3: Application Observability and Maintenance",
+            "question": "How do you view real-time logs from multiple pods of a Deployment named 'api'?",
+            "options": [
+                "kubectl logs deployment/api --all",
+                "kubectl logs -l app=api --follow",
+                "kubectl exec deployment/api -- tail -f /var/log/app.log",
+                "kubectl describe deployment api | grep logs"
+            ],
+            "correct": 1,
+            "explanation": "kubectl logs -l <label-selector> streams logs from all pods matching the label. --follow (-f) enables real-time streaming. This is useful for debugging across multiple replicas simultaneously."
+        },
+        {
+            "id": 12,
+            "domain": "Domain 4: Application Environment, Configuration and Security",
+            "question": "How do you create a ConfigMap from a file named 'app.properties'?",
+            "options": [
+                "kubectl create configmap my-config --from-file=app.properties",
+                "kubectl apply configmap my-config --file=app.properties",
+                "kubectl create secret generic my-config --from-file=app.properties",
+                "kubectl create configmap my-config --data=app.properties"
+            ],
+            "correct": 0,
+            "explanation": "kubectl create configmap --from-file=<filename> creates a ConfigMap with the file's content. The key defaults to the filename. Use --from-file=<key>=<filename> to specify a custom key."
+        },
+        {
+            "id": 13,
+            "domain": "Domain 4: Application Environment, Configuration and Security",
+            "question": "What is the difference between a ConfigMap and a Secret in terms of data storage?",
+            "options": [
+                "Secrets are encrypted at rest by default, ConfigMaps are not",
+                "Secrets store data as base64-encoded strings, ConfigMaps store plain text",
+                "ConfigMaps can only store key-value pairs, Secrets can store files",
+                "There is no difference, they are interchangeable"
+            ],
+            "correct": 1,
+            "explanation": "Secrets store data as base64-encoded strings (not encrypted by default). etcd encryption at rest must be configured separately. ConfigMaps store plain text data. Both can be mounted as volumes or used as environment variables."
+        },
+        {
+            "id": 14,
+            "domain": "Domain 4: Application Environment, Configuration and Security",
+            "question": "A pod's SecurityContext has 'runAsNonRoot: true'. What happens if the container image runs as root by default?",
+            "options": [
+                "The container runs as root anyway",
+                "The pod fails to start with a security validation error",
+                "Kubernetes automatically assigns a random non-root UID",
+                "The runAsNonRoot setting is ignored"
+            ],
+            "correct": 1,
+            "explanation": "With runAsNonRoot: true, if the container's image is configured to run as root (UID 0) and no runAsUser is specified, the pod will fail to start. You must either set runAsUser to a non-root UID or use an image that runs as non-root."
+        },
+        {
+            "id": 15,
+            "domain": "Domain 4: Application Environment, Configuration and Security",
+            "question": "What happens when a container exceeds its memory LIMIT?",
+            "options": [
+                "The container is throttled to the limit",
+                "The container is OOMKilled (Out of Memory Killed)",
+                "A warning event is generated but the container continues",
+                "The pod is rescheduled to a node with more memory"
+            ],
+            "correct": 1,
+            "explanation": "When a container exceeds its memory limit, the kernel's OOM killer terminates it (OOMKilled). This is different from CPU limits, where the container is throttled rather than killed. Kubernetes then restarts the container based on restartPolicy."
+        },
+        {
+            "id": 16,
+            "domain": "Domain 4: Application Environment, Configuration and Security",
+            "question": "How do you mount a specific key from a ConfigMap as a file in a pod?",
+            "options": [
+                "Use volumeMounts with subPath matching the key name",
+                "Use env.valueFrom.configMapKeyRef",
+                "ConfigMaps can only be mounted as entire directories",
+                "Use configMap.items with key and path in the volume definition"
+            ],
+            "correct": 3,
+            "explanation": "In the volume definition, use configMap.items to specify which keys to include and their file paths. For example: items: [{key: 'app.conf', path: 'app.conf'}]. SubPath can also be used in volumeMounts for single-key mounting."
+        },
+        {
+            "id": 17,
+            "domain": "Domain 5: Services and Networking",
+            "question": "What is the difference between a ClusterIP and a NodePort Service?",
+            "options": [
+                "ClusterIP exposes the service externally, NodePort is internal only",
+                "ClusterIP is accessible only within the cluster, NodePort exposes the service on each node's IP at a static port",
+                "ClusterIP uses TCP, NodePort uses UDP",
+                "ClusterIP requires an Ingress, NodePort does not"
+            ],
+            "correct": 1,
+            "explanation": "ClusterIP (default) creates an internal-only virtual IP. NodePort exposes the service on each node's IP at a port in the range 30000-32767, making it accessible from outside the cluster via <NodeIP>:<NodePort>."
+        },
+        {
+            "id": 18,
+            "domain": "Domain 5: Services and Networking",
+            "question": "An Ingress resource routes '/api' to service 'api-svc' and '/web' to service 'web-svc'. Which annotation controls URL rewriting in nginx ingress?",
+            "options": [
+                "nginx.ingress.kubernetes.io/rewrite-target: /",
+                "nginx.ingress.kubernetes.io/url-rewrite: true",
+                "nginx.ingress.kubernetes.io/path-redirect: /",
+                "nginx.ingress.kubernetes.io/backend-path: /"
+            ],
+            "correct": 0,
+            "explanation": "nginx.ingress.kubernetes.io/rewrite-target controls the URL rewriting. Setting it to '/' rewrites the matched path to '/'. For example, a request to '/api/users' would be forwarded to the backend as '/users'."
+        },
+        {
+            "id": 19,
+            "domain": "Domain 5: Services and Networking",
+            "question": "A NetworkPolicy allows ingress only from pods with label 'role=frontend' on port 8080. A pod with label 'role=backend' tries to connect on port 8080. What happens?",
+            "options": [
+                "The connection is allowed because port 8080 is open",
+                "The connection is denied because the source pod doesn't match the ingress rule",
+                "The NetworkPolicy is ignored because it only affects egress",
+                "The connection times out only if the CNI plugin doesn't support NetworkPolicy"
+            ],
+            "correct": 1,
+            "explanation": "NetworkPolicy ingress rules specify both 'from' (source pods/namespaces) and 'ports'. Even though port 8080 matches, the source pod doesn't have label 'role=frontend', so the connection is denied."
+        },
+        {
+            "id": 20,
+            "domain": "Domain 5: Services and Networking",
+            "question": "Which Service type automatically provisions a cloud load balancer?",
+            "options": [
+                "ClusterIP",
+                "NodePort",
+                "LoadBalancer",
+                "ExternalName"
+            ],
+            "correct": 2,
+            "explanation": "LoadBalancer type automatically provisions an external load balancer (e.g., AWS ELB, GCP Load Balancer). It builds on NodePort, which builds on ClusterIP. ExternalName maps a Service to a DNS name without any proxy."
+        }
+    ]
+}

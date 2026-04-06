@@ -565,17 +565,20 @@
         "id": "gcp-ml-engineer",
         "title": "Google Cloud Professional ML Engineer",
         "slug": "gcp-ml-engineer",
-        "description": "Luyện thi chứng chỉ Google Cloud Professional Machine Learning Engineer",
+        "description": "Practice exam for Google Cloud Professional Machine Learning Engineer — 50 questions covering all domains",
         "icon": "award",
         "provider": "Google Cloud",
-        "level": "Chuyên nghiệp",
+        "level": "Professional",
         "duration_minutes": 120,
         "passing_score": 70,
-        "questions_count": 15,
+        "questions_count": 50,
         "tags": [
             "GCP",
             "ML",
-            "Vertex AI"
+            "Vertex AI",
+            "BigQuery ML",
+            "MLOps",
+            "TFX"
         ],
         "series_slug": "luyen-thi-gcp-ml-engineer",
         "questions": [
@@ -1819,5 +1822,47 @@
                 "explanation": "A Headless Service (clusterIP: None) skips kube-proxy and returns Pod IPs directly via DNS. Used by StatefulSets for stable network identities and by clients that need direct Pod connections (e.g., databases, Cassandra)."
             }
         ]
+    },
+    {
+        "id": "kcna",
+        "title": "KCNA — Kubernetes and Cloud Native Associate",
+        "slug": "kcna",
+        "description": "Practice exam for KCNA — 20 questions covering all 5 domains",
+        "icon": "award",
+        "provider": "CNCF",
+        "level": "Foundational",
+        "duration_minutes": 30,
+        "passing_score": 75,
+        "questions_count": 20,
+        "tags": ["Kubernetes", "KCNA", "CNCF", "Cloud Native"],
+        "series_slug": "luyen-thi-kcna"
+    },
+    {
+        "id": "cka",
+        "title": "CKA — Certified Kubernetes Administrator",
+        "slug": "cka",
+        "description": "Practice exam for CKA — 20 questions covering all 5 domains",
+        "icon": "award",
+        "provider": "CNCF",
+        "level": "Professional",
+        "duration_minutes": 45,
+        "passing_score": 66,
+        "questions_count": 20,
+        "tags": ["Kubernetes", "CKA", "CNCF", "DevOps"],
+        "series_slug": "luyen-thi-cka"
+    },
+    {
+        "id": "ckad",
+        "title": "CKAD — Certified Kubernetes Application Developer",
+        "slug": "ckad",
+        "description": "Practice exam for CKAD — 20 questions covering all 5 domains",
+        "icon": "award",
+        "provider": "CNCF",
+        "level": "Professional",
+        "duration_minutes": 45,
+        "passing_score": 66,
+        "questions_count": 20,
+        "tags": ["Kubernetes", "CKAD", "CNCF", "DevOps"],
+        "series_slug": "luyen-thi-ckad"
     }
 ]
