@@ -33,7 +33,7 @@ Bạn có thể yêu cầu xóa toàn bộ dữ liệu cá nhân theo một tron
 
 **Cách 1: Qua email**
 
-Gửi email đến **<admin@xdev.asia>a>a>a>** với tiêu đề **"Yêu cầu xóa tài khoản"** và nội dung bao gồm:
+Gửi email đến **duy@xdev.asia** với tiêu đề **"Yêu cầu xóa tài khoản"** và nội dung bao gồm:
 
 - Địa chỉ email đã đăng ký
 - Tên hiển thị trên tài khoản
@@ -60,9 +60,7 @@ Khi yêu cầu được chấp thuận, chúng tôi sẽ xóa:
 
 ### Liên hệ
 
-<admin@xdev.asia>
-Nếu bạn có câ<admin@xdev.asia>riêng tư hoặc xử lý dữ liệu, vui lòng liên hệ:
-<admin@xdev.asia>
+Nếu bạn có câu hỏi về quyền riêng tư hoặc xử lý dữ liệu, vui lòng liên hệ:
 
-- **Email:** <admin@xdev.asia>
+- **Email:** duy@xdev.asia
 - **Chính sách bảo mật:** [xdev.asia/pages/chinh-sach-quyen-rieng-tu/](/pages/chinh-sach-quyen-rieng-tu/)
