@@ -65,18 +65,21 @@ Always overlay the xdev.asia logo onto generated images (except hero layers).
   - Source SVG: `public/images/logo/logo-vertical-dark.svg`
   - If updating the logo, re-convert SVG→PNG: `cairosvg.svg2png(url='public/images/logo/logo-vertical-dark.svg', write_to='public/images/logo/logo-vertical-dark.png', output_width=512, output_height=128)`
 - **Each banner item must include** `logo_position` field to specify where to place the logo
-- **Position depends on the image content** — look at the prompt to decide where the logo won't obscure important visuals
+- **Default to `"auto"`** — this analyzes the 4 corners of the generated image and places the logo where there is least visual detail (lowest standard deviation), so it never obscures important visuals
+- **You can also specify a fixed position** if needed: `bottom-right`, `bottom-left`, `top-right`, `top-left`
 
 | Position | Placement | Best when |
 |----------|-----------|-----------|
-| `bottom-right` | Bottom-right corner | Default, most common |
+| `auto` | Auto-detect emptiest corner | **Default, always prefer this** |
+| `bottom-right` | Bottom-right corner | Override when auto picks wrong |
 | `bottom-left` | Bottom-left corner | Main subject is on the right |
 | `top-right` | Top-right corner | Main subject is at bottom |
 | `top-left` | Top-left corner | Main subject is bottom-right |
 
-**Logo sizing & compositing:**
+**Logo sizing & compositing (with auto-detection):**
 
 ```python
+import numpy as np
 from PIL import Image
 
 LOGO_PATH = BASE_DIR / "public" / "images" / "logo" / "logo-vertical-dark.png"
@@ -84,7 +87,29 @@ LOGO_MARGIN = 30        # px from edge
 LOGO_HEIGHT = 80        # px height (auto-scale width to keep aspect ratio)
 LOGO_OPACITY = 180      # 0-255 (180 ≈ 70% opacity)
 
-def overlay_logo(img, position="bottom-right"):
+def find_best_logo_position(img, logo_w, logo_h, margin=LOGO_MARGIN):
+    """Analyze 4 corners of the image. Pick the one with least visual detail."""
+    iw, ih = img.size
+    pad = 20  # extra padding around logo area to scan
+    w, h = logo_w + margin + pad, logo_h + margin + pad
+    corners = {
+        "bottom-right": (iw - w, ih - h, iw, ih),
+        "bottom-left":  (0, ih - h, w, ih),
+        "top-right":    (iw - w, 0, iw, h),
+        "top-left":     (0, 0, w, h),
+    }
+    scores = {}
+    for name, box in corners.items():
+        region = img.crop(box).convert("L")  # grayscale
+        arr = np.array(region, dtype=np.float32)
+        # Low std = uniform/empty area = best for logo
+        scores[name] = float(np.std(arr))
+    best = min(scores, key=scores.get)
+    print(f"    🔍 Corner scores: {', '.join(f'{k}={v:.1f}' for k, v in scores.items())}")
+    print(f"    📌 Best position: {best} (lowest detail)")
+    return best
+
+def overlay_logo(img, position="auto"):
     logo = Image.open(LOGO_PATH).convert("RGBA")
     # Scale logo to fixed height, keep aspect ratio
     ratio = LOGO_HEIGHT / logo.height
@@ -93,9 +118,12 @@ def overlay_logo(img, position="bottom-right"):
     r, g, b, a = logo.split()
     a = a.point(lambda x: min(x, LOGO_OPACITY))
     logo = Image.merge("RGBA", (r, g, b, a))
-    # Calculate position
+    # Auto-detect best corner if position is "auto"
     iw, ih = img.size
     lw, lh = logo.size
+    if position == "auto":
+        position = find_best_logo_position(img, lw, lh)
+    # Calculate position
     positions = {
         "bottom-right": (iw - lw - LOGO_MARGIN, ih - lh - LOGO_MARGIN),
         "bottom-left":  (LOGO_MARGIN, ih - lh - LOGO_MARGIN),
@@ -111,7 +139,7 @@ def overlay_logo(img, position="bottom-right"):
 ```python
 {
     "filename": "example-featured.png",
-    "logo_position": "bottom-right",   # ← required
+    "logo_position": "auto",   # ← default, auto-detect emptiest corner
     "prompt": "..."
 }
 ```
