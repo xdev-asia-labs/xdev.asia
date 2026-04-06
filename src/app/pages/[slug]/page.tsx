@@ -11,6 +11,7 @@ const KNOWN_SLUGS = [
     "privacy-policy",
     "your-privacy-choices",
     "xoa-du-lieu-nguoi-dung",
+    "ve-toi",
 ];
 
 const SITE_URL = "https://xdev.asia";

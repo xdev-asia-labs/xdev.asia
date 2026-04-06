@@ -483,7 +483,7 @@ html {
    TAG PILL
    ═══════════════════════════════════════════════════════════════ */
 .tag-pill {
-  @apply inline-block text-xs font-medium px-2.5 py-1 rounded-lg transition-all duration-200 cursor-default;
+  @apply inline-block text-xs font-medium px-2.5 py-1 rounded-lg transition-all duration-200 cursor-pointer;
   background: #eff6ff;
   border: 1px solid #dbeafe;
   color: #2563eb;

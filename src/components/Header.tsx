@@ -46,6 +46,7 @@ const navLinks = [
     { href: "/blog/", label: "Bài viết" },
     { href: "/series/", label: "Khoá học" },
     { href: "/luyen-thi/", label: "Luyện thi" },
+    { href: "/pages/ve-toi/", label: "Về tôi" },
 ];
 
 export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
