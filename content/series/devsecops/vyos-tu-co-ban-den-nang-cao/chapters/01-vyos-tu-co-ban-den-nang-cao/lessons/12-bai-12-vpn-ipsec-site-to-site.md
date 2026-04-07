@@ -14,6 +14,8 @@ course:
   title: VyOS từ Cơ bản đến Nâng Cao
   slug: vyos-tu-co-ban-den-nang-cao
 ---
+<img src="/storage/uploads/2026/04/vyos-12-ipsec.png" alt="VPN — IPsec Site-to-Site" style="display:block;margin:24px auto 32px auto;max-width:700px;width:100%;border-radius:18px;box-shadow:0 4px 32px #0002" loading="lazy" />
+
 <h2>Giới thiệu IPsec VPN trên VyOS</h2>
 <p><strong>IPsec</strong> là chuẩn công nghiệp cho VPN bảo mật giữa các site. VyOS hỗ trợ đầy đủ IPsec với IKEv2, ESP, NAT-T, VTI. Bài này hướng dẫn cấu hình site-to-site, phân biệt policy-based và route-based, tích hợp với thiết bị khác và thực hành lab với BGP overlay.</p>
 <h3>Kiến thức nền tảng IPsec</h3>

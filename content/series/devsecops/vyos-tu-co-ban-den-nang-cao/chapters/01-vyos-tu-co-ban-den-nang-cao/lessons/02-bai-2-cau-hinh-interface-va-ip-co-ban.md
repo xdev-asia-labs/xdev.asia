@@ -16,6 +16,8 @@ course:
   slug: vyos-tu-co-ban-den-nang-cao
 ---
 
+<img src="/storage/uploads/2026/04/vyos-02-interface-ip.png" alt="Cấu hình Interface và IP cơ bản" style="display:block;margin:24px auto 32px auto;max-width:700px;width:100%;border-radius:18px;box-shadow:0 4px 32px #0002" loading="lazy" />
+
 <h2>Cấu hình Ethernet Interfaces</h2>
 
 <p>Trong VyOS, mỗi interface vật lý hoặc ảo được quản lý qua configuration tree tại node <code>interfaces</code>. Ethernet interface thường có tên <code>eth0</code>, <code>eth1</code>,... tương ứng với thứ tự NIC được kernel detect.</p>
@@ -35,7 +37,6 @@ set interfaces ethernet eth1 description 'LAN - Internal'
 # Xem thay đổi trước khi commit
 compare
 
-commit
 save</code></pre>
 
 <p>Một interface có thể có <strong>nhiều địa chỉ IP</strong> (secondary addresses):</p>
@@ -52,7 +53,7 @@ set interfaces ethernet eth1 address 10.0.0.1/24</code></pre>
 # Xem IP được cấp
 show interfaces ethernet eth0</code></pre>
 
-<h3>Disable/Enable Interface</h3>
+<img src="/storage/uploads/2026/04/vyos-02-interface-ip.png" alt="Cấu hình Interface và IP cơ bản" style="display:block;margin:24px auto 32px auto;max-width:700px;width:100%;border-radius:18px;box-shadow:0 4px 32px #0002" loading="lazy" />
 
 <pre><code class="language-bash"># Disable interface
 set interfaces ethernet eth2 disable

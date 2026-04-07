@@ -15,6 +15,7 @@ course:
   title: VyOS từ Cơ bản đến Nâng cao
   slug: vyos-tu-co-ban-den-nang-cao
 ---
+<img src="/storage/uploads/2026/04/vyos-01-intro-install.png" alt="Giới thiệu VyOS và Cài đặt" style="display:block;margin:24px auto 32px auto;max-width:700px;width:100%;border-radius:18px;box-shadow:0 4px 32px #0002" loading="lazy" />
 
 <h2>VyOS là gì?</h2>
 
@@ -278,20 +279,25 @@ vyos@vyos:~$ install image
 vyos@vyos:~$ configure
 
 # Đặt hostname
+
 set system host-name vyos-lab
 
 # Cấu hình WAN (DHCP từ NAT)
+
 set interfaces ethernet eth0 description 'WAN'
 set interfaces ethernet eth0 address dhcp
 
 # Cấu hình LAN
+
 set interfaces ethernet eth1 description 'LAN'
 set interfaces ethernet eth1 address 192.168.100.1/24
 
 # Bật SSH
+
 set service ssh port 22
 
 # Commit và save
+
 commit
 save</code></pre>
 
@@ -300,12 +306,15 @@ save</code></pre>
 exit
 
 # Kiểm tra interfaces
+
 show interfaces
 
 # Kiểm tra kết nối WAN
+
 ping 8.8.8.8
 
 # Xem routing table
+
 show ip route</code></pre>
 
 <h2>Tổng kết</h2>
