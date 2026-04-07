@@ -1,0 +1,62 @@
+---
+id: 019d65ef-d36f-773e-bf0a-9e3cc2fa6f1e
+title: 'Bài 14: WAN Load Balancing, QoS và Monitoring'
+slug: bai-14-wan-load-balancing-qos-va-monitoring
+description: >-
+  Hướng dẫn cấu hình cân bằng tải WAN, QoS, giám sát lưu lượng trên VyOS, lab thực hành dual-WAN, cấu hình NetFlow, SNMP, syslog, Prometheus.
+duration_minutes: 160
+is_free: true
+video_url: null
+sort_order: 14
+section_title: "VyOS từ Cơ bản đến Nâng cao"
+course:
+  id: 019d65ef-d36f-773e-bf0a-9e2efc5e19df
+  title: VyOS từ Cơ bản đến Nâng Cao
+  slug: vyos-tu-co-ban-den-nang-cao
+---
+<h2>WAN Load Balancing, QoS và Monitoring trên VyOS</h2>
+<p>Đảm bảo kết nối Internet ổn định, tối ưu hóa băng thông và giám sát lưu lượng là yêu cầu quan trọng. VyOS cung cấp các tính năng mạnh mẽ cho cân bằng tải WAN, QoS và monitoring.</p>
+<h3>WAN Load Balancing</h3>
+<pre><code class="language-bash">set load-balancing wan rule 10 inbound-interface eth0
+set load-balancing wan rule 10 interface eth1 weight 100
+set load-balancing wan rule 10 interface eth2 weight 50
+set load-balancing wan rule 10 failover
+set load-balancing wan rule 10 exclude traffic source address 192.168.1.0/24
+set load-balancing wan interface-health eth1 test 10 type ping target 8.8.8.8
+set load-balancing wan interface-health eth2 test 10 type ping target 1.1.1.1
+</code></pre>
+<h3>QoS: Traffic Shaping và Ưu tiên</h3>
+<pre><code class="language-bash">set qos policy shaper SHAPER bandwidth 100mbit
+set qos policy shaper SHAPER default bandwidth 80mbit
+set qos policy shaper SHAPER class 10 match ip destination address 192.168.2.0/24
+set qos policy shaper SHAPER class 10 bandwidth 20mbit
+set interfaces ethernet eth0 qos policy shaper SHAPER
+</code></pre>
+<p>Ưu tiên traffic VoIP/gaming bằng CAKE hoặc HTB.</p>
+<h3>NetFlow/sFlow, SNMP, Syslog</h3>
+<pre><code class="language-bash">set system flow-accounting interface eth0
+set system flow-accounting netflow server 192.168.10.10 port 2055
+set service snmp community public authorization ro
+set service snmp listen-address 0.0.0.0
+set system syslog host 192.168.10.20 facility all level info
+set system syslog host 192.168.10.20 transport tls
+</code></pre>
+<h3>Prometheus Monitoring Integration</h3>
+<p>VyOS hỗ trợ xuất số liệu qua SNMP hoặc exporter container.</p>
+<h3>Lab thực hành: Dual-WAN Load Balancing + QoS</h3>
+<ol>
+  <li>Cấu hình hai WAN interface (eth1, eth2) với rule cân bằng tải.</li>
+  <li>Thiết lập interface-health kiểm tra ping.</li>
+  <li>Cấu hình QoS shaper cho eth0, ưu tiên traffic cần thiết.</li>
+  <li>Kiểm tra failover bằng cách ngắt một WAN.</li>
+  <li>Kiểm tra NetFlow, SNMP, syslog gửi về server giám sát.</li>
+</ol>
+<pre><code class="language-bash"># Kiểm tra trạng thái load balancing
+show load-balancing wan
+# Kiểm tra QoS
+show qos
+# Kiểm tra flow-accounting
+show system flow-accounting
+</code></pre>
+<h3>Tổng kết</h3>
+<p>Bài này giúp bạn cấu hình cân bằng tải WAN, QoS, giám sát lưu lượng trên VyOS, thực hành dual-WAN, cấu hình NetFlow, SNMP, syslog, Prometheus để vận hành hệ thống mạng chuyên nghiệp.</p>
