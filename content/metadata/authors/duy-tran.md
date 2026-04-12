@@ -7,6 +7,7 @@ slug: 'duy-tran'
 github: 'https://github.com/tdduydev'
 linkedin: 'https://www.linkedin.com/in/duydev/'
 facebook: 'https://www.facebook.com/duydev'
+googleDev: 'https://g.dev/tdduydev'
 ---
 
 # DUY TRAN
@@ -18,6 +19,7 @@ Pursuing an AI-first mindset and intelligent system architecture. I build soluti
 - [GitHub Org](https://github.com/xdev-asia-labs)
 - [LinkedIn](https://www.linkedin.com/in/duydev/)
 - [Facebook](https://www.facebook.com/duydev)
+- [Google Developer](https://g.dev/tdduydev)
 
 ## Avatar
 ![DUY TRAN](/avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg)
