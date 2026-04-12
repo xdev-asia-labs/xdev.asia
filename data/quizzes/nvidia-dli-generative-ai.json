@@ -1,0 +1,350 @@
+{
+    "id": "nvidia-dli-generative-ai",
+    "title": "NVIDIA DLI — Generative AI with Diffusion Models & LLMs",
+    "slug": "nvidia-dli-generative-ai",
+    "description": "Practice exam covering all 4 DLI GenAI courses — Diffusion Models, RAG Agents, Agentic AI, LLM Eval & Fine-tuning. 20 questions, coding-style.",
+    "icon": "gpu",
+    "provider": "NVIDIA",
+    "level": "Intermediate",
+    "duration_minutes": 40,
+    "passing_score": 70,
+    "questions_count": 20,
+    "tags": [
+        "NVIDIA",
+        "DLI",
+        "Diffusion",
+        "LLM",
+        "RAG",
+        "LoRA",
+        "GenAI"
+    ],
+    "series_slug": "luyen-thi-nvidia-dli-generative-ai",
+    "domains": [
+        {
+            "name": "Part 1: Deep Learning Foundations",
+            "weight": 15,
+            "lessons": [
+                {
+                    "title": "Bài 1: PyTorch & Neural Network Fundamentals",
+                    "slug": "bai-1-pytorch-neural-network-fundamentals"
+                },
+                {
+                    "title": "Bài 2: Transformer Architecture & Attention",
+                    "slug": "bai-2-transformer-architecture-attention"
+                }
+            ]
+        },
+        {
+            "name": "Part 2: Generative AI with Diffusion Models",
+            "weight": 30,
+            "lessons": [
+                {
+                    "title": "Bài 3: U-Net Architecture & Denoising",
+                    "slug": "bai-3-unet-architecture-denoising"
+                },
+                {
+                    "title": "Bài 4: DDPM — Forward & Reverse Diffusion",
+                    "slug": "bai-4-ddpm-forward-reverse-diffusion"
+                },
+                {
+                    "title": "Bài 5: CLIP & Text-to-Image Pipeline",
+                    "slug": "bai-5-clip-text-to-image-pipeline"
+                }
+            ]
+        },
+        {
+            "name": "Part 3: LLM Applications & RAG",
+            "weight": 30,
+            "lessons": [
+                {
+                    "title": "Bài 6: LLM Inference & Pipeline Design",
+                    "slug": "bai-6-llm-inference-pipeline-design"
+                },
+                {
+                    "title": "Bài 7: RAG — Retrieval-Augmented Generation",
+                    "slug": "bai-7-rag-retrieval-augmented-generation"
+                },
+                {
+                    "title": "Bài 8: RAG Agent — Build & Evaluate",
+                    "slug": "bai-8-rag-agent-build-evaluate"
+                }
+            ]
+        },
+        {
+            "name": "Part 4: Agentic AI & LLM Customization",
+            "weight": 25,
+            "lessons": [
+                {
+                    "title": "Bài 9: Agentic AI & Multi-Agent Systems",
+                    "slug": "bai-9-agentic-ai-multi-agent-systems"
+                },
+                {
+                    "title": "Bài 10: LLM Evaluation & LoRA Fine-tuning",
+                    "slug": "bai-10-llm-evaluation-lora-fine-tuning"
+                }
+            ]
+        }
+    ],
+    "questions": [
+        {
+            "id": 1,
+            "domain": "Part 1: Deep Learning Foundations",
+            "question": "In PyTorch, what does `loss.backward()` compute?",
+            "options": [
+                "The forward pass of the neural network",
+                "Gradients of the loss with respect to all parameters that have requires_grad=True",
+                "Updates the model weights using the optimizer",
+                "Zeros out all gradients in the computation graph"
+            ],
+            "correct": 1,
+            "explanation": "`loss.backward()` computes gradients via backpropagation. It calculates ∂loss/∂param for every parameter with requires_grad=True. The actual weight update is done by `optimizer.step()`, and zeroing gradients is done by `optimizer.zero_grad()`."
+        },
+        {
+            "id": 2,
+            "domain": "Part 1: Deep Learning Foundations",
+            "question": "In the Transformer self-attention mechanism, what are the three projections computed from the input?",
+            "options": [
+                "Mean, Variance, Standard Deviation",
+                "Encoder, Decoder, Cross-Attention",
+                "Query (Q), Key (K), Value (V)",
+                "Input, Hidden, Output"
+            ],
+            "correct": 2,
+            "explanation": "Self-attention projects input into Q, K, V matrices. Attention scores are computed as softmax(QK^T / √d_k) · V. Each head learns different relationships between tokens."
+        },
+        {
+            "id": 3,
+            "domain": "Part 1: Deep Learning Foundations",
+            "question": "What is the purpose of positional encoding in Transformers?",
+            "options": [
+                "To reduce the number of parameters in the model",
+                "To inject information about token position since self-attention is permutation-invariant",
+                "To normalize the input embeddings to unit length",
+                "To increase the context window size of the model"
+            ],
+            "correct": 1,
+            "explanation": "Self-attention treats input as an unordered set — it has no notion of position. Positional encoding (sinusoidal or learned) adds position information so the model can distinguish 'cat sat on mat' from 'mat sat on cat'."
+        },
+        {
+            "id": 4,
+            "domain": "Part 2: Generative AI with Diffusion Models",
+            "question": "In a U-Net architecture used for diffusion models, what is the purpose of skip connections?",
+            "options": [
+                "To skip layers during training for faster convergence",
+                "To connect encoder features to decoder at matching resolutions, preserving spatial detail",
+                "To randomly drop layers during inference for diversity",
+                "To reduce the total number of parameters in the model"
+            ],
+            "correct": 1,
+            "explanation": "Skip connections concatenate encoder feature maps with decoder feature maps at the same resolution. This preserves fine spatial details that would otherwise be lost during downsampling, which is critical for image reconstruction quality."
+        },
+        {
+            "id": 5,
+            "domain": "Part 2: Generative AI with Diffusion Models",
+            "question": "Given the forward diffusion formula q(x_t | x_0) = N(x_t; √ᾱ_t · x_0, (1-ᾱ_t)·I), what happens as t → T (final timestep)?",
+            "options": [
+                "x_t becomes identical to x_0 (clean image)",
+                "x_t becomes pure Gaussian noise N(0, I) because ᾱ_T → 0",
+                "x_t becomes a blurred version of x_0",
+                "x_t becomes the mean of all training images"
+            ],
+            "correct": 1,
+            "explanation": "As t → T, ᾱ_t → 0, so the mean √ᾱ_t · x_0 → 0 and variance (1-ᾱ_t) → 1. The distribution approaches N(0, I) — pure standard Gaussian noise. This is why reverse diffusion starts from random noise."
+        },
+        {
+            "id": 6,
+            "domain": "Part 2: Generative AI with Diffusion Models",
+            "question": "In Classifier-Free Guidance (CFG), what does increasing the guidance scale w do?",
+            "options": [
+                "Makes generated images more random and diverse",
+                "Reduces inference time by skipping diffusion steps",
+                "Amplifies the conditional signal, making output more aligned with the prompt but less diverse",
+                "Switches the model from conditional to unconditional generation"
+            ],
+            "correct": 2,
+            "explanation": "CFG formula: ε_guided = ε_unconditional + w · (ε_conditional - ε_unconditional). Higher w amplifies the difference between conditional and unconditional predictions, pushing output closer to the prompt. Typical values: w=7.5. Too high causes artifacts."
+        },
+        {
+            "id": 7,
+            "domain": "Part 2: Generative AI with Diffusion Models",
+            "question": "Why do diffusion models prefer Group Normalization over Batch Normalization?",
+            "options": [
+                "Group Norm has fewer parameters than Batch Norm",
+                "Group Norm performs better on large batch sizes",
+                "Group Norm normalizes within each sample independently, making it stable for small batch sizes typical in image generation",
+                "Group Norm removes the need for skip connections"
+            ],
+            "correct": 2,
+            "explanation": "Batch Norm statistics depend on batch size — unstable when batch is small (common in diffusion training due to large images). Group Norm divides channels into groups and normalizes within each sample, independent of batch size."
+        },
+        {
+            "id": 8,
+            "domain": "Part 2: Generative AI with Diffusion Models",
+            "question": "CLIP (Contrastive Language-Image Pretraining) is used in text-to-image diffusion models to:",
+            "options": [
+                "Generate images directly from text without a diffusion process",
+                "Encode text prompts into embeddings that condition the U-Net via cross-attention",
+                "Replace the U-Net entirely with a vision transformer",
+                "Evaluate the quality of generated images automatically"
+            ],
+            "correct": 1,
+            "explanation": "CLIP's text encoder converts text prompts into dense embedding vectors. These embeddings are injected into the U-Net at multiple layers via cross-attention: Attention(Q=image_features, K=text_embeddings, V=text_embeddings). This conditions the generation process on the text."
+        },
+        {
+            "id": 9,
+            "domain": "Part 3: LLM Applications & RAG",
+            "question": "When chunking a 10,000-token document with chunk_size=512 and overlap=128, approximately how many chunks are produced?",
+            "options": [
+                "20 chunks",
+                "26 chunks",
+                "10 chunks",
+                "50 chunks"
+            ],
+            "correct": 1,
+            "explanation": "With overlap, stride = chunk_size - overlap = 512 - 128 = 384. Number of chunks ≈ ceil((10000 - 512) / 384) + 1 = ceil(9488/384) + 1 = 25 + 1 = 26 chunks."
+        },
+        {
+            "id": 10,
+            "domain": "Part 3: LLM Applications & RAG",
+            "question": "In a RAG pipeline, what is the PRIMARY purpose of embedding models?",
+            "options": [
+                "To generate the final answer from retrieved documents",
+                "To convert text into dense vector representations for semantic similarity search",
+                "To split documents into smaller chunks",
+                "To filter out irrelevant documents using keyword matching"
+            ],
+            "correct": 1,
+            "explanation": "Embedding models (e.g., NV-Embed-QA, sentence-transformers) convert text into dense vectors where semantically similar texts are close in vector space. This enables retrieval via cosine similarity or approximate nearest neighbor search."
+        },
+        {
+            "id": 11,
+            "domain": "Part 3: LLM Applications & RAG",
+            "question": "What is an input guardrail in a RAG system?",
+            "options": [
+                "A firewall that blocks network attacks on the LLM API",
+                "A mechanism that rejects user queries that are off-topic or potentially harmful before sending to the LLM",
+                "A rate limiter that controls the number of API calls per minute",
+                "A caching layer that stores frequently asked questions"
+            ],
+            "correct": 1,
+            "explanation": "Input guardrails check user queries before processing. Common techniques: embedding similarity to topic vectors (reject if < threshold), keyword blocklists, classifier for harmful content. This prevents misuse and keeps the system focused on its domain."
+        },
+        {
+            "id": 12,
+            "domain": "Part 3: LLM Applications & RAG",
+            "question": "Your RAG system has Precision@5 = 0.8 but Recall@5 = 0.2. What does this indicate and how would you improve it?",
+            "options": [
+                "Most retrieved docs are relevant but you're missing many relevant docs — increase top-k or use hybrid search",
+                "Most retrieved docs are irrelevant — improve the embedding model",
+                "The LLM is hallucinating — add output guardrails",
+                "The chunks are too large — reduce chunk size"
+            ],
+            "correct": 0,
+            "explanation": "High precision (4/5 retrieved are relevant) + low recall (only 20% of all relevant docs found) means the retriever is accurate but misses many documents. Solutions: increase top-k, add BM25 keyword search alongside semantic search (hybrid), or use a re-ranker."
+        },
+        {
+            "id": 13,
+            "domain": "Part 3: LLM Applications & RAG",
+            "question": "In LangChain Expression Language (LCEL), what does the pipe operator `|` represent?",
+            "options": [
+                "Logical OR between two conditions",
+                "Chaining components sequentially — output of left becomes input of right",
+                "Parallel execution of two components",
+                "Error handling — if left fails, try right"
+            ],
+            "correct": 1,
+            "explanation": "LCEL pipe operator chains components: `prompt | llm | output_parser`. Output of prompt template feeds into LLM, LLM output feeds into parser. It's syntactic sugar for creating a RunnableSequence."
+        },
+        {
+            "id": 14,
+            "domain": "Part 4: Agentic AI & LLM Customization",
+            "question": "In a LangGraph agent, what is the purpose of conditional edges?",
+            "options": [
+                "To add random branching for diversity in agent behavior",
+                "To route execution to different nodes based on the current state — enabling decision-making logic",
+                "To execute multiple nodes in parallel",
+                "To retry failed nodes automatically"
+            ],
+            "correct": 1,
+            "explanation": "Conditional edges evaluate the current graph state and route to different nodes. For example, a router function checks if the query needs research → route to search_agent, or already has enough context → route to answer_agent. This enables dynamic decision-making."
+        },
+        {
+            "id": 15,
+            "domain": "Part 4: Agentic AI & LLM Customization",
+            "question": "What is the key difference between ReAct and Plan-and-Execute cognitive architectures?",
+            "options": [
+                "ReAct uses LLMs while Plan-and-Execute uses rule-based systems",
+                "ReAct interleaves reasoning and action step-by-step, while Plan-and-Execute creates a full plan first then executes sequentially",
+                "Plan-and-Execute is always faster than ReAct",
+                "ReAct cannot use external tools"
+            ],
+            "correct": 1,
+            "explanation": "ReAct (Reason + Act): Think → Act → Observe → Think → Act → ... (interleaved). Plan-and-Execute: Plan all steps first → Execute step 1 → Execute step 2 → ... → Done. P&E is better for complex multi-step tasks; ReAct is better for conversational/adaptive tasks."
+        },
+        {
+            "id": 16,
+            "domain": "Part 4: Agentic AI & LLM Customization",
+            "question": "In structured output from an LLM, why use Pydantic models with `with_structured_output()`?",
+            "options": [
+                "To reduce the LLM's response latency",
+                "To force the LLM response into a validated JSON schema — ensuring machine-parseable output for downstream processing",
+                "To encrypt the LLM output for security",
+                "To compress the output to save bandwidth"
+            ],
+            "correct": 1,
+            "explanation": "Pydantic models define a strict schema (types, constraints, descriptions). `with_structured_output()` constrains the LLM to output valid JSON matching the schema, enabling reliable extraction of structured data for tool calls, API requests, or database operations."
+        },
+        {
+            "id": 17,
+            "domain": "Part 4: Agentic AI & LLM Customization",
+            "question": "LoRA (Low-Rank Adaptation) reduces fine-tuning parameters by decomposing weight update ΔW into:",
+            "options": [
+                "A diagonal matrix D of size (d×d)",
+                "Two low-rank matrices B (d×r) and A (r×k) where r << min(d,k)",
+                "A sparse matrix with 90% zeros",
+                "A single vector of size (d)"
+            ],
+            "correct": 1,
+            "explanation": "LoRA decomposes ΔW = B·A where B ∈ R^(d×r) and A ∈ R^(r×k). With r=16, d=k=4096: LoRA params = 2×4096×16 = 131,072 vs full fine-tuning 4096² = 16.7M (0.78%). The frozen base model + small adapters = memory efficient."
+        },
+        {
+            "id": 18,
+            "domain": "Part 4: Agentic AI & LLM Customization",
+            "question": "Your fine-tuned model achieves BLEU=0.12 but F1=0.78 on a QA task. What is the most likely explanation?",
+            "options": [
+                "The model is completely wrong — both metrics are bad",
+                "The model generates correct answers but uses different wording than the reference — BLEU penalizes paraphrasing",
+                "The model memorized the training data (overfitting)",
+                "The evaluation dataset is too small to be meaningful"
+            ],
+            "correct": 1,
+            "explanation": "BLEU measures exact n-gram overlap — penalizes correct answers with different wording. F1 measures token-level information overlap — more forgiving of paraphrasing. Low BLEU + high F1 = model is correct but paraphrases. Use semantic similarity or LLM-as-a-Judge for better QA evaluation."
+        },
+        {
+            "id": 19,
+            "domain": "Part 4: Agentic AI & LLM Customization",
+            "question": "What is the key advantage of QLoRA over standard LoRA?",
+            "options": [
+                "QLoRA achieves higher accuracy than standard LoRA",
+                "QLoRA quantizes the base model to 4-bit (NF4), dramatically reducing VRAM while keeping LoRA adapters in FP16",
+                "QLoRA fine-tunes all model parameters instead of low-rank adapters",
+                "QLoRA removes the need for a GPU during training"
+            ],
+            "correct": 1,
+            "explanation": "QLoRA = 4-bit NormalFloat quantized base model + FP16 LoRA adapters + double quantization + paged optimizers. A 7B model needs ~14GB VRAM with LoRA but only ~6GB with QLoRA — enabling fine-tuning on consumer GPUs (RTX 3090/4090)."
+        },
+        {
+            "id": 20,
+            "domain": "Part 4: Agentic AI & LLM Customization",
+            "question": "In the LLM-as-a-Judge evaluation pattern, what is the main risk to watch out for?",
+            "options": [
+                "The judge model is too expensive to run",
+                "Position bias — the judge tends to prefer the first or last response, and self-enhancement bias — it prefers outputs from the same model family",
+                "The judge model always disagrees with human evaluators",
+                "LLM-as-a-Judge can only evaluate English text"
+            ],
+            "correct": 1,
+            "explanation": "Key biases: (1) Position bias — preference for response in a certain position, mitigate by swapping order. (2) Self-enhancement bias — GPT-4 as judge favors GPT-4 outputs. (3) Verbosity bias — prefers longer responses. Mitigate with structured rubrics and randomized orderings."
+        }
+    ]
+}

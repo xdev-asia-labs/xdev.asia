@@ -1864,5 +1864,19 @@
         "questions_count": 20,
         "tags": ["Kubernetes", "CKAD", "CNCF", "DevOps"],
         "series_slug": "luyen-thi-ckad"
+    },
+    {
+        "id": "nvidia-dli-generative-ai",
+        "title": "NVIDIA DLI — Generative AI with Diffusion Models & LLMs",
+        "slug": "nvidia-dli-generative-ai",
+        "description": "Practice exam covering all 4 DLI GenAI courses — Diffusion Models, RAG Agents, Agentic AI, LLM Eval & Fine-tuning. 20 questions, coding-style.",
+        "icon": "gpu",
+        "provider": "NVIDIA",
+        "level": "Intermediate",
+        "duration_minutes": 40,
+        "passing_score": 70,
+        "questions_count": 20,
+        "tags": ["NVIDIA", "DLI", "Diffusion", "LLM", "RAG", "LoRA", "GenAI"],
+        "series_slug": "luyen-thi-nvidia-dli-generative-ai"
     }
 ]
