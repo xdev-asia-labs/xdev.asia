@@ -1,11 +1,13 @@
 import HeroBanner2026 from "@/components/HeroBanner2026";
 import { IconArrowRight, IconBook, IconBrain, IconCode } from "@/components/Icons";
+import KnowledgeGraph from "@/components/KnowledgeGraph";
 import NewsletterForm from "@/components/NewsletterForm";
 import PostCard from "@/components/PostCard";
 import ScrollReveal from "@/components/ScrollReveal";
 import SeriesCard from "@/components/SeriesCard";
 import SkeletonImage from "@/components/SkeletonImage";
 import { formatDate, getAllPosts, getAllSeries, getSeriesByCategory, getSettings } from "@/lib/data";
+import { buildKnowledgeGraph } from "@/lib/graph";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -70,6 +72,8 @@ export default function Home() {
     const featuredPost = posts[0];
     const sidePosts = posts.slice(1);
 
+    const graphData = buildKnowledgeGraph();
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "WebSite",
@@ -104,6 +108,54 @@ export default function Home() {
                 postCount={allPosts.length}
                 seriesCount={allSeriesItems.length}
             />
+
+            {/* ─── Knowledge Graph Preview ─── */}
+            {graphData.nodes.length > 0 && (
+                <section className="relative bg-[#0a0e1a] py-14 lg:py-18 overflow-hidden">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.08),transparent_70%)]" aria-hidden="true" />
+                    <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <ScrollReveal>
+                            <div className="text-center mb-6">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 mb-3">
+                                    <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="12" r="2" />
+                                        <circle cx="5" cy="6" r="1.5" />
+                                        <circle cx="19" cy="6" r="1.5" />
+                                        <circle cx="5" cy="18" r="1.5" />
+                                        <circle cx="19" cy="18" r="1.5" />
+                                        <line x1="12" y1="10" x2="5" y2="7.5" />
+                                        <line x1="12" y1="10" x2="19" y2="7.5" />
+                                        <line x1="12" y1="14" x2="5" y2="16.5" />
+                                        <line x1="12" y1="14" x2="19" y2="16.5" />
+                                    </svg>
+                                    Knowledge Graph
+                                </div>
+                                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Bản đồ tri thức</h2>
+                                <p className="text-sm text-slate-400 max-w-md mx-auto">
+                                    Khám phá mối liên kết giữa {graphData.nodes.length} chủ đề và {graphData.edges.length} liên kết.
+                                </p>
+                            </div>
+                        </ScrollReveal>
+                        <ScrollReveal>
+                            <div className="relative rounded-2xl border border-white/6 bg-[#0d1117] overflow-hidden shadow-2xl shadow-black/40">
+                                <KnowledgeGraph data={graphData} className="h-90 sm:h-105 lg:h-120" />
+                                <Link
+                                    href="/knowledge-graph"
+                                    className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 py-3 bg-linear-to-t from-[#0d1117] via-[#0d1117]/90 to-transparent text-sm font-medium text-indigo-300 hover:text-indigo-200 transition-colors"
+                                >
+                                    Xem toàn màn hình
+                                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="15 3 21 3 21 9" />
+                                        <polyline points="9 21 3 21 3 15" />
+                                        <line x1="21" y1="3" x2="14" y2="10" />
+                                        <line x1="3" y1="21" x2="10" y2="14" />
+                                    </svg>
+                                </Link>
+                            </div>
+                        </ScrollReveal>
+                    </div>
+                </section>
+            )}
 
             {/* ─── AI & Machine Learning — Dark accent section ─── */}
             {aiSeries.length > 0 && (
