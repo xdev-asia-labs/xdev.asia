@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 90
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai01-microservices-on-prem-overview.png
 sort_order: 1
 section_title: 'Phần 1: Nền tảng & Thiết kế Hạ tầng On-Premises'
 course:

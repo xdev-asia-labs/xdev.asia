@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 150
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai36-security-hardening.png
 sort_order: 36
 section_title: 'Phần 9: Security Hardening'
 course:

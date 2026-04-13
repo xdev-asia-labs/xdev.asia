@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 150
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai06-ha-control-plane.png
 sort_order: 6
 section_title: 'Phần 2: Kubernetes HA Cluster với kubeadm'
 course:

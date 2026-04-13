@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 150
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai40-canary-blue-green.png
 sort_order: 40
 section_title: 'Phần 10: Deployment Patterns & Auto-Scaling'
 course:

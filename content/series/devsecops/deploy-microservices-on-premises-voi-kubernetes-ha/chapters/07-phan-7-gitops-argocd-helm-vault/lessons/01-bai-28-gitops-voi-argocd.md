@@ -8,6 +8,7 @@ description: >-
 duration_minutes: 150
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai28-gitops-argocd.png
 sort_order: 28
 section_title: 'Phần 7: GitOps với ArgoCD, Helm & Vault'
 course:

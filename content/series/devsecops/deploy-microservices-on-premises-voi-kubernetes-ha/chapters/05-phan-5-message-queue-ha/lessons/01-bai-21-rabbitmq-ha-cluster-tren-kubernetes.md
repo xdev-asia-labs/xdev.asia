@@ -8,6 +8,7 @@ description: >-
 duration_minutes: 150
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai21-rabbitmq-ha-cluster.png
 sort_order: 21
 section_title: 'Phần 5: Message Queue HA (RabbitMQ, Kafka, Redis)'
 course:

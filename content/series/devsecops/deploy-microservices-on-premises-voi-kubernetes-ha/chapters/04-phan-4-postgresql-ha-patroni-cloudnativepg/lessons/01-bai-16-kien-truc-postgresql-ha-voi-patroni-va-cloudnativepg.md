@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 120
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai16-postgresql-ha-patroni.png
 sort_order: 16
 section_title: 'Phần 4: PostgreSQL HA với Patroni & CloudNativePG'
 course:

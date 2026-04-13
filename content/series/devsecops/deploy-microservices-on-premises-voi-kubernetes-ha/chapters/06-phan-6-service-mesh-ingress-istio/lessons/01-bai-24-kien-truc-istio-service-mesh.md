@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 150
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai24-istio-service-mesh.png
 sort_order: 24
 section_title: 'Phần 6: Service Mesh & Ingress với Istio'
 course:

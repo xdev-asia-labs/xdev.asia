@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 180
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai32-prometheus-observability.png
 sort_order: 32
 section_title: 'Phần 8: Observability — Prometheus, Loki, Tempo'
 course:

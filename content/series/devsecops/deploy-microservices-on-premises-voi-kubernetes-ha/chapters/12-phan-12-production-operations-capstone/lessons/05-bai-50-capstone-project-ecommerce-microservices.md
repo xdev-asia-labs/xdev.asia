@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 480
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai50-capstone-ecommerce.png
 sort_order: 50
 section_title: 'Phần 12: Production Operations & Capstone Project'
 course:

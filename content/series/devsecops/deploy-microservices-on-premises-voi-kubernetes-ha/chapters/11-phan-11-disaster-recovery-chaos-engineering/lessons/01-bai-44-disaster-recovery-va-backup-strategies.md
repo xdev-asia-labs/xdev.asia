@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 180
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai44-disaster-recovery.png
 sort_order: 44
 section_title: 'Phần 11: Disaster Recovery & Chaos Engineering'
 course:

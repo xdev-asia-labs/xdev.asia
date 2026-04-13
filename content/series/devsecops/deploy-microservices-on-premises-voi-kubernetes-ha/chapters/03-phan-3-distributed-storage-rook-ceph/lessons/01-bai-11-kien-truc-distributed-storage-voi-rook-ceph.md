@@ -9,6 +9,7 @@ description: >-
 duration_minutes: 120
 is_free: true
 video_url: null
+featured_image: uploads/2026/04/k8s-ha-bai11-rook-ceph-architecture.png
 sort_order: 11
 section_title: 'Phần 3: Distributed Storage — Rook-Ceph'
 course:
