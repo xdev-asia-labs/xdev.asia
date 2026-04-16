@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "highlight.js/styles/github-dark.css";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 @source not "../../content/**/*.md";
 @source not "../../out/**/*";
 @source not "../../.next/**/*";
@@ -1707,6 +1708,17 @@ details[open] .toc-chevron {
 /* ── Footer (already dark) ── */
 
 /* ── Article content ── */
+:root.dark .article-content {
+  color: #cbd5e1;
+}
+:root.dark .article-content p,
+:root.dark .article-content li,
+:root.dark .article-content ul,
+:root.dark .article-content ol,
+:root.dark .article-content dd,
+:root.dark .article-content dt {
+  color: #cbd5e1;
+}
 :root.dark .article-content h2,
 :root.dark .article-content h3,
 :root.dark .article-content h4 {
@@ -1860,6 +1872,18 @@ details[open] .toc-chevron {
 :root.dark .text-zinc-700 {
   color: #cbd5e1;
 }
+:root.dark .text-zinc-600 {
+  color: #94a3b8;
+}
+:root.dark .text-zinc-500 {
+  color: #94a3b8;
+}
+:root.dark .text-zinc-400 {
+  color: #64748b;
+}
+:root.dark .text-zinc-300 {
+  color: #475569;
+}
 :root.dark .bg-surface-100 {
   background: #1e293b;
 }
@@ -1872,11 +1896,49 @@ details[open] .toc-chevron {
 :root.dark .border-zinc-200 {
   border-color: #334155;
 }
+:root.dark .border-zinc-50 {
+  border-color: #1e293b;
+}
 :root.dark .bg-zinc-50 {
   background: #0f172a;
 }
+:root.dark .bg-zinc-100 {
+  background: #1e293b;
+}
+:root.dark .bg-zinc-300 {
+  background: #475569;
+}
 :root.dark .bg-white {
   background: #0b1120;
+}
+:root.dark .ring-zinc-200 {
+  --tw-ring-color: #334155;
+}
+:root.dark .shadow-zinc-200\/50 {
+  --tw-shadow-color: rgba(15, 23, 42, 0.5);
+}
+:root.dark .hover\:bg-zinc-50:hover {
+  background: #0f172a;
+}
+:root.dark .hover\:bg-brand-50:hover {
+  background: rgba(30, 58, 138, 0.15);
+}
+:root.dark .hover\:bg-brand-50\/60:hover {
+  background: rgba(30, 58, 138, 0.2);
+}
+:root.dark .article-content .content-image-missing {
+  background: rgba(30, 58, 138, 0.2);
+  border-color: #1e3a8a;
+  color: #93c5fd;
+}
+:root.dark .hero-gradient {
+  background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #172554 100%);
+}
+:root.dark .bg-brand-50 {
+  background: rgba(30, 58, 138, 0.2);
+}
+:root.dark .bg-brand-50\/50 {
+  background: rgba(30, 58, 138, 0.15);
 }
 
 /* ═══════════════════════════════════════════════════════════════
