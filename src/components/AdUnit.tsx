@@ -2,8 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-// TODO: Thay bằng Publisher ID thật sau khi được AdSense duyệt
-const ADSENSE_PUB_ID = "ca-pub-6342139522924885";
+const ADSENSE_PUB_ID = "ca-pub-4477428104110157";
 
 type AdFormat = "auto" | "fluid" | "rectangle" | "horizontal" | "vertical";
 
@@ -61,7 +60,7 @@ export default function AdUnit({
 export function InArticleAd({ className = "" }: { className?: string }) {
     return (
         <AdUnit
-            slot="XXXXXXXXXX"
+            slot="2738496555"
             format="fluid"
             layout="in-article"
             className={`my-8 ${className}`}
@@ -75,8 +74,8 @@ export function InArticleAd({ className = "" }: { className?: string }) {
 export function SidebarAd({ className = "" }: { className?: string }) {
     return (
         <AdUnit
-            slot="XXXXXXXXXX"
-            format="rectangle"
+            slot="1209792468"
+            format="auto"
             className={`mb-6 ${className}`}
         />
     );
@@ -88,8 +87,8 @@ export function SidebarAd({ className = "" }: { className?: string }) {
 export function BannerAd({ className = "" }: { className?: string }) {
     return (
         <AdUnit
-            slot="XXXXXXXXXX"
-            format="horizontal"
+            slot="1209792468"
+            format="auto"
             className={className}
         />
     );
