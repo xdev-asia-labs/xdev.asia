@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 const ADSENSE_PUB_ID = "ca-pub-4477428104110157";
 
-type AdFormat = "auto" | "fluid" | "rectangle" | "horizontal" | "vertical";
+type AdFormat = "auto" | "autorelaxed" | "fluid" | "rectangle" | "horizontal" | "vertical";
 
 interface AdUnitProps {
     /** Ad slot ID from AdSense (e.g. "1234567890") */
@@ -89,6 +89,33 @@ export function BannerAd({ className = "" }: { className?: string }) {
         <AdUnit
             slot="1209792468"
             format="auto"
+            className={className}
+        />
+    );
+}
+
+/**
+ * Multiplex ad — grid of native recommendation-style ads.
+ */
+export function MultiplexAd({ className = "" }: { className?: string }) {
+    return (
+        <AdUnit
+            slot="4687684659"
+            format="autorelaxed"
+            className={`my-8 ${className}`}
+        />
+    );
+}
+
+/**
+ * In-feed ad — blends into post listings.
+ */
+export function InFeedAd({ className = "" }: { className?: string }) {
+    return (
+        <AdUnit
+            slot="5667912220"
+            format="fluid"
+            layout="in-article"
             className={className}
         />
     );

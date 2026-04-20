@@ -1,4 +1,4 @@
-import { InArticleAd, SidebarAd, BannerAd } from "@/components/AdUnit";
+import { InArticleAd, SidebarAd, BannerAd, MultiplexAd } from "@/components/AdUnit";
 import AISummary from "@/components/AISummary";
 import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
@@ -429,6 +429,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     </div>
                 </section>
             )}
+
+            {/* Multiplex Ad — recommendation grid at bottom */}
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+                <MultiplexAd />
+            </div>
         </div>
     );
 }

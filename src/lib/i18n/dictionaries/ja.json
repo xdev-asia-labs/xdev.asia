@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "blog": "ブログ",
+    "series": "コース",
+    "exam_prep": "資格対策",
+    "about": "私について",
+    "topics": "トピック",
+    "view_all_posts": "すべての記事を見る",
+    "search": "検索",
+    "mcp": "MCP",
+    "mcp_server": "MCPサーバー",
+    "new_badge": "NEW",
+    "skip_to_content": "メインコンテンツへスキップ",
+    "toggle_menu": "メニューを開閉"
+  },
+  "footer": {
+    "tagline": "プログラミング、AI、DevOps、テクノロジーの知識を共有します。",
+    "explore": "探す",
+    "contact": "連絡先",
+    "saved": "ブックマーク",
+    "rights": "All rights reserved.",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "data_deletion": "データ削除"
+  },
+  "common": {
+    "language": "言語",
+    "loading": "読み込み中...",
+    "read_more": "続きを読む",
+    "view_all": "すべて表示",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "share": "シェア",
+    "copy_link": "リンクをコピー",
+    "copied": "コピーしました",
+    "minutes_read": "分で読めます",
+    "published_on": "公開日",
+    "updated_on": "更新日",
+    "by": "著者",
+    "related": "関連記事",
+    "table_of_contents": "目次"
+  },
+  "search": {
+    "placeholder": "記事やコースを検索...",
+    "no_results": "結果が見つかりません",
+    "results_for": "検索結果"
+  },
+  "auth": {
+    "sign_in": "ログイン",
+    "sign_out": "ログアウト",
+    "sign_in_with_google": "Googleでログイン",
+    "profile": "プロフィール",
+    "bookmarks": "ブックマーク"
+  },
+  "home": {
+    "hero_subtitle": "プログラミング、AI、DevOps、テクノロジーの知識共有プラットフォーム。",
+    "latest_posts": "最新の記事",
+    "popular_series": "おすすめコース",
+    "explore_topics": "トピックを探す"
+  },
+  "errors": {
+    "not_found_title": "ページが見つかりません",
+    "not_found_description": "お探しのページは存在しないか、移動された可能性があります。",
+    "back_home": "ホームに戻る"
+  },
+  "language_notice": {
+    "vietnamese_content": "オリジナルコンテンツはベトナム語です。自動翻訳は準備中です。"
+  }
+}

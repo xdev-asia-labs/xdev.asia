@@ -9,8 +9,15 @@ import {
   getSeriesLessonSlugs,
   getAvailableTopics,
 } from "@/lib/data";
+import { LOCALES, LOCALE_HREFLANG, localePrefix } from "@/lib/i18n/config";
 
 const SITE_URL = "https://xdev.asia";
+
+const homepageAlternates = {
+  languages: Object.fromEntries(
+    LOCALES.map((loc) => [LOCALE_HREFLANG[loc], `${SITE_URL}${localePrefix(loc) || "/"}`])
+  ),
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date().toISOString();
@@ -22,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "daily",
       priority: 1,
+      alternates: homepageAlternates,
     },
     {
       url: `${SITE_URL}/blog/`,

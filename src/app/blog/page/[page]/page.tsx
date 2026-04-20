@@ -1,4 +1,5 @@
 import { IconCode } from "@/components/Icons";
+import { InFeedAd, MultiplexAd } from "@/components/AdUnit";
 import Pagination from "@/components/Pagination";
 import PostCard from "@/components/PostCard";
 import { getAllPosts, getAvailableTopics } from "@/lib/data";
@@ -84,7 +85,16 @@ export default async function BlogPaginatedPage({ params }: { params: Promise<{ 
                         <PostCard key={post.id} post={post} priority={index < 3} />
                     ))}
                 </div>
+
+                {/* In-feed Ad */}
+                <div className="my-6">
+                    <InFeedAd />
+                </div>
+
                 <Pagination currentPage={currentPage} totalPages={totalPages} basePath="/blog/" />
+
+                {/* Multiplex Ad */}
+                <MultiplexAd className="mt-4" />
             </div>
         </div>
     );

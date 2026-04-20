@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, IconShield, IconServer, IconDatabase, IconTerminal, IconBook, IconRocket, IconPlug, IconAward } from "./Icons";
 import DarkModeToggle from "./DarkModeToggle";
 import UserMenu from "./UserMenu";
+import LanguageSwitcher from "./LanguageSwitcher";
+import type { Locale } from "@/lib/i18n/config";
 
 /* ────────────────────────────────────────
    Icon map – maps category.icon string → component
@@ -39,17 +41,49 @@ export interface NavTopic {
     icon: string;
 }
 
-/* ────────────────────────────────────────
-   Main nav links
-   ──────────────────────────────────────── */
-const navLinks = [
-    { href: "/blog/", label: "Bài viết" },
-    { href: "/series/", label: "Khoá học" },
-    { href: "/luyen-thi/", label: "Luyện thi" },
-    { href: "/pages/ve-toi/", label: "Về tôi" },
-];
+export interface HeaderStrings {
+    blog: string;
+    series: string;
+    exam_prep: string;
+    about: string;
+    topics: string;
+    view_all_posts: string;
+    search: string;
+    mcp: string;
+    skip_to_content: string;
+    toggle_menu: string;
+}
 
-export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
+const DEFAULT_STRINGS: HeaderStrings = {
+    blog: "Bài viết",
+    series: "Khoá học",
+    exam_prep: "Luyện thi",
+    about: "Về tôi",
+    topics: "Chủ đề",
+    view_all_posts: "Xem tất cả bài viết",
+    search: "Tìm kiếm",
+    mcp: "MCP",
+    skip_to_content: "Chuyển đến nội dung chính",
+    toggle_menu: "Mở/đóng menu",
+};
+
+export default function Header({
+    topics = [],
+    strings = DEFAULT_STRINGS,
+    localePrefix = "",
+    locale = "vi",
+}: {
+    topics?: NavTopic[];
+    strings?: HeaderStrings;
+    localePrefix?: string;
+    locale?: Locale;
+}) {
+    const navLinks = [
+        { href: `${localePrefix}/blog/`, label: strings.blog },
+        { href: `${localePrefix}/series/`, label: strings.series },
+        { href: `${localePrefix}/luyen-thi/`, label: strings.exam_prep },
+        { href: `${localePrefix}/pages/ve-toi/`, label: strings.about },
+    ];
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -128,7 +162,7 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                                         : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
                                         }`}
                                 >
-                                    Chủ đề
+                                    {strings.topics}
                                     <IconChevronDown
                                         size={13}
                                         className={`transition-transform duration-300 ${topicDropdownOpen ? "rotate-180" : ""}`}
@@ -143,7 +177,7 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                                     {topics.map((topic) => (
                                         <Link
                                             key={topic.slug}
-                                            href={`/${topic.slug}/`}
+                                            href={`${localePrefix}/${topic.slug}/`}
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-zinc-600 hover:text-brand-600 hover:bg-brand-50/60 transition-colors"
                                             onClick={() => setTopicDropdownOpen(false)}
                                         >
@@ -153,12 +187,12 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                                     ))}
                                     <div className="border-t border-zinc-100 mt-1 pt-1">
                                         <Link
-                                            href="/blog/"
+                                            href={`${localePrefix}/blog/`}
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-brand-600 font-medium hover:bg-brand-50/60 transition-colors"
                                             onClick={() => setTopicDropdownOpen(false)}
                                         >
                                             <IconCode size={15} />
-                                            Xem tất cả bài viết
+                                            {strings.view_all_posts}
                                         </Link>
                                     </div>
                                 </div>
@@ -167,36 +201,38 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
 
                         {/* MCP — highlighted */}
                         <Link
-                            href="/mcp/"
+                            href={`${localePrefix}/mcp/`}
                             className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${isActive("/mcp")
                                 ? "bg-brand-600 text-white shadow-md shadow-brand-500/30"
                                 : "bg-linear-to-r from-brand-500 to-indigo-500 text-white shadow-md shadow-brand-500/25 hover:shadow-lg hover:shadow-brand-500/40 hover:scale-105"
                                 }`}
                         >
                             <IconPlug size={14} />
-                            MCP
+                            {strings.mcp}
                             <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                         </Link>
 
                         {/* Search */}
                         <Link
-                            href="/search/"
+                            href={`${localePrefix}/search/`}
                             className="ml-1.5 p-2 rounded-lg text-zinc-400 hover:text-brand-600 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-                            aria-label="Tìm kiếm"
+                            aria-label={strings.search}
                         >
                             <IconSearch size={18} />
                         </Link>
                         <DarkModeToggle />
+                        <LanguageSwitcher currentLocale={locale} />
                         <UserMenu />
                     </div>
 
                     {/* Mobile */}
                     <div className="flex md:hidden items-center gap-0.5">
                         <DarkModeToggle />
+                        <LanguageSwitcher currentLocale={locale} variant="compact" />
                         <Link
-                            href="/search/"
+                            href={`${localePrefix}/search/`}
                             className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-                            aria-label="Tìm kiếm"
+                            aria-label={strings.search}
                         >
                             <IconSearch size={20} />
                         </Link>
@@ -205,7 +241,7 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                             id="mobile-menu-toggle"
                             className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 transition-colors"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            aria-label="Toggle menu"
+                            aria-label={strings.toggle_menu}
                         >
                             {mobileMenuOpen ? <IconClose size={22} /> : <IconMenu size={22} />}
                         </button>
@@ -232,23 +268,23 @@ export default function Header({ topics = [] }: { topics?: NavTopic[] }) {
                         </Link>
                     ))}
                     <Link
-                        href="/mcp/"
+                        href={`${localePrefix}/mcp/`}
                         className="flex items-center gap-2 mx-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-linear-to-r from-brand-500 to-indigo-500 text-white shadow-md"
                     >
                         <IconPlug size={16} />
-                        MCP Server
+                        {strings.mcp}
                         <span className="ml-auto text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">NEW</span>
                     </Link>
                     {topics.length > 0 && (
                         <>
                             <div className="pt-3 pb-1 px-4">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Chủ đề</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{strings.topics}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-1">
                                 {topics.map((topic) => (
                                     <Link
                                         key={topic.slug}
-                                        href={`/${topic.slug}/`}
+                                        href={`${localePrefix}/${topic.slug}/`}
                                         className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:text-brand-600 hover:bg-zinc-50 transition-colors"
                                     >
                                         <TopicIcon icon={topic.icon} size={14} className="text-zinc-400" />

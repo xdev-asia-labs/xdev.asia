@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "blog": "文章",
+    "series": "課程",
+    "exam_prep": "證照準備",
+    "about": "關於我",
+    "topics": "主題",
+    "view_all_posts": "查看所有文章",
+    "search": "搜尋",
+    "mcp": "MCP",
+    "mcp_server": "MCP 伺服器",
+    "new_badge": "新",
+    "skip_to_content": "跳至主要內容",
+    "toggle_menu": "切換選單"
+  },
+  "footer": {
+    "tagline": "分享程式設計、AI、DevOps 與技術知識。",
+    "explore": "探索",
+    "contact": "聯絡",
+    "saved": "收藏",
+    "rights": "版權所有。",
+    "privacy": "隱私權政策",
+    "terms": "服務條款",
+    "data_deletion": "資料刪除"
+  },
+  "common": {
+    "language": "語言",
+    "loading": "載入中...",
+    "read_more": "閱讀更多",
+    "view_all": "查看全部",
+    "back": "返回",
+    "next": "下一頁",
+    "previous": "上一頁",
+    "share": "分享",
+    "copy_link": "複製連結",
+    "copied": "已複製",
+    "minutes_read": "分鐘閱讀",
+    "published_on": "發佈於",
+    "updated_on": "更新於",
+    "by": "作者",
+    "related": "相關文章",
+    "table_of_contents": "目錄"
+  },
+  "search": {
+    "placeholder": "搜尋文章、課程...",
+    "no_results": "找不到結果",
+    "results_for": "搜尋結果"
+  },
+  "auth": {
+    "sign_in": "登入",
+    "sign_out": "登出",
+    "sign_in_with_google": "使用 Google 登入",
+    "profile": "個人資料",
+    "bookmarks": "收藏"
+  },
+  "home": {
+    "hero_subtitle": "程式設計、AI、DevOps 與技術的知識分享平台。",
+    "latest_posts": "最新文章",
+    "popular_series": "精選課程",
+    "explore_topics": "探索主題"
+  },
+  "errors": {
+    "not_found_title": "找不到頁面",
+    "not_found_description": "您要找的頁面不存在或已被移動。",
+    "back_home": "回首頁"
+  },
+  "language_notice": {
+    "vietnamese_content": "原始內容為越南文。自動翻譯版本正在開發中。"
+  }
+}

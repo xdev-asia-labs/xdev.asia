@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "blog": "Bài viết",
+    "series": "Khoá học",
+    "exam_prep": "Luyện thi",
+    "about": "Về tôi",
+    "topics": "Chủ đề",
+    "view_all_posts": "Xem tất cả bài viết",
+    "search": "Tìm kiếm",
+    "mcp": "MCP",
+    "mcp_server": "MCP Server",
+    "new_badge": "MỚI",
+    "skip_to_content": "Chuyển đến nội dung chính",
+    "toggle_menu": "Mở/đóng menu"
+  },
+  "footer": {
+    "tagline": "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ.",
+    "explore": "Khám phá",
+    "contact": "Liên hệ",
+    "saved": "Đã lưu",
+    "rights": "Mọi quyền được bảo lưu.",
+    "privacy": "Chính sách quyền riêng tư",
+    "terms": "Điều khoản sử dụng",
+    "data_deletion": "Xoá dữ liệu"
+  },
+  "common": {
+    "language": "Ngôn ngữ",
+    "loading": "Đang tải...",
+    "read_more": "Đọc tiếp",
+    "view_all": "Xem tất cả",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "share": "Chia sẻ",
+    "copy_link": "Sao chép liên kết",
+    "copied": "Đã sao chép",
+    "minutes_read": "phút đọc",
+    "published_on": "Đăng ngày",
+    "updated_on": "Cập nhật ngày",
+    "by": "bởi",
+    "related": "Bài liên quan",
+    "table_of_contents": "Mục lục"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm bài viết, khoá học...",
+    "no_results": "Không tìm thấy kết quả",
+    "results_for": "Kết quả cho"
+  },
+  "auth": {
+    "sign_in": "Đăng nhập",
+    "sign_out": "Đăng xuất",
+    "sign_in_with_google": "Đăng nhập với Google",
+    "profile": "Hồ sơ",
+    "bookmarks": "Đã lưu"
+  },
+  "home": {
+    "hero_subtitle": "Nền tảng chia sẻ kiến thức lập trình, AI, DevOps và công nghệ bằng tiếng Việt.",
+    "latest_posts": "Bài viết mới",
+    "popular_series": "Khoá học nổi bật",
+    "explore_topics": "Khám phá chủ đề"
+  },
+  "errors": {
+    "not_found_title": "Không tìm thấy trang",
+    "not_found_description": "Trang bạn tìm kiếm không tồn tại hoặc đã bị di chuyển.",
+    "back_home": "Về trang chủ"
+  },
+  "language_notice": {
+    "vietnamese_content": "Nội dung gốc bằng tiếng Việt. Bản dịch tự động đang được phát triển."
+  }
+}

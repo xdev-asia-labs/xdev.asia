@@ -3,7 +3,43 @@ import Image from "next/image";
 import { getSettings } from "@/lib/data";
 import { IconGitHub, IconFacebook, IconYouTube, IconTikTok, IconLinkedIn, IconTelegram } from "./Icons";
 
-export default function Footer() {
+export interface FooterStrings {
+    tagline: string;
+    explore: string;
+    contact: string;
+    blog: string;
+    series: string;
+    exam_prep: string;
+    saved: string;
+    search: string;
+    rights: string;
+    privacy: string;
+    terms: string;
+    data_deletion: string;
+}
+
+const DEFAULT_STRINGS: FooterStrings = {
+    tagline: "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ.",
+    explore: "Khám phá",
+    contact: "Liên hệ",
+    blog: "Bài viết",
+    series: "Khoá học",
+    exam_prep: "Luyện thi",
+    saved: "Đã lưu",
+    search: "Tìm kiếm",
+    rights: "All rights reserved.",
+    privacy: "Chính sách quyền riêng tư",
+    terms: "Điều khoản sử dụng",
+    data_deletion: "Xoá dữ liệu",
+};
+
+export default function Footer({
+    strings = DEFAULT_STRINGS,
+    localePrefix = "",
+}: {
+    strings?: FooterStrings;
+    localePrefix?: string;
+} = {}) {
     const settings = getSettings();
     const siteName = settings.site_name || "xDev";
     const socialGithub = settings.social_github_url || settings.github_url;
@@ -41,7 +77,7 @@ export default function Footer() {
                             />
                         </Link>
                         <p className="text-sm leading-relaxed max-w-sm mb-5" style={{ color: "rgba(147, 197, 253, 0.7)" }}>
-                            {settings.site_tagline || settings.site_description || "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ."}
+                            {settings.site_tagline || settings.site_description || strings.tagline}
                         </p>
 
                         <div className="flex gap-2.5">
@@ -62,14 +98,14 @@ export default function Footer() {
 
                     {/* Navigation */}
                     <div>
-                        <h4 className="footer-heading">Khám phá</h4>
+                        <h4 className="footer-heading">{strings.explore}</h4>
                         <ul className="space-y-2.5">
                             {[
-                                { href: "/blog/", label: "Bài viết" },
-                                { href: "/series/", label: "Khoá học" },
-                                { href: "/luyen-thi/", label: "Luyện thi" },
-                                { href: "/bookmarks/", label: "Đã lưu" },
-                                { href: "/search/", label: "Tìm kiếm" },
+                                { href: `${localePrefix}/blog/`, label: strings.blog },
+                                { href: `${localePrefix}/series/`, label: strings.series },
+                                { href: `${localePrefix}/luyen-thi/`, label: strings.exam_prep },
+                                { href: `${localePrefix}/bookmarks/`, label: strings.saved },
+                                { href: `${localePrefix}/search/`, label: strings.search },
                             ].map((link) => (
                                 <li key={link.href}>
                                     <Link href={link.href} className="text-sm transition-colors">
@@ -82,7 +118,7 @@ export default function Footer() {
 
                     {/* Contact */}
                     <div>
-                        <h4 className="footer-heading">Liên hệ</h4>
+                        <h4 className="footer-heading">{strings.contact}</h4>
                         {settings.site_email && (
                             <a href={`mailto:${settings.site_email}`} className="text-sm block mb-2.5 transition-colors">
                                 {settings.site_email}
@@ -108,13 +144,13 @@ export default function Footer() {
 
                 <div className="mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                     <p className="text-xs" style={{ color: "rgba(148, 163, 184, 0.6)" }}>
-                        &copy; {new Date().getFullYear()} {siteName}. All rights reserved.
+                        &copy; {new Date().getFullYear()} {siteName}. {strings.rights}
                     </p>
                     <div className="flex items-center gap-4">
                         {[
-                            { href: "/pages/chinh-sach-quyen-rieng-tu/", label: "Chính sách quyền riêng tư" },
-                            { href: "/pages/dieu-khoan-su-dung/", label: "Điều khoản sử dụng" },
-                            { href: "/pages/xoa-du-lieu-nguoi-dung/", label: "Xoá dữ liệu" },
+                            { href: `${localePrefix}/pages/chinh-sach-quyen-rieng-tu/`, label: strings.privacy },
+                            { href: `${localePrefix}/pages/dieu-khoan-su-dung/`, label: strings.terms },
+                            { href: `${localePrefix}/pages/xoa-du-lieu-nguoi-dung/`, label: strings.data_deletion },
                         ].map((link) => (
                             <Link key={link.href} href={link.href} className="text-xs transition-colors" style={{ color: "rgba(148, 163, 184, 0.6)" }}>
                                 {link.label}

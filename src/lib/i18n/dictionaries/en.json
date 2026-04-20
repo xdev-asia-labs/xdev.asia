@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "series": "Courses",
+    "exam_prep": "Cert Prep",
+    "about": "About",
+    "topics": "Topics",
+    "view_all_posts": "View all posts",
+    "search": "Search",
+    "mcp": "MCP",
+    "mcp_server": "MCP Server",
+    "new_badge": "NEW",
+    "skip_to_content": "Skip to main content",
+    "toggle_menu": "Toggle menu"
+  },
+  "footer": {
+    "tagline": "Sharing knowledge on programming, AI, DevOps and technology.",
+    "explore": "Explore",
+    "contact": "Contact",
+    "saved": "Bookmarks",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "data_deletion": "Data Deletion"
+  },
+  "common": {
+    "language": "Language",
+    "loading": "Loading...",
+    "read_more": "Read more",
+    "view_all": "View all",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "share": "Share",
+    "copy_link": "Copy link",
+    "copied": "Copied",
+    "minutes_read": "min read",
+    "published_on": "Published on",
+    "updated_on": "Updated on",
+    "by": "by",
+    "related": "Related posts",
+    "table_of_contents": "Table of Contents"
+  },
+  "search": {
+    "placeholder": "Search articles, courses...",
+    "no_results": "No results found",
+    "results_for": "Results for"
+  },
+  "auth": {
+    "sign_in": "Sign in",
+    "sign_out": "Sign out",
+    "sign_in_with_google": "Sign in with Google",
+    "profile": "Profile",
+    "bookmarks": "Bookmarks"
+  },
+  "home": {
+    "hero_subtitle": "A knowledge-sharing platform for programming, AI, DevOps and technology.",
+    "latest_posts": "Latest posts",
+    "popular_series": "Featured courses",
+    "explore_topics": "Explore topics"
+  },
+  "errors": {
+    "not_found_title": "Page not found",
+    "not_found_description": "The page you are looking for does not exist or has been moved.",
+    "back_home": "Back to home"
+  },
+  "language_notice": {
+    "vietnamese_content": "Original content is in Vietnamese. Automated translation is in progress."
+  }
+}

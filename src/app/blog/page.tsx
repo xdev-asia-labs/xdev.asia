@@ -1,4 +1,5 @@
 import { IconClock, IconCode } from "@/components/Icons";
+import { InFeedAd, MultiplexAd } from "@/components/AdUnit";
 import Pagination from "@/components/Pagination";
 import PostCard from "@/components/PostCard";
 import SkeletonImage from "@/components/SkeletonImage";
@@ -135,6 +136,12 @@ export default function BlogPage() {
                         <PostCard key={post.id} post={post} priority={index < 3} />
                     ))}
                 </div>
+
+                {/* In-feed Ad */}
+                <div className="my-6">
+                    <InFeedAd />
+                </div>
+
                 {posts.length === 0 && (
                     <div className="text-center py-20">
                         <IconCode size={48} className="text-zinc-300 mx-auto mb-4" />
@@ -142,6 +149,9 @@ export default function BlogPage() {
                     </div>
                 )}
                 <Pagination currentPage={1} totalPages={totalPages} basePath="/blog/" />
+
+                {/* Multiplex Ad */}
+                <MultiplexAd className="mt-4" />
             </div>
         </div>
     );
