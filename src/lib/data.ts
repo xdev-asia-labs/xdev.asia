@@ -162,6 +162,37 @@ function sortByPublishedDate<T extends { published_at?: string | null; created_a
   });
 }
 
+function tagNameFromSlug(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function normalizeTags(tags: unknown): Tag[] {
+  if (!Array.isArray(tags)) return [];
+
+  return tags.flatMap((entry) => {
+    if (!entry) return [];
+
+    if (typeof entry === "string") {
+      return [{ name: tagNameFromSlug(entry), slug: entry } satisfies Tag];
+    }
+
+    if (typeof entry !== "object") return [];
+
+    const maybeTag = entry as Partial<Tag> & { slug?: unknown; name?: unknown };
+    const slug = typeof maybeTag.slug === "string" ? maybeTag.slug : "";
+    const name = typeof maybeTag.name === "string" ? maybeTag.name : "";
+
+    if (!slug && !name) return [];
+
+    const normalizedSlug = slug || name.toLowerCase().replace(/\s+/g, "-");
+    return [{ name: name || tagNameFromSlug(normalizedSlug), slug: normalizedSlug } satisfies Tag];
+  });
+}
+
 function postFromDocument(data: PostFrontmatter, content?: string): PostIndex {
   return {
     id: data.id,
@@ -175,7 +206,7 @@ function postFromDocument(data: PostFrontmatter, content?: string): PostIndex {
     published_at: data.published_at,
     author: data.author,
     category: data.category,
-    tags: data.tags,
+    tags: normalizeTags(data.tags),
     comments_count: data.comments_count ?? data.comments?.length ?? 0,
   } satisfies PostIndex;
 }
@@ -240,7 +271,7 @@ function getAllSeriesFromMdx(): SeriesIndex[] {
         published_at: data.published_at,
         author: data.author,
         category: data.category,
-        tags: data.tags,
+        tags: normalizeTags(data.tags),
       } satisfies SeriesIndex;
     })
     .filter((item): item is SeriesIndex => item !== null);
@@ -590,11 +621,7 @@ export interface TagStats extends Tag {
 }
 
 function normalizeTagNameFromSlug(slug: string): string {
-  return slug
-    .split("-")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
+  return tagNameFromSlug(slug);
 }
 
 export function getTagStats(): TagStats[] {

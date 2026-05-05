@@ -303,18 +303,13 @@
               "type": "article"
             },
             {
-              "label": "BABOK Guide Overview (IIBA)",
-              "url": "https://www.iiba.org/standards-and-resources/babok/",
-              "type": "doc"
-            },
-            {
-              "label": "BA Planning Checklist (Bridging the Gap)",
-              "url": "https://www.bridging-the-gap.com/business-analysis-planning/",
+              "title": "BABOK Guide cho BA: Kim chỉ nam hành nghề Business Analysis",
+              "url": "/blog/babok-guide-cho-ba",
               "type": "article"
             },
             {
-              "label": "Requirements Quality Checklist",
-              "url": "https://www.modernanalyst.com/Resources/Templates/tabid/214/ID/4/Business-Requirements-Checklist.aspx",
+              "title": "Business Requirements Checklist cho BA",
+              "url": "/blog/business-requirements-checklist-ba",
               "type": "article"
             }
           ],
@@ -359,23 +354,18 @@
               "type": "article"
             },
             {
-              "label": "Impact Mapping Guide (impactmapping.org)",
-              "url": "https://www.impactmapping.org/drawing.html",
+              "title": "Impact Mapping cho BA: Kết nối tính năng với mục tiêu kinh doanh",
+              "url": "/blog/impact-mapping-cho-ba",
               "type": "article"
             },
             {
-              "label": "Business Case Template (Smartsheet)",
-              "url": "https://www.smartsheet.com/content/business-case-templates",
-              "type": "tool"
-            },
-            {
-              "label": "SWOT Analysis How-To (MindTools)",
-              "url": "https://www.mindtools.com/amtbj63/swot-analysis",
+              "title": "Business Case Template cho BA: Viết Business Case cho AI Project",
+              "url": "/blog/business-case-template-cho-ba",
               "type": "article"
             },
             {
-              "label": "Build vs Buy vs Partner decision",
-              "url": "https://hbr.org/2017/06/make-or-buy-decisions-in-the-knowledge-economy",
+              "title": "Make-or-Buy Decision cho BA: Khi nào tự xây dựng, khi nào mua sẵn AI?",
+              "url": "/blog/make-or-buy-decision-cho-ba",
               "type": "article"
             }
           ],
