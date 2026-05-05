@@ -45,6 +45,7 @@ export interface HeaderStrings {
     blog: string;
     series: string;
     exam_prep: string;
+    roadmap: string;
     about: string;
     topics: string;
     view_all_posts: string;
@@ -58,6 +59,7 @@ const DEFAULT_STRINGS: HeaderStrings = {
     blog: "Bài viết",
     series: "Khoá học",
     exam_prep: "Luyện thi",
+    roadmap: "Roadmap",
     about: "Về tôi",
     topics: "Chủ đề",
     view_all_posts: "Xem tất cả bài viết",
@@ -82,6 +84,7 @@ export default function Header({
         { href: `${localePrefix}/blog/`, label: strings.blog },
         { href: `${localePrefix}/series/`, label: strings.series },
         { href: `${localePrefix}/luyen-thi/`, label: strings.exam_prep },
+        { href: `${localePrefix}/roadmap/`, label: strings.roadmap },
         { href: `${localePrefix}/pages/ve-toi/`, label: strings.about },
     ];
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

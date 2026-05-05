@@ -33,6 +33,11 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
+    // ── Roadmap Progress (private per user) ──
+    match /users/{uid}/roadmapProgress/{roadmapSlug} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
     // ── Reviews ──
     match /reviews/{seriesSlug}/items/{reviewId} {
       allow read: if true;
