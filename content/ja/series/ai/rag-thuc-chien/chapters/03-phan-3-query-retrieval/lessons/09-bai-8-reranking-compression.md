@@ -1,0 +1,389 @@
+---
+id: 019c9619-ff08-7008-a008-ff0800000008
+title: 'レッスン 8: 再ランキングとコンテキスト圧縮'
+slug: bai-8-reranking-compression
+description: >-
+  Cross-Encoder、Cohere Rerank
+  を使用して検索結果を再ランク付けします。コンテキスト圧縮は冗長な情報を削除し、質問に関連する部分のみを残します。
+duration_minutes: 150
+is_free: true
+video_url: null
+sort_order: 7
+section_title: 'パート 3: 高度なクエリと取得'
+course:
+  id: 019c9619-aa05-7005-b005-aa0500000005
+  title: リアルバトルRAG：基礎から上級まで
+  slug: rag-thuc-chien
+locale: ja
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-2251" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-2251)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="840" cy="90" r="28" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="1080" cy="110" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="820" cy="130" r="18" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="1060" cy="150" r="28" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="800" cy="170" r="8" fill="#38bdf8" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#38bdf8" opacity="0.15"/>
+    <line x1="600" y1="70" x2="1100" y2="150" stroke="#38bdf8" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="100" x2="1050" y2="170" stroke="#38bdf8" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="991.650635094611,157.5 991.650635094611,182.5 970,195 948.349364905389,182.5 948.349364905389,157.5 970,145" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#38bdf8"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="99" height="28" rx="14" fill="#38bdf8" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#38bdf8">🧠 AI と ML — レッスン 7</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">レッスン 8: 再ランキングとコンテキスト圧縮</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">リアルバトルRAG：基礎から上級まで</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 3: 高度なクエリと取得</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
+## はじめに
+
+上位 K 位のドキュメントを取得しました。しかし、**順序が間違っている**、または **チャンクに冗長な情報が多すぎます** → LLM のノイズが多く、応答が悪くなります。
+
+> **例:** 5 つのチャンクを取得すると、4 番目のチャンクに正しい答えが含まれます。ただし、LLM はチャンク 1 (ランクは高いが関連性は低い) に焦点を当てます。再ランキングによりチャンク 4 が上位に押し上げられ、品質が向上します。
+
+この記事では、次の 2 つのテクニックについて説明します。
+1. **再ランキング** — 実際の関連性に基づいて結果を並べ替えます
+2. **コンテキスト圧縮** — 無関係な部分を圧縮/削除します
+
+```
+Retrieval Pipeline nâng cao:
+
+Query → Retrieve (top-20) → Re-Rank (chọn top-5) → Compress → LLM
+         ↑ recall cao          ↑ precision cao        ↑ ít noise
+         (lấy nhiều)           (chọn đúng)            (nén gọn)
+```
+
+---
+
+## 1. なぜ再ランキングが必要なのでしょうか?
+
+### 1.1 Bi-Encoder (埋め込み検索) の制限事項
+
+```
+Bi-Encoder (vector search):
+  Query  →  Encoder A  →  vector_q ─┐
+                                      ├── cosine similarity
+  Doc    →  Encoder B  →  vector_d ─┘
+
+Ưu: NHANH (pre-compute embeddings, tìm bằng ANN)
+Nhược: Encode query và doc RIÊNG RẼ → bỏ lỡ cross-attention
+       → ranking có thể sai thứ tự
+
+Cross-Encoder (re-ranker):
+  [Query + Doc] → Encoder → relevance score (0-1)
+
+Ưu: CHÍNH XÁC hơn (xem query+doc cùng lúc, full attention)
+Nhược: CHẬM (phải chạy model cho mỗi cặp query-doc)
+```
+
+### 1.2 戦略: 多数を取得 → 再ランク付け → 少数を選択
+
+```
+                    Bi-Encoder        Cross-Encoder
+                    (fast, rough)     (slow, accurate)
+                         │                  │
+Top-100 docs ──────→ Top-20 ──────→ Top-5 ──────→ LLM
+                    (recall cao)    (precision cao)
+```
+
+---
+
+## 2. クロスエンコーダーによる再ランキング
+
+### 2.1 文変換機能を使用する
+
+```python
+"""Cross-Encoder re-ranking với sentence-transformers"""
+from sentence_transformers import CrossEncoder
+
+# Load model cross-encoder
+reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+
+query = "Nghỉ phép bao nhiêu ngày?"
+
+# Documents từ retrieval (top-20)
+docs = [
+    "Công ty thành lập năm 2020, trụ sở tại TP.HCM.",
+    "Nhân viên full-time được 15 ngày phép có lương mỗi năm.",
+    "Quy trình tuyển dụng gồm 3 vòng phỏng vấn.",
+    "Nhân viên trên 5 năm được thêm 3 ngày phép.",
+    "Lương được trả vào ngày 5 hàng tháng.",
+]
+
+# Re-rank: tính relevance score cho mỗi cặp (query, doc)
+pairs = [(query, doc) for doc in docs]
+scores = reranker.predict(pairs)
+
+# Sắp xếp theo score giảm dần
+ranked = sorted(zip(docs, scores), key=lambda x: x[1], reverse=True)
+for doc, score in ranked:
+    print(f"[{score:.3f}] {doc}")
+
+# Output:
+# [0.987] Nhân viên full-time được 15 ngày phép có lương mỗi năm.
+# [0.912] Nhân viên trên 5 năm được thêm 3 ngày phép.
+# [0.023] Lương được trả vào ngày 5 hàng tháng.
+# [0.008] Quy trình tuyển dụng gồm 3 vòng phỏng vấn.
+# [0.003] Công ty thành lập năm 2020, trụ sở tại TP.HCM.
+```
+
+### 2.2 LangChain への統合
+
+```python
+"""Re-ranking trong LangChain pipeline"""
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+
+# Base retriever (retrieve top-20)
+base_retriever = vectorstore.as_retriever(search_kwargs={"k": 20})
+
+# Cross-encoder reranker
+model = HuggingFaceCrossEncoder(model_name="cross-encoder/ms-marco-MiniLM-L-6-v2")
+reranker = CrossEncoderReranker(model=model, top_n=5)  # Chỉ giữ top-5
+
+# Pipeline: retrieve 20 → rerank → top 5
+reranking_retriever = ContextualCompressionRetriever(
+    base_compressor=reranker,
+    base_retriever=base_retriever,
+)
+
+results = reranking_retriever.invoke("Nghỉ phép bao nhiêu ngày?")
+# Trả về 5 docs chính xác nhất (đã re-ranked)
+```
+
+> **💡 演習 1:** 上位 5 の結果を比較します: (a) 直接検索ベクトルの上位 5、(b) ベクトル検索の上位 20 → 上位 5 を再ランク付けします。どちらがより正確ですか?
+
+---
+
+## 3. Cohere 再ランク — API ベース
+
+### 3.1 Cohere Rerank APIの使用
+
+```python
+"""Cohere Rerank — production-grade reranking API"""
+from langchain_cohere import CohereRerank
+from langchain.retrievers import ContextualCompressionRetriever
+
+# Cohere reranker (cần API key)
+reranker = CohereRerank(
+    model="rerank-v3.5",
+    top_n=5,
+)
+
+reranking_retriever = ContextualCompressionRetriever(
+    base_compressor=reranker,
+    base_retriever=base_retriever,  # top-20
+)
+
+results = reranking_retriever.invoke("Nghỉ phép bao nhiêu ngày?")
+```
+
+### 3.2 リランカーの比較
+
+|リランカー |品質 |スピード |コスト |いつ使用するか |
+|--------|:---:|:---:|:---:|-------------|
+| **クロスエンコーダー (ローカル)** | ⭐⭐⭐ |遅い |無料 |プロトタイプ、オフライン |
+| **Cohere 再ランク** | ⭐⭐⭐⭐ |速い | APIコスト |制作 |
+| **ジナ リランカー** | ⭐⭐⭐⭐ |速い | APIコスト |代替案 |
+| **FlashRank (ローカル)** | ⭐⭐⭐ |非常に速い |無料 |エッジ、低遅延 |
+
+---
+
+## 4. コンテキスト圧縮
+
+### 4.1 問題: チャンクが長すぎます
+
+```
+Retrieved chunk (500 từ):
+"Công ty XYZ được thành lập năm 2010 tại Hà Nội.
+ Qua 15 năm phát triển, công ty đã mở rộng ra nhiều lĩnh vực.
+ [... 400 từ không liên quan ...]
+ Nhân viên full-time được 15 ngày phép/năm.    ← CÂU TRẢ LỜI
+ [... 50 từ nữa ...]"
+
+→ 490/500 từ là NOISE! LLM phải đọc hết → lãng phí tokens + giảm accuracy
+```
+
+コンテキスト圧縮は、関連する部分のみを **抽出**します。
+
+```
+Compressed: "Nhân viên full-time được 15 ngày phép/năm."
+→ 1 câu duy nhất, đúng trọng tâm!
+```
+
+### 4.2 LLM ベースの圧縮
+
+```python
+"""Dùng LLM để nén context — chỉ giữ phần liên quan"""
+from langchain.retrievers.document_compressors import LLMChainExtractor
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+
+# LLM extractor: đọc chunk + query → trích xuất phần liên quan
+compressor = LLMChainExtractor.from_llm(llm)
+
+compression_retriever = ContextualCompressionRetriever(
+    base_compressor=compressor,
+    base_retriever=base_retriever,
+)
+
+results = compression_retriever.invoke("Nghỉ phép bao nhiêu ngày?")
+# Mỗi document.page_content đã được NÉN — chỉ giữ phần liên quan
+```
+
+### 4.3 LLM フィルター — 無関係なチャンクを削除する
+
+```python
+"""LLMChainFilter: giữ/bỏ toàn bộ chunk (không trích xuất)"""
+from langchain.retrievers.document_compressors import LLMChainFilter
+
+# Filter: giữ chunk liên quan, bỏ chunk không liên quan
+filter_compressor = LLMChainFilter.from_llm(llm)
+
+filter_retriever = ContextualCompressionRetriever(
+    base_compressor=filter_compressor,
+    base_retriever=base_retriever,
+)
+
+# Nếu retrieve 20 chunks → filter có thể giữ 3-5 chunks liên quan
+results = filter_retriever.invoke("Nghỉ phép bao nhiêu ngày?")
+```
+
+### 4.4 EmbeddingsFilter — 高速、LLM 不要
+
+```python
+"""EmbeddingsFilter: lọc bằng similarity threshold, không tốn LLM call"""
+from langchain.retrievers.document_compressors import EmbeddingsFilter
+from langchain_openai import OpenAIEmbeddings
+
+embeddings_filter = EmbeddingsFilter(
+    embeddings=OpenAIEmbeddings(),
+    similarity_threshold=0.75,  # Chỉ giữ chunks có similarity >= 0.75
+)
+
+filter_retriever = ContextualCompressionRetriever(
+    base_compressor=embeddings_filter,
+    base_retriever=base_retriever,
+)
+```
+
+> **💡 演習 2:** 3 つのコンプレッサー: LLMChainExtractor、LLMChainFilter、EmbeddingsFilter を比較します。測定: (a) 出力品質、(b) レイテンシ、(c) トークン コスト。
+
+---
+
+## 5. 完全なパイプライン: 取得 → 再ランク付け → 圧縮
+
+```python
+"""Full pipeline: retrieve 20 → rerank top 5 → compress"""
+from langchain.retrievers.document_compressors import DocumentCompressorPipeline
+
+# Pipeline: rerank TRƯỚC, compress SAU
+pipeline = DocumentCompressorPipeline(
+    transformers=[
+        reranker,           # CrossEncoder: 20 → top-5
+        compressor,         # LLMChainExtractor: nén mỗi chunk
+    ]
+)
+
+full_retriever = ContextualCompressionRetriever(
+    base_compressor=pipeline,
+    base_retriever=base_retriever,  # top-20
+)
+
+results = full_retriever.invoke("Nghỉ phép bao nhiêu ngày?")
+# 5 chunks đã rerank + compress → feed vào LLM
+```
+
+```
+Pipeline flow:
+
+Query: "Nghỉ phép bao nhiêu ngày?"
+    │
+    ├── Bi-Encoder retrieve top-20  (fast, ~50ms)
+    │
+    ├── Cross-Encoder rerank → top-5  (slow, ~200ms)
+    │
+    ├── LLM compress 5 chunks  (slow, ~500ms)
+    │
+    └── LLM generate answer  (~1000ms)
+    
+Total: ~1.8s — acceptable cho chatbot
+```
+
+---
+
+## 概要
+
+|コンセプト |覚えておいてください |
+|----------|----------|
+| **バイエンコーダ** |検索に使用される高速な離散エンコーディング |
+| **クロスエンコーダー** |低速、正確、クエリ + ドキュメントをエンコード |ペア
+| **再ランキング** |たくさん取得→再ランキング→少し選ぶ |
+| **Cohere 再ランク** | API 実稼働グレード、高速、正確 |
+| **LLMChainExtractor** |チャンクから関連部分を抽出 |
+| **LLMChainFilter** |チャンク全体を保持/削除 |
+| **埋め込みフィルタ** |類似度によるフィルター、LLM は不要 |
+| **パイプライン** |再ランク → 圧縮 → LLM |
+
+## 一般的な演習
+
+1. ✅ 2 つの小さな演習 (1、2) を完了します。
+2. **完全なパイプライン:** 実装: 50 を取得 → 10 を再ランク付け → 圧縮 → 生成。 15 の質問でテストします。精度@5 とレイテンシを測定します。
+3. **A/B テスト:** 回答の品質を比較します (GPT-4 を使用して評価します): (a) 再ランキングなしの RAG、(b) 再ランキングありの RAG、(c) RAG 再ランキング + 圧縮。
+4. **カスタム リランカー:** ドメイン固有のデータ (ベトナム語の Q&A など) で 1 つのクロスエンコーダーをトレーニングします。事前トレーニング済みモデルと比較します。
+
+> **次の記事:** Graph RAG — Knowledge Graph + Vector Search — は、グラフ データベースとベクトル検索の力を組み合わせて、複雑な複数ステップの質問に答えます。

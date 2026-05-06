@@ -1,0 +1,354 @@
+---
+id: 019c9619-bb10-7010-c010-bb1000000010
+title: 'Lesson 10: Pre-training LLMs — CLM, MLM and Scaling Laws'
+slug: bai-10-pre-training-llms
+description: >-
+  LLMs pre-training process: Causal LM vs Masked LM, data curation. Chinchilla's
+  Scaling Laws — relationship between model size, data and compute.
+duration_minutes: 120
+is_free: true
+video_url: null
+sort_order: 9
+section_title: 'Part 3: Training & Fine-tuning LLMs'
+course:
+  id: 019c9619-aa01-7001-b001-aa0100000001
+  title: 'AI & LLM: From Basics to Advanced'
+  slug: ai-llm-tu-co-ban-den-nang-cao
+locale: en
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-8805" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-8805)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="688" cy="154" r="26" fill="#fbbf24" opacity="0.09"/>
+    <circle cx="776" cy="282" r="20" fill="#fbbf24" opacity="0.13"/>
+    <circle cx="864" cy="150" r="14" fill="#fbbf24" opacity="0.07"/>
+    <circle cx="952" cy="278" r="8" fill="#fbbf24" opacity="0.11"/>
+    <circle cx="1040" cy="146" r="32" fill="#fbbf24" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <line x1="600" y1="174" x2="1100" y2="254" stroke="#fbbf24" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="204" x2="1050" y2="274" stroke="#fbbf24" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="949.1147367097487,109.5 949.1147367097487,138.5 924,153 898.8852632902513,138.5 898.8852632902513,109.50000000000001 924,95" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fbbf24"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="99" height="28" rx="14" fill="#fbbf24" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fbbf24">🧠 AI & ML — Lesson 9</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Lesson 10: Pre-training LLMs — CLM, MLM and</tspan>
+      <tspan x="60" dy="42">Scaling Laws</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">AI & LLM: From Basics to Advanced</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Part 3: Training & Fine-tuning LLMs</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
+## Overview
+
+Pre-training is the **foundation** step of every LLM. A well-pretrained model will learn grammar, semantics, world knowledge, and reasoning abilities — just from predicting text. This article explains that process.
+
+---
+
+## 1. What is pre-training?
+
+Pre-training is the stage of training the model on **huge amounts of data** (hundreds of GB to TB of text) with a **self-supervised objective** — without human labels.
+
+```
+Pre-training Data:
+- Common Crawl (internet text)     ~50%
+- Books (BookCorpus, Gutenberg)    ~10%
+- Wikipedia                         ~5%
+- Code (GitHub)                    ~10%
+- Scientific papers (arXiv)         ~5%
+- Other curated sources            ~20%
+```
+
+After pre-training, the model is capable of **general language understanding** — the foundation for fine-tuning every task.
+
+---
+
+## 2. Causal Language Modeling (CLM)
+
+**Used by:** GPT series, LLaMA, Mistral, Falcon
+
+**Objective:** Predict the next token based on previous tokens.
+
+```
+Input:  "The quick brown fox"
+Label:  "quick brown fox jumps"
+
+Loss = -∑ log P(token_t | token_1, ..., token_{t-1})
+```
+
+```python
+import torch
+import torch.nn as nn
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# Minh họa CLM loss
+def compute_clm_loss(model, input_ids):
+    """
+    input_ids: (batch, seq_len)
+    Labels = input_ids shifted right (next token prediction)
+    """
+    outputs = model(input_ids, labels=input_ids)
+    # HuggingFace tự động shift: labels[1:] vs logits[:-1]
+    return outputs.loss
+
+# Thực tế với GPT-2
+tokenizer = AutoTokenizer.from_pretrained("gpt2")
+model = AutoModelForCausalLM.from_pretrained("gpt2")
+
+text = "The quick brown fox jumps over the lazy dog"
+inputs = tokenizer(text, return_tensors="pt")
+loss = compute_clm_loss(model, inputs["input_ids"])
+print(f"CLM Loss: {loss.item():.4f}")
+print(f"Perplexity: {torch.exp(loss).item():.2f}")
+```
+
+**CLM advantages:**
+- Fits naturally with text generation
+- Causal mask → can be used directly to generate
+
+---
+
+## 3. Masked Language Modeling (MLM)
+
+**Used by:** BERT, RoBERTa, ALBERT
+
+**Objective:** Random mask 15% of tokens, predict the masked token.
+
+```
+Original: "The [MASK] brown fox jumps"
+Predict:  "quick"
+```
+
+```python
+from transformers import BertForMaskedLM, BertTokenizer
+import torch
+
+tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+model = BertForMaskedLM.from_pretrained("bert-base-uncased")
+
+text = "The quick brown [MASK] jumps over the lazy dog"
+inputs = tokenizer(text, return_tensors="pt")
+mask_idx = (inputs["input_ids"] == tokenizer.mask_token_id).nonzero(as_tuple=True)[1]
+
+with torch.no_grad():
+    outputs = model(**inputs)
+    logits = outputs.logits
+
+# Top 5 dự đoán cho [MASK]
+top5 = torch.topk(logits[0, mask_idx], 5).indices
+predictions = tokenizer.convert_ids_to_tokens(top5[0])
+print(f"Top predictions: {predictions}")
+# ['fox', 'dog', 'cat', 'rabbit', 'horse']
+```
+
+**MLM advantages:**
+- Bidirectional context → deeper understanding
+- Good for NLU tasks (classification, NER, Q&A)
+
+**Disadvantages:** Cannot generate text directly.
+
+---
+
+## 4. Data Curation
+
+Data quality **determines** model quality. Typical data processing process:
+
+### 4.1 Collection
+
+```
+Common Crawl → hàng tỷ web pages mỗi tháng
+GitHub → source code
+arXiv → khoa học
+Wikipedia → encyclopedic knowledge
+Books3, Gutenberg → sách
+```
+
+### 4.2 Filtering
+
+```python
+# Các bước lọc điển hình
+filters = [
+    "language_detection",      # Giữ ngôn ngữ mục tiêu
+    "quality_scoring",         # FastText/classifier lọc low-quality
+    "deduplication",           # MinHash LSH loại duplicate
+    "toxic_content_filter",    # Loại nội dung độc hại
+    "pii_removal",             # Loại PII (email, phone, SSN)
+    "length_filter",           # Loại doc quá ngắn/dài
+]
+```
+
+### 4.3 Tokenization and packing
+
+```python
+# Ghép nhiều documents thành chunks dài (e.g., 2048 tokens)
+# Dùng separator token giữa documents
+# EOS token đánh dấu hết document
+```
+
+---
+
+## 5. Scaling Laws
+
+### 5.1 Kaplan et al. (2020) — OpenAI
+
+Loss reduces as **power law** according to the number of parameters (N), data (D), and compute (C):
+
+```
+L(N) ∝ N^{-0.076}     (scale parameters)
+L(D) ∝ D^{-0.095}     (scale data)
+L(C) ∝ C^{-0.050}     (scale compute)
+```
+
+**Conclusion:** "Scale everything — bigger is better." → GPT-3 175B
+
+### 5.2 Chinchilla (2022) — DeepMind
+
+Hoffmann et al. discovered: **GPT-3 and many models at that time were under-trained!**
+
+With fixed compute budget C, the optimal is:
+```
+N_optimal ∝ C^{0.5}
+D_optimal ∝ C^{0.5}
+
+→ N và D nên scale BẰNG NHAU
+```
+
+**Chinchilla rule of thumb:**
+```
+Số tokens training ≈ 20 × số parameters
+
+GPT-3 (175B params) → nên train trên 3.5T tokens
+                       (thực tế chỉ train ~300B tokens → underpowered)
+
+Llama-2 (7B params) → train 2T tokens ✅ (compute-optimal)
+```
+
+### 5.3 Practical applications
+
+```
+Model         Params    Tokens       Compute-optimal?
+GPT-3         175B      300B         ❌ Under-trained
+Chinchilla    70B       1.4T         ✅ Optimal
+LLaMA-1       7-65B     1T           ~✅
+LLaMA-2       7-70B     2T           ✅
+Mistral-7B    7B        ~1T          ✅
+```
+
+---
+
+## 6. Training Infrastructure
+
+### 6.1 Distributed Training
+
+```
+Data Parallelism: copy model lên nhiều GPU, chia batch
+Tensor Parallelism: chia layers/weights across GPUs
+Pipeline Parallelism: chia layers thành pipeline stages
+ZeRO (DeepSpeed): partition optimizer states, gradients, params
+```
+
+### 6.2 Mixed Precision
+
+```python
+# bf16 training (tốt hơn fp16 cho LLM)
+from transformers import TrainingArguments
+
+args = TrainingArguments(
+    bf16=True,                    # Brain Float 16
+    gradient_checkpointing=True,  # Tiết kiệm VRAM
+    gradient_accumulation_steps=4 # Accumulate 4 steps → effective batch lớn hơn
+)
+```
+
+### 6.3 Optimizer
+
+```python
+# AdamW với cosine LR schedule là tiêu chuẩn
+optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=0.1)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=total_steps)
+```
+
+---
+
+## 7. Emergent Capabilities
+
+One of the most interesting findings: when the model gets large enough, **new capabilities appear suddenly** that cannot be predicted from the smaller model:
+
+| Capability | Appears at ~params |
+|---|---|
+| 3-digit addition | ~500M |
+| Multi-step arithmetic | ~5B |
+| Chain-of-thought | ~100B |
+| Instructions following | ~100B (+ RLHF) |
+| Complex reasoning | ~500B+ |
+
+```
+"Emergence" không phải magic — chỉ là tại threshold nào đó,
+model đã học đủ "sub-skills" để combine thành ability mới.
+```
+
+---
+
+## Summary
+
+| Aspect | CLM (GPT) | MLM (BERT) |
+|--------|-----------|-----------|
+| Direction | Left-to-right | Bidirectional |
+| Generation | ✅ Natural | ❌ Not used to generate |
+| NLU | Good (big) | ✅ Very good |
+| Scaling | GPT-3, GPT-4, LLaMA | BERT-large max ~340M |
+
+**Takeaways:**
+- CLM (autoregressive) "won" over LLM because it scales better
+- Chinchilla: train longer (more data) with smaller model = more effective
+- Data quality > Data quantity
+
+**Next article:** Supervised Fine-Tuning — how to turn a pre-trained model into an assistant who can follow instructions.

@@ -1,0 +1,204 @@
+---
+id: 019f0b20-a602-7001-e001-f2b8f9000602
+title: 'レッスン 20: 分析ダッシュボード — 販売、トレンド、ニッチリサーチ'
+slug: bai-20-analytics-dashboard
+description: >-
+  ファッション POD 分析、販売、デザイナー、生産用のダッシュボード、トレンド分析、ニッチな調査ツール、BI スタックのためのデータ ウェアハウス
+  アーキテクチャ。
+duration_minutes: 120
+is_free: true
+video_url: null
+sort_order: 20
+section_title: 'パート 6: データ プラットフォームと分析'
+course:
+  id: 019f0b20-a100-7001-e001-f2b8f9000001
+  title: ファッション デザインとプリント オン デマンド システム アーキテクチャ — ドメイン分析から生産まで
+  slug: kien-truc-he-thong-fashion-design-print-on-demand
+locale: ja
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-2772" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-2772)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="941" cy="33" r="14" fill="#34d399" opacity="0.08"/>
+    <circle cx="782" cy="34" r="17" fill="#34d399" opacity="0.11"/>
+    <circle cx="623" cy="35" r="20" fill="#34d399" opacity="0.14"/>
+    <circle cx="964" cy="36" r="23" fill="#34d399" opacity="0.07"/>
+    <circle cx="805" cy="37" r="26" fill="#34d399" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#34d399" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#34d399" opacity="0.15"/>
+    <line x1="600" y1="243" x2="1100" y2="323" stroke="#34d399" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="273" x2="1050" y2="343" stroke="#34d399" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1025.9089653438086,174 1025.9089653438086,212 993,231 960.0910346561914,212 960.0910346561914,174 993,155" fill="none" stroke="#34d399" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#34d399"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#34d399" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#34d399">🏗️ アーキテクチャ — レッスン 20</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">レッスン 20: 分析ダッシュボード — 売上、トレンド</tspan>
+      <tspan x="60" dy="42">& ニッチリサーチ</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">ファッション デザインとプリント オン デマンド システム アーキテクチャ — ドメイン分析から生産まで</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 6: データ プラットフォームと分析</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
+<h2 id="1-warehouse-architecture"><strong>1. データウェアハウスのアーキテクチャ</strong></h2>
+
+<pre><code class="language-text">Sources (OLTP + Events)
+   -> ELT/CDC Pipeline
+   -> Staging Layer
+   -> Data Models (dbt)
+   -> Data Warehouse (ClickHouse/BigQuery)
+   -> BI Dashboards (Metabase/Superset)
+</code></pre>
+
+<h2 id="2-star-schema"><strong>2. POD のスター スキーマ</strong></h2>
+
+<pre><code class="language-sql">-- Fact table
+fact_orders(
+  order_id,
+  date_key,
+  shop_key,
+  product_key,
+  channel_key,
+  supplier_key,
+  gross_revenue_cents,
+  shipping_cents,
+  tax_cents,
+  discount_cents,
+  quantity,
+  status
+)
+
+-- Dimensions
+dim_date(date_key, day, week, month, quarter, year)
+dim_shop(shop_key, shop_id, segment, country)
+dim_product(product_key, product_id, category, style, tags)
+dim_channel(channel_key, channel_name)
+dim_supplier(supplier_key, supplier_name, region)
+</code></pre>
+
+<h2 id="3-core-dashboards"><strong>3. コアダッシュボード</strong></h2>
+
+<table>
+<thead>
+<tr><th>ダッシュボード</th><th>主要なKPI</th></tr>
+</thead>
+<tbody>
+<tr><td>販売</td><td>GMV、AOV、コンバージョン、CAC、ROAS</td></tr>
+<tr><td>デザイナー</td><td>トップクラスのデザイン、獲得ロイヤルティ、リピート率</td></tr>
+<tr><td>生産</td><td>リードタイム、不良率、SLA違反</td></tr>
+<tr><td>チャンネル</td><td>Shopify/Etsy/Amazon/TikTok による収益</td></tr>
+<tr><td>トレンド/ニッチ</td><td>トップトレンドのタグ、成長速度、競合</td></tr>
+</tbody>
+</table>
+
+<h2 id="4-sales-funnel"><strong>4. セールスファネル分析</strong></h2>
+
+<pre><code class="language-text">Impression -> Product View -> Add to Cart -> Checkout Start -> Payment Success
+</code></pre>
+
+<pre><code class="language-sql">SELECT
+  date,
+  SUM(impressions) AS impressions,
+  SUM(product_views) AS views,
+  SUM(add_to_cart) AS atc,
+  SUM(checkout_start) AS checkout,
+  SUM(purchases) AS purchases,
+  ROUND(SUM(purchases)::numeric / NULLIF(SUM(product_views),0), 4) AS view_to_buy
+FROM mart_funnel_daily
+GROUP BY date
+ORDER BY date DESC;
+</code></pre>
+
+<h2 id="5-production-metrics"><strong>5. 生産指標</strong></h2>
+
+<ul>
+<li>サプライヤーに応じた P50/P95 の生産時間</li>
+<li>製品タイプ別の不良率</li>
+<li>返品理由の分布</li>
+<li>地域別の納期厳守率</li>
+</ul>
+
+<h2 id="6-trend-analytics"><strong>6. トレンド＆ニッチ分析</strong></h2>
+
+<pre><code class="language-typescript">interface TrendInsight {
+  tag: string;
+  weekGrowthPct: number;
+  monthGrowthPct: number;
+  competitionScore: number;
+  opportunityScore: number;
+}
+
+function opportunity(trend: number, competition: number) {
+  return 0.7 * trend - 0.3 * competition;
+}
+</code></pre>
+
+<h2 id="7-data-quality"><strong>7. データ品質とガバナンス</strong></h2>
+
+<table>
+<thead>
+<tr><th>ルール</th><th>たとえば</th></tr>
+</thead>
+<tbody>
+<tr><td>鮮度</td><td>actual_orders の遅延は 30 分以内です</td></tr>
+<tr><td>独自性</td><td>order_id はマート テーブル内で一意です</td></tr>
+<tr><td>完全性</td><td>channel_key が null ではありません</td></tr>
+<tr><td>一貫性</td><td>総額 >= 税金 + 送料</td></tr>
+</tbody>
+</table>
+
+<h2 id="8-tong-ket"><strong>8. まとめ</strong></h2>
+
+<ul>
+<li><p><strong>スタースキーマ</strong> 運用および財務ダッシュボードに適しています</p></li>
+<li><p><strong>販売 + 生産 + トレンド</strong> POD の 3 つのコア ダッシュボード クラスターです。</p></li>
+<li><p><strong>ファネル分析</strong> 変換を段階的に最適化するのに役立ちます</p></li>
+<li><p><strong>データ品質チェック</strong> パイプラインで自動化する必要がある</p></li>
+</ul>

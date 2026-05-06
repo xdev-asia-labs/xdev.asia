@@ -1,0 +1,232 @@
+---
+id: 019d8b40-d302-7001-b005-reactnx000302
+title: 'Lesson 9: Server Components & Client Components'
+slug: bai-9-server-components-va-client-components
+description: >-
+  React Server Components (RSC), "use client" directive. Server vs Client
+  component boundaries. Streaming, Suspense, loading states. Composition
+  patterns.
+duration_minutes: 150
+is_free: true
+video_url: null
+sort_order: 9
+section_title: 'Part 3: Next.js Fundamentals'
+course:
+  id: 019d8b40-d100-7001-b005-reactnx000001
+  title: 'React & Next.js: From Basics to Advanced'
+  slug: react-nextjs-tu-co-ban-den-nang-cao
+locale: en
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-2791" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121a2b"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-2791)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="878" cy="104" r="16" fill="#fbbf24" opacity="0.09"/>
+    <circle cx="656" cy="42" r="20" fill="#fbbf24" opacity="0.13"/>
+    <circle cx="934" cy="240" r="24" fill="#fbbf24" opacity="0.07"/>
+    <circle cx="712" cy="178" r="28" fill="#fbbf24" opacity="0.11"/>
+    <circle cx="990" cy="116" r="32" fill="#fbbf24" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fbbf24" opacity="0.15"/>
+    <line x1="600" y1="244" x2="1100" y2="324" stroke="#fbbf24" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="274" x2="1050" y2="344" stroke="#fbbf24" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1027.7749907475932,174.5 1027.7749907475932,213.5 994,233 960.2250092524068,213.5 960.2250092524068,174.5 994,155" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fbbf24"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fbbf24" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fbbf24">💻 Programming — Lesson 9</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">Lesson 9: Server Components & Client</tspan>
+      <tspan x="60" dy="42">Components</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">React & Next.js: From Basics to Advanced</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">Part 3: Next.js Fundamentals</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
+<h2 id="1-server-vs-client"><strong>1. Server Components vs Client Components</strong></h2>
+
+<table>
+<thead><tr><th>Features</th><th>Server Component (default)</th><th>Client Component ("use client")</th></tr></thead>
+<tbody>
+<tr><td>Rendering</td><td>Server only</td><td>Server (SSR) + Client (hydration)</td></tr>
+<tr><td>JavaScript bundle</td><td>0 KB (no JS sent)</td><td>Included in bundle</td></tr>
+<tr><td>Data fetching</td><td>Direct DB/API access</td><td>useEffect, TanStack Query</td></tr>
+<tr><td>State/Effects</td><td>❌ No useState/useEffect</td><td>✅ Full hooks support</td></tr>
+<tr><td>Event handlers</td><td>❌ No onClick, onChange</td><td>✅ Full event support</td></tr>
+<tr><td>Browser APIs</td><td>❌ No windows, documents</td><td>✅ Full browser access</td></tr>
+<tr><td>Secrets/env</td><td>✅ Safe to use</td><td>❌ Exposed to clients</td></tr>
+</tbody>
+</table>
+
+<h2 id="2-khi-nao-dung"><strong>2. When to use what?</strong></h2>
+
+<pre><code class="language-text">Server Component (default):     Client Component ("use client"):
+✅ Static content               ✅ useState, useEffect
+✅ Data fetching                 ✅ onClick, onChange
+✅ Access database/API           ✅ Browser APIs
+✅ Sensitive logic               ✅ Custom hooks with state
+✅ Large dependencies            ✅ Third-party libs (charts, editors)
+</code></pre>
+
+<h2 id="3-patterns"><strong>3. Composition Patterns</strong></h2>
+
+<pre><code class="language-tsx">// ✅ Pattern 1: Server Component wraps Client Component
+// app/dashboard/page.tsx (Server Component)
+import { InteractiveChart } from './InteractiveChart';
+
+export default async function Dashboard() {
+  const data = await fetchAnalytics(); // Server-side data fetching
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+      &lt;InteractiveChart data={data} /&gt; {/* Pass serializable data */}
+    &lt;/div&gt;
+  );
+}
+
+// InteractiveChart.tsx
+'use client';
+export function InteractiveChart({ data }: { data: ChartData[] }) {
+  const [filter, setFilter] = useState('all');
+  // Interactive client-side logic
+  return &lt;div&gt;{/* chart */}&lt;/div&gt;;
+}
+</code></pre>
+
+<pre><code class="language-tsx">// ✅ Pattern 2: Children pattern (Server inside Client)
+// ClientLayout.tsx
+'use client';
+export function ClientLayout({ children }: { children: React.ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  return (
+    &lt;div className="flex"&gt;
+      &lt;Sidebar open={sidebarOpen} onToggle={() =&gt; setSidebarOpen(!sidebarOpen)} /&gt;
+      &lt;main&gt;{children}&lt;/main&gt; {/* children can be Server Components! */}
+    &lt;/div&gt;
+  );
+}
+
+// page.tsx (Server Component)
+import { ClientLayout } from './ClientLayout';
+
+export default async function Page() {
+  const data = await fetchData(); // Server-side
+
+  return (
+    &lt;ClientLayout&gt;
+      &lt;ServerContent data={data} /&gt; {/* Server component as children */}
+    &lt;/ClientLayout&gt;
+  );
+}
+</code></pre>
+
+<pre><code class="language-tsx">// ❌ Anti-pattern: Importing Server Component INTO Client Component
+'use client';
+import ServerComponent from './ServerComponent'; // ⚠️ Becomes client component!
+
+// ✅ Fix: Pass as children or props
+</code></pre>
+
+<h2 id="4-streaming-suspense"><strong>4. Streaming & Suspense</strong></h2>
+
+<pre><code class="language-tsx">import { Suspense } from 'react';
+
+export default function Dashboard() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+
+      {/* Mỗi Suspense boundary stream independently */}
+      &lt;Suspense fallback={&lt;CardSkeleton /&gt;}&gt;
+        &lt;RevenueChart /&gt; {/* Async server component */}
+      &lt;/Suspense&gt;
+
+      &lt;Suspense fallback={&lt;TableSkeleton /&gt;}&gt;
+        &lt;RecentOrders /&gt; {/* Async server component */}
+      &lt;/Suspense&gt;
+
+      &lt;Suspense fallback={&lt;ListSkeleton /&gt;}&gt;
+        &lt;TopProducts /&gt; {/* Async server component */}
+      &lt;/Suspense&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Async Server Component
+async function RevenueChart() {
+  const data = await fetchRevenue(); // Can take 2-3 seconds
+  return &lt;Chart data={data} /&gt;;
+}
+
+async function RecentOrders() {
+  const orders = await fetchRecentOrders(); // Independent fetch
+  return &lt;OrderTable orders={orders} /&gt;;
+}
+</code></pre>
+
+<h2 id="5-serialization"><strong>5. Serialization Rules</strong></h2>
+
+<pre><code class="language-tsx">// Server → Client props must be serializable:
+// ✅ string, number, boolean, null, undefined
+// ✅ Array, plain Object
+// ✅ Date (serialized as string)
+// ❌ Functions (cannot pass onClick from server)
+// ❌ Class instances
+// ❌ Symbols
+// ❌ DOM nodes
+
+// ✅ OK
+&lt;ClientComponent data={jsonData} count={42} /&gt;
+
+// ❌ Error
+&lt;ClientComponent onClick={() =&gt; {}} ref={myRef} /&gt;
+</code></pre>
+
+<p>Next article: <strong>Data Fetching & Caching</strong> — server-side fetching, ISR, revalidation, and caching strategies.</p>

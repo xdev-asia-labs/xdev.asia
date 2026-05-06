@@ -1,0 +1,511 @@
+---
+id: 019e2a10-a108-7a01-b001-f1a2b3c4d508
+title: 'レッスン 8: 注文サービス — 注文管理'
+slug: bai-8-order-service-quan-ly-don-hang
+description: '注文サービスの構築: 注文集約、注文ステータス (ステート マシン)、基本的なサーガ パターン、製品サービスの統合。'
+duration_minutes: 120
+is_free: false
+video_url: null
+sort_order: 7
+section_title: 'パート 2: マイクロサービス アーキテクチャの設計'
+course:
+  id: 019e2a10-a100-7a01-b001-f1a2b3c4d5e6
+  title: 'Quarkus マイクロサービス: 基本から運用まで'
+  slug: quarkus-microservices-tu-co-ban-den-production
+locale: ja
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-9225" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#121a2b"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-9225)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="995" cy="155" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="890" cy="110" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="785" cy="65" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="680" cy="280" r="23" fill="#fb923c" opacity="0.05"/>
+    <circle cx="1075" cy="235" r="8" fill="#fb923c" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#fb923c" opacity="0.15"/>
+    <line x1="600" y1="185" x2="1100" y2="265" stroke="#fb923c" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="215" x2="1050" y2="285" stroke="#fb923c" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1069.6410161513775,215 1069.6410161513775,255 1035,275 1000.3589838486224,255 1000.3589838486224,215 1035,195" fill="none" stroke="#fb923c" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#fb923c"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#fb923c" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#fb923c">💻 プログラミング — レッスン 7</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">レッスン 8: 注文サービス — 注文管理</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Quarkus マイクロサービス: 基本から運用まで</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 2: マイクロサービス アーキテクチャの設計</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
+## はじめに
+
+注文サービスは電子商取引の中心であり、製品サービス (在庫の確認)、支払いサービス (支払い)、および通知サービス (通知の送信) が調整されます。この記事では、注文のライフサイクルを管理するために、ステート マシンを使用して注文集約を構築します。
+
+## 注文集計
+
+### エンティティクラス
+
+```java
+@Entity
+@Table(name = "orders")
+public class Order extends PanacheEntity {
+
+    @Column(name = "order_number", unique = true, nullable = false)
+    public String orderNumber;
+
+    @Column(name = "customer_id", nullable = false)
+    public String customerId; // Keycloak user ID
+
+    @Column(name = "customer_email")
+    public String customerEmail;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    public OrderStatus status = OrderStatus.CREATED;
+
+    @OneToMany(mappedBy = "order",
+               cascade = CascadeType.ALL,
+               orphanRemoval = true)
+    public List<OrderItem> items = new ArrayList<>();
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "amount",
+            column = @Column(name = "total_amount")),
+        @AttributeOverride(name = "currency",
+            column = @Column(name = "total_currency"))
+    })
+    public Money totalAmount;
+
+    @Column(name = "payment_id")
+    public String paymentId;
+
+    @Column(columnDefinition = "TEXT")
+    public String notes;
+
+    @Column(name = "created_at", updatable = false)
+    public LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    public LocalDateTime updatedAt;
+
+    @Column(name = "paid_at")
+    public LocalDateTime paidAt;
+
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+        orderNumber = generateOrderNumber();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // === Domain Methods ===
+
+    public void addItem(Long productId, String productName,
+                        Money unitPrice, int quantity) {
+        OrderItem item = new OrderItem();
+        item.productId = productId;
+        item.productName = productName;
+        item.unitPrice = unitPrice;
+        item.quantity = quantity;
+        item.order = this;
+        this.items.add(item);
+        recalculateTotal();
+    }
+
+    public void confirm() {
+        assertStatus(OrderStatus.CREATED);
+        this.status = OrderStatus.CONFIRMED;
+    }
+
+    public void markPaid(String paymentId) {
+        assertStatus(OrderStatus.CONFIRMED);
+        this.status = OrderStatus.PAID;
+        this.paymentId = paymentId;
+        this.paidAt = LocalDateTime.now();
+    }
+
+    public void ship() {
+        assertStatus(OrderStatus.PAID);
+        this.status = OrderStatus.SHIPPED;
+    }
+
+    public void deliver() {
+        assertStatus(OrderStatus.SHIPPED);
+        this.status = OrderStatus.DELIVERED;
+    }
+
+    public void cancel(String reason) {
+        if (status == OrderStatus.SHIPPED
+                || status == OrderStatus.DELIVERED) {
+            throw new BusinessException(400,
+                "Cannot cancel shipped/delivered order");
+        }
+        this.status = OrderStatus.CANCELLED;
+        this.notes = reason;
+    }
+
+    private void recalculateTotal() {
+        BigDecimal total = items.stream()
+            .map(item -> item.unitPrice.amount()
+                .multiply(BigDecimal.valueOf(item.quantity)))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.totalAmount = Money.vnd(total);
+    }
+
+    private void assertStatus(OrderStatus expected) {
+        if (this.status != expected) {
+            throw new BusinessException(400,
+                "Order status must be " + expected
+                + " but is " + this.status);
+        }
+    }
+
+    private String generateOrderNumber() {
+        return "ORD-" + LocalDate.now()
+            .format(DateTimeFormatter.BASIC_ISO_DATE)
+            + "-" + UUID.randomUUID().toString()
+            .substring(0, 8).toUpperCase();
+    }
+}
+```
+
+### OrderItem エンティティ
+
+```java
+@Entity
+@Table(name = "order_items")
+public class OrderItem extends PanacheEntity {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    public Order order;
+
+    @Column(name = "product_id", nullable = false)
+    public Long productId;
+
+    @Column(name = "product_name", nullable = false)
+    public String productName;
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "amount",
+            column = @Column(name = "unit_price_amount")),
+        @AttributeOverride(name = "currency",
+            column = @Column(name = "unit_price_currency"))
+    })
+    public Money unitPrice;
+
+    @Column(nullable = false)
+    public int quantity;
+
+    public BigDecimal getSubtotal() {
+        return unitPrice.amount()
+            .multiply(BigDecimal.valueOf(quantity));
+    }
+}
+```
+
+### OrderStatus列挙型
+
+```java
+public enum OrderStatus {
+    CREATED,     // Mới tạo, chưa xác nhận
+    CONFIRMED,   // Đã xác nhận (stock reserved)
+    PAID,        // Đã thanh toán
+    SHIPPED,     // Đang giao hàng
+    DELIVERED,   // Đã giao thành công
+    CANCELLED;   // Đã hủy
+
+    public boolean canTransitionTo(OrderStatus next) {
+        return switch (this) {
+            case CREATED -> next == CONFIRMED || next == CANCELLED;
+            case CONFIRMED -> next == PAID || next == CANCELLED;
+            case PAID -> next == SHIPPED || next == CANCELLED;
+            case SHIPPED -> next == DELIVERED;
+            case DELIVERED, CANCELLED -> false;
+        };
+    }
+}
+```
+
+## 注文サービス層
+
+```java
+@ApplicationScoped
+public class OrderService {
+
+    @Inject
+    OrderRepository orderRepo;
+
+    @Inject
+    @RestClient
+    ProductServiceClient productClient;
+
+    @Transactional
+    public OrderDTO createOrder(String customerId,
+                                CreateOrderRequest request) {
+        Order order = new Order();
+        order.customerId = customerId;
+        order.customerEmail = request.email();
+
+        // Fetch product info từ Product Service
+        for (var item : request.items()) {
+            ProductInfo product =
+                productClient.getById(item.productId());
+
+            order.addItem(
+                product.id(),
+                product.name(),
+                Money.vnd(product.price()),
+                item.quantity()
+            );
+        }
+
+        orderRepo.persist(order);
+        return OrderDTO.from(order);
+    }
+
+    @Transactional
+    public OrderDTO confirmOrder(Long orderId) {
+        Order order = findOrder(orderId);
+
+        // Reserve stock trong Product Service
+        for (OrderItem item : order.items) {
+            productClient.reserveStock(
+                item.productId, item.quantity);
+        }
+
+        order.confirm();
+        return OrderDTO.from(order);
+    }
+
+    @Transactional
+    public OrderDTO cancelOrder(Long orderId, String reason) {
+        Order order = findOrder(orderId);
+
+        // Release reserved stock nếu đã confirm
+        if (order.status == OrderStatus.CONFIRMED
+                || order.status == OrderStatus.PAID) {
+            for (OrderItem item : order.items) {
+                productClient.releaseStock(
+                    item.productId, item.quantity);
+            }
+        }
+
+        order.cancel(reason);
+        return OrderDTO.from(order);
+    }
+
+    public PagedResult<OrderListDTO> listByCustomer(
+            String customerId, int page, int size) {
+        PanacheQuery<Order> query = orderRepo
+            .find("customerId = ?1",
+                  Sort.by("createdAt").descending(), customerId)
+            .page(Page.of(page, size));
+
+        return new PagedResult<>(
+            query.list().stream()
+                .map(OrderListDTO::from).toList(),
+            query.count(), page, size, query.pageCount());
+    }
+
+    private Order findOrder(Long id) {
+        return orderRepo.findByIdOptional(id)
+            .orElseThrow(() ->
+                new ResourceNotFoundException("Order", id));
+    }
+}
+```
+
+## REST クライアント — 製品サービスの呼び出し
+
+```java
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+
+@RegisterRestClient(configKey = "product-service")
+@Path("/api/v1/products")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public interface ProductServiceClient {
+
+    @GET
+    @Path("/{id}")
+    ProductInfo getById(@PathParam("id") Long id);
+
+    @POST
+    @Path("/{id}/reserve-stock")
+    void reserveStock(@PathParam("id") Long id,
+                      @QueryParam("quantity") int quantity);
+
+    @POST
+    @Path("/{id}/release-stock")
+    void releaseStock(@PathParam("id") Long id,
+                      @QueryParam("quantity") int quantity);
+}
+```
+
+```properties
+# application.properties
+quarkus.rest-client.product-service.url=http://localhost:8081
+quarkus.rest-client.product-service.scope=jakarta.inject.Singleton
+```
+
+## REST リソースの注文
+
+```java
+@Path("/api/v1/orders")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Orders")
+public class OrderResource {
+
+    @Inject
+    OrderService orderService;
+
+    @Inject
+    JsonWebToken jwt; // Keycloak token (bài sau)
+
+    @POST
+    public Response create(@Valid CreateOrderRequest request) {
+        String customerId = jwt.getSubject();
+        OrderDTO order = orderService.createOrder(
+            customerId, request);
+        return Response.created(
+            URI.create("/api/v1/orders/" + order.id()))
+            .entity(order).build();
+    }
+
+    @GET
+    public Response listMyOrders(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("20") int size) {
+        String customerId = jwt.getSubject();
+        var result = orderService.listByCustomer(
+            customerId, page, size);
+        return Response.ok(result.items())
+            .header("X-Total-Count", result.totalItems())
+            .build();
+    }
+
+    @POST @Path("/{id}/confirm")
+    public OrderDTO confirm(@PathParam("id") Long id) {
+        return orderService.confirmOrder(id);
+    }
+
+    @POST @Path("/{id}/cancel")
+    public OrderDTO cancel(@PathParam("id") Long id,
+                           CancelOrderRequest request) {
+        return orderService.cancelOrder(id, request.reason());
+    }
+}
+```
+
+## オーダーサービスの Flyway 移行
+
+```sql
+-- V1.0.0__create_orders_tables.sql
+CREATE TABLE orders (
+    id              BIGSERIAL PRIMARY KEY,
+    order_number    VARCHAR(30) UNIQUE NOT NULL,
+    customer_id     VARCHAR(100) NOT NULL,
+    customer_email  VARCHAR(255),
+    status          VARCHAR(20) NOT NULL DEFAULT 'CREATED',
+    total_amount    NUMERIC(14,2) NOT NULL DEFAULT 0,
+    total_currency  VARCHAR(3) DEFAULT 'VND',
+    payment_id      VARCHAR(100),
+    notes           TEXT,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    paid_at         TIMESTAMP
+);
+
+CREATE TABLE order_items (
+    id                  BIGSERIAL PRIMARY KEY,
+    order_id            BIGINT NOT NULL REFERENCES orders(id)
+                        ON DELETE CASCADE,
+    product_id          BIGINT NOT NULL,
+    product_name        VARCHAR(255) NOT NULL,
+    unit_price_amount   NUMERIC(12,2) NOT NULL,
+    unit_price_currency VARCHAR(3) DEFAULT 'VND',
+    quantity            INT NOT NULL CHECK (quantity > 0)
+);
+
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_orders_created ON orders(created_at DESC);
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+```
+
+## 演習
+
+1. Order Aggregate (Order + OrderItem) を使用して Order Service プロジェクトを作成します
+2. 検証遷移を備えた OrderStatus のステート マシンを実装する
+3. 製品サービスを呼び出して在庫を確認するための REST クライアントを作成します。
+4. 注文の作成、確認、キャンセルを行うエンドポイントを実装します。
+5. 注文スキーマの Flyway 移行を作成する
+6. テストフロー：作成→確認→（モック）支払い→発送→納品
+
+## 概要
+
+- **Order Aggregate** は OrderItem を管理し、全体的な計算の一貫性を確保します
+- **ステートマシン** (`canTransitionTo()`) 注文のライフサイクルを制御する
+- **REST クライアント** (`@RegisterRestClient`) 製品サービスに電話して在庫を予約/解放します
+- **ドメイン メソッド** (`confirm()`、 `markPaid()`、 `cancel()`) ビジネスロジックが含まれています
+- サービス層はドメインロジックと外部サービス呼び出しを調整します
+
+次の記事: 決済サービスと通知サービス。

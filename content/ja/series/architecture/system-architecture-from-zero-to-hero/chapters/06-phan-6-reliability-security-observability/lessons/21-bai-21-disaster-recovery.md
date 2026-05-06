@@ -1,0 +1,350 @@
+---
+id: 019d8a21-c110-7001-d001-e1f2a3b4c521
+title: 'レッスン 21: 災害復旧とマルチリージョン アーキテクチャ'
+slug: bai-21-disaster-recovery-multi-region-architecture
+description: >-
+  RPO と RTO の概念。 DR 戦略: バックアップと復元、パイロット ライト、ウォーム スタンバイ、マルチサイト
+  アクティブ/アクティブ。マルチリージョンのデータ レプリケーションの課題。グローバルな負荷分散。 DR テストとランブック。
+duration_minutes: 150
+is_free: false
+video_url: null
+sort_order: 21
+section_title: 'パート 6: 信頼性、セキュリティ、可観測性'
+course:
+  id: 019d8a21-c100-7001-d001-e1f2a3b4c5d6
+  title: 'システムアーキテクチャ: ゼロからヒーローへ'
+  slug: system-architecture-from-zero-to-hero
+locale: ja
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-7437" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1222"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-7437)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="847" cy="91" r="20" fill="#a78bfa" opacity="0.060000000000000005"/>
+    <circle cx="1094" cy="198" r="11" fill="#a78bfa" opacity="0.07"/>
+    <circle cx="841" cy="45" r="32" fill="#a78bfa" opacity="0.08"/>
+    <circle cx="1088" cy="152" r="23" fill="#a78bfa" opacity="0.09"/>
+    <circle cx="835" cy="259" r="14" fill="#a78bfa" opacity="0.1"/>
+    <circle cx="750" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#a78bfa" opacity="0.15"/>
+    <line x1="600" y1="81" x2="1100" y2="161" stroke="#a78bfa" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="111" x2="1050" y2="181" stroke="#a78bfa" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1012.1769145362398,163 1012.1769145362398,199 981,217 949.8230854637602,199 949.8230854637602,163 981,145" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#a78bfa"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#a78bfa" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#a78bfa">🏗️ アーキテクチャ — レッスン 21</text>
+
+  <!-- Title -->
+  <text x="60" y="140" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">レッスン 21: 災害復旧とマルチリージョン</tspan>
+      <tspan x="60" dy="42">建築</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">システムアーキテクチャ: ゼロからヒーローへ</text>
+
+  <!-- Section -->
+  <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 6: 信頼性、セキュリティ、可観測性</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg>
+
+## はじめに
+
+データセンター全体に問題 (停電、自然災害、ネットワーク停止) が発生した場合、リージョン内の高可用性だけでは十分ではありません。 **災害復旧 (DR)** は、システムが致命的な障害から確実に回復できるようにします。
+
+---
+
+## 1. RPO と RTO
+
+```
+RPO (Recovery Point Objective):
+  "Mất tối đa bao nhiêu data có thể chấp nhận?"
+  
+  RPO = 1 giờ → Backup mỗi giờ → Mất tối đa 1 giờ data
+  RPO = 0     → Synchronous replication → Không mất data
+
+RTO (Recovery Time Objective):
+  "Hệ thống phải recovery trong bao lâu?"
+  
+  RTO = 4 giờ  → Có 4 giờ để khôi phục
+  RTO = 0      → Instant failover (Active-Active)
+
+Timeline:
+  ◄──── RPO ────►           ◄──── RTO ────►
+  Last backup    Disaster    Start         Recovered
+      │              │       Recovery          │
+  ────┼──────────────┼───────┼─────────────────┼────
+      ▲              ▲       ▲                 ▲
+   Data preserved  Data lost  Downtime      Back online
+```
+
+---
+
+## 2. DR 戦略
+
+### 2.1 バックアップと復元
+
+```
+┌──────────────┐         ┌──────────────┐
+│ Primary      │ backup  │ S3/GCS       │
+│ Region       │────────►│ (cold store) │
+│ (running)    │         └──────┬───────┘
+└──────────────┘                │ restore
+                          ┌─────▼────────┐
+                          │ DR Region    │
+                          │ (provisioned │
+                          │  on demand)  │
+                          └──────────────┘
+
+RPO: Hours (last backup)
+RTO: Hours (provision + restore)
+Cost: $ (chỉ trả storage)
+Use case: Non-critical systems, dev/staging
+```
+
+### 2.2 パイロットライト
+
+```
+┌──────────────┐         ┌──────────────┐
+│ Primary      │ replica │ DR Region    │
+│ Region       │────────►│              │
+│ App servers  │         │ DB Replica   │ ← chạy sẵn
+│ DB Primary   │         │ (no app)     │
+│ Cache        │         │              │
+└──────────────┘         └──────────────┘
+
+Disaster → Scale up DR:
+  1. Promote DB replica → Primary
+  2. Launch app servers (AMI/container)
+  3. Update DNS → DR region
+
+RPO: Minutes (async replication)
+RTO: 10-30 minutes
+Cost: $$ (DB replica running)
+```
+
+### 2.3 ウォームスタンバイ
+
+```
+┌──────────────┐         ┌──────────────┐
+│ Primary      │ replica │ DR Region    │
+│ Region       │────────►│              │
+│ App × 10     │         │ App × 2      │ ← scaled down
+│ DB Primary   │         │ DB Replica   │
+│ Cache        │         │ Cache        │
+└──────────────┘         └──────────────┘
+
+Disaster → Scale up DR:
+  1. Scale app 2 → 10
+  2. Promote DB
+  3. Switch traffic
+
+RPO: Seconds-minutes
+RTO: Minutes
+Cost: $$$ (minimal infra running)
+```
+
+### 2.4 マルチサイトのアクティブ/アクティブ
+
+```
+┌──────────────┐         ┌──────────────┐
+│ Region A     │◄───────►│ Region B     │
+│ App × 10     │  sync   │ App × 10     │
+│ DB Primary   │         │ DB Primary   │
+│ Full traffic │         │ Full traffic │
+└──────────────┘         └──────────────┘
+       ▲                        ▲
+       └────── Global LB ──────┘
+              (GeoDNS/Anycast)
+
+RPO: 0 (synchronous) hoặc seconds (async)
+RTO: 0 (automatic failover)
+Cost: $$$$ (2x infrastructure)
+Use case: Mission-critical, global services
+```
+
+### 2.5 比較
+
+|戦略 | RPO | RTO |コスト |複雑さ |
+|----------|-----|-----|----------|----------|
+|バックアップと復元 |営業時間 |営業時間 | $ |低い |
+|パイロットライト |分 | 10～30分 | $$ |中 |
+|ウォームスタンバイ |秒 |分 | $$$ |高 |
+|アクティブ-アクティブ | ~0 | ~0 | $$$$ |非常に高い |
+
+---
+
+## 3. マルチリージョンデータの課題
+
+### 3.1 データのレプリケーション
+
+```
+Synchronous:
+  Region A write → Wait for Region B confirm → Return
+  ✅ Strong consistency (RPO=0)
+  ❌ Latency tăng (cross-region: 50-200ms)
+  ❌ Region B down → Region A blocked
+
+Asynchronous:
+  Region A write → Return immediately
+  Region A → replicate to Region B (background)
+  ✅ Nhanh, Region B down không ảnh hưởng
+  ❌ Replication lag → Data inconsistency
+  ❌ RPO > 0 (có thể mất data)
+
+Conflict Resolution (Active-Active):
+  Region A: UPDATE user SET name='Alice'
+  Region B: UPDATE user SET name='Bob'  (cùng lúc)
+  → Conflict! Giải quyết bằng:
+    - Last-Writer-Wins (LWW)
+    - Application-level merge
+    - CRDTs
+```
+
+### 3.2 グローバル負荷分散
+
+```
+GeoDNS:
+  User ở Vietnam → DNS trả IP Region Asia
+  User ở US → DNS trả IP Region US
+
+  user.example.com
+    ├── Vietnam user → 10.0.1.1 (Asia region)
+    ├── US user → 10.0.2.1 (US region)
+    └── EU user → 10.0.3.1 (EU region)
+
+Anycast:
+  Cùng 1 IP, nhiều locations
+  BGP routing → nearest location
+  Dùng cho CDN, DNS servers
+
+Latency-based:
+  AWS Route 53: Route to region có latency thấp nhất
+  Health check: Nếu region down → route sang region khác
+```
+
+---
+
+## 4. DR テスト
+
+```
+1. Tabletop Exercise (hàng quý):
+   Team ngồi lại, giả lập scenario trên giấy
+   "Database chính bị corrupt, phải làm gì?"
+   Lên plan, identify gaps
+
+2. Failover Test (hàng quý-năm):
+   Thực sự failover sang DR region
+   Verify data integrity
+   Measure actual RTO
+
+3. Chaos Day (hàng tháng):
+   Inject failures vào production
+   Kill processes, add latency
+   Netflix "Chaos Monkey" style
+
+4. Backup Restore Test (hàng tháng):
+   Restore backup to new environment
+   Verify data completeness
+   Measure restore time
+```
+
+---
+
+## 5. DR ランブック テンプレート
+
+```
+# Runbook: Database Failover
+
+## Trigger Conditions
+- Primary DB unreachable > 5 minutes
+- Data corruption detected
+- Region-level outage declared
+
+## Pre-Checks
+□ Verify primary is actually down (not network issue)
+□ Check replica lag (pg_stat_replication)
+□ Notify on-call team lead
+
+## Failover Steps
+1. Stop writes to primary (if accessible)
+2. Verify replica is caught up
+3. Promote replica: SELECT pg_promote()
+4. Update connection strings (DNS/config)
+5. Verify app connects to new primary
+6. Monitor error rates for 15 minutes
+
+## Post-Failover
+□ Notify stakeholders
+□ Update status page
+□ Create incident ticket
+□ Plan for original primary recovery
+□ Post-mortem within 48 hours
+
+## Rollback Plan
+If failover fails:
+1. Restore from latest backup
+2. Point apps to restored DB
+3. Accept data loss from RPO gap
+```
+
+---
+
+## 概要
+
+|決定 |要因 |
+|----------|----------|
+| RPO の選択 |データの重要性、コンプライアンス、コスト |
+| RTO の選択 |ダウンタイム 1 分あたりのビジネスへの影響 |
+| DR戦略 |予算、RPO/RTO 要件 |
+|地域 |ユーザーの場所、コンプライアンス、遅延 |
+|テスト |頻度は重要度に一致します |
+
+---
+
+## 演習
+
+1. **DR 戦略の選択:** フィンテック アプリ: トランザクション、ユーザー残高、コンプライアンス レポート。ダウンタイム > 30 分 = 規制違反。 RPO = 0、RTO < 5 分。予算: DR に月額 50,000 ドル。どの DR 戦略を選択しますか?
+
+2. **マルチリージョンデザイン:** 東南アジア向けのソーシャルメディアアプリ。ベトナム (60%)、インドネシア (20%)、フィリピン (10%)、その他 (10%) のユーザー。マルチリージョン アーキテクチャを設計します。どのデータがレプリケートされ、どのデータがリージョンごとにシャーディングされますか?
+
+3. **DR ランブック:** シナリオの詳細な DR ランブックを作成します: AWS ap-southeast-1 (シンガポール) が完全に利用できない。システムには、EKS クラスター、RDS PostgreSQL、ElastiCache Redis、S3 が含まれます。 DR サイト: ap-northeast-1 (東京)。
