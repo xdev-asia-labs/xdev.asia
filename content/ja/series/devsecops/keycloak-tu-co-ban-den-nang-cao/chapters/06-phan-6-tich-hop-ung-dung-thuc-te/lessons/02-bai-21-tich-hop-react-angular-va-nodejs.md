@@ -14,6 +14,7 @@ course:
   slug: keycloak-tu-co-ban-den-nang-cao
 locale: ja
 ---
+
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
   <defs>
     <linearGradient id="bg-7896" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -74,177 +75,1137 @@ locale: ja
   </text>
 
   <!-- Series subtitle -->
-  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Keycloak の基本から高度なもの</text>
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">基本から上級までの Keycloak</text>
 
   <!-- Section -->
-  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 6: 実用的なアプリケーションの統合__HTMLTAG_60___
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 6: 実際のアプリケーションの統合</text>
 
   <!-- xDev watermark -->
-  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia_</text>
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
 </svg>
 
-<h2 id="1-tong-quan-tich-hop-frontend-va-nodejs"><strong>1.フロントエンドと Node.js の統合の概要</strong></h2>
+<h2 id="1-tong-quan-tich-hop-frontend-va-nodejs"><strong>1. フロントエンドと Node.js の統合の概要</strong></h2>
 
-<p>Keycloakをフロントエンド・アプリケーションと統合する場合、__HTMLTAG_70___PKCE</strong>(コード交換用の証明キー)による認可コード・フローを使用します。これは、シングル・ページ・アプリケーション(SPA)およびパブリック・クライアントにとって最も標準的で安全なフローです。</p>
+<p>Keycloakをフロントエンドアプリケーションと統合する場合、次を使用します。<strong>PKCE を使用した認証コード フロー</strong>(コード交換用の証明キー) — シングル ページ アプリケーション (SPA) およびパブリック クライアント向けの最も標準的で安全なフロー。</p>
 
-___プレコード_0___
+<pre><code class="language-text">┌───────────┐     ┌──────────┐     ┌──────────────┐
+│  React /  │────▶│ Keycloak │     │  Node.js     │
+│  Angular  │     │  Server  │     │  Backend API │
+│  (SPA)    │     └────┬─────┘     └──────┬───────┘
+│           │          │                  │
+│  1. Login │──────────▶ 2. Auth Code     │
+│           │◀──────────  + PKCE          │
+│  3. Exchange code    │                  │
+│     for tokens ─────▶│                  │
+│           │◀──── 4. Access Token        │
+│           │          + Refresh Token    │
+│  5. API call with Bearer token ────────▶│
+│           │◀──── 6. Protected response  │
+└───────────┘                             │
+                                          │
+            7. Validate JWT ──────────────▶│
+               (jwks-uri)                 │
+</code></pre>
 
 <table>
 <thead>
-<tr><th>プラットフォーム</th><th>ライブラリ</th><th>アプローチ</th></tr>
+<tr><th>プラットフォーム</th><th>図書館</th><th>アプローチ</th></tr>
 </thead>
 <tbody>
-<tr><td>React</td><td><code>react-oidc-context</code> (推奨) / <code>keycloak-js</code></td><td>OIDC クライアント / Keycloakアダプター_</td></tr>
-<tr><td>Angular_</td><td><code>angular-auth-oidc-client</code></td><td>OIDC クライアント</td></tr>
-<tr><td>Node.js</td><td><code>jose</code> / <code>passport-keycloak-connect</code></td><td>JWT 検証 / パスポート戦略_</td></tr>
+<tr><td>反応する</td><td><code>反応-oidc-コンテキスト</code>（推奨） /<code>キークローク-js</code></td><td>OIDC クライアント/Keycloak アダプター</td></tr>
+<tr><td>角度のある</td><td><code>角度認証-oidc-クライアント</code></td><td>OIDCクライアント</td></tr>
+<tr><td>Node.js</td><td><code>ホセ</code> / <code>パスポート-キークローク-接続</code></td><td>JWT 検証 / パスポート戦略</td></tr>
 </tbody>
 </table>
 
 <h2 id="2-react-keycloak-integration"><strong>2. React + Keycloak の統合</strong></h2>
 
-<h3 id="21-approach-1-react-oidc-context-recommended"><strong>2.1 Approach 1: react-oidc-context (Recommended)</strong></h3>
+<h3 id="21-approach-1-react-oidc-context-recommended"><strong>2.1 アプローチ 1:react-oidc-context (推奨)</strong></h3>
 
-<p><code>react-oidc-context</code> は、__HTMLTAG_132___oidc-client-ts</code> に基づく最新の OIDC ライブラリであり、新しい React アプリケーションに推奨されます:</p>
+<p><code>反応-oidc-コンテキスト</code>最新の OIDC ベースのライブラリです<code>oidc-クライアント-ts</code>、新しい React アプリケーションに推奨:</p>
 
-___プレコード_1___
+<pre><code class="language-bash"># Cài đặt dependencies
+npm install react-oidc-context oidc-client-ts
+</code></pre>
 
-<h4>2.1.1 AuthProvider のセットアップ</h4>
+<h4>2.1.1 AuthProviderのセットアップ</h4>
 
-___プレコード_2___
+<pre><code class="language-tsx">// src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { AuthProvider } from 'react-oidc-context';
+import App from './App';
 
-<h4>2.1.2 useAuth フックの使用法</h4>
+const oidcConfig = {
+  authority: 'http://localhost:8080/realms/my-realm',
+  client_id: 'my-react-client',
+  redirect_uri: window.location.origin + '/callback',
+  post_logout_redirect_uri: window.location.origin,
+  // PKCE code flow (default và recommended)
+  response_type: 'code',
+  scope: 'openid profile email',
+  // Silent refresh
+  automaticSilentRenew: true,
+  // Lưu tokens trong sessionStorage (an toàn hơn localStorage)
+  userStore: undefined, // Mặc định sessionStorage
+};
 
-___プレコード_3___<h4>2.1.3 アクセス トークンを使用した API 呼び出し</h4>
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  &lt;React.StrictMode&gt;
+    &lt;AuthProvider {...oidcConfig}&gt;
+      &lt;App /&gt;
+    &lt;/AuthProvider&gt;
+  &lt;/React.StrictMode&gt;
+);
+</code></pre>
 
-___プレコード_4___
+<h4>2.1.2 useAuthフックの使用法</h4>
 
-<h4>2.1.4 保護されたルート__HTMLTAG_142___
+<pre><code class="language-tsx">// src/components/UserInfo.tsx
+import { useAuth } from 'react-oidc-context';
 
-___プレコード_5___
+function UserInfo() {
+  const auth = useAuth();
 
-___プレコード_6___
+  if (auth.isLoading) {
+    return &lt;div&gt;Loading...&lt;/div&gt;;
+  }
+
+  if (auth.error) {
+    return &lt;div&gt;Error: {auth.error.message}&lt;/div&gt;;
+  }
+
+  if (!auth.isAuthenticated) {
+    return (
+      &lt;div&gt;
+        &lt;p&gt;Bạn chưa đăng nhập&lt;/p&gt;
+        &lt;button onClick={() =&gt; auth.signinRedirect()}&gt;
+          Đăng nhập
+        &lt;/button&gt;
+      &lt;/div&gt;
+    );
+  }
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Welcome, {auth.user?.profile.preferred_username}&lt;/h2&gt;
+      &lt;p&gt;Email: {auth.user?.profile.email}&lt;/p&gt;
+      &lt;p&gt;Token expires in: {auth.user?.expires_in}s&lt;/p&gt;
+      &lt;button onClick={() =&gt; auth.removeUser()}&gt;
+        Đăng xuất
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default UserInfo;
+</code></pre>
+
+<h4>2.1.3 アクセストークンを使用した API 呼び出し</h4>
+
+<pre><code class="language-tsx">// src/hooks/useApi.ts
+import { useAuth } from 'react-oidc-context';
+import { useCallback } from 'react';
+
+export function useApi() {
+  const auth = useAuth();
+
+  const fetchWithAuth = useCallback(
+    async (url: string, options: RequestInit = {}) => {
+      if (!auth.user?.access_token) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${auth.user.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 401) {
+        // Token expired, trigger silent renew
+        await auth.signinSilent();
+        // Retry request
+        return fetch(url, {
+          ...options,
+          headers: {
+            ...options.headers,
+            Authorization: `Bearer ${auth.user.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+
+      return response;
+    },
+    [auth]
+  );
+
+  return { fetchWithAuth };
+}
+
+// Sử dụng trong component
+function UserList() {
+  const { fetchWithAuth } = useApi();
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetchWithAuth('http://localhost:8081/api/users')
+      .then(res => res.json())
+      .then(data => setUsers(data));
+  }, [fetchWithAuth]);
+
+  return (
+    &lt;ul&gt;
+      {users.map(user =&gt; (
+        &lt;li key={user.id}&gt;{user.username}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+</code></pre>
+
+<h4>2.1.4 保護されたルート</h4>
+
+<pre><code class="language-tsx">// src/components/PrivateRoute.tsx
+import { useAuth } from 'react-oidc-context';
+import { Navigate } from 'react-router-dom';
+
+interface PrivateRouteProps {
+  children: React.ReactNode;
+  requiredRoles?: string[];
+}
+
+function PrivateRoute({ children, requiredRoles = [] }: PrivateRouteProps) {
+  const auth = useAuth();
+
+  if (auth.isLoading) {
+    return &lt;div&gt;Loading...&lt;/div&gt;;
+  }
+
+  if (!auth.isAuthenticated) {
+    // Redirect to Keycloak login
+    auth.signinRedirect();
+    return &lt;div&gt;Redirecting to login...&lt;/div&gt;;
+  }
+
+  // Kiểm tra roles nếu được yêu cầu
+  if (requiredRoles.length > 0) {
+    const userRoles = getUserRoles(auth.user);
+    const hasRequiredRole = requiredRoles.some(role =>
+      userRoles.includes(role)
+    );
+
+    if (!hasRequiredRole) {
+      return &lt;Navigate to="/unauthorized" replace /&gt;;
+    }
+  }
+
+  return &lt;&gt;{children}&lt;/&gt;;
+}
+
+// Extract roles từ Keycloak token claims
+function getUserRoles(user: any): string[] {
+  if (!user?.profile) return [];
+
+  const realmRoles = user.profile.realm_access?.roles || [];
+  const clientRoles =
+    user.profile.resource_access?.['my-react-client']?.roles || [];
+
+  return [...realmRoles, ...clientRoles];
+}
+
+export default PrivateRoute;
+</code></pre>
+
+<pre><code class="language-tsx">// src/App.tsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import AdminPanel from './pages/AdminPanel';
+import Unauthorized from './pages/Unauthorized';
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+
+        {/* Protected route - chỉ cần authenticated */}
+        &lt;Route path="/dashboard" element={
+          &lt;PrivateRoute&gt;
+            &lt;Dashboard /&gt;
+          &lt;/PrivateRoute&gt;
+        } /&gt;
+
+        {/* Protected route - yêu cầu role ADMIN */}
+        &lt;Route path="/admin" element={
+          &lt;PrivateRoute requiredRoles={['ADMIN']}&gt;
+            &lt;AdminPanel /&gt;
+          &lt;/PrivateRoute&gt;
+        } /&gt;
+
+        &lt;Route path="/unauthorized" element={&lt;Unauthorized /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}
+
+export default App;
+</code></pre>
 
 <h4>2.1.5 ロールベースの UI レンダリング</h4>
 
-___プレコード_7___
+<pre><code class="language-tsx">// src/components/RoleBasedContent.tsx
+import { useAuth } from 'react-oidc-context';
+
+function getUserRoles(user: any): string[] {
+  if (!user?.profile) return [];
+  return user.profile.realm_access?.roles || [];
+}
+
+function hasRole(user: any, role: string): boolean {
+  return getUserRoles(user).includes(role);
+}
+
+function Navigation() {
+  const auth = useAuth();
+  const user = auth.user;
+
+  return (
+    &lt;nav&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+
+        {auth.isAuthenticated && (
+          &lt;li&gt;&lt;a href="/dashboard"&gt;Dashboard&lt;/a&gt;&lt;/li&gt;
+        )}
+
+        {/* Chỉ hiển thị cho ADMIN */}
+        {hasRole(user, 'ADMIN') && (
+          &lt;&gt;
+            &lt;li&gt;&lt;a href="/admin"&gt;Admin Panel&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="/admin/users"&gt;User Management&lt;/a&gt;&lt;/li&gt;
+          &lt;/&gt;
+        )}
+
+        {/* Chỉ hiển thị cho EDITOR */}
+        {hasRole(user, 'EDITOR') && (
+          &lt;li&gt;&lt;a href="/content"&gt;Content Management&lt;/a&gt;&lt;/li&gt;
+        )}
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  );
+}
+
+export default Navigation;
+</code></pre>
 
 <h3 id="22-approach-2-keycloak-js-adapter"><strong>2.2 アプローチ 2: keycloak-js アダプター</strong></h3>
 
-<p><code>keycloak-js</code> は Keycloak の公式アダプターです。まだ正常に動作しますが、__HTMLTAG_152___react-oidc-context</code> は、より OIDC 標準であるため、新しいプロジェクトでは優先されます:</p>
+<p><code>キークローク-js</code>Keycloak の公式アダプターです。まだ正常に動作しますが、<code>反応-oidc-コンテキスト</code>OIDC 標準が強化されているため、新しいプロジェクトが優先されます。</p>
 
-___プレコード_8___
+<pre><code class="language-bash">npm install keycloak-js
+</code></pre>
 
-___プレコード_9___
+<pre><code class="language-tsx">// src/keycloak.ts
+import Keycloak from 'keycloak-js';
 
-___プレコード_10___
+const keycloak = new Keycloak({
+  url: 'http://localhost:8080',
+  realm: 'my-realm',
+  clientId: 'my-react-client',
+});
 
-___プレコード_11___
+export default keycloak;
+</code></pre>
+
+<pre><code class="language-tsx">// src/components/KeycloakProvider.tsx
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import Keycloak from 'keycloak-js';
+import keycloak from '../keycloak';
+
+interface KeycloakContextType {
+  keycloak: Keycloak;
+  initialized: boolean;
+  authenticated: boolean;
+}
+
+const KeycloakContext = createContext&lt;KeycloakContextType&gt;({
+  keycloak,
+  initialized: false,
+  authenticated: false,
+});
+
+export function useKeycloak() {
+  return useContext(KeycloakContext);
+}
+
+interface KeycloakProviderProps {
+  children: ReactNode;
+}
+
+export function KeycloakProvider({ children }: KeycloakProviderProps) {
+  const [initialized, setInitialized] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    keycloak
+      .init({
+        onLoad: 'check-sso',       // hoặc 'login-required'
+        pkceMethod: 'S256',         // PKCE method
+        checkLoginIframe: false,    // Tắt iframe check (recommended)
+        silentCheckSsoRedirectUri:
+          window.location.origin + '/silent-check-sso.html',
+      })
+      .then((auth) => {
+        setAuthenticated(auth);
+        setInitialized(true);
+
+        // Setup token refresh
+        if (auth) {
+          setInterval(() => {
+            keycloak
+              .updateToken(70)  // Refresh nếu token hết hạn trong 70s
+              .catch(() => {
+                console.warn('Token refresh failed, logging out');
+                keycloak.logout();
+              });
+          }, 60000); // Check mỗi 60 giây
+        }
+      })
+      .catch((err) => {
+        console.error('Keycloak init failed:', err);
+        setInitialized(true);
+      });
+  }, []);
+
+  if (!initialized) {
+    return &lt;div&gt;Loading Keycloak...&lt;/div&gt;;
+  }
+
+  return (
+    &lt;KeycloakContext.Provider value={{ keycloak, initialized, authenticated }}&gt;
+      {children}
+    &lt;/KeycloakContext.Provider&gt;
+  );
+}
+</code></pre>
+
+<pre><code class="language-tsx">// Sử dụng keycloak-js trong component
+import { useKeycloak } from './KeycloakProvider';
+
+function Profile() {
+  const { keycloak, authenticated } = useKeycloak();
+
+  if (!authenticated) {
+    return &lt;button onClick={() =&gt; keycloak.login()}&gt;Login&lt;/button&gt;;
+  }
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;{keycloak.tokenParsed?.preferred_username}&lt;/h2&gt;
+      &lt;p&gt;Email: {keycloak.tokenParsed?.email}&lt;/p&gt;
+
+      {/* Role-based rendering */}
+      {keycloak.hasRealmRole('ADMIN') && (
+        &lt;p&gt;🔑 You are an Admin&lt;/p&gt;
+      )}
+      {keycloak.hasResourceRole('editor', 'my-react-client') && (
+        &lt;p&gt;✏️ You have editor access&lt;/p&gt;
+      )}
+
+      &lt;button onClick={() =&gt; keycloak.logout()}&gt;Logout&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
 
 <h3 id="23-keycloak-client-configuration-cho-spa"><strong>2.3 SPAのKeycloakクライアント構成</strong></h3>
 
-<p>Keycloak で React/Angular SPA 用のクライアントを作成する:</p>
+<p>Keycloak で React/Angular SPA 用のクライアントを作成します。</p>
 
-___プレコード_12___
+<pre><code class="language-text">Client Settings:
+  Client ID:           my-react-client
+  Client Protocol:     openid-connect
+  Access Type:         public (SPA không có client_secret)
+  Standard Flow:       ON (Authorization Code Flow)
+  Direct Access:       OFF (không dùng cho SPA)
+  Implicit Flow:       OFF (deprecated, dùng PKCE thay thế)
+
+  Valid Redirect URIs:
+    - http://localhost:3000/*
+    - http://localhost:4200/*
+
+  Valid Post Logout Redirect URIs:
+    - http://localhost:3000/*
+    - http://localhost:4200/*
+
+  Web Origins:
+    - http://localhost:3000
+    - http://localhost:4200
+    - + (cho phép tất cả origin từ redirect URIs)
+
+  Advanced Settings:
+    Proof Key for Code Exchange (PKCE): S256
+    Access Token Lifespan: 5 minutes
+    Refresh Token: Enable
+</code></pre>
 
 <h2 id="3-angular-keycloak-integration"><strong>3. Angular + Keycloak の統合</strong></h2>
 
-<h3 id="31-cai-dat-angular-auth-oidc-client"><strong>3.1 angular-auth-oidc-client</strong></h3> をインストールする
+<h3 id="31-cai-dat-angular-auth-oidc-client"><strong>3.1 angular-auth-oidc-client をインストールする</strong></h3>
 
-___プレコード_13___
+<pre><code class="language-bash">npm install angular-auth-oidc-client
+</code></pre>
 
-<h3 id="32-oidc-module-configuration"><strong>3.2 OIDC モジュール構成</strong></h3>
+<h3 id="32-oidc-module-configuration"><strong>3.2 OIDCモジュールの構成</strong></h3>
 
-___プレコード_14___
+<pre><code class="language-typescript">// src/app/app.config.ts (Angular 17+ standalone)
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAuth, LogLevel } from 'angular-auth-oidc-client';
+import { routes } from './app.routes';
+import { authInterceptor } from './auth/auth.interceptor';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAuth({
+      config: {
+        authority: 'http://localhost:8080/realms/my-realm',
+        redirectUrl: window.location.origin + '/callback',
+        postLogoutRedirectUri: window.location.origin,
+        clientId: 'my-angular-client',
+        scope: 'openid profile email',
+        responseType: 'code',
+        // Silent renew
+        silentRenew: true,
+        silentRenewUrl: window.location.origin + '/silent-renew.html',
+        useRefreshToken: true,
+        // Logging
+        logLevel: LogLevel.Debug,
+        // Auto login
+        autoUserInfo: true,
+        // Token renewal
+        renewTimeBeforeTokenExpiresInSec: 30,
+      },
+    }),
+  ],
+};
+</code></pre>
 
 <h3 id="33-auth-service"><strong>3.3 認証サービス</strong></h3>
 
-___プレコード_15___
+<pre><code class="language-typescript">// src/app/auth/auth.service.ts
+import { Injectable, inject } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { map } from 'rxjs/operators';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private oidcService = inject(OidcSecurityService);
+
+  isAuthenticated$ = this.oidcService.isAuthenticated$.pipe(
+    map((result) => result.isAuthenticated)
+  );
+
+  userData$ = this.oidcService.userData$;
+
+  login(): void {
+    this.oidcService.authorize();
+  }
+
+  logout(): void {
+    this.oidcService
+      .logoff()
+      .subscribe((result) => console.log('Logged out', result));
+  }
+
+  getAccessToken(): string {
+    let token = '';
+    this.oidcService
+      .getAccessToken()
+      .subscribe((t) => (token = t));
+    return token;
+  }
+
+  hasRole(role: string): boolean {
+    let hasRole = false;
+    this.userData$.subscribe((userData) => {
+      const realmRoles = userData?.userData?.realm_access?.roles || [];
+      hasRole = realmRoles.includes(role);
+    });
+    return hasRole;
+  }
+
+  getUserRoles(): string[] {
+    let roles: string[] = [];
+    this.userData$.subscribe((userData) => {
+      roles = userData?.userData?.realm_access?.roles || [];
+    });
+    return roles;
+  }
+}
+</code></pre>
 
 <h3 id="34-auth-guard"><strong>3.4 認証ガード</strong></h3>
 
-___プレコード_16___
+<pre><code class="language-typescript">// src/app/auth/auth.guard.ts
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { map, take } from 'rxjs/operators';
 
-<h3 id="35-http-interceptor"><strong>_3.5 HTTP インターセプタ</strong></h3>
+export const authGuard: CanActivateFn = (route, state) => {
+  const oidcService = inject(OidcSecurityService);
+  const router = inject(Router);
 
-___プレコード_17___
+  return oidcService.isAuthenticated$.pipe(
+    take(1),
+    map(({ isAuthenticated }) => {
+      if (!isAuthenticated) {
+        oidcService.authorize();
+        return false;
+      }
 
-<h3 id="36-routing-configuration"><strong>3.6 ルーティング構成</strong></h3>
+      // Kiểm tra required roles nếu có
+      const requiredRoles = route.data?.['roles'] as string[];
+      if (requiredRoles && requiredRoles.length > 0) {
+        // Kiểm tra roles từ token
+        const token = oidcService.getPayloadFromAccessToken();
+        const userRoles: string[] =
+          token?.realm_access?.roles || [];
+        const hasRole = requiredRoles.some((role) =>
+          userRoles.includes(role)
+        );
 
-___プレコード_18___
+        if (!hasRole) {
+          router.navigate(['/unauthorized']);
+          return false;
+        }
+      }
 
-<h3 id="37-component-su-dung-auth"><strong>_3.7 コンポーネントは認証を使用します</strong></h3>
+      return true;
+    })
+  );
+};
+</code></pre>
 
-___プレコード_19___
+<h3 id="35-http-interceptor"><strong>3.5 HTTP インターセプター</strong></h3>
 
-<h2 id="4-nodejs-express-keycloak-integration"><strong>4. Node.js/Express + Keycloak の統合</strong></h2>
+<pre><code class="language-typescript">// src/app/auth/auth.interceptor.ts
+import { HttpInterceptorFn, HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { switchMap, take } from 'rxjs/operators';
+
+export const authInterceptor: HttpInterceptorFn = (
+  req: HttpRequest&lt;unknown&gt;,
+  next: HttpHandlerFn
+) => {
+  const oidcService = inject(OidcSecurityService);
+
+  // Chỉ thêm token cho API calls
+  if (!req.url.includes('/api/')) {
+    return next(req);
+  }
+
+  return oidcService.getAccessToken().pipe(
+    take(1),
+    switchMap((token) => {
+      if (token) {
+        const clonedReq = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return next(clonedReq);
+      }
+      return next(req);
+    })
+  );
+};
+</code></pre>
+
+<h3 id="36-routing-configuration"><strong>3.6 ルーティング設定</strong></h3>
+
+<pre><code class="language-typescript">// src/app/app.routes.ts
+import { Routes } from '@angular/router';
+import { authGuard } from './auth/auth.guard';
+import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
+  },
+  {
+    path: 'callback',
+    loadComponent: () =>
+      import('./pages/callback/callback.component').then(
+        (m) => m.CallbackComponent
+      ),
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./pages/admin/admin.component').then(
+        (m) => m.AdminComponent
+      ),
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN'] },
+  },
+  {
+    path: 'unauthorized',
+    loadComponent: () =>
+      import('./pages/unauthorized/unauthorized.component').then(
+        (m) => m.UnauthorizedComponent
+      ),
+  },
+];
+</code></pre>
+
+<h3 id="37-component-su-dung-auth"><strong>3.7 コンポーネントは認証を使用します</strong></h3>
+
+<pre><code class="language-typescript">// src/app/pages/dashboard/dashboard.component.ts
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AuthService } from '../../auth/auth.service';
+
+@Component({
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    &lt;div *ngIf="isAuthenticated"&gt;
+      &lt;h2&gt;Dashboard&lt;/h2&gt;
+      &lt;p&gt;Username: {{ userData?.preferred_username }}&lt;/p&gt;
+      &lt;p&gt;Email: {{ userData?.email }}&lt;/p&gt;
+      &lt;p&gt;Roles: {{ roles.join(', ') }}&lt;/p&gt;
+
+      &lt;div *ngIf="authService.hasRole('ADMIN')"&gt;
+        &lt;h3&gt;Admin Section&lt;/h3&gt;
+        &lt;p&gt;Nội dung chỉ dành cho Admin&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;button (click)="authService.logout()"&gt;Logout&lt;/button&gt;
+    &lt;/div&gt;
+  `,
+})
+export class DashboardComponent implements OnInit {
+  authService = inject(AuthService);
+  private oidcService = inject(OidcSecurityService);
+
+  isAuthenticated = false;
+  userData: any = null;
+  roles: string[] = [];
+
+  ngOnInit(): void {
+    this.oidcService.isAuthenticated$.subscribe(
+      (result) => (this.isAuthenticated = result.isAuthenticated)
+    );
+
+    this.oidcService.userData$.subscribe((result) => {
+      this.userData = result.userData;
+      this.roles = this.userData?.realm_access?.roles || [];
+    });
+  }
+}
+</code></pre>
+
+<h2 id="4-nodejs-express-keycloak-integration"><strong>4. Node.js/Express + Keycloakの統合</strong></h2>
 
 <h3 id="41-approach-1-jose-jwt-verification-recommended"><strong>4.1 アプローチ 1: jose JWT 検証 (推奨)</strong></h3>
 
-<p>ライブラリ <code>jose</code> を使用して JWT トークンを検証します。軽量なアプローチで、フレームワーク固有のアダプターに依存しません:</p>
+<p>図書館を利用する<code>ホセ</code>JWT トークンを検証するには、フレームワーク固有のアダプターに依存しない軽量のアプローチを使用します。</p>
 
-___プレコード_20___
+<pre><code class="language-bash">npm install jose express
+npm install -D @types/express typescript
+</code></pre>
 
-___プレコード_21___
+<pre><code class="language-typescript">// src/middleware/auth.ts
+import { createRemoteJWKSet, jwtVerify, JWTPayload } from 'jose';
+import { Request, Response, NextFunction } from 'express';
 
-<h3 id="42-express-application"><strong>4.2 エクスプレス アプリケーション</strong></h3>
+// Keycloak configuration
+const KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'http://localhost:8080';
+const REALM = process.env.KEYCLOAK_REALM || 'my-realm';
+const ISSUER = `${KEYCLOAK_URL}/realms/${REALM}`;
+const JWKS_URI = `${ISSUER}/protocol/openid-connect/certs`;
 
-___プレコード_22___
+// Tạo JWKS client (tự cache keys)
+const JWKS = createRemoteJWKSet(new URL(JWKS_URI));
 
-<h3 id="43-approach-2-passport-keycloak-connect"><strong>_4.3 アプローチ 2: パスポート-キークローク-接続</strong></h3>
+// Extended Request type
+interface AuthenticatedRequest extends Request {
+  user?: {
+    sub: string;
+    username: string;
+    email: string;
+    roles: string[];
+    clientRoles: string[];
+  };
+}
 
-<p>プロジェクトで Passport.js を使用している場合は、__HTMLTAG_214___passport-keycloak-connect</code>:</p> を使用できます。
+// JWT verification middleware
+export async function authenticate(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise&lt;void&gt; {
+  const authHeader = req.headers.authorization;
 
-___プレコード_23___
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Missing or invalid Authorization header' });
+    return;
+  }
 
-___プレコード_24___
+  const token = authHeader.substring(7);
 
-<h2 id="5-silent-token-refresh"><strong>5.サイレント トークン リフレッシュ</strong></h2>
+  try {
+    const { payload } = await jwtVerify(token, JWKS, {
+      issuer: ISSUER,
+      // Optionally validate audience
+      // audience: 'my-client',
+    });
 
-<p>トークンの更新は、シームレスなユーザー エクスペリエンスを確保するために重要です。主に 2 つのメソッドがあります:</p>
+    // Extract user info from JWT claims
+    req.user = {
+      sub: payload.sub || '',
+      username: (payload as any).preferred_username || '',
+      email: (payload as any).email || '',
+      roles: extractRealmRoles(payload),
+      clientRoles: extractClientRoles(payload, 'my-client'),
+    };
 
-<h3 id="51-refresh-token-rotation"><strong>5.1 リフレッシュ トークンのローテーション</strong></h3>
+    next();
+  } catch (err) {
+    console.error('JWT verification failed:', err);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+}
 
-___プレコード_25___
+// Extract realm roles từ JWT
+function extractRealmRoles(payload: JWTPayload): string[] {
+  const realmAccess = (payload as any).realm_access;
+  return realmAccess?.roles || [];
+}
 
-<h3 id="52-react-oidc-context-auto-refresh"><strong>5.2 反応-oidc-context 自動更新</strong></h3>
+// Extract client roles từ JWT
+function extractClientRoles(
+  payload: JWTPayload,
+  clientId: string
+): string[] {
+  const resourceAccess = (payload as any).resource_access;
+  return resourceAccess?.[clientId]?.roles || [];
+}
 
-___プレコード_26___
+// Role check middleware factory
+export function requireRole(...roles: string[]) {
+  return (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): void => {
+    if (!req.user) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
 
-<h3 id="53-silent-check-sso-html"><strong>_5.3 サイレント チェック SSO HTML</strong></h3>
+    const userRoles = [...req.user.roles, ...req.user.clientRoles];
+    const hasRole = roles.some((role) => userRoles.includes(role));
 
-<p>サイレント SSO チェック用のファイル <code>public/silent-check-sso.html</code> を作成します:</p>
+    if (!hasRole) {
+      res.status(403).json({
+        error: 'Forbidden',
+        message: `Required roles: ${roles.join(', ')}`,
+      });
+      return;
+    }
 
-___プレコード_27___
+    next();
+  };
+}
+</code></pre>
 
-<h2 id="6-keycloak-client-settings-reference"><strong>6. Keycloakクライアント設定リファレンス</strong></h2><p>アプリケーションの種類については、Keycloakクライアント構成を参照してください:</p>
+<h3 id="42-express-application"><strong>4.2 エクスプレスアプリケーション</strong></h3>
+
+<pre><code class="language-typescript">// src/app.ts
+import express from 'express';
+import cors from 'cors';
+import { authenticate, requireRole } from './middleware/auth';
+
+const app = express();
+
+// Middleware
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:4200'],
+  credentials: true,
+}));
+app.use(express.json());
+
+// ========== Public Routes ==========
+
+app.get('/api/public/health', (req, res) => {
+  res.json({ status: 'UP' });
+});
+
+// ========== Protected Routes ==========
+
+// Tất cả routes dưới đây yêu cầu authentication
+app.use('/api', authenticate);
+
+app.get('/api/me', (req: any, res) => {
+  res.json({
+    username: req.user.username,
+    email: req.user.email,
+    roles: req.user.roles,
+  });
+});
+
+// User routes
+app.get('/api/users', requireRole('USER', 'ADMIN'), (req, res) => {
+  res.json({
+    message: 'User list',
+    users: [
+      { id: 1, name: 'User 1' },
+      { id: 2, name: 'User 2' },
+    ],
+  });
+});
+
+// Admin routes
+app.get(
+  '/api/admin/dashboard',
+  requireRole('ADMIN'),
+  (req: any, res) => {
+    res.json({
+      message: 'Admin Dashboard',
+      adminUser: req.user.username,
+    });
+  }
+);
+
+app.post(
+  '/api/admin/users',
+  requireRole('ADMIN'),
+  (req: any, res) => {
+    res.json({
+      message: 'User created',
+      createdBy: req.user.username,
+      user: req.body,
+    });
+  }
+);
+
+// ========== Start Server ==========
+
+const PORT = process.env.PORT || 8081;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+export default app;
+</code></pre>
+
+<h3 id="43-approach-2-passport-keycloak-connect"><strong>4.3 アプローチ 2: パスポート-キークローク-接続</strong></h3>
+
+<p>プロジェクトですでに Passport.js を使用している場合は、それを使用できます<code>パスポート-キークローク-接続</code>:</p>
+
+<pre><code class="language-bash">npm install passport passport-keycloak-connect express-session
+npm install -D @types/passport @types/express-session
+</code></pre>
+
+<pre><code class="language-typescript">// src/passport-setup.ts
+import passport from 'passport';
+import KeycloakStrategy from 'passport-keycloak-connect';
+import session from 'express-session';
+import express from 'express';
+
+const app = express();
+
+// Session configuration (required for Passport)
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }, // true cho HTTPS
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Keycloak strategy
+const keycloakConfig = {
+  host: 'http://localhost:8080',
+  realm: 'my-realm',
+  clientId: 'my-node-client',
+  clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
+  callbackURL: '/auth/callback',
+};
+
+passport.use('keycloak', new KeycloakStrategy(keycloakConfig,
+  (accessToken: string, refreshToken: string, profile: any, done: Function) => {
+    // Profile chứa user info từ Keycloak
+    return done(null, {
+      id: profile.id,
+      username: profile.username,
+      email: profile.email,
+      roles: profile.realm_access?.roles || [],
+    });
+  }
+));
+
+passport.serializeUser((user: any, done) => done(null, user));
+passport.deserializeUser((user: any, done) => done(null, user));
+
+// Routes
+app.get('/auth/login',
+  passport.authenticate('keycloak', { scope: ['openid', 'profile', 'email'] })
+);
+
+app.get('/auth/callback',
+  passport.authenticate('keycloak', { failureRedirect: '/login-failed' }),
+  (req, res) => {
+    res.redirect('/dashboard');
+  }
+);
+
+app.get('/api/me',
+  (req, res, next) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+    next();
+  },
+  (req, res) => {
+    res.json(req.user);
+  }
+);
+</code></pre>
+
+<h2 id="5-silent-token-refresh"><strong>5. サイレントトークンリフレッシュ</strong></h2>
+
+<p>トークンの更新は、シームレスなユーザー エクスペリエンスを確保するために重要です。主な方法は 2 つあります。</p>
+
+<h3 id="51-refresh-token-rotation"><strong>5.1 リフレッシュトークンのローテーション</strong></h3>
+
+<pre><code class="language-text">Client ──── Access Token (5 min) ────▶ API Server
+              │                            │
+              │ Token expired (401)         │
+              │◀───────────────────────────│
+              │                            │
+Client ──── Refresh Token ──────────▶ Keycloak
+              │                            │
+              │ New Access Token            │
+              │ + New Refresh Token         │
+              │◀───────────────────────────│
+              │                            │
+Client ──── New Access Token ────────▶ API Server
+</code></pre>
+
+<h3 id="52-react-oidc-context-auto-refresh"><strong>5.2 反応-oidc-contextの自動更新</strong></h3>
+
+<pre><code class="language-tsx">// Đã bật trong config
+const oidcConfig = {
+  // ...
+  automaticSilentRenew: true,
+};
+
+// Lắng nghe sự kiện token refresh
+import { useAuth } from 'react-oidc-context';
+
+function TokenMonitor() {
+  const auth = useAuth();
+
+  useEffect(() => {
+    // Sự kiện khi token được renew thành công
+    return auth.events.addAccessTokenExpiring(() => {
+      console.log('Token is about to expire, renewing...');
+    });
+  }, [auth.events]);
+
+  useEffect(() => {
+    return auth.events.addAccessTokenExpired(() => {
+      console.log('Token expired, signing in silently...');
+      auth.signinSilent().catch(() => {
+        // Silent renew failed, redirect to login
+        auth.signinRedirect();
+      });
+    });
+  }, [auth.events, auth]);
+
+  return null;
+}
+</code></pre>
+
+<h3 id="53-silent-check-sso-html"><strong>5.3 SSO HTML のサイレントチェック</strong></h3>
+
+<p>ファイルの作成<code>public/silent-check-sso.html</code>サイレント SSO チェックの場合:</p>
+
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Silent Check SSO&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;script&gt;
+    parent.postMessage(location.href, location.origin);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="6-keycloak-client-settings-reference"><strong>6. Keycloakクライアント設定リファレンス</strong></h2>
+
+<p>次のタイプのアプリケーションについては、「Keycloak クライアント構成」を参照してください。</p>
 
 <table>
 <thead>
-<tr><th>設定</th><th>SPA (React/Angular)_</th><th>Node.js バックエンド_</th></tr>
+<tr><th>設定</th><th>SPA (React/Angular)</th><th>Node.js バックエンド</th></tr>
 </thead>
 <tbody>
-<tr><td>クライアント プロトコル</td><td>openid-connect</td><td>openid-connect_</td></tr>
-<tr><td>アクセス タイプ</td><td><code>public</code></td><td><code>機密</code></td></tr>
-<tr><td>標準フロー</td><td>ON</td><td>ON (Web アプリの場合)</td></tr>
-<tr><td>直接アクセス</td><td>OFF</td><td>_OFF</td></tr>
-<tr><td>サービス アカウント</td><td>OFF</td><td>ON (必要な場合)</td></tr>
-<tr><td>PKCE_</td><td><code>S256_</code></td><td>N/A</td></tr>
-<tr><td>_有効なリダイレクト URI</td><td><code>http://localhost:3000/*</code></td><td><code>http://localhost:8081/*</code></td></tr>
-<tr><td>ウェブオリジン</td><td><code>http://localhost:3000</code></td><td><code>_+</code></td></tr>
+<tr><td>クライアントプロトコル</td><td>オープンID接続</td><td>オープンID接続</td></tr>
+<tr><td>アクセスタイプ</td><td><code>公共。公共</code></td><td><code>機密。機密</code></td></tr>
+<tr><td>標準流量</td><td>の上</td><td>オン (Web アプリの場合)</td></tr>
+<tr><td>直接アクセス</td><td>オフ</td><td>オフ</td></tr>
+<tr><td>サービスアカウント</td><td>オフ</td><td>オン (必要な場合)</td></tr>
+<tr><td>PKCE</td><td><code>S256</code></td><td>該当なし</td></tr>
+<tr><td>有効なリダイレクト URI</td><td><code>http://localhost:3000/*</code></td><td><code>http://localhost:8081/*</code></td></tr>
+<tr><td>ウェブオリジン</td><td><code>http://localhost:3000</code></td><td><code>+</code></td></tr>
 </tbody>
 </table>
 
-<h2 id="7-tong-ket"><strong>7.概要_</strong></h2><table>
+<h2 id="7-tong-ket"><strong>7. まとめ</strong></h2>
+
+<table>
 <thead>
-<tr><th>プラットフォーム_</th><th>ライブラリ</th><th>利点_</th><th>メモ_</th></tr>
+<tr><th>プラットフォーム</th><th>図書館</th><th>アドバンテージ</th><th>注記</th></tr>
 </thead>
 <tbody>
-<tr><td>React</td><td><code>react-oidc-context_</code></td><td>OIDC 標準、フック API、自動更新</td><td>リダイレクト URI を構成する必要がある正しく_</td></tr>
-<tr><td>React</td><td><code>_keycloak-js</code></td><td>公式アダプター、フル API</td><td>密結合Keycloak</td></tr>
-<tr><td>Angular_</td><td><code>angular-auth-oidc-client</code></td><td>Angular ネイティブ、ガード、インターセプター</td><td>Config はより複雑です反応</td></tr>
-<tr><td>_Node.js</td><td><code>_jose</code></td><td>軽量、依存関係なし、標準</td><td>ミドルウェアの実装が必要あなた自身</td></tr>
-<tr><td>Node.js</td><td><code>passport-keycloak-connect</code></td><td>Passport.js 統合エコシステム</td><td>セッションが必要管理_</td></tr>
+<tr><td>反応する</td><td><code>反応-oidc-コンテキスト</code></td><td>OIDC標準、APIフック、自動リフレッシュ</td><td>リダイレクト URI を正しく構成する必要がある</td></tr>
+<tr><td>反応する</td><td><code>キークローク-js</code></td><td>公式アダプター、完全な API</td><td>Keycloakと密接に連携</td></tr>
+<tr><td>角度のある</td><td><code>角度認証-oidc-クライアント</code></td><td>Angular ネイティブ、ガード、インターセプター</td><td>ReactよりもConfigが複雑</td></tr>
+<tr><td>Node.js</td><td><code>ホセ</code></td><td>軽量、依存性なし、標準</td><td>ミドルウェアを自分で実装する必要がある</td></tr>
+<tr><td>Node.js</td><td><code>パスポート-キークローク-接続</code></td><td>Passport.js エコシステムを統合する</td><td>セッション管理が必要</td></tr>
 </tbody>
 </table>
 
-<p>次の記事では、KeycloakをAPIゲートウェイ（Nginx、Kong、Traefik）およびマイクロサービスアーキテクチャと統合する方法を学びます。</p>
+<p>次の記事では、Keycloak を API Gateway (Nginx、Kong、Traefik) およびマイクロサービス アーキテクチャと統合する方法を学びます。</p>

@@ -14,6 +14,7 @@ course:
   slug: keycloak-tu-co-ban-den-nang-cao
 locale: ja
 ---
+
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
   <defs>
     <linearGradient id="bg-1835" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -74,317 +75,883 @@ locale: ja
   </text>
 
   <!-- Series subtitle -->
-  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Keycloak の基本から高度なもの</text>
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">基本から上級までの Keycloak</text>
 
   <!-- Section -->
-  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 5: テーマ、イベント、セキュリティ、Vault__HTMLTAG_60___
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 5: テーマ、イベント、セキュリティ、および Vault</text>
 
   <!-- xDev watermark -->
-  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia_</text>
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
 </svg>
 
-<h2 id="1-tong-quan-event-system"><strong>1.概要 イベント システム_</strong></h2>
+<h2 id="1-tong-quan-event-system"><strong>1. イベントシステムの概要</strong></h2>
 
-<p>Keycloak は、システム内のすべてのアクティビティを監視するための包括的な <strong>イベント システム</strong> を提供します。ログイン、登録、管理設定の変更に至るすべてのアクションがイベントとして記録されます。</p>
+<p>Keycloakがシステムを提供<strong>イベントシステム</strong>システム内のすべてのアクティビティを監視するための包括的な機能。ログイン、登録、管理設定の変更に至るすべてのアクションがイベントとして記録されます。</p>
 
 <h3 id="11-hai-loai-events"><strong>1.1 2 種類のイベント</strong></h3>
 
 <table>
 <thead>
-<tr><th>タイプ</th><th>説明_</th><th>例_</th></tr>
+<tr><th>タイプ</th><th>説明する</th><th>例えば</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>ログインイベント (ユーザーイベント)</strong></td><td>ユーザーに関連するアクション</td><td>LOGIN、REGISTER、LOGOUT、TOKEN_EXCHANGE</td></tr>
-<tr><td><strong>管理イベント</strong></td><td>管理コンソール/APIによる構成変更</td><td>_ユーザーの作成、レルムの更新、クライアントの削除</td></tr>
+<tr><td><strong>ログインイベント（ユーザーイベント）</strong></td><td>ユーザー関連のアクション</td><td>ログイン、登録、ログアウト、TOKEN_EXCHANGE</td></tr>
+<tr><td><strong>管理者イベント</strong></td><td>管理コンソール/API を介した構成変更</td><td>ユーザーの作成、レルムの更新、クライアントの削除</td></tr>
 </tbody>
 </table>
 
-<h3 id="12-login-event-types"><strong>1.2 ログイン イベント タイプ</strong></h3><table>
-<thead>
-<tr><th>イベントの種類_</th><th>説明_</th><th>いつ発生する</th></tr>
-</thead>
-<tbody>
-<tr><td><code>LOGIN</code></td><td>ログイン成功</td><td>ユーザーは正しい認証情報を入力しました_</td></tr>
-<tr><td><code>LOGIN_ERROR</code></td><td>_ログイン失敗_</td><td>虚偽のユーザー名/パスワード</td></tr>
-<tr><td><code>REGISTER</code></td><td>新しいアカウントを登録</td><td>ユーザーがパブリックとしてアカウントを作成</td></tr>
-<tr><td><code>REGISTER_ERROR</code></td><td>登録に失敗しました_</td><td>メールが重複し、検証が失敗しました</td></tr>
-<tr><td><code>_LOGOUT</code></td><td>_ログアウト_</td><td>ユーザーのログアウトまたはセッションの期限切れ_</td></tr>
-<tr><td><code>CODE_TO_TOKEN</code></td><td>認可コード→トークン交換</td><td>OIDC認可コードの流れ</td></tr>
-<tr><td><code>CODE_TO_TOKEN_ERROR</code></td><td>_トークン交換に失敗しました</td><td>無効なコード、期限切れのコード</td></tr>
-<tr><td><code>REFRESH_TOKEN</code></td><td>リフレッシュ アクセス トークン_</td><td>クライアントがリフレッシュ トークンを使用</td></tr>
-<tr><td><code>REFRESH_TOKEN_ERROR</code></td><td>リフレッシュトークンが失敗しました</td><td>トークンが取り消されているか期限切れです</td></tr>
-<tr><td><code>CLIENT_LOGIN</code></td><td>_クライアント認証</td><td>サービスアカウントログイン</td></tr>
-<tr><td><code>INTROSPECT_TOKEN</code></td><td>トークンイントロスペクション</td><td>リソースサーバー検証トークン</td></tr>
-<tr><td><code>UPDATE_PASSWORD</code></td><td>パスワードの変更_</td><td>ユーザーのパスワード変更</td></tr>
-<tr><td><code>RESET_PASSWORD</code></td><td>パスワードをリセット_</td><td>メールリンク経由でユーザーをリセット</td></tr>
-<tr><td><code>VERIFY_EMAIL</code></td><td>メール認証</td><td>ユーザーのクリック確認リンク</td></tr>
-<tr><td><code>SEND_RESET_PASSWORD</code></td><td>パスワードリセットメールを送信</td><td>パスワードを忘れた場合のリクエスト</td></tr>
-<tr><td><code>UPDATE_PROFILE</code></td><td>プロファイルを更新</td><td>ユーザーが個人情報カーネルを更新</td></tr>
-<tr><td><code>REMOVE_TOTP</code></td><td>TOTP デバイスを削除</td><td>ユーザーが OTP 認証システムを削除</td></tr>
-<tr><td><code>UPDATE_TOTP</code></td><td>TOTP 構成</td><td>ユーザー設定 OTP</td></tr>
-<tr><td><code>GRANT_CONSENT</code></td><td>ユーザー付与権限の同意</td><td>OAuth2同意画面</td></tr>
-<tr><td><code>TOKEN_EXCHANGE</code></td><td>トークン交換</td><td>クライアント間でトークンを交換</td></tr>
-</tbody>
-</table><h3 id="13-admin-event-operations"><strong>1.3 管理イベント操作</strong></h3>
+<h3 id="12-login-event-types"><strong>1.2 ログインイベントの種類</strong></h3>
 
 <table>
 <thead>
-<tr><th>操作_</th><th>説明_</th><th>リソースタイプ_</th></tr>
+<tr><th>イベントタイプ</th><th>説明する</th><th>それはいつ起こりますか?</th></tr>
 </thead>
 <tbody>
-<tr><td><code>CREATE</code></td><td>新しいリソースの作成</td><td>USER、CLIENT、REALM、GROUP、ROLE...</td></tr>
-<tr><td><code>UPDATE</code></td><td>リソースを更新</td><td>USER、CLIENT、REALM_SETTINGS...</td></tr>
-<tr><td><code>DELETE</code></td><td>リソースを削除</td><td>ユーザー、クライアント、セッション...</td></tr>
-<tr><td><code>ACTION</code></td><td>_アクションの実行</td><td>_RESET_PASSWORD、SEND_VERIFY_EMAIL...</td></tr>
+<tr><td><code>ログイン</code></td><td>ログインに成功しました</td><td>ユーザーが正しい認証情報を入力する</td></tr>
+<tr><td><code>ログインエラー</code></td><td>ログインに失敗しました</td><td>ユーザー名/パスワードが間違っています</td></tr>
+<tr><td><code>登録する</code></td><td>新しいアカウントを登録する</td><td>ユーザーがアカウントを正常に作成しました</td></tr>
+<tr><td><code>登録エラー</code></td><td>登録に失敗しました</td><td>メールが重複しています。検証に失敗しました</td></tr>
+<tr><td><code>ログアウト</code></td><td>サインアウト</td><td>ユーザーのログアウトまたはセッションの期限切れ</td></tr>
+<tr><td><code>CODE_TO_TOKEN</code></td><td>認可コード→トークンの交換</td><td>OIDC 認可コードのフロー</td></tr>
+<tr><td><code>CODE_TO_TOKEN_ERROR</code></td><td>トークン交換に失敗しました</td><td>無効なコード、期限切れのコード</td></tr>
+<tr><td><code>REFRESH_TOKEN</code></td><td>アクセストークンを更新する</td><td>クライアントはリフレッシュトークンを使用します</td></tr>
+<tr><td><code>REFRESH_TOKEN_ERROR</code></td><td>リフレッシュトークンが失敗しました</td><td>トークンが取り消されたか期限切れになった</td></tr>
+<tr><td><code>CLIENT_LOGIN</code></td><td>クライアント認証</td><td>サービスアカウントのログイン</td></tr>
+<tr><td><code>INTROSPECT_TOKEN</code></td><td>トークンの導入</td><td>リソースサーバー検証トークン</td></tr>
+<tr><td><code>UPDATE_PASSWORD</code></td><td>パスワードを変更する</td><td>ユーザーがパスワードを変更する</td></tr>
+<tr><td><code>RESET_PASSWORD</code></td><td>パスワードをリセットする</td><td>電子メールリンク経由でユーザーがリセット</td></tr>
+<tr><td><code>VERIFY_EMAIL</code></td><td>メール認証</td><td>ユーザーが確認リンクをクリックする</td></tr>
+<tr><td><code>SEND_RESET_PASSWORD</code></td><td>パスワードリセットメールを送信する</td><td>パスワードを忘れた場合のリクエスト</td></tr>
+<tr><td><code>UPDATE_PROFILE</code></td><td>プロフィールを更新する</td><td>ユーザーが個人情報を更新する</td></tr>
+<tr><td><code>REMOVE_TOTP</code></td><td>TOTPデバイスの削除</td><td>ユーザーが OTP 認証システムを削除する</td></tr>
+<tr><td><code>UPDATE_TOTP</code></td><td>TOTP 構成</td><td>ユーザーが OTP を設定する</td></tr>
+<tr><td><code>GRANT_CONSENT</code></td><td>ユーザーが同意する</td><td>OAuth2同意画面</td></tr>
+<tr><td><code>TOKEN_EXCHANGE</code></td><td>トークン交換</td><td>クライアント間でトークンを交換する</td></tr>
 </tbody>
 </table>
 
-<h2 id="2-bat-event-logging"><strong>2.イベント ログを有効にする_</strong></h2>
+<h3 id="13-admin-event-operations"><strong>1.3 管理イベントの操作</strong></h3>
+
+<table>
+<thead>
+<tr><th>手術</th><th>説明する</th><th>リソースの種類</th></tr>
+</thead>
+<tbody>
+<tr><td><code>作成する</code></td><td>新しいリソースを作成する</td><td>ユーザー、クライアント、レルム、グループ、ロール...</td></tr>
+<tr><td><code>アップデート</code></td><td>リソースを更新する</td><td>ユーザー、クライアント、REALM_SETTINGS...</td></tr>
+<tr><td><code>消去</code></td><td>リソースの削除</td><td>ユーザー、クライアント、セッション...</td></tr>
+<tr><td><code>アクション</code></td><td>行動を起こす</td><td>RESET_PASSWORD、SEND_VERIFY_EMAIL...</td></tr>
+</tbody>
+</table>
+
+<h2 id="2-bat-event-logging"><strong>2. イベントログをオンにする</strong></h2>
 
 <h3 id="21-qua-admin-console"><strong>2.1 管理コンソール経由</strong></h3>
 
 <ol>
-<li>ログイン <strong>管理コンソール___HTMLTAG_398__HTMLTAG_399___
-<li>レルムを選択 → <strong>レルム設定</strong> → タブ <strong>イベント</strong></li>
-<li>構成__HTMLTAG_407___ユーザー イベント設定</strong>:
+<li>ログイン<strong>管理コンソール</strong></li>
+<li>レルムを選択 →<strong>レルム設定</strong>→タブ<strong>イベント</strong></li>
+<li>構成<strong>ユーザーイベント設定</strong>:
 <ul>
-<li><strong>イベントを保存</strong>: オン</li>
-<li><strong>有効期限</strong>: 30 日 (コンプライアンス要件による)</li>
-<li><strong>保存されたタイプ</strong>: 保存するイベント タイプを選択します (デフォルト: すべて)</li>
+<li><strong>イベントの保存</strong>： の上</li>
+<li><strong>有効期限</strong>: 30 日間 (コンプライアンス要件に応じて)</li>
+<li><strong>保存されたタイプ</strong>: 保存するイベントの種類を選択します (デフォルト: ALL)</li>
 </ul>
 </li>
-<li>構成__HTMLTAG_425___管理イベント設定</strong>:
+<li>構成<strong>管理者イベントの設定</strong>:
 <ul>
-<li><strong>イベントを保存</strong>: オン</li>
-<li><strong>表現を含める</strong>: オン (リクエスト/レスポンス本文を保存)</li>
+<li><strong>イベントの保存</strong>： の上</li>
+<li><strong>表現を含める</strong>: ON (リクエスト/レスポンスボディを保存)</li>
 </ul>
 </li>
-<li><strong>_イベント リスナー__HTMLTAG_440___: 必要なリスナーを追加__HTMLTAG_441___
+<li><strong>イベントリスナー</strong>: 必要なリスナーを追加します</li>
 </ol>
 
 <h3 id="22-qua-rest-api"><strong>2.2 REST API経由</strong></h3>
 
-___プレコード_0___
+<pre><code class="language-bash"># Bật event logging cho realm
+curl -X PUT "http://localhost:8080/admin/realms/my-realm" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventsEnabled": true,
+    "eventsExpiration": 2592000,
+    "eventsListeners": ["jboss-logging"],
+    "enabledEventTypes": [
+        "LOGIN", "LOGIN_ERROR",
+        "REGISTER", "REGISTER_ERROR",
+        "LOGOUT",
+        "CODE_TO_TOKEN", "CODE_TO_TOKEN_ERROR",
+        "REFRESH_TOKEN", "REFRESH_TOKEN_ERROR",
+        "CLIENT_LOGIN", "CLIENT_LOGIN_ERROR",
+        "UPDATE_PASSWORD",
+        "RESET_PASSWORD",
+        "SEND_RESET_PASSWORD"
+    ],
+    "adminEventsEnabled": true,
+    "adminEventsDetailsEnabled": true
+  }'
+</code></pre>
 
-<h2 id="3-event-listeners"><strong>3.イベント リスナー_</strong></h2>
+<h2 id="3-event-listeners"><strong>3. イベントリスナー</strong></h2>
 
-<p>イベント リスナーは、イベントが発生したときに処理します。 Keycloak には次のリスナーが利用可能です:</p>
+<p>イベント リスナーは、イベントが発生したときに処理します。 Keycloak には次のリスナーが利用可能です。</p>
 
 <h3 id="31-jboss-logging-listener"><strong>3.1 jboss-logging リスナー</strong></h3>
 
 <p>イベントをKeycloakサーバーログに記録します(デフォルトで有効):</p>
 
-___プレコード_1___
+<pre><code class="language-text"># Log output mẫu
+2026-03-15 10:30:45,123 INFO  [org.keycloak.events] (executor-thread-1)
+  type=LOGIN, realmId=my-realm, clientId=my-app, userId=abc-123,
+  ipAddress=192.168.1.100, auth_method=openid-connect,
+  auth_type=code, redirect_uri=https://myapp.com/callback,
+  username=john@example.com
+</code></pre>
 
-<h3 id="32-email-listener"><strong>3.2 電子メール リスナー</strong></h3>
+<h3 id="32-email-listener"><strong>3.2 電子メールリスナー</strong></h3>
 
 <p>重要なイベントがあるときにユーザーに電子メールを送信します (例: 新しいデバイスからのログイン):</p>
 
-___プレコード_2___
+<pre><code class="language-text"># Bật email listener
+Realm Settings → Events → Event listeners → Thêm "email"
 
-<h2 id="4-event-details-va-event-store"><strong>4.イベントの詳細とイベント ストア</strong></h2><h3 id="41-cau-truc-login-event"><strong>_4.1 ログイン イベントの構造</strong></h3>
+# Events được gửi email por defecto:
+- LOGIN_ERROR (quá nhiều lần → cảnh báo compromised account)
+- UPDATE_PASSWORD
+- REMOVE_TOTP
+- UPDATE_TOTP
+</code></pre>
 
-___プレコード_3___
+<h2 id="4-event-details-va-event-store"><strong>4. イベント詳細とイベントストア</strong></h2>
 
-<h3 id="42-cau-truc-admin-event"><strong>_4.2 管理イベント構造</strong></h3>
+<h3 id="41-cau-truc-login-event"><strong>4.1 ログインイベントの構造</strong></h3>
 
-___プレコード_4___
+<pre><code class="language-json">{
+    "time": 1710489045000,
+    "type": "LOGIN",
+    "realmId": "my-realm",
+    "clientId": "my-web-app",
+    "userId": "550e8400-e29b-41d4-a716-446655440000",
+    "sessionId": "abc-session-id",
+    "ipAddress": "192.168.1.100",
+    "details": {
+        "auth_method": "openid-connect",
+        "auth_type": "code",
+        "redirect_uri": "https://myapp.com/callback",
+        "consent": "no_consent_required",
+        "code_id": "xyz-code-id",
+        "username": "john@example.com",
+        "identity_provider": null
+    }
+}
+</code></pre>
 
-<h3 id="43-event-store-database"><strong>4.3 イベント ストア — データベース</strong></h3>
+<h3 id="42-cau-truc-admin-event"><strong>4.2 管理イベントの構造</strong></h3>
 
-<p>イベントはKeycloakのデータベースに保存されます:</p>
+<pre><code class="language-json">{
+    "time": 1710489100000,
+    "realmId": "my-realm",
+    "authDetails": {
+        "realmId": "master",
+        "clientId": "security-admin-console",
+        "userId": "admin-user-id",
+        "ipAddress": "10.0.0.1"
+    },
+    "operationType": "CREATE",
+    "resourceType": "USER",
+    "resourcePath": "users/new-user-id",
+    "representation": "{\"username\":\"newuser\",\"email\":\"new@example.com\",\"enabled\":true}"
+}
+</code></pre>
+
+<h3 id="43-event-store-database"><strong>4.3 イベントストア — データベース</strong></h3>
+
+<p>イベントはKeycloakのデータベースに保存されます。</p>
 
 <table>
 <thead>
-<tr><th>表</th><th>内容</th></tr>
+<tr><th>テーブル</th><th>コンテンツ</th></tr>
 </thead>
 <tbody>
 <tr><td><code>EVENT_ENTITY</code></td><td>ログインイベント</td></tr>
-<tr><td><code>ADMIN_EVENT_ENTITY</code></td><td>管理イベント_</td></tr>
+<tr><td><code>ADMIN_EVENT_ENTITY</code></td><td>管理者イベント</td></tr>
 </tbody>
 </table>
 
 <blockquote>
-<p><strong>注:</strong> デフォルトでは、イベント ストアは Keycloak DB に保存されます。イベントの数が多い場合は、カスタム イベント リスナーを使用してイベントを外部システムに送信し、組み込みストアの有効期限を短く設定する必要があります。</p>
+<p><strong>注記：</strong>デフォルトのイベントストアはKeycloak DBに保存されます。イベントの数が多い場合は、カスタム イベント リスナーを使用してイベントを外部システムに送信し、組み込みストアの有効期限を短く設定する必要があります。</p>
 </blockquote>
 
-<h2 id="5-event-filtering-va-truy-van"><strong>5.イベントのフィルタリングとクエリ</strong></h2>
+<h2 id="5-event-filtering-va-truy-van"><strong>5. イベントのフィルタリングとクエリ</strong></h2>
 
-<h3 id="51-qua-admin-console"><strong>_5.1 管理コンソール経由</strong></h3>
+<h3 id="51-qua-admin-console"><strong>5.1 管理コンソール経由</strong></h3>
 
 <ol>
-<li>__HTMLTAG_527___イベント</strong> → タブ__HTMLTAG_529___ユーザー イベント</strong> または <strong>管理イベント___HTMLTAG_532__HTMLTAG_533___ に移動します
-<li>イベントを次の方法でフィルタリングします。
-<ul>
-<li><strong>イベント タイプ</strong>: LOGIN、LOGIN_ERROR、REGISTER...</li>
-<li><strong>クライアント</strong>: 特定のクライアントを選択</li>
-<li><strong>ユーザー</strong>: ユーザー ID</li> で検索します
+<li>入力<strong>イベント</strong>→タブ<strong>ユーザーイベント</strong>または<strong>管理者イベント</strong></li>
+<li>イベントを次の条件でフィルタリングします。<ul>
+<li><strong>イベントの種類</strong>: ログイン、ログインエラー、登録...</li>
+<li><strong>クライアント</strong>: 特定のクライアントを選択します</li>
+<li><strong>ユーザー</strong>：ユーザーIDで検索</li>
 <li><strong>日付範囲</strong>: 開始日/終了日</li>
-<li><strong>IP アドレス</strong>: IP によるフィルター</li>
+<li><strong>IPアドレス</strong>: IPでフィルタリング</li>
 </ul>
 </li>
 </ol>
 
-<h3 id="52-qua-rest-api-login-events"><strong>5.2 REST API 経由 — ログイン イベント</strong></h3>
+<h3 id="52-qua-rest-api-login-events"><strong>5.2 REST API経由 — ログインイベント</strong></h3>
 
-___プレコード_5___
+<pre><code class="language-bash"># Lấy tất cả login events
+curl -s "http://localhost:8080/admin/realms/my-realm/events" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
+
+# Filter theo event type
+curl -s "http://localhost:8080/admin/realms/my-realm/events?type=LOGIN_ERROR" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
+
+# Filter theo user
+curl -s "http://localhost:8080/admin/realms/my-realm/events?user=user-uuid" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
+
+# Filter theo client và date range
+curl -s "http://localhost:8080/admin/realms/my-realm/events?\
+client=my-app&amp;\
+dateFrom=2026-03-01&amp;\
+dateTo=2026-03-31&amp;\
+first=0&amp;\
+max=100" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
+
+# Filter nhiều event types
+curl -s "http://localhost:8080/admin/realms/my-realm/events?\
+type=LOGIN&amp;type=LOGIN_ERROR&amp;type=REGISTER" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
+</code></pre>
 
 <h3 id="53-qua-rest-api-admin-events"><strong>5.3 REST API 経由 — 管理イベント</strong></h3>
 
-___プレコード_6___
+<pre><code class="language-bash"># Lấy admin events
+curl -s "http://localhost:8080/admin/realms/my-realm/admin-events" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
 
-<h2 id="6-custom-event-listener-spi"><strong>6.カスタム イベント リスナー SPI</strong></h2>
+# Filter theo operation type
+curl -s "http://localhost:8080/admin/realms/my-realm/admin-events?\
+operationTypes=CREATE&amp;\
+resourceTypes=USER" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
 
-<p>Keycloak を使用すると、__HTMLTAG_572___サービスプロバイダーインターフェイス (SPI)</strong>.</p> を介してカスタムイベントリスナーを作成できます。
+# Filter theo resource path
+curl -s "http://localhost:8080/admin/realms/my-realm/admin-events?\
+resourcePath=users" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" | jq .
+</code></pre>
+
+<h2 id="6-custom-event-listener-spi"><strong>6. カスタム イベント リスナー SPI</strong></h2>
+
+<p>Keycloak を使用すると、カスタム イベント リスナーを作成できます。<strong>サービスプロバイダーインターフェイス (SPI)</strong>.</p>
 
 <h3 id="61-tao-maven-project"><strong>6.1 Maven プロジェクトの作成</strong></h3>
 
-___プレコード_7___
+<pre><code class="language-xml">&lt;!-- pom.xml --&gt;
+&lt;project&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;custom-event-listener&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
 
-<h3 id="62-implement-eventlistenerprovider"><strong>_6.2 EventListenerProvider の実装</strong></h3>
+    &lt;properties&gt;
+        &lt;keycloak.version&gt;26.1.0&lt;/keycloak.version&gt;
+        &lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;
+    &lt;/properties&gt;
 
-___プレコード_8___
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.keycloak&lt;/groupId&gt;
+            &lt;artifactId&gt;keycloak-server-spi&lt;/artifactId&gt;
+            &lt;version&gt;${keycloak.version}&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.keycloak&lt;/groupId&gt;
+            &lt;artifactId&gt;keycloak-server-spi-private&lt;/artifactId&gt;
+            &lt;version&gt;${keycloak.version}&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.keycloak&lt;/groupId&gt;
+            &lt;artifactId&gt;keycloak-services&lt;/artifactId&gt;
+            &lt;version&gt;${keycloak.version}&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
 
-<h3 id="63-implement-eventlistenerproviderfactory"><strong>6.3 EventListenerProviderFactory の実装</strong></h3>
+<h3 id="62-implement-eventlistenerprovider"><strong>6.2 EventListenerProviderの実装</strong></h3>
 
-___プレコード_9___
+<pre><code class="language-java">// src/main/java/com/example/CustomEventListenerProvider.java
+package com.example;
 
-<h3 id="64-dang-ky-spi"><strong>6.4 SPI の登録</strong></h3>
+import org.keycloak.events.Event;
+import org.keycloak.events.EventListenerProvider;
+import org.keycloak.events.EventType;
+import org.keycloak.events.admin.AdminEvent;
+import org.keycloak.events.admin.OperationType;
+import org.keycloak.models.KeycloakSession;
+import org.jboss.logging.Logger;
 
-___プレコード_10___
+import java.util.Map;
 
-<h3 id="65-deploy-va-kich-hoat"><strong>_6.5 導入とアクティブ化</strong></h3>
+public class CustomEventListenerProvider implements EventListenerProvider {
 
-___プレコード_11___
+    private static final Logger log = Logger.getLogger(CustomEventListenerProvider.class);
+    private final KeycloakSession session;
 
-<h2 id="7-keycloak-json-logging"><strong>7. Keycloak JSON ロギング</strong></h2>
+    public CustomEventListenerProvider(KeycloakSession session) {
+        this.session = session;
+    }
 
-<p>集中ログと統合するには、JSON ログを出力するように Keycloak を設定します:</p>___プレコード_12___
+    @Override
+    public void onEvent(Event event) {
+        // Xử lý Login Events
+        log.infof("Event: type=%s, realmId=%s, clientId=%s, userId=%s, ip=%s",
+                event.getType(),
+                event.getRealmId(),
+                event.getClientId(),
+                event.getUserId(),
+                event.getIpAddress());
 
-<h3 id="71-json-log-output-mau"><strong>_7.1 JSON ログ出力サンプル</strong></h3>
+        // Xử lý theo event type
+        switch (event.getType()) {
+            case LOGIN:
+                handleLogin(event);
+                break;
+            case LOGIN_ERROR:
+                handleLoginError(event);
+                break;
+            case REGISTER:
+                handleRegister(event);
+                break;
+            default:
+                break;
+        }
+    }
 
-___プレコード_13___
+    @Override
+    public void onEvent(AdminEvent event, boolean includeRepresentation) {
+        // Xử lý Admin Events
+        log.infof("AdminEvent: operation=%s, resourceType=%s, resourcePath=%s, realmId=%s",
+                event.getOperationType(),
+                event.getResourceType(),
+                event.getResourcePath(),
+                event.getRealmId());
+
+        if (event.getOperationType() == OperationType.DELETE) {
+            handleAdminDelete(event);
+        }
+    }
+
+    private void handleLogin(Event event) {
+        // Ví dụ: Gửi event đến Kafka
+        String payload = buildEventPayload(event);
+        // kafkaProducer.send("keycloak-login-events", payload);
+        log.debugf("Login event sent to message broker: %s", payload);
+    }
+
+    private void handleLoginError(Event event) {
+        Map&lt;String, String&gt; details = event.getDetails();
+        String username = details != null ? details.get("username") : "unknown";
+        String error = event.getError();
+
+        log.warnf("Login failure: user=%s, error=%s, ip=%s",
+                username, error, event.getIpAddress());
+
+        // Ví dụ: Increment metric counter cho monitoring
+        // metricsService.incrementCounter("login_failures",
+        //     "realm", event.getRealmId(),
+        //     "error", error);
+    }
+
+    private void handleRegister(Event event) {
+        log.infof("New user registered: userId=%s, realm=%s",
+                event.getUserId(), event.getRealmId());
+    }
+
+    private void handleAdminDelete(AdminEvent event) {
+        log.warnf("Admin DELETE operation: resource=%s/%s by admin=%s",
+                event.getResourceType(),
+                event.getResourcePath(),
+                event.getAuthDetails().getUserId());
+    }
+
+    private String buildEventPayload(Event event) {
+        // Tạo JSON payload cho message broker
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"type\":\"").append(event.getType()).append("\",");
+        sb.append("\"realmId\":\"").append(event.getRealmId()).append("\",");
+        sb.append("\"userId\":\"").append(event.getUserId()).append("\",");
+        sb.append("\"clientId\":\"").append(event.getClientId()).append("\",");
+        sb.append("\"ipAddress\":\"").append(event.getIpAddress()).append("\",");
+        sb.append("\"time\":").append(event.getTime());
+        sb.append("}");
+        return sb.toString();
+    }
+
+    @Override
+    public void close() {
+        // Cleanup resources
+    }
+}
+</code></pre>
+
+<h3 id="63-implement-eventlistenerproviderfactory"><strong>6.3 EventListenerProviderFactoryの実装</strong></h3>
+
+<pre><code class="language-java">// src/main/java/com/example/CustomEventListenerProviderFactory.java
+package com.example;
+
+import org.keycloak.Config;
+import org.keycloak.events.EventListenerProvider;
+import org.keycloak.events.EventListenerProviderFactory;
+import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.KeycloakSessionFactory;
+
+public class CustomEventListenerProviderFactory implements EventListenerProviderFactory {
+
+    public static final String PROVIDER_ID = "custom-event-listener";
+
+    @Override
+    public EventListenerProvider create(KeycloakSession session) {
+        return new CustomEventListenerProvider(session);
+    }
+
+    @Override
+    public void init(Config.Scope config) {
+        // Đọc cấu hình từ keycloak config
+        // Ví dụ: String kafkaBrokers = config.get("kafka-brokers", "localhost:9092");
+    }
+
+    @Override
+    public void postInit(KeycloakSessionFactory factory) {
+        // Post-initialization
+    }
+
+    @Override
+    public void close() {
+        // Cleanup
+    }
+
+    @Override
+    public String getId() {
+        return PROVIDER_ID;
+    }
+}
+</code></pre>
+
+<h3 id="64-dang-ky-spi"><strong>6.4 SPIの登録</strong></h3>
+
+<pre><code class="language-text"># src/main/resources/META-INF/services/org.keycloak.events.EventListenerProviderFactory
+com.example.CustomEventListenerProviderFactory
+</code></pre>
+
+<h3 id="65-deploy-va-kich-hoat"><strong>6.5 導入とアクティベーション</strong></h3>
+
+<pre><code class="language-bash"># Build
+mvn clean package
+
+# Deploy
+cp target/custom-event-listener-1.0.0.jar $KEYCLOAK_HOME/providers/
+$KEYCLOAK_HOME/bin/kc.sh build
+
+# Kích hoạt: Admin Console → Realm Settings → Events → Event listeners
+# Thêm "custom-event-listener"
+</code></pre>
+
+<h2 id="7-keycloak-json-logging"><strong>7. KeycloakのJSONロギング</strong></h2>
+
+<p>集中ログと統合するには、JSON ログを出力するように Keycloak を構成します。</p>
+
+<pre><code class="language-bash"># Bật JSON logging
+bin/kc.sh start \
+  --log=console \
+  --log-console-output=json
+
+# Hoặc qua environment variables
+KC_LOG=console
+KC_LOG_CONSOLE_OUTPUT=json
+</code></pre>
+
+<h3 id="71-json-log-output-mau"><strong>7.1 JSON ログ出力のサンプル</strong></h3>
+
+<pre><code class="language-json">{
+    "timestamp": "2026-03-15T10:30:45.123Z",
+    "level": "INFO",
+    "loggerClassName": "org.keycloak.events",
+    "loggerName": "org.keycloak.events",
+    "message": "type=LOGIN, realmId=my-realm, clientId=my-app, userId=abc-123, ipAddress=192.168.1.100",
+    "threadName": "executor-thread-1",
+    "threadId": 42,
+    "hostName": "keycloak-0",
+    "processName": "keycloak",
+    "processId": 1
+}
+</code></pre>
 
 <h3 id="72-cau-hinh-log-levels"><strong>7.2 ログレベルの構成</strong></h3>
 
-___プレコード_14___
+<pre><code class="language-bash"># Cấu hình log levels cho events
+bin/kc.sh start \
+  --log=console \
+  --log-console-output=json \
+  --log-level=INFO \
+  --log-level=org.keycloak.events:DEBUG
 
-<h2 id="8-tich-hop-elk-stack"><strong>_8. ELK スタックの統合</strong></h2>
+# Environment variables
+KC_LOG_LEVEL=INFO
+KC_LOG_LEVEL=org.keycloak.events:DEBUG
+</code></pre>
 
-<p>Keycloak ログを ELK スタック (Elasticsearch、Logstash、Kibana) に送信して一元的に分析します。</p>
+<h2 id="8-tich-hop-elk-stack"><strong>8.ELKスタックの統合</strong></h2>
+
+<p>一元的に分析するために、Keycloak ログを ELK スタック (Elasticsearch、Logstash、Kibana) に送信します。</p>
 
 <h3 id="81-kien-truc-tong-quan"><strong>8.1 一般的なアーキテクチャ</strong></h3>
 
-___プレコード_15___
+<pre><code class="language-text">Keycloak (JSON logs)
+    ↓
+Filebeat (log shipper)
+    ↓
+Logstash (processing &amp; enrichment)
+    ↓
+Elasticsearch (storage &amp; indexing)
+    ↓
+Kibana (visualization &amp; dashboards)
+</code></pre>
 
-<h3 id="82-filebeat-configuration"><strong>_8.2 Filebeat 構成</strong></h3>
+<h3 id="82-filebeat-configuration"><strong>8.2 Filebeat の設定</strong></h3>
 
-___プレコード_16___
+<pre><code class="language-yaml"># filebeat.yml
+filebeat.inputs:
+  - type: container
+    paths:
+      - /var/log/containers/keycloak-*.log
+    processors:
+      - decode_json_fields:
+          fields: ["message"]
+          target: "keycloak"
+          overwrite_keys: true
+      - add_fields:
+          target: ""
+          fields:
+            service.name: keycloak
+            environment: production
+
+output.logstash:
+  hosts: ["logstash:5044"]
+</code></pre>
 
 <h3 id="83-logstash-pipeline"><strong>8.3 Logstash パイプライン</strong></h3>
 
-___プレコード_17___
+<pre><code class="language-conf"># logstash/pipeline/keycloak.conf
+input {
+  beats {
+    port =&gt; 5044
+  }
+}
 
-<h3 id="84-kibana-dashboard"><strong>8.4 Kibana ダッシュボード</strong></h3>
+filter {
+  if [service][name] == "keycloak" {
+    # Parse Keycloak event message
+    if [keycloak][message] =~ "^type=" {
+      kv {
+        source =&gt; "[keycloak][message]"
+        field_split =&gt; ", "
+        value_split =&gt; "="
+        target =&gt; "kc_event"
+      }
 
-<p>監視する Kibana ダッシュボードを作成する:</p>
+      mutate {
+        add_field =&gt; {
+          "event_type" =&gt; "%{[kc_event][type]}"
+          "realm" =&gt; "%{[kc_event][realmId]}"
+          "client_id" =&gt; "%{[kc_event][clientId]}"
+        }
+      }
+    }
+
+    # GeoIP enrichment
+    if [kc_event][ipAddress] {
+      geoip {
+        source =&gt; "[kc_event][ipAddress]"
+        target =&gt; "geo"
+      }
+    }
+
+    # Detect suspicious patterns
+    if [kc_event][type] == "LOGIN_ERROR" {
+      mutate {
+        add_tag =&gt; ["login_failure"]
+      }
+    }
+  }
+}
+
+output {
+  if [service][name] == "keycloak" {
+    elasticsearch {
+      hosts =&gt; ["elasticsearch:9200"]
+      index =&gt; "keycloak-events-%{+YYYY.MM.dd}"
+    }
+  }
+}
+</code></pre>
+
+<h3 id="84-kibana-dashboard"><strong>8.4 キバナダッシュボード</strong></h3>
+
+<p>監視する Kibana ダッシュボードを作成します。</p>
 
 <ul>
-<li><strong>ログインの成功/失敗率</strong> — 時系列の棒グラフ</li>
-<li><strong>_上位のログイン エラー</strong> — エラー タイプ別の円グラフ</li>
-<li><strong>地理的位置によるログイン</strong> — 地図の視覚化</li>
-<li><strong>IP 別ログイン失敗</strong> — ブルート フォース検出テーブル</li>
-<li><strong>ユーザー登録傾向</strong> — 日別の折れ線グラフ</li>
-<li><strong>管理操作監査</strong> — 詳細を含むデータ テーブル</li>
+<li><strong>ログイン成功率/失敗率</strong>— 時間の経過に伴う棒グラフ</li>
+<li><strong>よくあるログインエラー</strong>— エラーの種類別の円グラフ</li>
+<li><strong>地理的位置によるログイン</strong>— 地図の視覚化</li>
+<li><strong>IP によるログイン失敗</strong>— ブルートフォース検出テーブル</li>
+<li><strong>ユーザー登録動向</strong>— 日別の折れ線グラフ</li>
+<li><strong>管理操作の監査</strong>— 完全な詳細を含むデータテーブル</li>
 </ul>
 
 <h2 id="9-tich-hop-grafana-loki"><strong>9. Grafana Loki の統合</strong></h2>
 
-<p>_Grafana Loki は ELK より軽量なログ集約ソリューションであり、Kubernetes 環境に適しています。</p>
+<p>Grafana Loki は、ELK よりも軽量なログ集約ソリューションであり、Kubernetes 環境に適しています。</p>
 
-<h3 id="91-promtail-configuration"><strong>9.1 Promtail 構成</strong></h3>
+<h3 id="91-promtail-configuration"><strong>9.1 Promtail の構成</strong></h3>
 
-___プレコード_18___
+<pre><code class="language-yaml"># promtail-config.yml
+server:
+  http_listen_port: 9080
 
-<h3 id="92-grafana-dashboard-queries"><strong>9.2 Grafana ダッシュボード クエリ</strong></h3>
+positions:
+  filename: /tmp/positions.yaml
 
-___プレコード_19___
+clients:
+  - url: http://loki:3100/loki/api/v1/push
 
-<h2 id="10-siem-integration"><strong>10. SIEM 統合</strong></h2>
+scrape_configs:
+  - job_name: keycloak
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: keycloak
+        action: keep
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level
+            logger: loggerName
+            message: message
+            timestamp: timestamp
+      - labels:
+          level:
+          logger:
+      - match:
+          selector: '{app="keycloak"} |~ "type=LOGIN|type=REGISTER|type=LOGOUT"'
+          stages:
+            - regex:
+                expression: 'type=(?P&lt;event_type&gt;\w+), realmId=(?P&lt;realm&gt;[\w-]+), clientId=(?P&lt;client_id&gt;[\w-]+), userId=(?P&lt;user_id&gt;[\w-]+)'
+            - labels:
+                event_type:
+                realm:
+</code></pre>
 
-<p>Keycloak イベントをセキュリティ情報およびイベント管理 (SIEM) システムと統合します。</p>
+<h3 id="92-grafana-dashboard-queries"><strong>9.2 Grafana ダッシュボードのクエリ</strong></h3>
 
-<h3 id="101-splunk-integration"><strong>10.1 Splunk 統合</strong></h3>
+<pre><code class="language-text"># Login failures trong 1 giờ qua
+{app="keycloak"} |~ "type=LOGIN_ERROR" | json | count_over_time({app="keycloak"} |~ "LOGIN_ERROR" [1h])
 
-___プレコード_20___
+# Login events theo realm
+sum by (realm) (count_over_time({app="keycloak"} |~ "type=LOGIN" [5m]))
 
-<h3 id="102-siem-use-cases"><strong>10.2 SIEM の使用例</strong></h3><table>
+# Top IPs với login failures
+{app="keycloak"} |~ "type=LOGIN_ERROR" | regexp `ipAddress=(?P&lt;ip&gt;[\d.]+)` | count by (ip) | sort desc | limit 10
+</code></pre>
+
+<h2 id="10-siem-integration"><strong>10. SIEM統合</strong></h2>
+
+<p>Keycloakイベントをセキュリティ情報およびイベント管理(SIEM)システムと統合します。</p>
+
+<h3 id="101-splunk-integration"><strong>10.1 Splunk の統合</strong></h3>
+
+<pre><code class="language-yaml"># Cấu hình Filebeat ship đến Splunk HEC
+output.logstash:
+  enabled: false
+
+output.http:
+  enabled: true
+  hosts: ["https://splunk-hec:8088"]
+  path: "/services/collector/event"
+  headers:
+    Authorization: "Splunk &lt;HEC_TOKEN&gt;"
+  format: json
+</code></pre>
+
+<h3 id="102-siem-use-cases"><strong>10.2 SIEM の使用例</strong></h3>
+
+<table>
 <thead>
-<tr><th>_ユースケース</th><th>イベントパターン</th><th>アクション</th></tr>
+<tr><th>使用事例</th><th>イベントパターン</th><th>アクション</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>_総当たり検出_</strong></td><td>同じ IP からの複数の LOGIN_ERROR_</td><td>アラート + IP ブロック</td></tr>
-<tr><td><strong>アカウント乗っ取り</strong></td><td>通常とは異なる地域IPからのログイン</td><td>アラート + MFAが必要</td></tr>
-<tr><td><strong>権限昇格</strong></td><td>管理者ロールadminの割り当て_</td><td>アラート+レビュー_</td></tr>
-<tr><td><strong>データ漏洩</strong></td><td>多数の異常なトークン要求</td><td>アラート+セッションの取り消し</td></tr>
-<tr><td><strong>不審な登録</strong></td><td>同じ IP からの複数の登録_</td><td>アラート + CAPTCHA</td></tr>
+<tr><td><strong>ブルートフォース検出</strong></td><td>同じ IP からの複数の LOGIN_ERROR</td><td>アラート + IP ブロック</td></tr>
+<tr><td><strong>アカウント乗っ取り</strong></td><td>GeoIP からのログインは異常です</td><td>アラート + MFA が必要</td></tr>
+<tr><td><strong>権限昇格</strong></td><td>管理者が管理者ロールを割り当てます</td><td>アラート + レビュー</td></tr>
+<tr><td><strong>データの引き出し</strong></td><td>異常なトークンリクエストが多い</td><td>アラート + セッションの取り消し</td></tr>
+<tr><td><strong>不審な登録</strong></td><td>同じIPからの複数のREGISTER</td><td>アラート + キャプチャ</td></tr>
 </tbody>
 </table>
 
-<h2 id="11-audit-compliance"><strong>11.監査コンプライアンス</strong></h2>
+<h2 id="11-audit-compliance"><strong>11. 監査のコンプライアンス</strong></h2>
 
 <h3 id="111-soc2-requirements"><strong>11.1 SOC2 要件</strong></h3>
 
 <table>
 <thead>
-<tr><th>_SOC2 コントロール</th><th>Keycloak の実装</th></tr>
+<tr><th>SOC2制御</th><th>キークロークの実装</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>CC6.1</strong> — 論理アクセスセキュリティ</td><td>LOGIN、LOGIN_ERROR、PASSWORD変更のイベントログ</td></tr>
-<tr><td><strong>CC6.2</strong> — ユーザー認証_</td><td>MFA イベント、登録イベント_</td></tr>
-<tr><td><strong>CC6.3</strong> — アクセス承認_</td><td>ロール/権限変更の管理イベント_</td></tr>
-<tr><td><strong>CC7.2</strong> — セキュリティ監視</td><td>ログイン失敗時のリアルタイム警告</td></tr>
-<tr><td><strong>CC8.1</strong> — 変更管理</td><td>表現を伴う管理イベント</td></tr>
+<tr><td><strong>CC6.1</strong>— 論理アクセスのセキュリティ</td><td>LOGIN、LOGIN_ERROR、PASSWORD 変更のイベントログ</td></tr>
+<tr><td><strong>CC6.2</strong>— ユーザー認証</td><td>MFA イベント、登録イベント</td></tr>
+<tr><td><strong>CC6.3</strong>— アクセス許可</td><td>ロール/権限変更の管理者イベント</td></tr>
+<tr><td><strong>CC7.2</strong>— セキュリティ監視</td><td>ログイン失敗時のリアルタイムアラート</td></tr>
+<tr><td><strong>CC8.1</strong>— 変更管理</td><td>表現を含む管理イベント</td></tr>
 </tbody>
 </table>
 
-<h3 id="112-hipaa-requirements"><strong>_11.2 HIPAA 要件</strong></h3><table>
+<h3 id="112-hipaa-requirements"><strong>11.2 HIPAA 要件</strong></h3>
+
+<table>
 <thead>
-<tr><th>HIPAA コントロール</th><th>Keycloak の実装</th></tr>
+<tr><th>HIPAA コントロール</th><th>キークロークの実装</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>§164.312(b)</strong> — 監査制御_</td><td>すべてのイベント タイプ、表現のある管理イベントを有効にする_</td></tr>
-<tr><td><strong>§164.312(d)</strong> — 個人認証_</td><td>認証試行のイベントログ_</td></tr>
-<tr><td><strong>§164.308(a)(5)</strong> — セキュリティ意識_</td><td>不審なアクティビティの電子メール通知_</td></tr>
+<tr><td><strong>§164.312(b)</strong>— 監査制御</td><td>すべてのイベント タイプ、表現を含む管理イベントを有効にする</td></tr>
+<tr><td><strong>§164.312(d)</strong>— 本人認証</td><td>認証試行のイベントログ</td></tr>
+<tr><td><strong>§164.308(a)(5)</strong>— セキュリティ意識</td><td>不審なアクティビティの電子メール通知</td></tr>
 </tbody>
 </table>
 
-<h3 id="113-retention-policy"><strong>_11.3 保持ポリシー</strong></h3>
+<h3 id="113-retention-policy"><strong>11.3 保持ポリシー</strong></h3>
 
-___プレコード_21___
+<pre><code class="language-bash"># Cấu hình event retention
+# SOC2: minimum 1 năm
+# HIPAA: minimum 6 năm
 
-<h2 id="12-alert-automation"><strong>12.アラートの自動化</strong></h2>
+# Trong Keycloak (built-in store)
+# Realm Settings → Events → Expiration: 365 days
 
-<h3 id="121-prometheus-alerting"><strong>_12.1 Prometheus アラート</strong></h3>
+# Trong Elasticsearch (centralized logging)
+# ILM Policy:
+# - Hot: 30 days (SSD)
+# - Warm: 335 days (HDD)
+# - Cold/Frozen: 5+ years (S3/GCS)
+# - Delete: 7 years
+</code></pre>
 
-<p>Keycloak は <code>/metrics</code> エンドポイント経由でメトリクスを公開します (メトリクスを有効にする必要があります):</p>
+<h2 id="12-alert-automation"><strong>12. アラートの自動化</strong></h2>
 
-___プレコード_22___
+<h3 id="121-prometheus-alerting"><strong>12.1 プロメテウスのアラート</strong></h3>
 
-___プレコード_23___
+<p>Keycloakはメトリクスを次のように公開します。<code>/メトリクス</code>エンドポイント (メトリクスを有効にする必要があります):</p>
+
+<pre><code class="language-bash"># Bật metrics
+bin/kc.sh start --metrics-enabled=true
+</code></pre>
+
+<pre><code class="language-yaml"># prometheus-alerts.yml
+groups:
+  - name: keycloak-security
+    rules:
+      - alert: HighLoginFailureRate
+        expr: |
+          sum(rate(keycloak_login_error_total[5m])) by (realm)
+          /
+          sum(rate(keycloak_login_total[5m])) by (realm)
+          > 0.3
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High login failure rate in realm {{ $labels.realm }}"
+          description: "Login failure rate is {{ $value | humanizePercentage }} (threshold: 30%)"
+
+      - alert: BruteForceDetected
+        expr: |
+          sum(increase(keycloak_login_error_total[5m])) by (realm) > 50
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Possible brute-force attack on realm {{ $labels.realm }}"
+          description: "{{ $value }} login failures in 5 minutes"
+
+      - alert: UnusualRegistrationSpike
+        expr: |
+          sum(increase(keycloak_registrations_total[10m])) by (realm) > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Unusual registration spike in realm {{ $labels.realm }}"
+</code></pre>
 
 <h3 id="122-alertmanager-routing"><strong>12.2 アラートマネージャーのルーティング</strong></h3>
 
-___プレコード_24___
+<pre><code class="language-yaml"># alertmanager.yml
+route:
+  receiver: default
+  routes:
+    - match:
+        severity: critical
+      receiver: pagerduty-security
+      continue: true
+    - match:
+        severity: critical
+      receiver: slack-security
+    - match:
+        severity: warning
+      receiver: slack-ops
 
-<h2 id="13-best-practices"><strong>13.ベスト プラクティス</strong></h2>
+receivers:
+  - name: default
+    email_configs:
+      - to: ops-team@example.com
+
+  - name: slack-security
+    slack_configs:
+      - api_url: https://hooks.slack.com/services/xxx
+        channel: '#security-alerts'
+        title: '{{ .GroupLabels.alertname }}'
+        text: '{{ .CommonAnnotations.description }}'
+
+  - name: pagerduty-security
+    pagerduty_configs:
+      - service_key: &lt;pagerduty-integration-key&gt;
+        severity: critical
+</code></pre>
+
+<h2 id="13-best-practices"><strong>13. ベストプラクティス</strong></h2>
 
 <ul>
-<li><strong>ログイン イベントと管理イベントの両方をオンにします</strong> — システム内のアクティビティを見逃さないでください。</li>
-<li><strong>イベントを外部システムに送信</strong> — 組み込みのイベント ストアだけに依存しないでください。長期保存には ELK/Loki/SIEM を使用してください。</li>
-<li><strong>管理イベント表現を有効にする</strong> — 完全な監査のために管理操作のリクエスト/応答本文を保存します。</li>
-<li><strong>_適切な保持期間を設定</strong> — コンプライアンス要件に準拠します (SOC2: 1 年、HIPAA: 6 年)。</li>
-<li><strong>ログイン失敗率を監視</strong> — ブルートフォース検出とアカウント乗っ取りのアラートを設定します。</li>
-<li><strong>イベントを関連付ける</strong> — Keycloakイベントとアプリケーションログを組み合わせて全体像を把握します。</li>
-<li><strong>イベント ログの保護</strong> - ログ データには PII が含まれており、保存中および転送中に暗号化が必要であり、アクセスは制限されています。</li>
+<li><strong>ログイン イベントと管理者イベントの両方を有効にする</strong>— システム内のアクティビティを見逃さないでください。</li>
+<li><strong>イベントを外部システムに送信する</strong>— 組み込みのイベント ストアだけに依存しないでください。長期保存には ELK/Loki/SIEM を使用してください。</li>
+<li><strong>管理イベント表現をオンにする</strong>— 完全な監査のために、管理操作のリクエスト/レスポンス本文を保存します。</li>
+<li><strong>適切な保持期間を設定する</strong>— コンプライアンス要件に準拠します (SOC2: 1 年、HIPAA: 6 年)。</li>
+<li><strong>ログイン失敗率を監視する</strong>— ブルートフォース検出とアカウント乗っ取りに対するアラートを設定します。</li>
+<li><strong>イベントを関連付ける</strong>— Keycloakイベントとアプリケーションログを組み合わせて、全体像を把握します。</li>
+<li><strong>イベントログを保護する</strong>— ログ データには PII が含まれているため、保存中および転送中に暗号化してアクセスを制限する必要があります。</li>
 </ul>

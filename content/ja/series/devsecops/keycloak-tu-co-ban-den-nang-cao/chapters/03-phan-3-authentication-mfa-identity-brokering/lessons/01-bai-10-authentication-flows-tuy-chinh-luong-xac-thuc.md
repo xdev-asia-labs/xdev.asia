@@ -14,6 +14,7 @@ course:
   slug: keycloak-tu-co-ban-den-nang-cao
 locale: ja
 ---
+
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
   <defs>
     <linearGradient id="bg-9250" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -75,7 +76,7 @@ locale: ja
   </text>
 
   <!-- Series subtitle -->
-  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">_Keycloak の基本から高度なもの__HTMLTAG_59___
+  <text x="60" y="244" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">基本から上級までの Keycloak</text>
 
   <!-- Section -->
   <text x="60" y="268" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 3: 認証、MFA、および ID ブローカリング</text>
@@ -84,363 +85,541 @@ locale: ja
   <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
 </svg>
 
-<h2 id="1-authentication-flows-tong-quan"><strong>1.認証フロー — 概要</strong></h2>
+<h2 id="1-authentication-flows-tong-quan"><strong>1. 認証フロー — 概要</strong></h2>
 
-Keycloakの__HTMLTAG_71___認証フローは、ユーザーがログイン、登録、またはセキュリティアクションを実行するときに通過する必要がある__HTMLTAG_72___一連の認証ステップ__HTMLTAG_73___です。各フローは、順序付けされた <strong>実行</strong> (認証者) で構成され、<strong>サブフロー</strong>.</p> を介してネストできます。
+<p>Keycloakでの認証フローは次のとおりです。<strong>一連の認証ステップ</strong>これは、ユーザーがログイン、登録、またはその他のセキュリティ アクションを実行するときに実行する必要があります。各フローには次のものが含まれます<strong>処刑</strong>(認証者) は順序付けされており、入れ子にすることができます<strong>サブフロー</strong>.</p>
 
-<p>フローを表示および管理するには、__HTMLTAG_80___管理コンソール → 認証 → フロー</strong>.</p> に移動します。
+<p>フローを表示および管理するには、次のサイトにアクセスしてください。<strong>管理コンソール → 認証 → フロー</strong>.</p>
 
-<h3 id="11-built-in-flows"><strong>1.1 組み込み認証フロー</strong></h3>
+<h3 id="11-built-in-flows"><strong>1.1 組み込みの認証フロー</strong></h3>
 
-<p>_Keycloak はデフォルトのフローを提供します:</p><table>
-<thead>
-<tr><th>フロー</th><th>説明_</th><th>トリガーされるタイミング_</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>ブラウザ フロー</strong></td><td>ブラウザ ログイン フロー_</td><td>初めてアプリケーションにアクセスするユーザー、またはセッションの有効期限が切れたユーザー</td></tr>
-<tr><td><strong>直接付与フロー</strong></td><td>ユーザー名/パスワードによる直接認証(リソース所有者のパスワード)</td><td>grant_type=passwordによるAPI呼び出し</td></tr>
-<tr><td><strong>登録フロー</strong></td><td>新規アカウント登録フロー</td><td>ユーザーがログインページで「登録」をクリック</td></tr>
-<tr><td><strong>資格情報のリセット フロー</strong></td><td>パスワードのリセット フロー</td><td>ユーザーが「パスワードを忘れた場合」をクリック</td></tr>
-<tr><td><strong>最初のブローカーログインフロー</strong></td><td>アイデンティティプロバイダー経由の最初のログインを処理するフロー_</td><td>ソーシャルログイン経由の最初のログイントップ</td></tr>
-<tr><td><strong>Docker 認証フロー</strong></td><td>Docker レジストリの認証_</td><td>Docker クライアントのイメージのプル/プッシュ</td></tr>
-<tr><td><strong>HTTP チャレンジ フロー</strong></td><td>HTTP ヘッダーによる認証_</td><td>非ブラウザ クライアント (Kerberos、X.509)</td></tr>
-</tbody>
-</table>
-
-<h3 id="12-flow-types"><strong>1.2 フロー タイプ</strong></h3>
-
-<p>各フローには次のタイプの要素を含めることができます:</p>
+<p>Keycloak はデフォルトのフローを提供します。</p>
 
 <table>
 <thead>
-<tr><th>種類</th><th>説明</th></tr>
+<tr><th>流れ</th><th>説明する</th><th>それはいつトリガーされますか?</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>_Authenticator</strong></td><td>特定の認証手順 (ユーザー名、パスワード フォームなど)_</td></tr>
-<tr><td><strong>サブフロー</strong></td><td>_サブフローには複数の認証子が含まれています — 複雑なロジックの作成が可能_</td></tr>
-<tr><td><strong>フォーム</strong></td><td>ユーザーが情報（ユーザー名、パスワード、OTPなど）を入力するためのフォームを表示_</td></tr>
+<tr><td><strong>ブラウザの流れ</strong></td><td>ブラウザからのログインの流れ</td><td>ユーザーが初めてアプリケーションにアクセスするか、セッションが期限切れになる</td></tr>
+<tr><td><strong>直接助成金の流れ</strong></td><td>ユーザー名/パスワード (リソース所有者パスワード) を使用した直接認証</td><td>Grant_type=password を使用した API 呼び出し</td></tr>
+<tr><td><strong>登録の流れ</strong></td><td>新規アカウント登録の流れ</td><td>ユーザーがログインページで「登録」をクリックします</td></tr>
+<tr><td><strong>認証情報のリセットフロー</strong></td><td>パスワードリセットの流れ</td><td>ユーザーが「パスワードを忘れた場合」をクリックします</td></tr>
+<tr><td><strong>最初のブローカーのログインフロー</strong></td><td>フローは、アイデンティティ プロバイダーを介した最初のログインを処理します。</td><td>ユーザーが初めてソーシャル ログイン経由でログインする</td></tr>
+<tr><td><strong>Docker認証フロー</strong></td><td>Dockerレジストリの認証</td><td>Docker クライアントのイメージのプル/プッシュ</td></tr>
+<tr><td><strong>HTTPチャレンジの流れ</strong></td><td>HTTPヘッダーによる認証</td><td>非ブラウザクライアント (Kerberos、X.509)</td></tr>
 </tbody>
 </table>
 
-<h2 id="2-browser-flow-chi-tiet"><strong>2.ブラウザ フロー — 詳細</strong></h2>
+<h3 id="12-flow-types"><strong>1.2 フローの種類</strong></h3>
 
-<p>デフォルトのブラウザ フローは次の構造になっています:</p>
+<p>各フローには、次のタイプの要素を含めることができます。</p>
 
-___プレコード_0___
+<table>
+<thead>
+<tr><th>タイプ</th><th>説明する</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>認証者</strong></td><td>特定の認証ステップ (例: ユーザー名、パスワード フォーム)</td></tr>
+<tr><td><strong>サブフロー</strong></td><td>子フローには複数の認証子が含まれており、複雑なロジックが可能です</td></tr>
+<tr><td><strong>形状</strong></td><td>ユーザーが情報 (ユーザー名、パスワード、OTP など) を入力するためのフォームを表示します。</td></tr>
+</tbody>
+</table>
 
-<p><strong>_仕組み:</strong></p><ol>
-<li><strong>_Cookie</strong>: ユーザーがすでに有効なセッション Cookie を持っている場合 → すべてスキップし、正常にログインします</li>
-<li><strong>Kerberos</strong>: デフォルトでは無効になっています。有効になっている場合は、Kerberos チケット</li> を試してください。
-<li><strong>アイデンティティ プロバイダ リダイレクタ</strong>: 存在する場合__HTMLTAG_237___kc_idp_hint</code> → その IdP__HTMLTAG_239___ にリダイレクトします
-<li><strong>フォーム</strong>: ログイン フォームを表示します
-    <ul>
-    <li>ユーザー名とパスワードが必要</li>
-    <li>ユーザーが OTP を設定している場合 → OTP コードの入力を要求</li>
+<h2 id="2-browser-flow-chi-tiet"><strong>2. ブラウザ フロー — 詳細</strong></h2>
+
+<p>デフォルトのブラウザ フローは次の構造になっています。</p>
+
+<pre><code>Browser Flow
+├── Cookie (Alternative)              → Kiểm tra SSO session cookie
+├── Kerberos (Disabled)               → Xác thực Kerberos (tắt mặc định)
+├── Identity Provider Redirector (Alternative) → Redirect đến IdP nếu có
+└── Forms (Alternative)               → Sub-flow xử lý form login
+    ├── Username Password Form (Required) → Nhập username + password
+    └── Browser - Conditional OTP (Conditional) → Sub-flow OTP
+        ├── Condition - User Configured (Required) → Kiểm tra user đã setup OTP
+        └── OTP Form (Required)           → Nhập mã OTP</code></pre>
+
+<p><strong>仕組み:</strong></p>
+
+<ol>
+<li><strong>クッキー</strong>: ユーザーがすでに有効なセッション Cookie を持っている場合 → すべてスキップし、ログインに成功します</li>
+<li><strong>ケルベロス</strong>: デフォルトでは無効です — 有効にすると、Kerberos チケットが試行されます</li>
+<li><strong>アイデンティティプロバイダリダイレクタ</strong>: あれば<code>kc_idp_hint</code>→ その IdP にリダイレクトします</li>
+<li><strong>フォーム</strong>：ログインフォームを表示<ul>
+    <li>ユーザー名とパスワードが必要です</li>
+    <li>ユーザーが OTP を設定している場合 → OTP コードの入力が必要</li>
     </ul>
 </li>
 </ol>
 
-<h3 id="21-execution-requirements"><strong>_2.1 実行要件</strong></h3>
+<h3 id="21-execution-requirements"><strong>2.1 実行要件</strong></h3>
 
-<p>フロー内の各実行には、</p> の動作を定義する <strong>requirement__HTMLTAG_257___ があります。
+<p>フロー内の各実行には 1 つの<strong>要件。要件</strong>動作を定義します。</p>
 
 <table>
 <thead>
-<tr><th>要件</th><th>説明</th><th>いつ使用するか_</th></tr>
+<tr><th>要件</th><th>説明する</th><th>いつ使用するか</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>必須</strong></td><td>必須かつ成功__HTMLTAG_277___<td>_ユーザー名/パスワード、設定時のOTP画像</td></tr>
-<tr><td><strong>代替</strong></td><td>成功した代替案の 1 つで十分</td><td>Cookie OR フォーム — 1 回のパス</td></tr>
-<tr><td><strong>条件付き</strong></td><td>サブフローは条件がtrueの場合にのみ実行</td><td>条件付きOTP — ユーザーがセットアップしている場合にのみOTPを要求</td></tr>
-<tr><td><strong>_無効</strong></td><td>_完全にスキップ_</td><td>削除せずにステップを無効にする</td></tr>
+<tr><td><strong>必須</strong></td><td>実行して成功することが不可欠です</td><td>ユーザー名/パスワード、OTP の設定後</td></tr>
+<tr><td><strong>代替</strong></td><td>成功した代替案の 1 つで十分です</td><td>Cookie またはフォーム — たった 1 パス</td></tr>
+<tr><td><strong>条件付き</strong></td><td>サブフローは条件が true の場合にのみ実行されます</td><td>条件付き OTP — ユーザーが設定した場合にのみ OTP が必要です</td></tr>
+<tr><td><strong>無効</strong></td><td>完全に無視してください</td><td>ステップを削除せずに一時的に無効にする</td></tr>
 </tbody>
 </table>
 
 <p><strong>重要なルール:</strong></p>
 <ul>
-<li>フロー内のすべての実行が <strong>代替</strong> の場合 → <strong>1 パスのみ_</strong></li>
-<li>__HTMLTAG_325___Required</strong> が少なくとも 1 つある場合、すべての Required が合格する必要があり、Alternative は無視されます</li>
-<li><strong>Conditional</strong> はサブフローでよく使用されます。最初のステップは条件チェッカーであり、次のステップは認証子__HTMLTAG_331___
+<li>フロー内のすべての実行が<strong>代替</strong>→ただ<strong>パスワード1個</strong></li>
+<li>少なくとも 1 つあれば<strong>必須</strong>→ Required はすべて合格する必要があり、Alternative は無視されます</li>
+<li><strong>条件付き</strong>サブフローでよく使用されます。最初のステップは条件チェッカーであり、次のステップは認証子です。</li>
 </ul>
 
-<h2 id="3-tao-custom-authentication-flow"><strong>3.カスタム認証フローの作成</strong></h2>
+<h2 id="3-tao-custom-authentication-flow"><strong>3. カスタム認証フローの作成</strong></h2>
 
-<p>組み込みフローは直接編集できません。 <strong>複製</strong>してからカスタマイズする必要があります。</p>
+<p>組み込みフローは直接編集できません。必要です<strong>重複。重複</strong>それからカスタマイズします。</p>
 
-<h3 id="31-duplicate-va-chinh-sua"><strong>_3.1 複製と編集</strong></h3><ol>
-<li>__HTMLTAG_347___認証 → フロー___HTMLTAG_348__HTMLTAG_349___ に移動します
-<li>コピーするフローを選択します (例: <code>ブラウザ</code></li>)
-<li>_「アクション」→「複製」をクリック__HTMLTAG_356__HTMLTAG_357___
-<li>新しい名前: <code>カスタム ブラウザ フロー</code></li>
-<li>新しいフローは、元のフローとすべて同じ実行で表示されます</li>
+<h3 id="31-duplicate-va-chinh-sua"><strong>3.1 複製と編集</strong></h3>
+
+<ol>
+<li>入力<strong>認証 → フロー</strong></li>
+<li>コピーするフローを選択します。たとえば、<code>ブラウザ</code></li>
+<li>クリック<strong>アクション → 複製</strong></li>
+<li>新しい名前:<code>私のカスタムブラウザフロー</code></li>
+<li>新しいフローは、元のフローとすべて同じ実行で表示されます。</li>
 </ol>
 
 <h3 id="32-them-execution"><strong>3.2 実行の追加</strong></h3>
 
-<p>複製後、実行を追加/削除/並べ替えることができます:</p>
+<p>複製したら、実行を追加/削除/並べ替えることができます。</p>
 
 <ol>
-<li>カスタム フローで、__HTMLTAG_373___「ステップの追加」</strong></li> をクリックします。
-<li>_リストから認証システムを選択します:
-    <ul>
-    <li><code>ユーザー名パスワード フォーム</code> — ユーザー名 + パスワード入力フォーム</li>
-    <li><code>OTP フォーム</code> — OTP 入力フォーム コード</li>
-    <li><code>_Cookie</code> — セッション Cookie を確認</li>
-    <li><code>アイデンティティ プロバイダ リダイレクタ</code> — 外部 IdP</li> へのリダイレクト
-    <li><code>アクセスの拒否</code> — アクセスの拒否</li>
-    <li><code>アクセスを許可</code> — アクセスを許可</li>
-    <li><code>ユーザー名フォーム</code> — ユーザー名のみを入力してください (パスワードは別途)</li>
-    <li><code>パスワード フォーム</code> — パスワードのみを入力</li>
-    <li><code>WebAuthn Authenticator</code> — セキュリティ キー</li> を使用して認証します
-    <li><code>WebAuthn パスワードレス認証</code> — パスワードレス認証</li>
+<li>カスタム フローで、<strong>「ステップを追加」</strong></li>
+<li>リストから認証システムを選択します。<ul>
+    <li><code>ユーザー名 パスワード フォーム</code>— ユーザー名+パスワード入力フォーム</li>
+    <li><code>OTPフォーム</code>— OTPコードを入力するフォーム</li>
+    <li><code>クッキー</code>— セッション Cookie を確認する</li>
+    <li><code>アイデンティティプロバイダリダイレクタ</code>— 外部 IdP へのリダイレクト</li>
+    <li><code>アクセスを拒否する</code>— アクセスを拒否する</li>
+    <li><code>アクセスを許可する</code>— アクセスを許可する</li>
+    <li><code>ユーザー名フォーム</code>— ユーザー名のみを入力します (別のパスワード)</li>
+    <li><code>パスワードフォーム</code>— パスワードのみを入力します</li>
+    <li><code>WebAuthn オーセンティケーター</code>— セキュリティキーによる認証</li>
+    <li><code>WebAuthn パスワードレス認証システム</code>— パスワードレス認証</li>
     </ul>
 </li>
 <li>適切な要件を設定します (必須、代替、条件付き、無効)</li>
 </ol>
 
-<h3 id="33-them-sub-flow"><strong>_3.3 サブフローの追加</strong></h3>
+<h3 id="33-them-sub-flow"><strong>3.3 サブフローの追加</strong></h3>
 
-<p>サブフローを使用すると、複数の実行をグループ化して、より複雑なロジックを作成できます:</p>
+<p>サブフローを使用すると、複数の実行をグループ化して、より複雑なロジックを作成できます。</p>
 
-___プレコード_1___
+<pre><code>My Custom Browser Flow
+├── Cookie (Alternative)
+├── Identity Provider Redirector (Alternative)
+└── My Login Forms (Alternative)              ← Sub-flow
+    ├── Username Password Form (Required)
+    └── MFA Sub-flow (Conditional)            ← Sub-flow lồng nhau
+        ├── Condition - User Configured (Required)
+        ├── OTP Form (Alternative)            ← Cho chọn OTP...
+        └── WebAuthn Authenticator (Alternative) ← ...hoặc Security Key</code></pre>
 
-<p><strong>_サブフローの追加方法:</strong></p>
+<p><strong>サブフローを追加する方法:</strong></p>
 <ol>
-<li>__HTMLTAG_435___「サブフローを追加」をクリック</strong></li>
-<li>名前を付けます。例: <code>MFA サブフロー</code></li>
-<li>要件の設定: <code>条件付き</code></li>
-<li>サブフローに実行を追加</li>
+<li>クリック<strong>「サブフローを追加」</strong></li>
+<li>たとえば、次のように名前を付けます。<code>MFA サブフロー</code></li>
+<li>要件を設定します。<code>条件付き</code></li>
+<li>サブフローに実行を追加する</li>
 </ol>
 
-<h2 id="4-conditional-authenticators"><strong>4.条件付き認証子_</strong></h2>
+<h2 id="4-conditional-authenticators"><strong>4. 条件付き認証子</strong></h2>
 
-<p>条件付き認証子を使用すると、サブフローを実行する前に__HTMLTAG_454___条件</strong>をチェックできます。条件が満たされない場合 → サブフロー全体がスキップされます。</p>
+<p>条件付き認証子が許可される<strong>条件を確認する</strong>サブフローを実行する前に。条件が満たされない場合 → サブフロー全体がスキップされます。</p>
 
-<h3 id="41-cac-condition-co-san"><strong>4.1 利用可能な条件</strong></h3><table>
+<h3 id="41-cac-condition-co-san"><strong>4.1 利用可能な条件</strong></h3>
+
+<table>
 <thead>
-<tr><th>_状態_</th><th>説明</th></tr>
+<tr><th>状態</th><th>説明する</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>条件 - ユーザー構成</strong></td><td>_ユーザーが対応する認証情報 (OTP、WebAuthn...) を構成しました</td></tr>
+<tr><td><strong>条件 - ユーザー設定</strong></td><td>ユーザーは対応する認証情報 (OTP、WebAuthn...) を構成しました。</td></tr>
 <tr><td><strong>条件 - ユーザーの役割</strong></td><td>ユーザーには特定の役割があります</td></tr>
-<tr><td><strong>条件 - ユーザー属性_</strong></td><td>_ユーザーには目的の値を持つ特定の属性がある_</td></tr>
-<tr><td><strong>条件 - クライアント スコープ</strong></td><td>特定のスコープを含むリクエスト (例: <code>acr_values</code>)</td></tr>
-<tr><td><strong>条件 - サブフローが実行されました</strong></td><td>_サブフローは以前に正常に実行されました_</td></tr>
+<tr><td><strong>条件 - ユーザー属性</strong></td><td>ユーザーは必要な値を持つ特定の属性を持っています</td></tr>
+<tr><td><strong>条件 - クライアントの範囲</strong></td><td>リクエストには特定のスコープが含まれています (例:<code>acr_values</code>)</td></tr>
+<tr><td><strong>条件 - サブフローの実行</strong></td><td>前のサブフローは正常に実行されました</td></tr>
 </tbody>
 </table>
 
-<h3 id="42-vi-du-conditional-otp-theo-role"><strong>4.2 例: 役割に応じた条件付き OTP</strong></h3>
+<h3 id="42-vi-du-conditional-otp-theo-role"><strong>4.2 例: ロール別の条件付き OTP</strong></h3>
 
-<p>ロール <code>admin</code>:</p> を持つユーザーに対してのみ OTP をリクエストします
+<p>ロールを持つユーザーのみの OTP リクエスト<code>管理者。管理者</code>:</p>
 
-___プレコード_2___
+<pre><code>My Custom Browser Flow
+├── Cookie (Alternative)
+└── Forms (Alternative)
+    ├── Username Password Form (Required)
+    └── Admin OTP Sub-flow (Conditional)
+        ├── Condition - User Role (Required)    → Config: role = "admin"
+        └── OTP Form (Required)</code></pre>
 
-<p><strong>構成条件 - ユーザー役割:</strong></p>
+<p><strong>条件の構成 - ユーザーの役割:</strong></p>
 <ol>
-<li>__HTMLTAG_529___条件 - ユーザー役割</code>をサブフロー</li>に追加します
-<li>条件の横にある⚙️ (設定) アイコンをクリック</li>
-<li>入力:
-    <ul>
-    <li><strong>エイリアス</strong>: <code>管理者の役割を確認</code></li>
-    <li><strong>ユーザー ロール</strong>: <code>admin</code> (またはクライアント ロールの場合は <code>realm-management.manage-users</code>)</li>
-    <li><strong>出力を否定</strong>: <code>オフ</code> (ロールを持たないユーザーに適用する場合はオン)</li>
+<li>もっと<code>条件 - ユーザーの役割</code>サブフローへ</li>
+<li>条件の横にある ⚙️ (設定) アイコンをクリックします。</li>
+<li>入力：<ul>
+    <li><strong>エイリアス</strong>: <code>管理者の役割を確認する</code></li>
+    <li><strong>ユーザーの役割</strong>: <code>管理者。管理者</code>（または<code>レルム管理.管理ユーザー</code>クライアントの役割の場合)</li>
+    <li><strong>出力を否定します</strong>: <code>オフ</code>(ロールを持たないユーザーに適用する場合はオン)</li>
     </ul>
 </li>
 </ol>
 
 <h3 id="43-condition-client-scope"><strong>4.3 条件 - クライアントの範囲</strong></h3>
 
-<p>クライアントが特別なスコープを要求する場合はMFAが必要です:</p>
+<p>クライアントが特別なスコープを要求する場合は MFA を要求します。</p>
 
-___プレコード_3___
+<pre><code># Authorization request yêu cầu MFA
+GET /realms/myrealm/protocol/openid-connect/auth?
+  client_id=my-app&
+  scope=openid profile mfa-required&
+  response_type=code&
+  redirect_uri=https://myapp.example.com/callback</code></pre>
 
-___プレコード_4___
+<pre><code>My Custom Browser Flow
+├── Cookie (Alternative)
+└── Forms (Alternative)
+    ├── Username Password Form (Required)
+    └── MFA When Requested (Conditional)
+        ├── Condition - Client Scope (Required)  → Config: scope = "mfa-required"
+        └── OTP Form (Required)</code></pre>
 
-<h2 id="5-step-up-authentication-va-loa"><strong>5.ステップアップ認証と認証レベル (LoA)</strong></h2>
+<h2 id="5-step-up-authentication-va-loa"><strong>5. ステップアップ認証と認証レベル (LoA)</strong></h2>
 
-<p>ステップアップ認証を使用すると、ユーザーに完全な再認証を強制することなく、機密性の高いアクションに対して__HTMLTAG_570___より高いレベルの認証__HTMLTAG_571___を要求できます。
+<p>ステップアップ認証によりリクエストが許可されます<strong>より高いレベルの認証</strong>ユーザーに完全な再認証を強制することなく、機密性の高いアクションを実行できます。</p>
 
-<h3 id="51-acr-va-loa-mapping"><strong>5.1 ACR とスピーカー マッピング</strong></h3>
+<h3 id="51-acr-va-loa-mapping"><strong>5.1 ACR とスピーカーのマッピング</strong></h3>
 
-<p><strong>ACR (認証コンテキスト クラス参照)</strong> は、__HTMLTAG_580___認証レベル__HTMLTAG_581___ が実行されたことを示す ID トークン内のクレームです。 KeycloakはACR値を__HTMLTAG_582___認証レベル(LoA)</strong> — 整数</p>にマップします。<p><strong>ACR からスピーカーへのマッピング構成:</strong></p>
+<p><strong>ACR (認証コンテキスト クラス リファレンス)</strong>ID トークン内のクレームは次のとおりです<strong>信憑性のレベル</strong>が行われました。 KeycloakはACR値をマップします<strong>認証レベル (LoA)</strong>— 整数。</p>
+
+<p><strong>ACR から LoA へのマッピングを構成します。</strong></p>
 <ol>
-<li>__HTMLTAG_591___認証 → フロー___HTMLTAG_592__HTMLTAG_593___ に移動します
+<li>入力<strong>認証 → フロー</strong></li>
 <li>使用中のフローを開きます (例: ブラウザ フロー)</li>
-<li>各サブフローには <strong>LoA レベル</strong></li> を割り当てることができます
+<li>各サブフローには 1 つを割り当てることができます<strong>LoAレベル</strong></li>
 </ol>
 
-___プレコード_5___
+<pre><code>My Step-up Browser Flow
+├── Cookie (Alternative)                          → LoA: không set
+└── Login Forms (Alternative)
+    ├── Username Password Form (Required)         → LoA Level 1
+    └── Step-up MFA (Conditional)
+        ├── Condition - Level of Authentication (Required)
+        └── OTP Sub-flow (Conditional)            → LoA Level 2
+            ├── Condition - User Configured (Required)
+            └── OTP Form (Required)</code></pre>
 
-<p><strong>_デフォルトの LoA マッピング (認証 → フロー → 歯車アイコン):</strong></p>
+<p><strong>デフォルトの LoA マッピング (認証 → フロー → 歯車アイコン):</strong></p>
 
-___プレコード_6___
+<pre><code># Trong Realm Settings → General → ACR to LoA Mapping:
+# Hoặc cấu hình trong flow
+{
+  "acr_to_loa_mapping": {
+    "urn:keycloak:loa:1": 1,    // Password only
+    "urn:keycloak:loa:2": 2,    // Password + OTP
+    "urn:keycloak:loa:3": 3,    // Password + Security Key
+    "gold": 2,                   // Custom ACR value
+    "platinum": 3                // Custom ACR value
+  }
+}</code></pre>
 
-<h3 id="52-request-step-up"><strong>5.2 ステップアップ認証のリクエスト</strong></h3>
+<h3 id="52-request-step-up"><strong>5.2 ステップアップ認証の要求</strong></h3>
 
-<p>クライアントは、__HTMLTAG_610___acr_values</code> または__HTMLTAG_612___claims</code> パラメータ:</p> を介して特定の LoA をリクエストします。
+<p>クライアントは、次の方法で特定の LoA を要求します。<code>acr_values</code>または<code>主張</code>パラメータ:</p>
 
-___プレコード_7___
+<pre><code># Sử dụng acr_values (voluntary — không bắt buộc)
+GET /realms/myrealm/protocol/openid-connect/auth?
+  client_id=my-app&
+  scope=openid&
+  acr_values=gold&
+  response_type=code&
+  redirect_uri=https://myapp.example.com/callback
 
-<p><strong>結果はトークン ID:</strong></p>
+# Sử dụng claims parameter (essential — bắt buộc LoA)
+GET /realms/myrealm/protocol/openid-connect/auth?
+  client_id=my-app&
+  scope=openid&
+  claims={"id_token":{"acr":{"essential":true,"values":["gold"]}}}&
+  response_type=code&
+  redirect_uri=https://myapp.example.com/callback</code></pre>
 
-___プレコード_8___
+<p><strong>ID トークンの結果:</strong></p>
 
-<h3 id="53-loa-trong-token"><strong>_5.3 アプリケーションでスピーカーを確認する</strong></h3>
+<pre><code>{
+  "acr": "gold",
+  "sub": "user-123",
+  "iss": "https://keycloak.example.com/realms/myrealm",
+  ...
+}</code></pre>
 
-___プレコード_9___
+<h3 id="53-loa-trong-token"><strong>5.3 アプリケーションで LoA を確認する</strong></h3>
 
-<h2 id="6-direct-grant-flow"><strong>6.直接助成金の流れ</strong></h2>
+<pre><code class="language-java">// Spring Security — kiểm tra ACR level
+@GetMapping("/sensitive-action")
+public ResponseEntity&lt;?&gt; sensitiveAction(
+        @AuthenticationPrincipal OidcUser user) {
+    
+    String acr = user.getIdToken().getClaimAsString("acr");
+    
+    if (!"gold".equals(acr)) {
+        // Redirect user để step-up authentication
+        String stepUpUrl = keycloakBaseUrl + 
+            "/realms/myrealm/protocol/openid-connect/auth" +
+            "?client_id=my-app" +
+            "&scope=openid" +
+            "&acr_values=gold" + 
+            "&prompt=login" +
+            "&response_type=code" +
+            "&redirect_uri=" + redirectUri;
+        
+        return ResponseEntity.status(302)
+            .header("Location", stepUpUrl)
+            .build();
+    }
+    
+    return ResponseEntity.ok("Sensitive data here");
+}</code></pre>
 
-<p>直接付与フローの処理 <code>grant_type=password</code> — ブラウザを経由しない直接認証:</p>
+<h2 id="6-direct-grant-flow"><strong>6. 直接的な助成金の流れ</strong></h2>
 
-___プレコード_10___
+<p>ダイレクトグラントフロー処理<code>許可タイプ=パスワード</code>— ブラウザを経由しない直接認証:</p>
 
-___プレコード_11___
+<pre><code>Direct Grant Flow (mặc định)
+├── Username Validation (Required)    → Kiểm tra username tồn tại
+├── Password (Required)               → Verify password
+└── Direct Grant - Conditional OTP (Conditional)
+    ├── Condition - User Configured (Required)
+    └── OTP (Required)</code></pre>
+
+<pre><code class="language-bash"># Ví dụ: Direct Grant request
+curl -X POST \
+  https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=password' \
+  -d 'client_id=my-backend' \
+  -d 'client_secret=my-secret' \
+  -d 'username=user@example.com' \
+  -d 'password=user-password' \
+  -d 'totp=123456'    # Nếu user đã setup OTP</code></pre>
 
 <blockquote>
-<p>⚠️ <strong>注</strong>: 実稼働環境では、直接付与 (リソース所有者のパスワード認証情報) は推奨されません。代わりに認証コード フロー + PKCE を使用する必要があります。</p>
+<p>⚠️ <strong>注記</strong>: 直接付与 (リソース所有者のパスワード認証情報) は実稼働環境では推奨されません。代わりに認証コード フロー + PKCE を使用する必要があります。</p>
 </blockquote>
 
-<h2 id="7-registration-flow"><strong>7。登録フロー_</strong></h2>
+<h2 id="7-registration-flow"><strong>7. 登録の流れ</strong></h2>
 
-<p>登録フローは、新しいアカウント登録プロセスを制御します:</p>
+<p>登録フローは、新しいアカウントの登録プロセスを制御します。</p>
 
-___プレコード_12___
+<pre><code>Registration Flow (mặc định)
+└── Registration Form (Required)
+    ├── Registration User Profile (Required)  → Nhập thông tin profile
+    ├── Password Validation (Required)        → Nhập + confirm password
+    └── Recaptcha (Disabled)                  → reCAPTCHA (tắt mặc định)</code></pre>
 
-<h3 id="71-bat-registration"><strong>_7.1 登録を有効にする</strong></h3>
+<h3 id="71-bat-registration"><strong>7.1 登録を有効にする</strong></h3>
 
 <ol>
-<li>__HTMLTAG_649___レルム設定 → ログイン</strong></li> に移動します
-<li>オン<strong>ユーザー登録</strong>: オン</li>
-<li>オプション: <strong>電子メールをユーザー名</strong>として有効にし、ユーザーが電子メールをユーザー名</li>として使用できるようにします。
+<li>入力<strong>レルム設定 → ログイン</strong></li>
+<li>オンにする<strong>ユーザー登録</strong>：の上</li>
+<li>オプション: オン<strong>ユーザー名としての電子メール</strong>ユーザーがユーザー名として電子メールを使用できるようにする</li>
 </ol>
 
-<h3 id="72-custom-registration-flow"><strong>_7.2 カスタム登録フロー</strong></h3>
+<h3 id="72-custom-registration-flow"><strong>7.2 カスタム登録の流れ</strong></h3>
 
-___プレコード_13___
+<pre><code>My Registration Flow
+└── Registration Form (Required)
+    ├── Registration User Profile (Required)
+    ├── Password Validation (Required)
+    ├── Recaptcha (Required)                → Bật reCAPTCHA
+    └── Terms and Conditions (Required)     → Yêu cầu đồng ý điều khoản</code></pre>
 
-<p><strong>ReCAPTCHA 構成:</strong></p>
+<p><strong>reCAPTCHA を構成します。</strong></p>
 <ol>
-<li>__HTMLTAG_671___https://www.google.com/recaptcha/admin</a></li> で Google reCAPTCHA v3 にサインアップします
-<li>フロー内で、__HTMLTAG_674___Recaptcha</code></li> の横にある ⚙️ をクリックします。
-<li>入力:
-    <ul>
-    <li><strong>_サイト キーの再キャプチャ</strong>: <code>サイト キー</code></li>
-    <li><strong>再キャプチャ シークレット</strong>: <code>秘密キー</code></li>
-    <li><strong>_Recaptcha.net を使用</strong>: オン (中国で必要な場合)</li>
+<li>Google reCAPTCHA v3 にサインアップするには、<a href="https://www.google.com/recaptcha/admin">https://www.google.com/recaptcha/admin</a></li>
+<li>フロー内で、その横にある ⚙️ をクリックします<code>再キャプチャ</code></li>
+<li>入力：<ul>
+    <li><strong>再キャプチャサイトキー</strong>: <code>あなたのサイトキー</code></li>
+    <li><strong>再キャプチャシークレット</strong>: <code>あなたの秘密鍵</code></li>
+    <li><strong>Recaptcha.net を使用する</strong>: オン (中国で必要な場合)</li>
     </ul>
 </li>
 </ol>
 
-<h2 id="8-reset-credentials-flow"><strong>_8.認証情報のリセットフロー</strong></h2>
+<h2 id="8-reset-credentials-flow"><strong>8. 認証情報のリセットフロー</strong></h2>
 
-<p>フローはパスワードのリセットを処理します:</p>
+<p>フローはパスワード リセット プロセスを処理します。</p>
 
-___プレコード_14___
+<pre><code>Reset Credentials Flow (mặc định)
+├── Choose User (Required)                → User nhập username/email
+├── Send Reset Email (Required)           → Gửi email reset link
+├── Reset Password (Required)             → Form nhập mật khẩu mới
+└── Reset - Conditional OTP (Conditional) → OTP nếu đã cấu hình
+    ├── Condition - User Configured (Required)
+    └── Reset OTP (Required)</code></pre>
 
-<h2 id="9-session-limits"><strong>9.セッション制限</strong></h2><p>_Keycloak を使用すると、ユーザーごとの同時セッション数を制限できます。</p>
+<h2 id="9-session-limits"><strong>9. セッション制限</strong></h2>
 
-<h3 id="91-cau-hinh-session-limits"><strong>_9.1 認証フローでのセッション制限の構成</strong></h3>
+<p>Keycloakを使用すると、ユーザーごとの同時セッション数を制限できます。</p>
 
-<p>__HTMLTAG_715___ユーザー セッション制限</code> 認証子をフローに追加します:</p>
+<h3 id="91-cau-hinh-session-limits"><strong>9.1 認証フローでのセッション制限の構成</strong></h3>
 
-___プレコード_15___
+<p>もっと<code>ユーザーセッションの制限</code>フローへの認証子:</p>
 
-<p><strong>_ユーザー セッション制限の構成:</strong></p>
+<pre><code>My Custom Browser Flow
+├── Cookie (Alternative)
+└── Forms (Alternative)
+    ├── Username Password Form (Required)
+    ├── Browser - Conditional OTP (Conditional)
+    │   ├── Condition - User Configured (Required)
+    │   └── OTP Form (Required)
+    └── User Session Limits (Required)</code></pre>
+
+<p><strong>ユーザーセッション制限を構成します。</strong></p>
 <ol>
-<li>_<code>ユーザー セッションの制限___HTMLTAG_725__HTMLTAG_726___ の横にある ⚙️ をクリックします
-<li>構成:
-    <ul>
-    <li><strong>_最大レルム セッション</strong>: レルム内のセッションの最大合計数 (例: <code>3</code>)</li>
-    <li><strong>最大クライアント セッション</strong>: 1 クライアントの最大セッション数 (例: <code>1</code>)</li>
-    <li><strong>_制限に達したときの動作</strong>:
+<li>横にある⚙️をクリックしてください<code>ユーザーセッションの制限</code></li>
+<li>構成：<ul>
+    <li><strong>最大レルムセッション数</strong>: レルム内のセッションの最大合計数 (例:<code>3</code>)</li>
+    <li><strong>最大クライアントセッション数</strong>: 1 クライアントの最大セッション数 (例:<code>1</code>)</li>
+    <li><strong>制限に達したときの動作</strong>:
         <ul>
-        <li><code>新しいセッションを拒否</code> — 新しいログインを拒否</li>
-        <li><code>最も古いセッションを終了</code> — 最も古いセッションを終了</li>
+        <li><code>新しいセッションを拒否する</code>— 新規ログインを拒否する</li>
+        <li><code>最も古いセッションを終了する</code>— 最古のセッションロック</li>
         </ul>
     </li>
-    <li><strong>エラー メッセージ</strong>: 拒否された場合のカスタム メッセージ (例: <code>「ログイン セッションの制限に達しました」</code>)</li>
+    <li><strong>エラーメッセージ</strong>: 拒否された場合のカスタム メッセージ (例:<code>「ログインセッションの制限に達しました」</code>)</li>
     </ul>
 </li>
 </ol>
 
-<h2 id="10-bind-flow-vao-realm-va-client"><strong>10.レルムとクライアントへのバインド フロー</strong></h2>
+<h2 id="10-bind-flow-vao-realm-va-client"><strong>10. レルムとクライアントへのバインド フロー</strong></h2>
 
-<h3 id="101-bind-flow-cho-realm"><strong>_10.1 レルムのバインド フロー</strong></h3>
+<h3 id="101-bind-flow-cho-realm"><strong>10.1 レルムのバインドフロー</strong></h3>
 
-<p>カスタム フローを作成した後、それをレルムのデフォルト フローとしてバインドします:</p>
+<p>カスタム フローを作成したら、それをレルムのデフォルト フローとしてバインドします。</p>
 
 <ol>
-<li>__HTMLTAG_776___認証 → フロー___HTMLTAG_777__HTMLTAG_778___ に移動します
-<li>タブをクリック <strong>「バインディング」</strong> (または__HTMLTAG_782___必要なアクション</strong>) </li>
-<li>各バインディングのフローを選択:
-    <ul>
-    <li><strong>ブラウザ フロー</strong>: <code>カスタム ブラウザ フロー</code></li>
-    <li><strong>直接助成金の流れ_</strong>: <code>直接助成金</code></li>
-    <li><strong>登録フロー</strong>: <code>登録フロー</code></li>
-    <li><strong>_認証情報のリセット フロー</strong>: <code>認証情報のリセット</code></li>
+<li>入力<strong>認証 → フロー</strong></li>
+<li>タブをクリックします<strong>「バインディング」</strong>（または<strong>必要なアクション</strong>) </li>
+<li>各バインディングのフローを選択します。<ul>
+    <li><strong>ブラウザの流れ</strong>: <code>私のカスタムブラウザフロー</code></li>
+    <li><strong>直接助成金の流れ</strong>: <code>直接助成</code></li>
+    <li><strong>登録の流れ</strong>: <code>私の登録の流れ</code></li>
+    <li><strong>認証情報のリセットフロー</strong>: <code>認証情報のリセット</code></li>
     </ul>
 </li>
 </ol>
 
 <h3 id="102-bind-flow-cho-client"><strong>10.2 特定のクライアントのバインド フロー</strong></h3>
 
-<p>クライアントごとにレルム フローをオーバーライドできます:</p><ol>
-<li>__HTMLTAG_822___クライアントに移動 → クライアントを選択</strong></li>
-<li>タブ <strong>「詳細」___HTMLTAG_827__HTMLTAG_828___
-<li>セクション <strong>「認証フローのオーバーライド」</strong>:
-    <ul>
-    <li><strong>ブラウザ フロー</strong>: 別のフロー レルムのデフォルトを選択</li>
-    <li><strong>直接助成フロー</strong>: 別のフローを選択</li>
-    </ul>
-</li>
-</ol>
-
-<h2 id="11-dynamic-flow-selection-voi-client-policies"><strong>11.クライアント ポリシーによる動的なフロー選択</strong></h2>
-
-<p>Keycloak 25 以降では、__HTMLTAG_849___クライアント ポリシー</strong> を使用して、クライアントのプロパティに基づいて認証フローを自動的に選択できます。</p>
-
-<h3 id="111-tao-client-policy"><strong>11.1 フロー選択用のクライアント ポリシーの作成</strong></h3>
+<p>各クライアントのレルム フローをオーバーライドできます。</p>
 
 <ol>
-<li>__HTMLTAG_858___レルム設定 → クライアント ポリシー → ポリシー</strong></li> に移動します。
-<li>新しいポリシーの作成: <code>Secure Clients MFA ポリシー</code></li>
-<li>__HTMLTAG_866___条件</strong>を追加:
+<li>入力<strong>クライアント → クライアントを選択</strong></li>
+<li>タブ<strong>"高度な"</strong></li>
+<li>アイテム<strong>「認証フローのオーバーライド」</strong>:
     <ul>
-    <li>タイプ: <code>クライアントスコープ___HTMLTAG_871__HTMLTAG_872___
-    <li>スコープ: <code>["MFA 必須"]</code></li>
-    </ul>
-</li>
-<li>__HTMLTAG_880___プロファイル</strong> を追加 (クライアント プロファイルから):
-    <ul>
-    <li>_プロファイル エグゼキュータ: ブラウザ フローをオーバーライド__HTMLTAG_884___
+    <li><strong>ブラウザの流れ</strong>: レルムのデフォルト以外のフローを選択します</li>
+    <li><strong>直接助成金の流れ</strong>: 別のフローを選択します</li>
     </ul>
 </li>
 </ol>
 
-___プレコード_16___
+<h2 id="11-dynamic-flow-selection-voi-client-policies"><strong>11. クライアントポリシーによる動的なフロー選択</strong></h2>
 
-<h2 id="12-export-import-flows"><strong>12.認証フローのエクスポート/インポート</strong></h2>
+<p>Keycloak 25+ からは次のことができます<strong>クライアントポリシー</strong>クライアントのプロパティに基づいて認証フローを自動的に選択します。</p>
 
-<p>認証フローはレルムのエクスポートに含まれています:</p>
+<h3 id="111-tao-client-policy"><strong>11.1 フロー選択のためのクライアントポリシーの作成</strong></h3>
 
-___プレコード_17___
+<ol>
+<li>入力<strong>レルム設定 → クライアントポリシー → ポリシー</strong></li>
+<li>新しいポリシーを作成します。<code>安全なクライアント MFA ポリシー</code></li>
+<li>もっと<strong>状態</strong>:
+    <ul>
+    <li>タイプ：<code>クライアントスコープ</code></li>
+    <li>範囲:<code>["MFA が必要"]</code></li>
+    </ul>
+</li>
+<li>もっと<strong>プロフィール</strong>(クライアントプロフィールより):<ul>
+    <li>プロファイル エグゼキュータ: ブラウザ フローをオーバーライドします</li>
+    </ul>
+</li>
+</ol>
 
-<p><strong>_管理 REST API 経由の部分インポート:</strong></p>
+<pre><code class="language-json">// Client Policy — ví dụ export JSON
+{
+  "policies": [
+    {
+      "name": "Secure Clients MFA Policy",
+      "description": "Enforce MFA for clients with mfa-required scope",
+      "enabled": true,
+      "conditions": [
+        {
+          "condition": "client-scopes",
+          "configuration": {
+            "scopes": ["mfa-required"],
+            "type": "DEFAULT"
+          }
+        }
+      ],
+      "profiles": ["mfa-enforced-profile"]
+    }
+  ]
+}</code></pre>
 
-___プレコード_18___
+<h2 id="12-export-import-flows"><strong>12. 認証フローのエクスポート/インポート</strong></h2>
 
-<h2 id="13-tom-tat"><strong>13.概要_</strong></h2><table>
+<p>認証フローはレルムのエクスポートに含まれます。</p>
+
+<pre><code class="language-bash"># Export realm bao gồm flows
+/opt/keycloak/bin/kc.sh export \
+  --dir /opt/keycloak/data/export \
+  --realm myrealm
+
+# Trong file realm-export.json, flows nằm ở:
+# "authenticationFlows": [...]
+# "authenticationExecutions": [...]</code></pre>
+
+<p><strong>Admin REST API を介した部分的なインポート:</strong></p>
+
+<pre><code class="language-bash"># Lấy danh sách flows
+curl -s -X GET \
+  "https://keycloak.example.com/admin/realms/myrealm/authentication/flows" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" | jq '.[].alias'
+
+# Export 1 flow cụ thể
+FLOW_ID=$(curl -s -X GET \
+  "https://keycloak.example.com/admin/realms/myrealm/authentication/flows" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" | \
+  jq -r '.[] | select(.alias=="My Custom Browser Flow") | .id')
+
+curl -s -X GET \
+  "https://keycloak.example.com/admin/realms/myrealm/authentication/flows/$FLOW_ID/executions" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" | jq .</code></pre>
+
+<h2 id="13-tom-tat"><strong>13. まとめ</strong></h2>
+
+<table>
 <thead>
-<tr><th>コンセプト_</th><th>説明_</th></tr>
+<tr><th>コンセプト</th><th>説明する</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>認証フロー</strong></td><td>認証ステップシーケンス — サブフロー経由でネスト可能_</td></tr>
+<tr><td><strong>認証の流れ</strong></td><td>認証ステップのチェーン - サブフローを介してネスト可能</td></tr>
 <tr><td><strong>実行要件</strong></td><td>必須、代替、条件付き、無効</td></tr>
-<tr><td><strong>条件付き認証子</strong></td><td>サブフロー実行前に条件を確認</td></tr>
-<tr><td><strong>ステップアップ認証</strong></td><td>機密性の高いアクションには上位スピーカーが必要__HTMLTAG_942___</tr>
-<tr><td><strong>ACR からスピーカーへのマッピング</strong></td><td>ACR 値を数値レベルにマッピング_</td></tr>
-<tr><td><strong>セッション制限</strong></td><td>ユーザーごとの同時セッションの制限_</td></tr>
-<tr><td><strong>フローバインディング</strong></td><td>レルムレベルまたはクライアントごとのオーバーライドでのバインドフロー_</td></tr>
+<tr><td><strong>条件付き認証子</strong></td><td>サブフロー実行前に条件を確認する</td></tr>
+<tr><td><strong>ステップアップ認証</strong></td><td>機密性の高いアクションにはより高い LoA が必要</td></tr>
+<tr><td><strong>ACR から LoA へのマッピング</strong></td><td>ACR値を数値レベルにマッピングする</td></tr>
+<tr><td><strong>セッション制限</strong></td><td>ユーザーごとの同時セッションを制限する</td></tr>
+<tr><td><strong>フローバインディング</strong></td><td>レルムレベルまたはクライアントごとのオーバーライドでのバインドフロー</td></tr>
 </tbody>
 </table>

@@ -304,216 +304,228 @@ locale: ja
 <p></p><h2><strong>パート 1: Keycloak プラットフォーム</strong></h2>
 <h3>レッスン 1: Keycloak の紹介 - エンタープライズにおける IAM と SSO</h3>
 <ul>
-<li><p>Keycloakとは何ですか?開発履歴 (JBoss から CNCF インキュベーションまで)</p></li>
-<li><p>Identity and Access Management (IAM) が必要な理由</p></li>
+<li><p>キークロークとは何ですか?開発経緯（JBossからCNCFインキュベーションまで）</p></li>
+<li><p>Identity and Access Management (IAM) が必要な理由は何ですか?</p></li>
 <li><p>中心的な概念: レルム、クライアント、ユーザー、ロール、グループ、セッション</p></li>
 <li><p>Quarkus (26.x) の Keycloak アーキテクチャ</p></li>
 <li><p>Keycloak、Auth0、Okta、Azure AD の比較</p></li>
-<li><p>ユースケース: SSO、ソーシャル ログイン、LDAP フェデレーション、MFA、API セキュリティ</p></li>
+<li><p>使用例: SSO、ソーシャル ログイン、LDAP フェデレーション、MFA、API セキュリティ</p></li>
 </ul>
 <h3>レッスン 2: Keycloak のインストール - スタンドアロン、Docker、Kubernetes</h3>
 <ul>
-<li><p>Ubuntu/CentOS (ベアメタル) に Keycloak をインストール</p></li>
-<li><p>Docker および Docker Compose を使用して Keycloak を実行</p></li>
-<li><p>Kubernetes Operator のデプロイ</p></li>
-<li><p>データベース バックエンド構成 (PostgreSQL、MySQL、MariaDB)</p></li>
+<li><p>Ubuntu/CentOS (ベアメタル) に Keycloak をインストールする</p></li>
+<li><p>Docker および Docker Compose を使用して Keycloak を実行する</p></li>
+<li><p>Kubernetes Operator のデプロイメント</p></li>
+<li><p>データベース バックエンドの構成 (PostgreSQL、MySQL、MariaDB)</p></li>
 <li><p>HTTPS/TLS セットアップとホスト名 v2 構成</p></li>
-<li><p>開発モードと本番モード</p></li>
+<li><p>開発モードと運用モード</p></li>
 </ul>
-<h3>レッスン 3: 管理コンソールと最初のレルムの作成__HTMLTAG_63___
+<h3>レッスン 3: 管理コンソールと最初のレルムの作成</h3>
 <ul>
-<li><p>最初の管理者ユーザーの作成 (管理者のブートストラップと回復)</p></li>
+<li><p>最初の管理者ユーザーを作成します (管理者ブートストラップとリカバリ)</p></li>
 <li><p>管理コンソール UI の概要</p></li>
 <li><p>レルムの作成と構成 (全般、ログイン、電子メール、テーマ、キー)</p></li>
 <li><p>マスター レルムとカスタム レルム</p></li>
-<li><p>管理 CLI (kcadm.sh) 基本</p></li>
+<li><p>基本的な管理 CLI (kcadm.sh)。</p></li>
 <li><p>管理者 REST API の概要</p></li>
 </ul>
-<h3>レッスン 4: ユーザー、グループ、ユーザー プロファイルの管理__HTMLTAG_91___
+<h3>レッスン 4: ユーザー、グループ、およびユーザー プロファイルの管理</h3>
 <ul>
-<li><p>ユーザーの作成と管理、認証情報の設定</p></li>
-<li><p>ユーザー プロファイル: カスタム属性、バリデーター、注釈</p></li>
+<li><p>ユーザーの作成と管理、資格情報の設定</p></li>
+<li><p>ユーザープロファイル: カスタム属性、バリデータ、注釈</p></li>
 <li><p>プログレッシブプロファイリング</p></li>
 <li><p>グループとサブグループ、グループ属性、役割マッピング</p></li>
 <li><p>ユーザーの自己登録と必要なアクション</p></li>
 <li><p>なりすまし、アカウント削除、個人データ</p></li>
 </ul>
-<h3>_レッスン 5: 役割、権限、アクセス制御__HTMLTAG_119___
+<h3>レッスン 5: 役割、権限、およびアクセス制御</h3>
 <ul>
-<li><p>レルム ロールとクライアント ロール</p></li>
+<li><p>レルムの役割とクライアントの役割</p></li>
 <li><p>複合ロールとデフォルトのロール</p></li>
-<li><p>ユーザーとグループのロール マッピング</p></li>
+<li><p>ユーザーとグループの役割マッピング</p></li>
 <li><p>きめ細かい管理者権限 V2</p></li>
 <li><p>レルム管理の委任</p></li>
-<li><p>_専用レルム管理コンソール</p></li>
-</ul><h2><strong>_パート 2: SSO プロトコル - OpenID Connect と SAML</strong></h2>
+<li><p>専用レルム管理コンソール</p></li>
+</ul>
+
+<h2><strong>パート 2: SSO プロトコル - OpenID Connect と SAML</strong></h2>
 <h3>レッスン 6: OpenID Connect クライアント - A から Z までの構成</h3>
 <ul>
-<li><p>クライアント タイプ: パブリック、機密、ベアラーのみ</p></li>
+<li><p>クライアントの種類: パブリック、機密、ベアラーのみ</p></li>
 <li><p>一般設定、アクセス設定、機能構成</p></li>
-<li><p>_OIDC 認証フロー: 認可コード、暗黙的、クライアント認証情報、デバイス認証</p></li>
+<li><p>OIDC 認証フロー: 認証コード、暗黙的、クライアント認証情報、デバイス認証</p></li>
 <li><p>PKCE (コード交換用の証明キー)</p></li>
-<li><p>_CIBA (クライアント開始バックチャネル認証)</p></li>
-<li><p>OIDC クライアントと React、Spring Boot、Node.js の統合</p></li>
+<li><p>CIBA (クライアント開始バックチャネル認証)</p></li>
+<li><p>OIDC クライアントを React、Spring Boot、Node.js と統合する</p></li>
 </ul>
-<h3>_レッスン 7: SAML クライアントとプロトコル マッパー__HTMLTAG_179___
+<h3>レッスン 7: SAML クライアントとプロトコル マッパー</h3>
 <ul>
 <li><p>SAML 2.0 クライアント、SAML バインディング (POST、リダイレクト、アーティファクト) の作成</p></li>
 <li><p>SAML アサーション、XML 署名および暗号化</p></li>
-<li><p>_エンティティ記述子のインポート</p></li>
-<li><p>OIDC プロトコル マッパー: ユーザー属性、セッション メモ、ハードコード、スクリプト</p></li>
+<li><p>エンティティ記述子のインポート</p></li>
+<li><p>OIDC プロトコル マッパー: ユーザー属性、セッション ノート、ハードコード、スクリプト</p></li>
 <li><p>SAML プロトコル マッパー</p></li>
-<li><p>軽量アクセス トークンとペアごとのサブジェクト識別子</p></li>
+<li><p>Lightweight アクセス トークンとペアワイズ サブジェクト識別子</p></li>
 </ul>
-<h3>レッスン 8: クライアント スコープ、トークン管理、DPoP</h3>
+<h3>レッスン 8: クライアント スコープ、トークン管理、および DPoP</h3>
 <ul>
-<li><p>_クライアント スコープ: デフォルトとオプション、同意設定</p></li>
+<li><p>クライアント スコープ: デフォルトとオプション、同意設定</p></li>
 <li><p>レルムのデフォルトのクライアント スコープ、スコープの評価</p></li>
-<li><p>アクセス トークン、ID トークン、リフレッシュ トークンのライフサイクル</p></li>
-<li><p>_セッションとトークンのタイムアウト構成</p></li>
-<li><p>オフライン アクセス、トークン失効</p></li>
-<li><p>_DPoP (所有証明のデモンストレーション)</p></li>
+<li><p>アクセストークン、IDトークン、リフレッシュトークンのライフサイクル</p></li>
+<li><p>セッションとトークンのタイムアウト構成</p></li>
+<li><p>オフラインアクセス、トークン取り消し</p></li>
+<li><p>DPoP (所有証明の実証)</p></li>
 </ul>
-<h3>レッスン 9: クライアント ポリシーと高度なクライアント構成__HTMLTAG_235___
+<h3>レッスン 9: クライアント ポリシーと高度なクライアント構成</h3>
 <ul>
-<li><p>クライアント ポリシー アーキテクチャ: ポリシー、プロファイル、条件、実行プログラム</p></li>
+<li><p>クライアントポリシーのアーキテクチャ: ポリシー、プロファイル、条件、エグゼキュータ</p></li>
 <li><p>FAPI 2.0 セキュリティ プロファイルとメッセージ署名</p></li>
 <li><p>クライアント シークレットのローテーション</p></li>
-<li><p>サービス アカウントと対象ユーザーのサポート</p></li>
+<li><p>サービスアカウントと対象ユーザーのサポート</p></li>
 <li><p>トークン交換 (標準、JWT 認可付与 RFC 7523)</p></li>
-<li><p>MCP サーバーの認可サーバーとしての Keycloak</p></li>
-</ul><h2><strong>パート 3: 認証、MFA、および ID ブローカリング</strong></h2>
-<h3>レッスン 10: 認証フロー - 認証フローのカスタマイズ__HTMLTAG_267___
+<li><p>MCPサーバーの認可サーバーとしてのKeycloak</p></li>
+</ul>
+
+<h2><strong>パート 3: 認証、MFA、および ID ブローカリング</strong></h2>
+<h3>レッスン 10: 認証フロー - 認証フローのカスタマイズ</h3>
 <ul>
-<li><p>_組み込みフロー: ブラウザ、直接付与、登録、認証情報のリセット</p></li>
+<li><p>組み込みフロー: ブラウザ、直接付与、登録、認証情報のリセット</p></li>
 <li><p>カスタム認証フローの作成</p></li>
-<li><p>条件付き認証子 (実行されるサブフロー、クライアント スコープ)</p></li>
-<li><p>_ステップアップ認証とACR/LoAマッピング</p></li>
+<li><p>条件付きオーセンティケーター (実行されるサブフロー、クライアント スコープ)</p></li>
+<li><p>ステップアップ認証とACR/LoAマッピング</p></li>
 <li><p>セッション制限 (レルムレベル、クライアントレベル)</p></li>
-<li><p>_クライアント ポリシーによる動的認証フローの選択</p></li>
+<li><p>クライアントポリシーによる動的な認証フローの選択</p></li>
 </ul>
 <h3>レッスン 11: 多要素認証 - OTP、WebAuthn、およびパスキー</h3>
 <ul>
-<li><p>Google 認証システム、FreeOTP を使用した TOTP/HOTP セットアップ</p></li>
-<li><p>OTP ポリシー構成と回復コード</p></li>
-<li><p>_WebAuthn (FIDO2 セキュリティ キー) のセットアップ</p></li>
+<li><p>Google Authenticator、FreeOTP による TOTP/HOTP 設定</p></li>
+<li><p>OTP ポリシーの構成と回復コード</p></li>
+<li><p>WebAuthn (FIDO2 セキュリティ キー) のセットアップ</p></li>
 <li><p>パスキーの統合 (条件付き UI、モーダル UI)</p></li>
-<li><p>Kerberos 認証</p></li>
+<li><p>ケルベロス認証</p></li>
 <li><p>X.509 クライアント証明書認証</p></li>
 </ul>
 <h3>レッスン 12: ID ブローカリングとソーシャル ログイン</h3>
 <ul>
-<li><p>_ソーシャル ログイン: Google、Facebook、GitHub、Apple、Microsoft</p></li>
-<li><p>OpenID Connect と SAML ID プロバイダ</p></li>
+<li><p>ソーシャルログイン: Google、Facebook、GitHub、Apple、Microsoft</p></li>
+<li><p>OpenID Connect および SAML ID プロバイダー</p></li>
 <li><p>OAuth v2 および Kubernetes ID プロバイダー</p></li>
-<li><p>最初のログイン フローとアカウントのリンク</p></li>
-<li><p>アイデンティティ プロバイダ マッパーと同期モード</p></li>
-<li><p>クライアント推奨の IdP および IdP ログアウト</p></li>
-</ul><h2><strong>パート 4: ユーザー連合、組織、認可</strong></h2>
-<h3>_レッスン 13: ユーザー フェデレーション - LDAP と Active Directory</h3>
+<li><p>初回ログインフローとアカウントリンク</p></li>
+<li><p>ID プロバイダー マッパーと同期モード</p></li>
+<li><p>クライアント提案の IdP と IdP ログアウト</p></li>
+</ul>
+
+<h2><strong>パート 4: ユーザー フェデレーション、組織、および認可</strong></h2>
+<h3>レッスン 13: ユーザー フェデレーション - LDAP と Active Directory</h3>
 <ul>
-<li><p>LDAP/AD フェデレーション構成 (ストレージ モード、編集モード)</p></li>
-<li><p>_接続設定: SSL、接続プール、紹介</p></li>
+<li><p>LDAP/AD フェデレーションの構成 (ストレージ モード、編集モード)</p></li>
+<li><p>接続設定: SSL、接続プール、紹介</p></li>
 <li><p>LDAP マッパー: ユーザー属性、フルネーム、グループ、ロール</p></li>
 <li><p>MSAD ユーザー アカウント制御マッパー</p></li>
-<li><p>SSSD/FreeIPA の統合と Kerberos ブリッジ</p></li>
+<li><p>SSSD/FreeIPAの統合とKerberosブリッジ</p></li>
 <li><p>カスタム ユーザー ストレージ SPI</p></li>
 </ul>
 <h3>レッスン 14: 組織 - マルチテナンシーと CIAM</h3>
 <ul>
-<li><p>Keycloak で組織機能を有効にする</p></li>
+<li><p>Keycloakの組織機能をオンにする</p></li>
 <li><p>組織、ドメイン、属性の作成/管理</p></li>
-<li><p>_メンバー管理: 管理対象、非管理対象、招待状</p></li>
-<li><p>ID プロバイダーと組織の関連付け</p></li>
+<li><p>メンバー管理: 管理対象、非管理対象、招待</p></li>
+<li><p>ID プロバイダーを組織に関連付ける</p></li>
 <li><p>ID ファーストのログイン フロー</p></li>
-<li><p>_組織クレームをトークンにマッピング</p></li>
+<li><p>組織のクレームをトークンにマッピングする</p></li>
 </ul>
 <h3>レッスン 15: 認可サービス - 詳細な認可</h3>
 <ul>
-<li><p>_リソース サーバー、リソース、スコープ、権限、ポリシー</p></li>
-<li><p>ポリシー タイプ: ロール、ユーザー、グループ、クライアント、時間、JS、集約</p></li>
-<li><p>UMA 2.0 と Permission API</p></li>
-<li><p>_ポリシー執行者と請求情報ポイント</p></li>
-<li><p>_Spring Boot / Node.jsへの認可の統合</p></li>
+<li><p>リソースサーバー、リソース、スコープ、権限、ポリシー</p></li>
+<li><p>ポリシーの種類: ロール、ユーザー、グループ、クライアント、時間、JS、集約</p></li>
+<li><p>UMA 2.0 と許可 API</p></li>
+<li><p>ポリシー執行者と請求情報ポイント</p></li>
+<li><p>認可を Spring Boot / Node.js に統合する</p></li>
 <li><p>評価 API とトラブルシューティング権限</p></li>
 </ul>
-<h3>_レッスン 16: ワークフロー - IGA による管理の自動化</h3>
+<h3>レッスン 16: ワークフロー - IGA による管理の自動化</h3>
 <ul>
-<li><p>Keycloak ワークフロー エンジン (プレビュー)</p></li>
-<li><p>ワークフロー定義と式言語</p></li>
-<li><p>_条件と手順の定義</p></li>
+<li><p>Keycloakワークフローエンジン（プレビュー）</p></li>
+<li><p>ワークフロー定義と表現言語</p></li>
+<li><p>条件とステップの定義</p></li>
 <li><p>Joiner-Mover-Leaver (JML) プロセス</p></li>
-<li><p>自動オンボーディング/オフボーディング</p></li>
-<li><p>_アクセス レビューと一般的な使用例</p></li>
-</ul><h2><strong>_パート 5: テーマ、イベント、セキュリティ、Vault</strong></h2>
+<li><p>自動化されたオンボーディング/オフボーディング</p></li>
+<li><p>レビューと一般的な使用例にアクセスする</p></li>
+</ul>
+
+<h2><strong>パート 5: テーマ、イベント、セキュリティ、および Vault</strong></h2>
 <h3>レッスン 17: カスタム テーマ - ログイン、アカウント、管理者、電子メール</h3>
 <ul>
-<li><p>_テーマ システム: ログイン、アカウント、管理コンソール、メール テーマ</p></li>
-<li><p>カスタム テーマ、フリーマーカー テンプレートの作成</p></li>
-<li><p>_ダーク モードのサポート、国際化</p></li>
+<li><p>テーマ システム: ログイン、アカウント、管理コンソール、電子メールのテーマ</p></li>
+<li><p>カスタム テーマ、Freemark テンプレートを作成する</p></li>
+<li><p>ダークモードのサポート、国際化</p></li>
 <li><p>PatternFly 5 コンポーネント</p></li>
-<li><p>テーマのホットデプロイ、テーマのリソース</p></li>
-<li><p>_アカウント コンソール v3 のカスタマイズ</p></li>
+<li><p>ホットデプロイテーマ、テーマリソース</p></li>
+<li><p>アカウントコンソールv3のカスタマイズ</p></li>
 </ul>
-<h3>レッスン 18: イベントの監査とログ__HTMLTAG_499___
+<h3>レッスン 18: イベントの監査とログ記録</h3>
 <ul>
-<li><p>ユーザー イベントと管理者イベントの構成</p></li>
-<li><p>イベント タイプとイベント リスナー</p></li>
-<li><p>_カスタム イベント リスナー SPI</p></li>
-<li><p>監視用のイベント指標</p></li>
+<li><p>ユーザーイベントと管理者イベントの構成</p></li>
+<li><p>イベントタイプとイベントリスナー</p></li>
+<li><p>カスタム イベント リスナー SPI</p></li>
+<li><p>監視用のイベントメトリクス</p></li>
 <li><p>ロギング: コンソール、ファイル、JSON、ECS 形式、syslog</p></li>
-<li><p>_ELK スタック / Loki との統合</p></li>
+<li><p>ELK スタック/Loki との統合</p></li>
 </ul>
 <h3>レッスン 19: セキュリティ強化とブルート フォース保護</h3>
 <ul>
 <li><p>SSL/HTTPS および管理エンドポイント保護</p></li>
 <li><p>ブルート フォース保護 (永続的、一時的、複合ロックアウト)</p></li>
-<li><p>パスワード ポリシー</p></li>
-<li><p>_セキュリティ ヘッダー: CSP、X-Frame-Options、HSTS</p></li>
+<li><p>パスワードポリシー</p></li>
+<li><p>セキュリティヘッダー: CSP、X-Frame-Options、HSTS</p></li>
 <li><p>reCAPTCHA セットアップ (v2 および Enterprise)</p></li>
-<li><p>Vault 統合 (ファイルベース、Kubernetes Secret)</p></li>
-</ul><h2><strong>パート 6: 実用的なアプリケーションの統合</strong></h2>
-<h3>_レッスン 20: Keycloak と Spring Boot の統合</h3>
+<li><p>Vault の統合 (ファイルベース、Kubernetes Secret)</p></li>
+</ul>
+
+<h2><strong>パート 6: 実際のアプリケーションの統合</strong></h2>
+<h3>レッスン 20: Keycloak と Spring Boot の統合</h3>
 <ul>
-<li><p>_Spring Security OAuth2 リソース サーバー</p></li>
+<li><p>Spring Security OAuth2 リソースサーバー</p></li>
 <li><p>Spring Security OAuth2 クライアント</p></li>
-<li><p>_認可クライアント ライブラリ</p></li>
+<li><p>認可クライアントライブラリ</p></li>
 <li><p>@PreAuthorize によるロールベースの承認</p></li>
 <li><p>トークンリレーとサービス間通信</p></li>
-<li><p>マルチテナントとテスト戦略</p></li>
+<li><p>マルチテナンシーとテスト戦略</p></li>
 </ul>
-<h3>_レッスン 21: Keycloak と React/Angular および Node.js の統合</h3>
+<h3>レッスン 21: Keycloak と React/Angular および Node.js の統合</h3>
 <ul>
-<li><p>_Keycloak JavaScript アダプター (スタンドアロン ライブラリ)</p></li>
+<li><p>Keycloak JavaScript アダプター (スタンドアロン ライブラリ)</p></li>
 <li><p>React の統合 (keycloak-js、react-oidc-context)</p></li>
-<li><p>Angular 統合 (angular-auth-oidc-client)</p></li>
-<li><p>_Node.js バックエンド (Passport.js、express-openid-connect)</p></li>
+<li><p>Angular の統合 (angular-auth-oidc-client)</p></li>
+<li><p>Node.js バックエンド (Passport.js、express-openid-connect)</p></li>
 <li><p>トークン管理、サイレント SSO、保護されたルート</p></li>
-<li><p>_SPA 認証のベスト プラクティス</p></li>
+<li><p>SPA 認証のベスト プラクティス</p></li>
 </ul>
 <h3>レッスン 22: Nginx、API ゲートウェイ、マイクロサービスを使用した Keycloak</h3>
 <ul>
 <li><p>auth_request / OAuth2 プロキシを使用した Nginx リバース プロキシ</p></li>
-<li><p>_API ゲートウェイ: Kong、Traefik、Keycloak OIDC を使用した APISIX</p></li>
-<li><p>マイクロサービス認証パターン</p></li>
-<li><p>_トークンイントロスペクションエンドポイント</p></li>
+<li><p>API ゲートウェイ: Kong、Traefik、Keycloak OIDC を使用した APISIX</p></li>
+<li><p>マイクロサービスの認証パターン</p></li>
+<li><p>トークンイントロスペクションエンドポイント</p></li>
 <li><p>Docker レジストリ v2 認証</p></li>
-<li><p>検証可能な認証情報 (OID4VCI) - 実験的</p></li>
-</ul><h2><strong>パート 7: 本番環境、高可用性、Kubernetes</strong></h2>
-<h3>_レッスン 23: Keycloak 本番環境のデプロイとデータベースのチューニング</h3>
+<li><p>検証可能な資格情報 (OID4VCI) - 実験的</p></li>
+</ul>
+
+<h2><strong>パート 7: 実稼働、高可用性、および Kubernetes</strong></h2>
+<h3>レッスン 23: Keycloak 本番環境のデプロイとデータベースのチューニング</h3>
 <ul>
 <li><p>本番準備チェックリスト</p></li>
 <li><p>ビルドの最適化 (kc.sh ビルド)</p></li>
-<li><p>データベース調整: PostgreSQL、接続プール、追加データソース</p></li>
-<li><p>_ホスト名 v2、リバース プロキシ、HTTP/HTTPS 設定</p></li>
-<li><p>JVM チューニング、Argon2 ハッシュ、キャッシュ構成</p></li>
-<li><p>_レルム データのインポート/エクスポート</p></li>
+<li><p>データベースのチューニング: PostgreSQL、接続プール、追加のデータソース</p></li>
+<li><p>ホスト名 v2、リバース プロキシ、HTTP/HTTPS 設定</p></li>
+<li><p>JVMチューニング、Argon2ハッシュ、キャッシュ構成</p></li>
+<li><p>レルムデータのインポート/エクスポート</p></li>
 </ul>
-<h3>_レッスン 24: 高可用性、クラスタリング、およびマルチサイト展開</h3>
+<h3>レッスン 24: 高可用性、クラスタリング、およびマルチサイト展開</h3>
 <ul>
-<li><p>Infinispan、jdbc-pingトランスポートによるKeycloakクラスタリング</p></li>
-<li><p>_ゼロ構成の安全なクラスター通信</p></li>
-<li><p>セッション レプリケーションと永続ユーザー セッション</p></li>
+<li><p>Infinispan、jdbc-ping トランスポートを使用した Keycloak クラスタリング</p></li>
+<li><p>構成不要のセキュアなクラスター通信</p></li>
+<li><p>セッションレプリケーションと永続的なユーザーセッション</p></li>
 <li><p>マルチサイトのアクティブ/パッシブ展開</p></li>
 <li><p>ローリングアップデートとノンブロッキングヘルスチェック</p></li>
 <li><p>CPU/メモリサイジングガイド</p></li>
@@ -521,9 +533,9 @@ locale: ja
 <h3>レッスン 25: Kubernetes オペレーター、モニタリング、および管理 CLI</h3>
 <ul>
 <li><p>Keycloak オペレーター: Keycloak CR、KeycloakRealmImport CR</p></li>
-<li><p>_オペレーターの詳細構成 (スケジュール、リソース、ネットワークポリシー)</p></li>
-<li><p>OpenTelemetry: トレース、メトリクス、ログ</p></li>
+<li><p>オペレーターの詳細構成 (スケジュール、リソース、ネットワークポリシー)</p></li>
+<li><p>OpenTelemetry: トレース、メトリクス、ロギング</p></li>
 <li><p>Prometheus メトリクスと Grafana ダッシュボード</p></li>
-<li><p>_管理 CLI (kcadm.sh) の習得</p></li>
+<li><p>管理者 CLI (kcadm.sh) の習得</p></li>
 <li><p>バックアップ/復元戦略とトラブルシューティング</p></li>
 </ul>
