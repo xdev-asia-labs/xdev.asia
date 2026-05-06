@@ -1,25 +1,28 @@
 {
   "slug": "ba",
-  "title": "AI-Era Business Analyst (BA)",
-  "headline": "Roadmap BA thời AI",
-  "description": "Lộ trình BA cho thời đại AI: từ nền tảng phân tích nghiệp vụ đến AI-assisted discovery, prompt workflow, data governance, và triển khai giải pháp có đo lường tác động.",
+  "title": "Business Analyst (Business & Software BA)",
+  "headline": "Roadmap BA nghiệp vụ & BA phần mềm",
+  "description": "Lộ trình BA bao phủ cả BA nghiệp vụ và Software BA: BABOK, SDLC, Agile/Scrum, elicitation, BRD/SRS, user story, BPMN/UML, API/data, UAT, change control, governance và AI-assisted workflow.",
   "category": "role",
-  "intro": "BA thời AI không chỉ thu thập yêu cầu mà còn biết dùng AI để tăng tốc discovery, chuẩn hóa tài liệu, phát hiện mâu thuẫn yêu cầu, và đề xuất giải pháp dựa trên dữ liệu.",
-  "why_now": "Doanh nghiệp đang đưa AI vào sản phẩm rất nhanh, nên BA cần nâng cấp từ viết tài liệu thuần thủ công sang orchestrate workflow giữa business, data, AI team và engineering.",
-  "icon": "🤖",
+  "intro": "BA nghiệp vụ làm rõ mục tiêu kinh doanh, quy trình, quy định và giá trị cần đạt. Software BA chuyển hóa các insight đó thành yêu cầu hệ thống rõ ràng, khả triển khai và khả kiểm thử cho Dev, QA, UX, Data và Product.",
+  "why_now": "Sản phẩm số ngày càng chạy theo Agile, tích hợp API/data/AI và phải đáp ứng security, privacy, compliance. BA hiện đại cần hiểu chuẩn phát triển phần mềm, quản trị vòng đời yêu cầu, traceability, UAT và cách dùng AI như copilot mà vẫn giữ kiểm soát nghiệp vụ.",
+  "icon": "📋",
   "theme": "blue",
   "stats": {
     "phases": 7,
     "duration": "8-14 tháng",
-    "level": "Người mới -> AI-ready Senior BA",
-    "certs": "ECBA / CBAP / PMI-PBA / AI Product"
+    "level": "Người mới -> Senior Business/Software BA",
+    "certs": "ECBA / CCBA / CBAP / PMI-PBA / IIBA-AAC"
   },
   "tags": [
-    "AI BA",
+    "Business BA",
+    "Software BA",
+    "BABOK",
+    "SDLC",
     "Requirements",
-    "Prompt",
+    "SRS",
+    "UAT",
     "API",
-    "SQL",
     "Governance"
   ],
   "tracks": [
@@ -35,15 +38,15 @@
         4
       ],
       "outcomes": [
-        "Viết được user story và acceptance criteria đạt chuẩn",
-        "Dùng AI hỗ trợ discovery và review tài liệu",
+        "Viết được BRD/SRS, user story và acceptance criteria đạt chuẩn",
+        "Hiểu vai trò BA trong SDLC, Agile/Scrum và requirement lifecycle",
         "Có portfolio 1 case study BA end-to-end"
       ]
     },
     {
       "id": "transitioner",
       "label": "Track B - Transitioner",
-      "target": "Người đã làm QA/PM/Dev/Operations muốn chuyển sang BA thời AI.",
+      "target": "Người đã làm QA/PM/Dev/Operations muốn chuyển sang Business BA hoặc Software BA.",
       "weeklyHours": "4-6 giờ/tuần",
       "focusPhases": [
         2,
@@ -53,50 +56,50 @@
         7
       ],
       "outcomes": [
-        "Chuẩn hóa requirement lifecycle với AI copilots",
-        "Làm việc trơn tru với data/AI/engineering team",
+        "Chuẩn hóa requirement lifecycle, traceability và change control",
+        "Làm việc trơn tru với business, UX, data, engineering và QA team",
         "Lead discovery và solution evaluation cho 1 initiative"
       ]
     }
   ],
   "faq": [
     {
-      "question": "BA thời AI có bị thay thế không?",
-      "answer": "Không. AI thay phần việc lặp lại (tóm tắt, draft tài liệu, phân nhóm yêu cầu), còn BA vẫn giữ vai trò quyết định về ngữ cảnh nghiệp vụ, trade-off và alignment giữa các bên."
+      "question": "BA nghiệp vụ và Software BA khác nhau thế nào?",
+      "answer": "BA nghiệp vụ tập trung vào mục tiêu kinh doanh, quy trình vận hành, stakeholder và chính sách. Software BA đi sâu hơn vào yêu cầu hệ thống: SRS, API/data touchpoints, NFR, edge cases, UAT, traceability và handoff cho Dev/QA."
     },
     {
-      "question": "BA có cần biết machine learning sâu không?",
-      "answer": "Không cần đi sâu thuật toán như Data Scientist, nhưng cần hiểu use case AI, giới hạn mô hình, đánh giá chất lượng đầu ra, và cách viết yêu cầu cho tính năng có AI."
+      "question": "BA có cần biết code không?",
+      "answer": "Không bắt buộc code như developer, nhưng Software BA nên đọc hiểu API contract, data model cơ bản, SQL truy vấn đơn giản, log/error message và các ràng buộc kỹ thuật để viết yêu cầu khả thi."
     },
     {
-      "question": "Nên học gì trước để bắt đầu BA thời AI?",
-      "answer": "Học nền tảng BA + kỹ năng viết yêu cầu trước, sau đó thêm AI workflow: prompt design, evaluation criteria, data/privacy guardrails và AI-assisted backlog refinement."
+      "question": "Nên học chuẩn nào trước để bắt đầu BA?",
+      "answer": "Bắt đầu với BABOK để hiểu năng lực BA, SDLC để biết yêu cầu đi qua các giai đoạn nào, Agile/Scrum để làm backlog hằng ngày, rồi bổ sung BPMN/UML, BRD/SRS, UAT và AI-assisted workflow."
     }
   ],
   "phases": [
     {
       "phase": 1,
-      "title": "BA Foundation trong bối cảnh AI",
-      "subtitle": "Tư duy BA cốt lõi + cách AI thay đổi vai trò BA",
+      "title": "BA Foundation & SDLC Standards",
+      "subtitle": "Tư duy BA nghiệp vụ, Software BA và chuẩn phát triển phần mềm",
       "duration": "3-4 tuần",
       "theme": "blue",
       "goals": [
-        "Hiểu rõ vai trò BA hiện đại trong product team",
-        "Nắm khung discovery -> delivery -> evaluation",
-        "Biết phần nào giao cho AI, phần nào BA phải kiểm soát"
+        "Phân biệt rõ Business BA, Software BA, PO, PM, UX, QA và Engineering",
+        "Nắm khung discovery -> requirements -> design -> build -> test -> release -> evaluation",
+        "Biết chuẩn nào cần dùng: BABOK, SDLC, Agile/Scrum, Definition of Ready/Done, traceability"
       ],
       "deliverables": [
-        "BA role map thời AI",
+        "BA role map cho product/software team",
         "Stakeholder map + communication cadence",
-        "Decision log mẫu cho dự án"
+        "SDLC artifact map + decision log mẫu cho dự án"
       ],
       "projects": [
-        "Phân tích một tính năng hỗ trợ AI trong app chăm sóc khách hàng"
+        "Phân tích một tính năng đặt lịch hoặc chăm sóc khách hàng từ góc nhìn nghiệp vụ và phần mềm"
       ],
       "items": [
         {
-          "name": "Vai trò BA trong thời AI",
-          "detail": "Phân biệt BA, PO, PM, AI Engineer; xác định điểm chạm BA trong lifecycle của tính năng AI.",
+          "name": "Vai trò BA nghiệp vụ & Software BA",
+          "detail": "Phân biệt Business BA, Software BA, PO, PM, UX, QA, Dev và AI Engineer; xác định BA chịu trách nhiệm gì trong từng giai đoạn của SDLC.",
           "type": "skill",
           "level": "basic",
           "estimatedTime": "3h",
@@ -106,9 +109,15 @@
           ],
           "resources": [
             "Role matrix",
+            "SDLC artifact map",
             "Product lifecycle map"
           ],
           "resourceLinks": [
+            {
+              "label": "Business BA vs Software BA: Khác nhau ở đâu và cần học gì?",
+              "url": "/blog/business-ba-vs-software-ba",
+              "type": "article"
+            },
             {
               "label": "BA, PO, PM và AI Engineer: Ai làm gì trong product team?",
               "url": "/blog/ba-po-pm-ai-engineer-trong-product-team",
@@ -121,14 +130,14 @@
             }
           ],
           "learningSteps": [
-            "Đọc mô tả vai trò BA, PO, PM và AI Engineer trong 1 product team",
-            "Vẽ role matrix: ai làm gì, ai quyết định gì trong từng giai đoạn",
-            "Xác định 3 điểm BA can thiệp khi build AI feature: discovery, requirement review, UAT",
-            "So sánh BA truyền thống vs AI-era BA: khác nhau ở đâu?"
+            "Đọc mô tả vai trò Business BA, Software BA, PO, PM, UX, QA, Dev và AI Engineer trong 1 product team",
+            "Vẽ role matrix: ai làm gì, ai quyết định gì trong discovery, design, build, test, release",
+            "Xác định 5 điểm BA can thiệp trong SDLC: problem framing, requirements, review, UAT, post-launch evaluation",
+            "So sánh BA nghiệp vụ vs Software BA: artifact, stakeholder, độ sâu kỹ thuật khác nhau ở đâu?"
           ],
           "quiz": [
             {
-              "q": "Trong một product team có AI feature, ai chịu trách nhiệm chính cho việc viết acceptance criteria?",
+              "q": "Trong một product/software team, ai chịu trách nhiệm chính cho việc viết acceptance criteria?",
               "options": [
                 "AI Engineer",
                 "Business Analyst (BA)",
@@ -136,18 +145,18 @@
                 "Data Scientist"
               ],
               "answer": 1,
-              "explanation": "BA chịu trách nhiệm viết acceptance criteria vì BA hiểu ngữ cảnh nghiệp vụ và kỳ vọng của stakeholder tốt nhất."
+              "explanation": "BA chịu trách nhiệm chính vì BA hiểu kỳ vọng stakeholder, business rule và hành vi hệ thống cần kiểm thử."
             },
             {
-              "q": "Điểm khác biệt lớn nhất giữa BA truyền thống và AI-era BA là gì?",
+              "q": "Điểm khác biệt chính giữa Business BA và Software BA là gì?",
               "options": [
-                "BA AI-era cần biết code Python",
-                "BA AI-era cần hiểu giới hạn AI và viết yêu cầu cho tính năng có AI",
-                "BA AI-era không cần viết tài liệu nữa",
-                "BA AI-era làm thay PO"
+                "Business BA chỉ họp, Software BA chỉ code",
+                "Business BA tập trung mục tiêu/quy trình/chính sách, Software BA chuyển hóa thành yêu cầu hệ thống khả triển khai và kiểm thử",
+                "Software BA không cần hiểu nghiệp vụ",
+                "Business BA không cần viết tài liệu"
               ],
               "answer": 1,
-              "explanation": "BA thời AI không nhất thiết phải code, nhưng cần hiểu AI use case, giới hạn, và biết viết yêu cầu đặc thù cho AI features (guardrails, fallback, accuracy threshold...)."
+              "explanation": "Hai vai trò chồng lấn nhưng độ sâu khác nhau: Software BA cần đi xa hơn vào SRS, API/data touchpoints, NFR, edge cases và UAT."
             },
             {
               "q": "BA thường NOT làm việc gì trong lifecycle AI feature?",
@@ -159,6 +168,71 @@
               ],
               "answer": 1,
               "explanation": "Training/fine-tuning model là việc của ML Engineer/Data Scientist. BA tập trung vào nghiệp vụ, yêu cầu và đánh giá giải pháp."
+            }
+          ]
+        },
+        {
+          "name": "Chuẩn SDLC, BABOK và Agile/Scrum cho BA",
+          "detail": "Nắm các chuẩn nền tảng mà BA dùng trong dự án phần mềm: knowledge areas của BABOK, vòng đời SDLC, Scrum events/artifacts, Definition of Ready/Done, traceability và change control.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "5h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "BABOK knowledge areas",
+            "SDLC artifact map",
+            "Scrum artifact checklist",
+            "Definition of Ready/Done template"
+          ],
+          "resourceLinks": [
+            {
+              "title": "SDLC, BABOK và Agile/Scrum cho BA: Học sao để không bị rối?",
+              "url": "/blog/sdlc-babok-agile-scrum-cho-ba",
+              "type": "article"
+            },
+            {
+              "title": "BABOK Guide cho BA: Kim chỉ nam hành nghề Business Analysis",
+              "url": "/blog/babok-guide-cho-ba",
+              "type": "article"
+            },
+            {
+              "title": "BA Planning & Monitoring",
+              "url": "/blog/ba-planning-monitoring-ba",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Map 6 knowledge areas của BABOK vào công việc hằng ngày của BA trong team phần mềm",
+            "Vẽ SDLC artifact map: business case, BRD, SRS, backlog, design, test case, UAT sign-off, release note",
+            "So sánh waterfall, iterative và Agile/Scrum: yêu cầu được baseline và thay đổi như thế nào",
+            "Viết Definition of Ready/Done cho 1 team Scrum có BA, Dev và QA",
+            "Tạo mini traceability matrix từ business objective -> requirement -> user story -> test case"
+          ],
+          "quiz": [
+            {
+              "q": "Trong dự án phần mềm, traceability giúp BA kiểm soát điều gì?",
+              "options": [
+                "Màu sắc UI",
+                "Mối liên kết từ mục tiêu kinh doanh đến requirement, story, test case và release",
+                "Lịch nghỉ phép của team",
+                "Cấu hình server production"
+              ],
+              "answer": 1,
+              "explanation": "Traceability đảm bảo mỗi phần build ra đều có lý do nghiệp vụ, có yêu cầu gốc và có test case kiểm chứng."
+            },
+            {
+              "q": "Definition of Ready dùng để làm gì?",
+              "options": [
+                "Xác nhận story đủ rõ để team bắt đầu phát triển",
+                "Xác nhận feature đã release thành công",
+                "Đánh giá performance của BA",
+                "Thay thế hoàn toàn SRS"
+              ],
+              "answer": 0,
+              "explanation": "Definition of Ready là quality gate trước development: story phải rõ value, scope, AC, dependency, data/API impact và testability."
             }
           ]
         },
@@ -381,7 +455,7 @@
               "options": [
                 "Viết user stories ngay",
                 "Chọn vendor AI ngay",
-                "Phân tích capability gap: hiện tại team hỗ trợ bằng cách nào? gào nhẵn của khách? thời gian phản hồi?",
+                "Phân tích capability gap: hiện tại team hỗ trợ bằng cách nào? phàn nàn của khách là gì? thời gian phản hồi?",
                 "Estimate sprint points"
               ],
               "answer": 2,
@@ -393,27 +467,27 @@
     },
     {
       "phase": 2,
-      "title": "AI-assisted Discovery & Requirements",
-      "subtitle": "Dùng AI tăng tốc thu thập, tổng hợp, và chuẩn hóa yêu cầu",
+      "title": "Discovery & Requirements Engineering",
+      "subtitle": "Thu thập yêu cầu, chuẩn hóa BRD/SRS/user story và quản lý thay đổi",
       "duration": "5-6 tuần",
       "theme": "violet",
       "goals": [
-        "Thu thập yêu cầu nhanh hơn nhưng vẫn đúng ngữ cảnh",
-        "Giảm mâu thuẫn yêu cầu từ sớm",
-        "Biến discovery output thành backlog chất lượng"
+        "Thu thập yêu cầu nghiệp vụ và phần mềm đúng ngữ cảnh",
+        "Viết yêu cầu rõ, đầy đủ, nhất quán, khả kiểm thử",
+        "Biến discovery output thành BRD/SRS/backlog có traceability và change control"
       ],
       "deliverables": [
         "Interview guide + transcript summary",
-        "10 user stories + acceptance criteria",
-        "RTM phiên bản đầu"
+        "BRD/SRS skeleton + 10 user stories + acceptance criteria",
+        "RTM phiên bản đầu + change request form"
       ],
       "projects": [
-        "Workshop discovery cho chatbot CSKH nội bộ"
+        "Workshop discovery cho luồng đặt lịch/chăm sóc khách hàng và chuyển thành SRS + backlog"
       ],
       "items": [
         {
-          "name": "Elicitation với AI notes",
-          "detail": "Dùng AI để tóm tắt interview/workshop, tự động nhóm insight và action items.",
+          "name": "Elicitation & stakeholder workshop",
+          "detail": "Thu thập yêu cầu bằng interview, workshop, observation, document analysis; dùng AI để tóm tắt, nhóm insight và phát hiện gap nhưng BA vẫn kiểm chứng nguồn.",
           "type": "skill",
           "level": "basic",
           "estimatedTime": "4h",
@@ -423,9 +497,15 @@
           ],
           "resources": [
             "Interview prompt pack",
+            "Workshop agenda",
             "Summary checklist"
           ],
           "resourceLinks": [
+            {
+              "label": "Stakeholder Workshop cho BA: Cách chuẩn bị, facilitation và chốt decision",
+              "url": "/blog/stakeholder-workshop-facilitation-ba",
+              "type": "article"
+            },
             {
               "label": "Elicitation với AI: Thu thập yêu cầu nhanh hơn mà không mất ngữ cảnh",
               "url": "/blog/elicitation-voi-ai-notes-ba-thu-thap-yeu-cau",
@@ -517,8 +597,8 @@
           ]
         },
         {
-          "name": "BRD/SRS AI-assisted drafting",
-          "detail": "Dùng AI tạo bản nháp BRD/SRS rồi BA rà soát tính đúng đắn nghiệp vụ và ràng buộc pháp lý.",
+          "name": "BRD/SRS chuẩn Software BA",
+          "detail": "Soạn BRD để mô tả nhu cầu nghiệp vụ và SRS để mô tả hành vi hệ thống, rule, constraint, interface, data, NFR và tiêu chí kiểm thử. AI có thể hỗ trợ draft, nhưng BA chịu trách nhiệm baseline và sign-off.",
           "type": "skill",
           "level": "intermediate",
           "estimatedTime": "5h",
@@ -527,25 +607,33 @@
           ],
           "resources": [
             "BRD template",
-            "NFR checklist"
+            "SRS template",
+            "NFR checklist",
+            "Review checklist"
           ],
           "resourceLinks": [
             {
-              "label": "User Story & Acceptance Criteria: Hướng dẫn viết chuẩn INVEST",
-              "url": "/blog/user-story-acceptance-criteria-chuan-invest",
+              "label": "BRD và SRS cho Software BA: Template, ví dụ và cách viết dễ hiểu",
+              "url": "/blog/brd-srs-template-software-ba",
               "type": "article"
             },
             {
-              "label": "Responsible AI Requirements cho BA",
-              "url": "/blog/responsible-ai-requirements-ba",
+              "label": "Business Rules và Decision Table cho BA: Viết rule sao cho Dev/QA không hiểu sai",
+              "url": "/blog/business-rules-decision-table-ba",
+              "type": "article"
+            },
+            {
+              "title": "Business Requirements Checklist cho BA",
+              "url": "/blog/business-requirements-checklist-ba",
               "type": "article"
             }
           ],
           "learningSteps": [
-            "Hiểu cấu trúc BRD: Executive Summary, Business Objectives, Stakeholders, Requirements, Assumptions, Constraints",
-            "Dùng AI để draft sections đầu từ discovery notes — BA chỉ cần review và chỉnh",
-            "Bổ sung NFR (Non-functional Requirements): performance, security, scalability, compliance",
-            "Review tính nhất quán giữa functional và non-functional requirements"
+            "Hiểu cấu trúc BRD: business objectives, scope, stakeholders, current state, future state, assumptions, constraints",
+            "Hiểu cấu trúc SRS: functional requirements, business rules, interfaces, data, NFR, error cases, reporting, audit",
+            "Dùng AI để draft sections đầu từ discovery notes, sau đó BA review source, rule, conflict và ambiguity",
+            "Baseline tài liệu: version, reviewer, sign-off, change request path",
+            "Review tính nhất quán giữa BRD, SRS, backlog và test cases"
           ],
           "quiz": [
             {
@@ -558,6 +646,60 @@
               ],
               "answer": 1,
               "explanation": "BRD là 'what business needs' — viết cho stakeholder. SRS là 'what system will do' — viết cho development team, technical hơn và chi tiết hơn."
+            }
+          ]
+        },
+        {
+          "name": "NFR, quality attributes & edge cases",
+          "detail": "Viết non-functional requirements cho performance, security, reliability, accessibility, scalability, observability và compliance; xác định edge cases để Dev/QA không chỉ build happy path.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "NFR checklist",
+            "Quality attribute scenarios",
+            "Edge case catalog",
+            "Accessibility checklist"
+          ],
+          "resourceLinks": [
+            {
+              "title": "NFR, Quality Attributes và Edge Cases: BA viết sao cho Dev/QA test được?",
+              "url": "/blog/nfr-quality-attributes-edge-cases-ba",
+              "type": "article"
+            },
+            {
+              "title": "Business Requirements Checklist cho BA",
+              "url": "/blog/business-requirements-checklist-ba",
+              "type": "article"
+            },
+            {
+              "label": "Responsible AI Requirements cho BA",
+              "url": "/blog/responsible-ai-requirements-ba",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Chuyển câu mơ hồ như 'hệ thống phải nhanh' thành NFR đo được: p95 latency, throughput, availability, error budget",
+            "Viết quality attribute scenario: stimulus, environment, response, response measure",
+            "Liệt kê edge cases: permission denied, duplicate request, timeout, invalid data, partial failure, empty state",
+            "Thêm accessibility, localization, audit log và security/privacy requirement khi phù hợp",
+            "Gắn mỗi NFR với cách kiểm thử: automated test, monitoring, UAT checklist hoặc security review"
+          ],
+          "quiz": [
+            {
+              "q": "Yêu cầu nào là NFR tốt hơn?",
+              "options": [
+                "Hệ thống phải nhanh",
+                "Trang checkout phải phản hồi dưới 2 giây ở p95 với 1.000 concurrent users",
+                "UI đẹp và hiện đại",
+                "API phải ổn định"
+              ],
+              "answer": 1,
+              "explanation": "NFR tốt cần đo được bằng điều kiện rõ: ngữ cảnh, ngưỡng, tải, cách kiểm thử hoặc metric theo dõi."
             }
           ]
         },
@@ -618,6 +760,16 @@
           ],
           "resourceLinks": [
             {
+              "title": "Requirements Traceability Matrix cho BA: RTM là gì và làm mẫu thế nào?",
+              "url": "/blog/requirements-traceability-matrix-ba",
+              "type": "article"
+            },
+            {
+              "label": "Change Control, Baseline và Sign-off cho BA: Quản trị yêu cầu mà không làm team chậm",
+              "url": "/blog/change-control-baseline-signoff-ba",
+              "type": "article"
+            },
+            {
               "label": "User Story & Acceptance Criteria: Hướng dẫn viết chuẩn INVEST",
               "url": "/blog/user-story-acceptance-criteria-chuan-invest",
               "type": "article"
@@ -639,7 +791,7 @@
                 "Yêu cầu đã pass UAT"
               ],
               "answer": 1,
-              "explanation": "Baseline là điểm đẳng bằng chính thức. Sau baseline, mọi thay đổi phải qua change request process, không thể edit tự do."
+              "explanation": "Baseline là điểm chuẩn chính thức. Sau baseline, mọi thay đổi phải qua change request process, không thể edit tự do."
             }
           ]
         }
@@ -647,27 +799,28 @@
     },
     {
       "phase": 3,
-      "title": "Modeling & Prompt Workflow",
-      "subtitle": "Mô hình hóa nghiệp vụ và thiết kế workflow prompt đáng tin cậy",
+      "title": "Process, System Modeling & Prompt Workflow",
+      "subtitle": "BPMN/UML, wireframe, handoff kỹ thuật và prompt workflow khi có AI",
       "duration": "4-5 tuần",
       "theme": "emerald",
       "goals": [
-        "Mô hình hóa rõ luồng nghiệp vụ có AI",
-        "Thiết kế prompt workflow có kiểm soát",
-        "Giảm lỗi do prompt mơ hồ"
+        "Mô hình hóa rõ quy trình nghiệp vụ, use case, activity, sequence và data flow",
+        "Tạo artifact đủ tốt để Dev/QA/UX cùng hiểu hệ thống cần làm gì",
+        "Thiết kế prompt workflow có kiểm soát khi sản phẩm có AI"
       ],
       "deliverables": [
-        "Use case + sequence diagram có AI actor",
+        "BPMN + use case + sequence diagram",
+        "System context + data flow sketch",
         "Prompt flow map",
         "Prompt quality checklist"
       ],
       "projects": [
-        "Thiết kế luồng AI assistant hỗ trợ xử lý ticket"
+        "Thiết kế luồng xử lý ticket từ current state đến future state, có API/data/error path và optional AI assistant"
       ],
       "items": [
         {
-          "name": "UML/BPMN cho luồng có AI",
-          "detail": "Vẽ luồng chính, fallback path và human-in-the-loop cho tác vụ có AI.",
+          "name": "UML/BPMN cho luồng nghiệp vụ & hệ thống",
+          "detail": "Vẽ current state/future state bằng BPMN, use case, activity và sequence diagram; bổ sung API/data touchpoints, exception path, fallback path và human-in-the-loop nếu có AI.",
           "type": "skill",
           "level": "intermediate",
           "estimatedTime": "6h",
@@ -681,6 +834,11 @@
           ],
           "resourceLinks": [
             {
+              "label": "BPMN và UML cho Software BA: Vẽ workflow sao cho business hiểu, Dev triển khai được",
+              "url": "/blog/bpmn-uml-workflow-modeling-software-ba",
+              "type": "article"
+            },
+            {
               "label": "UML & BPMN cho luồng có AI: Mô hình hóa tính năng AI-assisted",
               "url": "/blog/uml-bpmn-cho-luong-co-ai",
               "type": "article"
@@ -688,22 +846,76 @@
           ],
           "learningSteps": [
             "Nắm vững 5 ký hiệu BPMN cơ bản: Task, Gateway, Event, Pool, Lane",
-            "Vẽ luồng AI với confidence threshold: happy path và fallback path",
-            "Thêm human-in-the-loop lane với SLA rõ ràng",
-            "Vẽ sequence diagram cho AI service call, bao gồm timeout và error handling",
-            "Review checklist: error path đã được vẽ chưa? audit log step có không?"
+            "Vẽ current state và future state để thấy thay đổi quy trình trước/sau dự án",
+            "Vẽ use case/activity/sequence diagram cho luồng chính, error path và integration touchpoints",
+            "Nếu có AI, thêm confidence threshold, fallback path và human-in-the-loop lane với SLA rõ ràng",
+            "Review checklist: actor đúng chưa, API/data step đủ chưa, audit log và exception path có chưa?"
           ],
           "quiz": [
             {
-              "q": "Khi vẽ BPMN cho AI feature, phần nào QUAN TRỌNG NHẤT cần bổ sung so với BPMN truyền thống?",
+              "q": "Khi vẽ BPMN cho một quy trình nghiệp vụ, điều gì thường giúp Dev/QA hiểu đúng hơn?",
               "options": [
-                "Thêm nhiều swimlane hơn",
-                "Confidence threshold cụ thể và fallback path khi AI không đủ tin cậy",
-                "Vẽ chi tiết từng điều kiện if-else",
-                "Sử dụng màu sắc khác nhau"
+                "Chỉ vẽ happy path",
+                "Thể hiện actor, gateway quyết định, exception path và handoff giữa các lane",
+                "Dùng càng nhiều màu càng tốt",
+                "Ẩn hết bước thủ công để diagram ngắn"
               ],
               "answer": 1,
-              "explanation": "AI output có tính probabilistic, nên cần vẽ gateway confidence threshold cụ thể và fallback path rõ ràng — đây là điểm BPMN truyền thống không có."
+              "explanation": "BPMN hữu ích khi nó làm rõ ai làm gì, khi nào rẽ nhánh, lỗi đi đâu và team nào nhận handoff."
+            }
+          ]
+        },
+        {
+          "name": "Software handoff: SRS -> design -> test cases",
+          "detail": "Chuẩn bị gói handoff từ BA sang UX/Dev/QA: scope, requirements, business rules, assumptions, API/data impact, open questions, test scenarios và sign-off criteria.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Handoff checklist",
+            "Three Amigos agenda",
+            "Test scenario template",
+            "Open question log"
+          ],
+          "resourceLinks": [
+            {
+              "title": "Software Handoff cho BA: Từ SRS sang Design, Dev và Test Cases",
+              "url": "/blog/software-handoff-srs-design-test-cases-ba",
+              "type": "article"
+            },
+            {
+              "label": "User Story & Acceptance Criteria: Hướng dẫn viết chuẩn INVEST",
+              "url": "/blog/user-story-acceptance-criteria-chuan-invest",
+              "type": "article"
+            },
+            {
+              "title": "Business Requirements Checklist cho BA",
+              "url": "/blog/business-requirements-checklist-ba",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Tổ chức Three Amigos với BA, Dev, QA trước khi story vào sprint",
+            "Tạo checklist handoff: business value, scope, rule, AC, mockup, API/data impact, NFR, dependency, risk",
+            "Chuyển mỗi acceptance criterion thành ít nhất 1 test scenario",
+            "Ghi open questions với owner/deadline thay vì để requirement mơ hồ trong ticket",
+            "Xác nhận sign-off path: ai approve requirement, ai approve UAT, ai quyết go/no-go"
+          ],
+          "quiz": [
+            {
+              "q": "Trong buổi Three Amigos, nhóm nào nên có mặt tối thiểu?",
+              "options": [
+                "BA, Dev, QA",
+                "Chỉ BA và Product Owner",
+                "Chỉ Dev và DevOps",
+                "Tất cả nhân sự công ty"
+              ],
+              "answer": 0,
+              "explanation": "Three Amigos giúp BA, Dev và QA cùng hiểu requirement, cách build và cách test trước khi sprint bắt đầu."
             }
           ]
         },
@@ -763,7 +975,7 @@
           "learningSteps": [
             "Xây dựng adversarial test set: input gây lối (empty, sai ngôn ngữ, XSS-like, jailbreak attempts)",
             "Test policy boundary: prompt có generate harmful content không? có leak system prompt không?",
-            "Test hallucination risk: AI có invẹnt facts không? cite nguồn sai không?",
+            "Test hallucination risk: AI có invent facts không? cite nguồn sai không?",
             "Document từng test case: input → expected behavior → actual → pass/fail"
           ],
           "quiz": [
@@ -804,7 +1016,7 @@
             "Vẽ wireframe low-fidelity cho AI interaction: chỗ nào hiển AI response? loading state? fallback message?",
             "Mark rõ trong wireframe: đây là AI-generated content (cần label thích hợp cho transparency)",
             "Vẽ flow diagram với confidence path: high confidence → auto show, low → show with disclaimer, very low → human review",
-            "Review wireframe với UX designer: AI output có editấble được không? user có thể report sai không?"
+            "Review wireframe với UX designer: AI output có editable được không? user có thể report sai không?"
           ],
           "quiz": [
             {
@@ -893,7 +1105,7 @@
                 "Hiển thị response vì khách đang chờ",
                 "Route tự động đến human agent, không hiển thị AI response — confidence dưới threshold",
                 "Hỏi lại user",
-                "Tắc động request"
+                "Chặn request"
               ],
               "answer": 1,
               "explanation": "Confidence 0.45 < 0.70 threshold = AI không đủ chắc. Hiển thị response có thể mislead user. Route to human là đúng theo HITL design, kèm message 'Connecting you with an agent...'"
@@ -911,27 +1123,28 @@
     },
     {
       "phase": 4,
-      "title": "Data, API, Guardrails",
-      "subtitle": "Kiến thức kỹ thuật BA cần để làm AI feature an toàn",
+      "title": "Technical Literacy: API, Data, Security, Guardrails",
+      "subtitle": "Kiến thức kỹ thuật Software BA cần để trao đổi với Dev/QA/Architect",
       "duration": "5-6 tuần",
       "theme": "cyan",
       "goals": [
-        "Đọc hiểu API/data contracts",
-        "Viết yêu cầu phi chức năng cho AI features",
-        "Đưa guardrails vào ngay từ requirement"
+        "Đọc hiểu API/data contracts, event, error handling và validation rule",
+        "Viết yêu cầu phi chức năng cho security, privacy, reliability, observability và compliance",
+        "Đưa guardrails vào ngay từ requirement cho cả phần mềm thường và tính năng AI"
       ],
       "deliverables": [
         "API contract review checklist",
         "Data quality rules cho 1 use case",
-        "AI safety requirement set"
+        "Security/privacy requirement set",
+        "AI safety requirement set khi có AI"
       ],
       "projects": [
-        "Soạn đặc tả cho tính năng AI gợi ý nội dung có kiểm duyệt"
+        "Soạn đặc tả cho tính năng tích hợp API, validate dữ liệu và xử lý quyền truy cập"
       ],
       "items": [
         {
           "name": "REST API & Event basics",
-          "detail": "Hiểu request/response, webhook/event, idempotency và error handling trong luồng AI.",
+          "detail": "Hiểu request/response, webhook/event, idempotency, rate limit, pagination, versioning và error handling trong hệ thống phần mềm.",
           "type": "skill",
           "level": "intermediate",
           "estimatedTime": "6h",
@@ -945,6 +1158,11 @@
           ],
           "resourceLinks": [
             {
+              "label": "API và Data Contract cho Software BA: Đọc, hỏi và viết yêu cầu tích hợp thế nào?",
+              "url": "/blog/api-data-contracts-software-ba",
+              "type": "article"
+            },
+            {
               "label": "REST API & Data Validation cho BA: Từ HTTP basics đến OpenAPI spec",
               "url": "/blog/rest-api-data-validation-ba",
               "type": "article"
@@ -952,13 +1170,13 @@
           ],
           "learningSteps": [
             "Học HTTP basics: method (GET/POST/PUT), status codes, headers, request/response body",
-            "Hiểu idempotency: tại sao PUT/DELETE idempotent nhưng POST không, áp dụng vào AI workflow",
-            "Soạn error handling strategy cho AI feature: 4xx vs 5xx, retry logic, circuit breaker",
-            "Viết OpenAPI spec đơn giản cho 1 AI API endpoint"
+            "Hiểu idempotency: tại sao PUT/DELETE idempotent nhưng POST không, áp dụng vào retry và duplicate request",
+            "Soạn error handling strategy: 4xx vs 5xx, validation error, retry logic, timeout, fallback",
+            "Đọc OpenAPI spec đơn giản và review field bắt buộc, enum, status code, error body"
           ],
           "quiz": [
             {
-              "q": "Khi gọi API của AI service để translate text, request bị timeout lần đầu. Nên retry request đó không và tại sao?",
+              "q": "Khi gọi API tạo đơn hàng, request bị timeout lần đầu. Nên retry request đó không và tại sao?",
               "options": [
                 "Không retry, vì có thể duplicate request",
                 "Có retry nếu là GET hoặc PUT (idempotent), không retry POST",
@@ -966,7 +1184,7 @@
                 "Hỏi user xem retry không"
               ],
               "answer": 1,
-              "explanation": "POST không idempotent (mỗi call có thể tạo mới), nên retry POST request có thể tạo duplicate translation. GET/PUT an toàn retry vì kết quả giống nhau."
+              "explanation": "POST không idempotent nếu không có idempotency key, nên retry có thể tạo duplicate order. GET/PUT thường an toàn retry hơn vì kết quả dự kiến giống nhau."
             }
           ]
         },
@@ -986,6 +1204,11 @@
           ],
           "resourceLinks": [
             {
+              "label": "API và Data Contract cho Software BA: Đọc, hỏi và viết yêu cầu tích hợp thế nào?",
+              "url": "/blog/api-data-contracts-software-ba",
+              "type": "article"
+            },
+            {
               "label": "REST API & Data Validation cho BA: Từ HTTP basics đến OpenAPI spec",
               "url": "/blog/rest-api-data-validation-ba",
               "type": "article"
@@ -994,12 +1217,12 @@
           "learningSteps": [
             "Viết SELECT query để validate input data: kiểm tra NULL, range, format (email, phone)",
             "Tạo data quality rules: uniqueness, referential integrity, business constraint (e.g., age > 0)",
-            "Soạn acceptance criteria cho data validation trong AI feature requirement",
-            "Practice: Query 10 data quality checks cho use case AI"
+            "Soạn acceptance criteria cho data validation trong requirement phần mềm",
+            "Practice: Query 10 data quality checks cho use case đặt hàng, thanh toán hoặc onboarding"
           ],
           "quiz": [
             {
-              "q": "BA được requirement: 'Hệ thống sẽ gợi ý sản phẩm cho khách hàng'. Acceptance criteria nào về data validation cần add?",
+              "q": "BA được requirement: 'Hệ thống tạo hồ sơ khách hàng mới'. Acceptance criteria nào về data validation cần add?",
               "options": [
                 "Không cần, đó là QA responsibility",
                 "customer_id NOT NULL AND age > 0 AND purchase_history IS NOT NULL",
@@ -1007,7 +1230,61 @@
                 "All above"
               ],
               "answer": 1,
-              "explanation": "BA phải define dữ liệu input nào bắt buộc (NOT NULL), range (age > 0), completeness (purchase_history) trước khi gửi cho AI. Đây là acceptance criteria."
+              "explanation": "BA phải define dữ liệu input nào bắt buộc, range hợp lệ, format đúng và rule nghiệp vụ trước khi dữ liệu đi vào hệ thống."
+            }
+          ]
+        },
+        {
+          "name": "Security, privacy & compliance requirements",
+          "detail": "Viết yêu cầu bảo mật và quyền riêng tư ở mức BA: authentication, authorization, audit log, data masking, consent, retention, PII/PHI/PCI classification và compliance constraints.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Security requirements checklist",
+            "Privacy impact checklist",
+            "RBAC matrix",
+            "Audit log template"
+          ],
+          "resourceLinks": [
+            {
+              "title": "Security, Privacy & Compliance Requirements cho BA",
+              "url": "/blog/security-privacy-compliance-requirements-ba",
+              "type": "article"
+            },
+            {
+              "label": "Responsible AI Requirements cho BA",
+              "url": "/blog/responsible-ai-requirements-ba",
+              "type": "article"
+            },
+            {
+              "title": "Data Governance cho AI: Lineage, retention, PII classification, provenance",
+              "url": "/blog/data-governance-ai-ba",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Xác định loại dữ liệu: public, internal, confidential, PII, PHI, payment data",
+            "Viết RBAC matrix: role nào được view/create/update/delete/export dữ liệu nào",
+            "Bổ sung audit log requirement: ai làm gì, lúc nào, trước/sau thay đổi ra sao",
+            "Đưa privacy requirement vào SRS: consent, data minimization, masking, retention, deletion request",
+            "Review requirement với security/privacy owner trước khi baseline"
+          ],
+          "quiz": [
+            {
+              "q": "Yêu cầu nào BA nên thêm khi hệ thống cho phép nhân viên xem dữ liệu khách hàng nhạy cảm?",
+              "options": [
+                "Màu nền màn hình phải xanh",
+                "RBAC, audit log, masking dữ liệu nhạy cảm và quyền export rõ ràng",
+                "Tăng số lượng button",
+                "Chỉ cần QA test thủ công"
+              ],
+              "answer": 1,
+              "explanation": "Với dữ liệu nhạy cảm, BA cần đặc tả quyền, audit, masking và export vì đó là requirement nghiệp vụ, bảo mật và compliance."
             }
           ]
         },
@@ -1074,7 +1351,7 @@
           ],
           "learningSteps": [
             "Cài Postman, import API collection và thực hiện smoke test các endpoint chính",
-            "Test happy path: gọi API với valid input, kiểm tra response 200 và data dúng format",
+            "Test happy path: gọi API với valid input, kiểm tra response 200 và data đúng format",
             "Test error case: gọi với invalid/missing field, kiểm tra response có error message rõ không",
             "Dùng SQL Client (DBeaver/TablePlus) chạy read-only query kiểm tra data trong DB"
           ],
@@ -1088,7 +1365,7 @@
                 "Không có permission"
               ],
               "answer": 2,
-              "explanation": "422 = request body parse được nhưng data fail validation rules. BA cần kiểm tra: fiếld nào sai? format sai? BA có đặc tả rõ validation rule đó chưa?"
+              "explanation": "422 = request body parse được nhưng data fail validation rules. BA cần kiểm tra: field nào sai? format sai? BA có đặc tả rõ validation rule đó chưa?"
             }
           ]
         },
@@ -1216,27 +1493,28 @@
     },
     {
       "phase": 5,
-      "title": "Agile Delivery với AI Copilot",
-      "subtitle": "Quản lý backlog, refinement, và release trong team có AI workflow",
+      "title": "Agile Delivery, QA Collaboration & UAT",
+      "subtitle": "Quản lý backlog, refinement, quality gate, UAT và release trong team phần mềm",
       "duration": "3-4 tuần",
       "theme": "amber",
       "goals": [
-        "Refine backlog nhanh hơn nhưng không giảm chất lượng",
-        "Theo dõi risk khi release AI features",
-        "Nâng hiệu suất collaboration BA-Dev-QA"
+        "Refine backlog theo chuẩn INVEST, Definition of Ready và dependency/risk rõ ràng",
+        "Phối hợp QA để biến requirement thành test scenarios, defect triage và UAT plan",
+        "Theo dõi release risk, business readiness và go/no-go decision"
       ],
       "deliverables": [
         "Definition of Ready/Done bản cập nhật",
-        "AI feature release checklist",
+        "Test scenario + defect triage checklist",
+        "Release readiness checklist",
         "Sprint learning log"
       ],
       "projects": [
-        "Refine 15 stories cho roadmap AI assistant"
+        "Refine 15 stories cho một module phần mềm và lập UAT plan trước release"
       ],
       "items": [
         {
-          "name": "Backlog refinement với AI",
-          "detail": "Dùng AI để đề xuất split story, dependency map và risk hints cho sprint planning.",
+          "name": "Backlog refinement theo chuẩn Agile",
+          "detail": "Refine epic/story theo INVEST, Definition of Ready, dependency map, risk hints và acceptance criteria; AI có thể hỗ trợ đề xuất nhưng BA giữ quyết định nghiệp vụ.",
           "type": "skill",
           "level": "intermediate",
           "estimatedTime": "4h",
@@ -1248,10 +1526,10 @@
             "Refinement checklist"
           ],
           "learningSteps": [
-            "Dùng AI prompt để split epic thành user stories theo INVEST rubric",
+            "Split epic thành user stories theo INVEST rubric",
             "Tạo dependency map: vẽ dependency giữa stories, xác định blocker trước sprint",
-            "Dùng AI để suggest risk hints: 'What could go wrong with this story?'",
-            "Practice: Refine 5 stories cho AI feature với AI copilot, so sánh với manual"
+            "Dùng AI nếu cần để suggest risk hints: 'What could go wrong with this story?'",
+            "Practice: Refine 5 stories cho module phần mềm, so sánh output thủ công và AI-assisted"
           ],
           "quiz": [
             {
@@ -1276,7 +1554,7 @@
         },
         {
           "name": "Story estimation & uncertainty",
-          "detail": "Ước lượng trong bối cảnh tính năng AI biến động cao, ghi rõ giả định và unknowns.",
+          "detail": "Ước lượng trong bối cảnh yêu cầu chưa chắc chắn, integration phụ thuộc nhiều bên hoặc tính năng AI biến động cao; ghi rõ giả định, unknowns và spike cần làm.",
           "type": "skill",
           "level": "intermediate",
           "estimatedTime": "3h",
@@ -1287,9 +1565,9 @@
             "Estimation risk matrix"
           ],
           "learningSteps": [
-            "Hiểu tại sao AI story khó estimate hơn: model behavior không deterministic, phụ thuộc data quality",
+            "Hiểu vì sao story khó estimate: scope mơ hồ, dependency API/vendor, data quality, technical spike hoặc AI behavior không deterministic",
             "Dùng range estimation thay vì point estimate: 'Best case 3 ngày / Expected 5 ngày / Worst case 8 ngày'",
-            "Document assumptions rõ ràng trong story: accuracy target, data availability, external API uptime",
+            "Document assumptions rõ ràng trong story: data availability, external API uptime, permission, NFR hoặc accuracy target",
             "Thêm uncertainty spike nếu có unknowns lớn: time-box 1-2 ngày để validate assumption trước"
           ],
           "quiz": [
@@ -1327,22 +1605,22 @@
             "Jira workflow template"
           ],
           "learningSteps": [
-            "Tạo custom issue template cho AI story: có field cho accuracy target, assumptions, model version",
+            "Tạo custom issue template cho story: business value, AC, NFR, assumptions, dependency, data/API impact",
             "Setup automation rule: khi story vào Done → tự động tạo review ticket cho BA",
-            "Dùng label/tag để track AI-specific stories: phân biệt AI feature vs regular feature",
-            "Tạo dashboard view cho sprint: filter by AI stories, show blockers, show risk flags"
+            "Dùng label/tag để track module, domain, compliance hoặc AI-specific stories khi cần",
+            "Tạo dashboard view cho sprint: blockers, risk flags, defect trend, UAT readiness"
           ],
           "quiz": [
             {
-              "q": "BA muốn track tất cả AI-related stories riêng để báo cáo cho Compliance. Cách hiệu quả nhất?",
+              "q": "BA muốn track các story liên quan compliance riêng để báo cáo stakeholder. Cách hiệu quả nhất?",
               "options": [
                 "Export Excel thủ công mỗi sprint",
-                "Tạo custom label 'ai-feature' và filter/save view trong Jira",
+                "Tạo custom label phù hợp và filter/save view trong Jira",
                 "Hỏi dev danh sách",
                 "Đọc hết sprint backlog"
               ],
               "answer": 1,
-              "explanation": "Label + saved filter trong Jira là cách scalable nhất: tag story khi create, sau đó filter bất cứ lúc nào cho Compliance report mà không cần manual export."
+              "explanation": "Label + saved filter trong Jira/Azure DevOps là cách scalable nhất: tag story khi create, sau đó filter bất cứ lúc nào cho report mà không cần manual export."
             }
           ],
           "resourceLinks": [
@@ -1354,8 +1632,62 @@
           ]
         },
         {
+          "name": "QA collaboration & defect triage",
+          "detail": "Làm việc với QA để biến requirement thành test scenarios, phân loại defect theo severity/priority, kiểm soát scope leakage và quyết định fix now/fix later dựa trên business risk.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Test scenario template",
+            "Defect triage matrix",
+            "Severity/Priority rubric",
+            "Regression scope checklist"
+          ],
+          "resourceLinks": [
+            {
+              "title": "QA Collaboration & Defect Triage cho BA: Làm sao giảm bug sai nghiệp vụ?",
+              "url": "/blog/qa-collaboration-defect-triage-ba",
+              "type": "article"
+            },
+            {
+              "label": "User Story & Acceptance Criteria: Hướng dẫn viết chuẩn INVEST",
+              "url": "/blog/user-story-acceptance-criteria-chuan-invest",
+              "type": "article"
+            },
+            {
+              "title": "Business Requirements Checklist cho BA",
+              "url": "/blog/business-requirements-checklist-ba",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Chuyển acceptance criteria thành test scenarios: happy path, alternate path, error path, permission case",
+            "Phân biệt severity và priority: lỗi nghiêm trọng về kỹ thuật chưa chắc priority cao nếu business impact thấp",
+            "Tạo defect triage matrix với owner, impact, workaround, release decision",
+            "Review regression scope mỗi khi requirement hoặc API/data contract thay đổi",
+            "Chuẩn bị release note và known issues để stakeholder hiểu rủi ro còn lại"
+          ],
+          "quiz": [
+            {
+              "q": "Một bug làm sai format ngày trên màn hình admin nội bộ nhưng không ảnh hưởng dữ liệu. BA nên triage thế nào?",
+              "options": [
+                "Luôn P0 vì có bug",
+                "Đánh giá severity/priority theo business impact, workaround và release risk",
+                "Bỏ qua không cần ghi nhận",
+                "Đổi requirement để bug thành đúng"
+              ],
+              "answer": 1,
+              "explanation": "Defect triage không chỉ dựa vào có lỗi hay không, mà dựa vào impact, người dùng bị ảnh hưởng, workaround, compliance và release risk."
+            }
+          ]
+        },
+        {
           "name": "UAT & Business Readiness",
-          "detail": "Lập UAT plan cho AI feature: business acceptance criteria, rollout communication plan, training readiness checklist cho end user, và go/no-go decision framework.",
+          "detail": "Lập UAT plan cho release phần mềm: business acceptance criteria, UAT scope, entry/exit criteria, rollout communication, training readiness và go/no-go decision framework. Với AI feature, bổ sung output quality threshold.",
           "type": "skill",
           "level": "intermediate",
           "estimatedTime": "5h",
@@ -1370,28 +1702,28 @@
           ],
           "resourceLinks": [
             {
-              "label": "UAT & Business Readiness cho AI Feature: Từ test plan đến go/no-go decision",
-              "url": "/blog/uat-business-readiness-ai-feature",
+              "label": "UAT & Business Readiness: Từ test plan đến go/no-go decision",
+              "url": "/blog/uat-business-readiness-software-ba",
               "type": "article"
             }
           ],
           "learningSteps": [
-            "Hiểu 3 lớp UAT cho AI feature: Functional, AI Output Quality, Business Readiness",
-            "Soạn Golden Test Set: 20 test cases với expected output cho AI feature",
+            "Hiểu 3 lớp UAT: Functional readiness, business process readiness, operational/training readiness",
+            "Soạn UAT scenario set: happy path, alternate path, permission, error handling, data migration/integration case",
             "Viết UAT Plan theo template: scope, participants, scenarios, entry/exit criteria",
-            "Xây dựng go/no-go decision framework cho stakeholder sign-off"
+            "Xây dựng go/no-go decision framework cho stakeholder sign-off; nếu có AI, thêm output quality threshold"
           ],
           "quiz": [
             {
-              "q": "UAT cho AI feature khác UAT truyền thống ở điểm chính nào?",
+              "q": "UAT khác QA testing ở điểm chính nào?",
               "options": [
-                "UAT AI cần nhiều người hơn",
-                "Output AI có thể biến thiên nên cần acceptance threshold thay vì pass/fail tuyệt đối",
-                "UAT AI chỉ do QA thực hiện",
-                "UAT AI nghiêm khắc hơn"
+                "UAT chỉ kiểm tra UI đẹp hay không",
+                "UAT xác nhận solution đáp ứng business scenario và được business user chấp nhận",
+                "UAT chỉ do developer thực hiện",
+                "UAT không cần test data"
               ],
               "answer": 1,
-              "explanation": "AI không deterministic như code truyền thống — cần định nghĩa acceptance threshold (VD: accuracy ≥ 85%) thay vì chỉ dùng pass/fail."
+              "explanation": "QA testing kiểm tra hệ thống đúng spec; UAT kiểm tra solution có dùng được trong ngữ cảnh business thật và đủ điều kiện go-live hay không."
             }
           ]
         }
@@ -1399,27 +1731,27 @@
     },
     {
       "phase": 6,
-      "title": "Evaluation & Optimization",
-      "subtitle": "Đo lường chất lượng giải pháp AI sau triển khai",
+      "title": "Solution Evaluation & Continuous Improvement",
+      "subtitle": "Đo lường chất lượng giải pháp phần mềm sau triển khai",
       "duration": "4-5 tuần",
       "theme": "rose",
       "goals": [
-        "Đo được business impact của AI feature",
+        "Đo được business impact của feature/release",
         "Thiết lập vòng phản hồi liên tục",
         "Đưa ra cải tiến dựa trên số liệu"
       ],
       "deliverables": [
-        "KPI tree cho AI feature",
+        "KPI tree cho feature/release",
         "Post-launch evaluation report",
         "Optimization backlog"
       ],
       "projects": [
-        "Đánh giá 30/60/90 ngày cho tính năng AI summary"
+        "Đánh giá 30/60/90 ngày cho một feature đã go-live và tạo optimization backlog"
       ],
       "items": [
         {
           "name": "Solution evaluation framework",
-          "detail": "Định nghĩa metric business + metric kỹ thuật + metric trải nghiệm cho tính năng AI.",
+          "detail": "Định nghĩa metric business, product, technical và user experience cho giải pháp phần mềm; với AI feature, thêm metric output quality và safety.",
           "type": "skill",
           "level": "advanced",
           "estimatedTime": "5h",
@@ -1438,14 +1770,14 @@
             }
           ],
           "learningSteps": [
-            "Định nghĩa 3 lớp KPI: Business KPIs, AI Quality KPIs, User Experience KPIs",
+            "Định nghĩa 4 lớp KPI: Business KPIs, Product Usage KPIs, Technical Quality KPIs, User Experience KPIs",
             "Viết Success Metrics section trong SRS trước khi sprint 1 bắt đầu",
             "Lên lịch evaluation timeline: 7 ngày, 30 ngày, 60 ngày, 90 ngày sau launch",
             "Xây dựng Benefits Realization report sau 90 ngày go-live"
           ],
           "quiz": [
             {
-              "q": "Khi nào BA nên định nghĩa success metrics cho AI feature?",
+              "q": "Khi nào BA nên định nghĩa success metrics cho một feature?",
               "options": [
                 "Sau khi launch và có data thực",
                 "Trước khi sprint 1 bắt đầu, trong phase requirements",
@@ -1459,7 +1791,7 @@
         },
         {
           "name": "Risk & incident analysis",
-          "detail": "Theo dõi drift, lỗi gợi ý sai, và quy trình rollback/escalation.",
+          "detail": "Theo dõi production incident, defect leakage, business process failure, rollback/escalation; với AI feature, bổ sung model drift và lỗi gợi ý sai.",
           "type": "skill",
           "level": "advanced",
           "estimatedTime": "4h",
@@ -1470,10 +1802,10 @@
             "Incident postmortem template"
           ],
           "learningSteps": [
-            "Học concept model drift: tại sao AI accuracy giảm theo thời gian khi data distribution thay đổi",
-            "Thiết lập monitoring alert: khi accuracy < threshold → notify BA + Data team",
+            "Học incident taxonomy: bug production, data quality issue, integration failure, security/privacy incident, AI model drift",
+            "Thiết lập alert và owner: khi metric hoặc defect leakage vượt ngưỡng thì notify BA/Product/Engineering",
             "Viết incident postmortem template: timeline, root cause, impact, corrective actions",
-            "Define rollback criteria: khi nào nên rollback AI feature vs fix forward"
+            "Define rollback/fix-forward criteria: khi nào rollback, hotfix, feature flag off hoặc communicate known issue"
           ],
           "quiz": [
             {
@@ -1498,7 +1830,7 @@
         },
         {
           "name": "Dashboarding cho BA",
-          "detail": "Dùng BI để theo dõi adoption, conversion, quality và cost của AI feature.",
+          "detail": "Dùng BI để theo dõi adoption, conversion, funnel, quality, defect trend, SLA và cost của feature/release; với AI feature, thêm accuracy/hallucination/cost per request.",
           "type": "tool",
           "level": "intermediate",
           "estimatedTime": "4h",
@@ -1510,16 +1842,16 @@
             "Dashboard storyboard"
           ],
           "learningSteps": [
-            "Xác định 4 loại metric cần track: Adoption (dùng không?), Quality (đúng không?), Business (ảnh hưởng gì?), Cost (tốn bao nhiêu?)",
+            "Xác định 5 loại metric cần track: Adoption, Conversion/Funnel, Quality, Business Impact, Cost/SLA",
             "Thiết kế dashboard storyboard trước khi build: ai xem? cần thấy gì? bao nhiêu panels?",
             "Kết nối data source: event tracking → BI tool (Looker/Metabase/Power BI)",
             "Thiết lập alert: khi metric vượt ngưỡng → email/Slack notify stakeholder"
           ],
           "quiz": [
             {
-              "q": "BA cần present AI feature performance report cho CEO hàng tháng. Dashboard nên highlight metric nào đầu tiên?",
+              "q": "BA cần present feature performance report cho CEO hàng tháng. Dashboard nên highlight metric nào đầu tiên?",
               "options": [
-                "Số lần AI được gọi (API calls)",
+                "Số lần API được gọi",
                 "Business outcome: revenue impact, cost saved, user satisfaction — gắn trực tiếp với business goal",
                 "Model accuracy % kỹ thuật",
                 "Error rate"
@@ -1564,7 +1896,7 @@
           ],
           "quiz": [
             {
-              "q": "AI chatbot launch, business case hứa giảm 40% ticket support sau 90 ngày. Ngày 90, support ticket giảm chỉ 15%. BA nên làm gì?",
+              "q": "Một feature self-service launch, business case hứa giảm 40% ticket support sau 90 ngày. Ngày 90, ticket giảm chỉ 15%. BA nên làm gì?",
               "options": [
                 "Đợi thêm 90 ngày nữa",
                 "Báo cáo thành công (15% cũng là giảm)",
@@ -1580,27 +1912,27 @@
     },
     {
       "phase": 7,
-      "title": "Career & Certification",
-      "subtitle": "Portfolio BA thời AI, chứng chỉ, và readiness phỏng vấn",
+      "title": "Career, Portfolio & Certification",
+      "subtitle": "Portfolio Business BA/Software BA, chứng chỉ và readiness phỏng vấn",
       "duration": "4 tuần",
       "theme": "orange",
       "goals": [
-        "Định vị hồ sơ BA theo thị trường AI",
-        "Chuẩn bị case study có số liệu tác động",
+        "Định vị hồ sơ theo Business BA, Software BA, Product BA hoặc AI BA",
+        "Chuẩn bị case study có artifact và số liệu tác động",
         "Lập lộ trình chứng chỉ phù hợp"
       ],
       "deliverables": [
         "Portfolio 2-3 case studies",
-        "CV/LinkedIn định hướng AI BA",
+        "CV/LinkedIn định hướng Business/Software BA",
         "Certification plan 12 tháng"
       ],
       "projects": [
-        "Mock interview theo role AI Business Analyst"
+        "Mock interview theo role Business Analyst / Software Business Analyst"
       ],
       "items": [
         {
-          "name": "Portfolio AI BA",
-          "detail": "Viết case study theo format problem -> approach -> impact -> lessons learned.",
+          "name": "Portfolio Business/Software BA",
+          "detail": "Viết case study theo format problem -> approach -> artifacts -> impact -> lessons learned, có BRD/SRS sample, BPMN/UML, backlog, UAT plan và metrics.",
           "type": "skill",
           "level": "intermediate",
           "estimatedTime": "6h",
@@ -1613,14 +1945,15 @@
             "STAR method"
           ],
           "learningSteps": [
-            "Chọn 2-3 dự án thực tế có AI element để làm case study (dù nhỏ cũng được)",
-            "Viết theo format: Problem → Stakeholders → Approach (tools/methods) → Outcome (số liệu) → Lessons",
+            "Chọn 2-3 dự án thực tế hoặc mô phỏng để làm case study: business process, software feature, integration hoặc AI-assisted feature",
+            "Viết theo format: Problem → Stakeholders → Approach → Artifacts → Outcome (số liệu) → Lessons",
             "Quantify impact: 'Giảm 30% thời gian discovery' tốt hơn 'cải thiện process'",
-            "Publish trên LinkedIn hoặc GitHub để recruiter và hiring manager có thể đọc"
+            "Đính kèm artifact mẫu: stakeholder map, BPMN, BRD/SRS excerpt, user stories, RTM, UAT plan, dashboard",
+            "Publish trên LinkedIn hoặc GitHub/portfolio để recruiter và hiring manager có thể đọc"
           ],
           "quiz": [
             {
-              "q": "Trong portfolio case study cho vị trí AI BA, phần nào quan trọng nhất với hiring manager?",
+              "q": "Trong portfolio case study cho vị trí BA/Software BA, phần nào quan trọng nhất với hiring manager?",
               "options": [
                 "Danh sách tools đã dùng (Jira, Confluence, Miro...)",
                 "Measurable business impact và cách BA approach problem — numbers tell the story",
@@ -1678,7 +2011,7 @@
                 "PMI-PMP"
               ],
               "answer": 1,
-              "explanation": "IIBA-AAC được thiết kế cho BA trong môi trường Agile, yêu cầu 2+ năm BA + 2+ năm Agile experience — phù hợp hơn CCBA/CBAP vớn thiên waterfall."
+              "explanation": "IIBA-AAC được thiết kế cho BA trong môi trường Agile, yêu cầu 2+ năm BA + 2+ năm Agile experience — phù hợp hơn nếu bạn thiên về Agile thay vì waterfall."
             }
           ]
         },

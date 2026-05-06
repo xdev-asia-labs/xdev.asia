@@ -658,6 +658,117 @@ html {
   background: #ffffff;
 }
 
+.roadmap-detail-hero {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.92)),
+    linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+}
+
+.roadmap-hero-stat,
+.roadmap-detail-stat {
+  min-width: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 0.7rem 0.8rem;
+}
+
+.roadmap-hero-stat strong,
+.roadmap-detail-stat strong {
+  display: block;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.roadmap-hero-stat span,
+.roadmap-detail-stat span {
+  display: block;
+  margin-top: 0.2rem;
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.roadmap-index-card {
+  border-radius: 0.95rem;
+  padding: 0.9rem;
+}
+
+.roadmap-index-icon,
+.roadmap-detail-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 1rem;
+  border: 1px solid #dbeafe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.roadmap-index-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.35rem;
+}
+
+.roadmap-detail-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 2rem;
+}
+
+.roadmap-phase-block {
+  padding-left: 1.25rem;
+}
+
+.roadmap-phase-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.roadmap-phase-progress {
+  min-width: 4.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.85rem;
+  background: #ffffff;
+  padding: 0.55rem 0.7rem;
+  text-align: center;
+}
+
+.roadmap-phase-progress strong {
+  display: block;
+  color: #0f172a;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.roadmap-phase-progress span {
+  display: block;
+  margin-top: 0.2rem;
+  color: #64748b;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.roadmap-overview-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #f8fafc, #ffffff);
+  padding: 1rem;
+}
+
 .dark .roadmap-index-bg,
 .dark .roadmap-detail-bg {
   background:
@@ -719,6 +830,40 @@ html {
 .dark .roadmap-node:hover {
   border-color: #1e40af;
   background: rgba(15, 23, 42, 0.95);
+}
+
+.dark .roadmap-detail-hero {
+  background:
+    linear-gradient(180deg, rgba(9, 9, 11, 0.92), rgba(15, 23, 42, 0.88)),
+    linear-gradient(to right, rgba(71, 85, 105, 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(71, 85, 105, 0.18) 1px, transparent 1px);
+}
+
+.dark .roadmap-hero-stat,
+.dark .roadmap-detail-stat,
+.dark .roadmap-phase-progress,
+.dark .roadmap-overview-box {
+  border-color: #1f2937;
+  background: rgba(15, 23, 42, 0.72);
+}
+
+.dark .roadmap-hero-stat strong,
+.dark .roadmap-detail-stat strong,
+.dark .roadmap-phase-progress strong {
+  color: #f8fafc;
+}
+
+.dark .roadmap-hero-stat span,
+.dark .roadmap-detail-stat span,
+.dark .roadmap-phase-progress span {
+  color: #94a3b8;
+}
+
+.dark .roadmap-index-icon,
+.dark .roadmap-detail-icon {
+  border-color: #1e40af;
+  background: rgba(30, 64, 175, 0.28);
+  color: #bfdbfe;
 }
 
 /* ═══════════════════════════════════════════════════════════════

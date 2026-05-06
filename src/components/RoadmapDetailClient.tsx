@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { IconArrowRight, IconBook } from "@/components/Icons";
+import { IconArrowRight, IconBook, IconCheckCircle, IconClock, IconRocket } from "@/components/Icons";
 import { useAuth } from "@/components/AuthProvider";
 import {
     ITEM_TYPE_BADGE,
@@ -54,8 +55,6 @@ function ItemDrawer({ item, nodeKey, done, onClose, onMarkComplete }: DrawerProp
         ? questions.filter((q, i) => selected[i] === q.answer).length
         : 0;
     const passed = submitted && questions.length > 0 && score >= Math.ceil(questions.length * 0.6);
-    const canComplete = !hasQuiz || passed || done;
-
     function handleSubmit() {
         if (Object.keys(selected).length < questions.length) return;
         setSubmitted(true);
@@ -119,6 +118,53 @@ function ItemDrawer({ item, nodeKey, done, onClose, onMarkComplete }: DrawerProp
                                 <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">{item.detail}</p>
                             </section>
 
+                            {!!item.outcomes?.length && (
+                                <section>
+                                    <h3 className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-2">Sau node này bạn làm được gì?</h3>
+                                    <ul className="space-y-2">
+                                        {item.outcomes.map((outcome) => (
+                                            <li key={outcome} className="flex gap-2.5 text-sm text-zinc-700 dark:text-zinc-300">
+                                                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+                                                <span className="leading-relaxed">{outcome}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </section>
+                            )}
+
+                            {(item.lab || item.artifact || !!item.checklist?.length) && (
+                                <section>
+                                    <h3 className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-2">Thực hành & tự kiểm tra</h3>
+                                    <div className="space-y-2.5">
+                                        {item.lab && (
+                                            <div className="rounded-xl border border-cyan-200 dark:border-cyan-800 bg-cyan-50 dark:bg-cyan-900/20 p-3">
+                                                <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-700 dark:text-cyan-300">Mini-lab</p>
+                                                <p className="mt-1 text-sm text-cyan-900 dark:text-cyan-100 leading-relaxed">{item.lab}</p>
+                                            </div>
+                                        )}
+                                        {item.artifact && (
+                                            <div className="rounded-xl border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-900/20 p-3">
+                                                <p className="text-[11px] font-bold uppercase tracking-wide text-violet-700 dark:text-violet-300">Artifact nộp</p>
+                                                <p className="mt-1 text-sm text-violet-900 dark:text-violet-100 leading-relaxed">{item.artifact}</p>
+                                            </div>
+                                        )}
+                                        {!!item.checklist?.length && (
+                                            <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 p-3">
+                                                <p className="text-[11px] font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Checklist tự đánh giá</p>
+                                                <ul className="mt-1.5 space-y-1">
+                                                    {item.checklist.map((check) => (
+                                                        <li key={check} className="flex gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+                                                            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500 shrink-0" />
+                                                            <span className="leading-relaxed">{check}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+                                </section>
+                            )}
+
                             {/* Learning steps */}
                             {!!item.learningSteps?.length && (
                                 <section>
@@ -143,6 +189,7 @@ function ItemDrawer({ item, nodeKey, done, onClose, onMarkComplete }: DrawerProp
                                     {!!item.resourceLinks?.length ? (
                                         <ul className="space-y-2">
                                             {item.resourceLinks.map((r) => {
+                                                const resourceTitle = r.label ?? r.title ?? r.url;
                                                 const typeIcon = r.type === "video" ? "▶" : r.type === "course" ? "🎓" : r.type === "tool" ? "🔧" : r.type === "doc" ? "📄" : "📖";
                                                 const typeBadge = r.type === "video"
                                                     ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800"
@@ -154,7 +201,7 @@ function ItemDrawer({ item, nodeKey, done, onClose, onMarkComplete }: DrawerProp
                                                     ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800"
                                                     : "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800";
                                                 return (
-                                                    <li key={r.url}>
+                                                    <li key={`${r.url}-${resourceTitle}`}>
                                                         <a
                                                             href={r.url}
                                                             target="_blank"
@@ -165,7 +212,7 @@ function ItemDrawer({ item, nodeKey, done, onClose, onMarkComplete }: DrawerProp
                                                                 {typeIcon} {r.type ?? "article"}
                                                             </span>
                                                             <span className="text-sm text-zinc-700 dark:text-zinc-300 group-hover/link:text-brand-600 dark:group-hover/link:text-brand-400 transition-colors leading-snug flex-1">
-                                                                {r.label}
+                                                                {resourceTitle}
                                                             </span>
                                                             <svg className="shrink-0 text-zinc-400 group-hover/link:text-brand-500 transition-colors" width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                                                         </a>
@@ -343,7 +390,7 @@ function ItemDrawer({ item, nodeKey, done, onClose, onMarkComplete }: DrawerProp
     );
 }
 
-export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
+export default function RoadmapDetailClient({ roadmap, bannerImage }: { roadmap: Roadmap; bannerImage: string }) {
     const { user, loading: authLoading, openLoginModal } = useAuth();
     const {
         loading: progressLoading,
@@ -356,6 +403,15 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
 
     const totalNodes = roadmap.phases.reduce((acc, phase) => acc + phase.items.length, 0);
     const percent = totalNodes > 0 ? Math.round((completedCount / totalNodes) * 100) : 0;
+    const firstIncompletePhase = roadmap.phases.find((phase) =>
+        phase.items.some((_, itemIndex) => !isCompleted(`p${phase.phase}-i${itemIndex}`))
+    )?.phase ?? roadmap.phases[0]?.phase ?? 1;
+    const firstResourceUrl = roadmap.phases
+        .flatMap((phase) => phase.items)
+        .flatMap((item) => item.resourceLinks ?? [])
+        .find((resource) => !!resource.url)?.url;
+    const guidesHref = firstResourceUrl ?? "/blog/";
+    const guidesIsExternal = /^https?:\/\//i.test(guidesHref);
 
     if (authLoading) {
         return (
@@ -372,6 +428,16 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
             <div className="roadmap-detail-bg min-h-screen">
                 <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                     <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 md:p-10 text-center">
+                        <div className="relative mb-6 aspect-video overflow-hidden rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-100 dark:bg-zinc-950">
+                            <Image
+                                src={bannerImage}
+                                alt={`${roadmap.title} banner`}
+                                fill
+                                sizes="(min-width: 1024px) 896px, 100vw"
+                                className="object-cover"
+                                priority
+                            />
+                        </div>
                         <p className="text-5xl mb-4">{roadmap.icon}</p>
                         <h1 className="text-2xl md:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-100">
                             {roadmap.title}
@@ -379,6 +445,21 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
                         <p className="mt-3 text-sm md:text-base text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
                             Đăng nhập để xem chi tiết roadmap và lưu tiến độ học tập của bạn trên mọi thiết bị.
                         </p>
+
+                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
+                            <div className="roadmap-detail-stat">
+                                <strong>{roadmap.stats.phases}</strong>
+                                <span>phases</span>
+                            </div>
+                            <div className="roadmap-detail-stat">
+                                <strong>{totalNodes}</strong>
+                                <span>nodes</span>
+                            </div>
+                            <div className="roadmap-detail-stat">
+                                <strong>{roadmap.stats.duration}</strong>
+                                <span>duration</span>
+                            </div>
+                        </div>
 
                         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                             <button
@@ -409,8 +490,8 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
                     onMarkComplete={(key) => toggleNode(key)}
                 />
             )}
-            <section className="border-b border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-950/70 backdrop-blur">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+            <section className="roadmap-detail-hero border-b border-zinc-200 dark:border-zinc-800">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
                     <Link
                         href="/roadmap/"
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
@@ -418,27 +499,67 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
                         <IconArrowRight size={12} className="rotate-180" /> Back to all roadmaps
                     </Link>
 
-                    <div className="mt-4 flex items-start gap-4">
-                        <span className="text-5xl leading-none">{roadmap.icon}</span>
+                    <div className="mt-5 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-8 lg:gap-12 items-end">
                         <div className="min-w-0">
-                            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-100">
-                                {roadmap.title}
-                            </h1>
-                            <p className="mt-2 text-sm md:text-base text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed">
+                            <div className="flex items-center gap-3">
+                                <span className="roadmap-detail-icon">{roadmap.icon}</span>
+                                <div>
+                                    <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-600 dark:text-brand-300">
+                                        <IconRocket size={13} />
+                                        Interactive roadmap
+                                    </div>
+                                    <h1 className="mt-1 text-3xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-zinc-100">
+                                        {roadmap.title}
+                                    </h1>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm md:text-base text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed">
                                 {roadmap.description}
                             </p>
-                        </div>
-                    </div>
 
-                    <div className="mt-6 flex flex-wrap gap-2">
-                        {roadmap.tags.map((tag) => (
-                            <span
-                                key={tag}
-                                className="text-xs font-medium px-2.5 py-1 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400"
-                            >
-                                {tag}
-                            </span>
-                        ))}
+                            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-3xl">
+                                <div className="roadmap-detail-stat">
+                                    <strong>{roadmap.stats.phases}</strong>
+                                    <span>phases</span>
+                                </div>
+                                <div className="roadmap-detail-stat">
+                                    <strong>{totalNodes}</strong>
+                                    <span>nodes</span>
+                                </div>
+                                <div className="roadmap-detail-stat">
+                                    <strong>{roadmap.stats.duration}</strong>
+                                    <span>duration</span>
+                                </div>
+                                <div className="roadmap-detail-stat">
+                                    <strong>{percent}%</strong>
+                                    <span>complete</span>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 flex flex-wrap gap-2">
+                                {roadmap.tags.map((tag) => (
+                                    <span
+                                        key={tag}
+                                        className="text-xs font-medium px-2.5 py-1 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400"
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="relative aspect-video overflow-hidden rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-100 dark:bg-zinc-950 shadow-sm">
+                                <Image
+                                    src={bannerImage}
+                                    alt={`${roadmap.title} banner`}
+                                    fill
+                                    sizes="(min-width: 1024px) 360px, 100vw"
+                                    className="object-cover"
+                                    priority
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -474,15 +595,18 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
                         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
                             <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Tiến độ học</h2>
                             <div className="mt-3">
-                                <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+                                <div className="flex items-end justify-between gap-3">
+                                    <strong className="text-2xl font-black text-zinc-900 dark:text-zinc-100">{percent}%</strong>
+                                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                        {progressLoading ? "Đang tải..." : `${completedCount}/${totalNodes} nodes`}
+                                    </span>
+                                </div>
+                                <div className="mt-3 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
                                     <div
                                         className="h-full rounded-full bg-linear-to-r from-brand-400 to-brand-600 transition-all duration-500"
                                         style={{ width: `${percent}%` }}
                                     />
                                 </div>
-                                <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">
-                                    {progressLoading ? "Đang tải..." : `${completedCount}/${totalNodes} nodes (${percent}%)`}
-                                </p>
                             </div>
                         </div>
 
@@ -505,12 +629,18 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
                         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
                             <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Start Learning</h2>
                             <div className="mt-3 flex flex-col gap-2">
-                                <Link href="/series/" className="btn-primary justify-center">
-                                    <IconBook size={14} /> Series
-                                </Link>
-                                <Link href="/blog/" className="btn-ghost justify-center">
-                                    Guides
-                                </Link>
+                                <a href={`#phase-${firstIncompletePhase}`} className="btn-primary justify-center">
+                                    <IconBook size={14} /> Bắt đầu từ Phase {firstIncompletePhase}
+                                </a>
+                                {guidesIsExternal ? (
+                                    <a href={guidesHref} target="_blank" rel="noopener noreferrer" className="btn-ghost justify-center">
+                                        Mở tài nguyên roadmap
+                                    </a>
+                                ) : (
+                                    <Link href={guidesHref} className="btn-ghost justify-center">
+                                        Mở tài nguyên roadmap
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -518,17 +648,34 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
 
                 <main className="lg:col-span-8 xl:col-span-9 space-y-6">
                     <section className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
-                        <h2 className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
-                            What is {roadmap.title}?
-                        </h2>
-                        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                            {roadmap.intro || roadmap.description}
-                        </p>
-                        {roadmap.why_now && (
-                            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                                {roadmap.why_now}
-                            </p>
-                        )}
+                        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_280px] gap-6">
+                            <div>
+                                <h2 className="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
+                                    What is {roadmap.title}?
+                                </h2>
+                                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                    {roadmap.intro || roadmap.description}
+                                </p>
+                                {roadmap.why_now && (
+                                    <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                        {roadmap.why_now}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="roadmap-overview-box">
+                                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+                                    <IconCheckCircle size={14} />
+                                    Outcome
+                                </div>
+                                <p className="mt-3 text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-relaxed">
+                                    {roadmap.stats.level}
+                                </p>
+                                <div className="mt-4 flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                                    <IconClock size={14} />
+                                    {roadmap.stats.duration}
+                                </div>
+                            </div>
+                        </div>
                     </section>
 
                     <section className="roadmap-canvas rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 md:p-6">
@@ -544,21 +691,31 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
                         <div className="space-y-5">
                             {roadmap.phases.map((phase, phaseIndex) => {
                                 const t = THEME[phase.theme];
+                                const phaseDone = phase.items.filter((_, itemIndex) => isCompleted(`p${phase.phase}-i${itemIndex}`)).length;
+                                const phasePercent = phase.items.length > 0 ? Math.round((phaseDone / phase.items.length) * 100) : 0;
                                 return (
                                     <div key={phase.phase} id={`phase-${phase.phase}`} className="roadmap-phase-block">
                                         {phaseIndex < roadmap.phases.length - 1 && <div className="roadmap-phase-connector" aria-hidden />}
 
-                                        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border ${t.borderColor} ${t.bgColor}`}>
-                                            <span className={`text-xs font-black ${t.color}`}>PHASE {phase.phase}</span>
-                                            <span className="text-xs text-zinc-500 dark:text-zinc-400">{phase.duration}</span>
-                                        </div>
+                                        <div className="roadmap-phase-header">
+                                            <div className="min-w-0">
+                                                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border ${t.borderColor} ${t.bgColor}`}>
+                                                    <span className={`text-xs font-black ${t.color}`}>PHASE {phase.phase}</span>
+                                                    <span className="text-xs text-zinc-500 dark:text-zinc-400">{phase.duration}</span>
+                                                </div>
 
-                                        <h3 className="mt-2 text-base md:text-lg font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight">
-                                            {phase.title}
-                                        </h3>
-                                        <p className="mt-1 text-xs md:text-sm text-zinc-600 dark:text-zinc-400">
-                                            {phase.subtitle}
-                                        </p>
+                                                <h3 className="mt-2 text-base md:text-xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                                                    {phase.title}
+                                                </h3>
+                                                <p className="mt-1 text-xs md:text-sm text-zinc-600 dark:text-zinc-400">
+                                                    {phase.subtitle}
+                                                </p>
+                                            </div>
+                                            <div className="roadmap-phase-progress">
+                                                <strong>{phaseDone}/{phase.items.length}</strong>
+                                                <span>{phasePercent}%</span>
+                                            </div>
+                                        </div>
 
                                         {!!phase.goals?.length && (
                                             <div className="mt-3">
@@ -665,6 +822,16 @@ export default function RoadmapDetailClient({ roadmap }: { roadmap: Roadmap }) {
                                                                 Tài nguyên: {item.resources.join(" • ")}
                                                             </p>
                                                         )}
+
+                                                        <div className="mt-3 pl-7 flex items-center justify-between gap-3 text-[11px] font-semibold text-zinc-500 dark:text-zinc-500">
+                                                            <span className="inline-flex items-center gap-1">
+                                                                <IconBook size={12} />
+                                                                {item.learningSteps?.length || 0} steps
+                                                            </span>
+                                                            <span className="inline-flex items-center gap-1 text-brand-600 dark:text-brand-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                Mở chi tiết <IconArrowRight size={11} />
+                                                            </span>
+                                                        </div>
                                                     </article>
                                                 );
                                             })}

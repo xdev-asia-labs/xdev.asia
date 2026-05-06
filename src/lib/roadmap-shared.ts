@@ -13,9 +13,13 @@ export interface RoadmapItem {
     type: RoadmapItemType;
     level?: "basic" | "intermediate" | "advanced";
     estimatedTime?: string;
+    outcomes?: string[];
+    lab?: string;
+    artifact?: string;
+    checklist?: string[];
     recommendedFor?: Array<"beginner" | "transitioner">;
     resources?: string[];
-    resourceLinks?: Array<{ label: string; url: string; type?: "article" | "video" | "course" | "tool" | "doc" }>;
+    resourceLinks?: Array<{ label?: string; title?: string; url: string; type?: "article" | "video" | "course" | "tool" | "doc" }>;
     learningSteps?: string[];
     quiz?: RoadmapQuizQuestion[];
 }

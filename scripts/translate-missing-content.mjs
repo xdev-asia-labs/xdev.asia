@@ -58,6 +58,7 @@ function parseArgs() {
     dryRun: false,
     fixViLeftovers: false,
     onlyUntracked: false,
+    includes: [],
   };
 
   for (let i = 0; i < args.length; i += 1) {
@@ -80,6 +81,8 @@ function parseArgs() {
       options.fixViLeftovers = true;
     } else if (arg === "--only-untracked") {
       options.onlyUntracked = true;
+    } else if (arg === "--include" || arg === "--includes") {
+      options.includes.push(...(args[++i] || "").split(",").filter(Boolean));
     } else {
       throw new Error(`Unknown argument: ${arg}`);
     }
@@ -145,6 +148,15 @@ function shouldIncludeSource(filePath, root, seriesFilters) {
   return seriesFilters.some((series) => rel === series || rel.startsWith(`${series}/`));
 }
 
+function shouldIncludeRelPath(relPath, includes) {
+  if (includes.length === 0) return true;
+  const normalized = relPath.replaceAll(path.sep, "/");
+  return includes.some((include) => {
+    const value = include.replaceAll(path.sep, "/").replace(/^content\/blog\//, "");
+    return normalized === value || normalized.endsWith(`/${value}`);
+  });
+}
+
 function localeFromPath(filePath) {
   const normalized = toPosixPath(filePath);
   const match = normalized.match(/^content\/(en|ja|zh-tw)\//);
@@ -185,6 +197,7 @@ function findMissing(options) {
       if (!id) continue;
 
       const relPath = path.relative(sourceBase, sourcePath);
+      if (!shouldIncludeRelPath(relPath, options.includes)) continue;
       for (const locale of options.locales) {
         if (localeMaps[locale].has(String(id))) continue;
         missing.push({

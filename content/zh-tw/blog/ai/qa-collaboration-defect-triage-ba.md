@@ -1,0 +1,232 @@
+---
+id: 02760001-ba02-4001-a008-000000000001
+title: BA 的 QA 協作和缺陷分類：如何減少操作錯誤？
+slug: qa-collaboration-defect-triage-ba
+excerpt: BA 和 QA 是將需求轉化為測試場景的重要組合。本文介紹如何在發布前與 QA 協調、對嚴重性/優先級進行分類、對缺陷進行分類以及管理回歸範圍。
+featured_image: /images/blog/user-story-acceptance-criteria.png
+type: blog
+reading_time: 11
+view_count: 0
+meta: null
+published_at: '2026-05-06T10:10:00.000000Z'
+created_at: '2026-05-06T10:10:00.000000Z'
+author:
+  id: 019c9616-d2b4-713f-9b2c-40e2e92a05cf
+  name: Duy Tran
+  avatar: avatars/7e8eb5c6-4cac-455b-a701-4060f085d501.jpeg
+category:
+  id: 019c9616-cat1-7001-a001-000000000001
+  name: AI
+  slug: ai
+tags:
+  - name: BA
+    slug: ba
+  - name: QA
+    slug: qa
+  - name: Defect
+    slug: defect
+  - name: UAT
+    slug: uat
+  - name: Agile
+    slug: agile
+comments: []
+locale: zh-tw
+---
+BA 寫要求。 QA 驗證需求。如果這兩個角色配合不緊密，「走錯職業」的bug就會出現很多。
+
+業務錯誤通常不是因為開發薄弱或缺乏 QA 測試。根通常是：
+
+——驗收標準不夠明確。
+- 業務規則存在於利害關係人的腦海中。
+- 未說明邊緣情況。
+- QA不允許參與細化。
+- 缺陷分類只考慮技術，而不考慮業務影響。
+
+## 1. BA 和 QA 何時應該協調？
+
+來自細化，而不是衝刺結束。
+
+在以下情況下應邀請品質檢查：
+
+- 故事有複雜的業務規則。
+- 有很多角色/權限。
+- 具有整合/API。
+- 具備資料遷移功能。
+- 擁有 UAT 或合規性。
+- 具有顯著的 NFR。
+
+如果 QA 僅在建置完成後才看到需求，那麼他們只能在後期偵測到錯誤。
+
+## 2.從AC到測試場景
+
+良好的驗收標準是測試場景的輸入。
+
+故事：
+
+> 作為客戶，我想取消我的預約，以便在我無法出席時可以騰出空位。
+
+交流電：
+
+```gherkin
+Given khách có lịch hẹn Confirmed
+When khách hủy trước giờ hẹn ít nhất 4 tiếng
+Then hệ thống cập nhật trạng thái thành Cancelled
+And slot được mở lại cho khách khác đặt
+And khách nhận email xác nhận hủy
+```
+
+測試場景：
+
+|身分證 |場景 |預計|
+|---|---|---|
+| TC-001 |提前4小時取消 |已取消，插槽重新開放，電子郵件已發送 |
+| TC-002 | 4 小時內取消 |不允許取消，顯示政策 |
+| TC-003 |取消預定 取消 |不允許取消 |
+| TC-004 |電子郵件服務錯誤 |預訂仍被取消，請透過電子郵件重試/日誌 |
+| TC-005 |另一位使用者取消預約 | 403 或沒有權限 |
+
+QA 幫助 BA 發現 BA 經常錯過的案例。
+
+## 3. 嚴重性與優先級
+
+這兩個概念經常被混淆。
+
+- **嚴重性**：系統/功能錯誤的嚴重性。
+- **優先順序**：根據業務/發布上下文修復的緊急需求等級。
+
+例如：
+
+|蟲子 |嚴重性 |優先事項 |為什麼 |
+|---|---|---|---|
+|付款被收取兩次|關鍵| P0|對金錢和信任的影響|
+|內部管理中標誌偏移 2px |低| P3 |低影響 |
+|發票上的日期格式錯誤 |中| P1 |可能的法律/會計影響|
+|匯出 CSV 缺少可選 |專欄 中 | P2 |有解法|
+
+BA 需要優先參與，因為 BA 了解業務影響。
+
+## 4. 缺陷分類會議
+
+30 分鐘議程：
+
+```text
+1. Review bug mới theo severity
+2. Xác định business impact
+3. Xác định workaround
+4. Quyết định fix now / fix later / won't fix
+5. Update release risk
+6. Assign owner và deadline
+```
+
+每個缺陷應具有：
+
+- 重現步驟。
+- 實際結果。
+- 預期結果。
+- 環境。
+- 證據截圖/日誌。
+- 相關要求/AC。
+- 影響。
+- 嚴重性。
+- 優先事項。
+- 所有者。
+
+## 5. 缺陷分類矩陣
+
+|影響 |解決方法|決定|
+|---|---|---|
+|高|沒有解決辦法 |發布前修復 |
+|高|有解決辦法|產品/BA決定風險 |
+|中|沒有解決方法 |修復容量問題 |
+|中等|有解決方法|可以延後|
+|低|有解決方法|積壓|
+
+決定不應該基於感覺。原因必須說清楚。
+
+## 6.迴歸範圍
+
+當需求改變時，QA 需要知道要重新測試什麼。
+
+BA應該寫：
+
+- 需求變更。
+- 哪些業務規則改變了？
+- 哪些 API/資料受到影響？
+- 哪個角色受到影響？
+- 哪些報告/儀表板受到影響？
+- 哪些UAT場景需要更新？
+
+例如：
+
+```text
+Change: Cho phép hủy lịch trước 2 tiếng thay vì 4 tiếng.
+
+Regression scope:
+- Cancel appointment flow
+- Slot availability recalculation
+- Email template
+- Admin booking history
+- UAT scenario UAT-03
+```
+
+## 7. BA應該如何讀取bug？
+
+當 QA 記錄錯誤時，BA 不僅會問「規範是否正確？」問：
+
+- 規格是否含糊？
+- AC 是否涵蓋這種情況？
+- 業務規則有來源嗎？
+- 這是錯誤還是變更請求？
+- 如果不解決，會對業務產生什麼影響？
+- 有解決方法嗎？
+- 我需要更新SRS/RTM/測試案例嗎？
+
+如果由於缺少需求而出現錯誤，BA 應該負責改進需求，而不僅僅是將其推給開發人員。
+
+## 8.UAT缺陷
+
+UAT 的缺陷通常分為 3 類：
+
+|類型 |如何處理|
+|---|---|
+|真正的錯誤|以嚴重性/優先順序修復 |
+|需求差距|變更請求或範圍更新 |
+|訓練/流程問題 |更新指南、訓練、溝通 |
+
+BA需要明確區分。並非每個 UAT 回應都是錯誤。
+
+## 9. 常見錯誤
+
+**錯誤1：QA不允許參與細化**
+
+當 QA 遲到時，邊緣情況就會晚發現。
+
+**錯誤2：BA在bug後沒有更新需求**
+
+如果錯誤指定了新規則，則必須更新 SRS/AC/測試案例。否則，同樣的錯誤將會再次出現。
+
+**錯誤3：根據誰喊得最大聲來決定錯誤的優先順序**
+
+優先順序必須基於影響、緊迫性、解決方法和發布風險。
+
+## 練習練習
+
+選擇一個你曾經寫過的故事。建立表：
+
+- 交流電
+- 測試場景
+- 預期結果
+- 需要數據
+- 需要角色
+- 邊緣情況
+
+然後問自己：QA 可以在不再次詢問你的情況下進行測試嗎？
+
+## 參考來源
+
+- Scrum 指南 2020： https://scrumguides.org/scrum-guide.html
+- IIBA BABOK 指引： https://www.iiba.org/standards-and-resources/babok/
+
+## 結論
+
+BA 和 QA 從兩個角度保護品質：BA 保護業務重要性，QA 保護可驗證性。當這兩個角色儘早且結構化地工作時，團隊就會減少錯誤，減少返工，並使 UAT 變得更輕。

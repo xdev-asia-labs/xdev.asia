@@ -1,6 +1,15 @@
 export const dynamic = "force-static";
 
 import { getAllPosts } from "@/lib/data";
+import { localizedPath, LOCALES, type Locale } from "@/lib/i18n/config";
+
+const SITE_URL = "https://xdev.asia";
+const NEWS_LANGUAGE: Record<Locale, string> = {
+  vi: "vi",
+  en: "en",
+  ja: "ja",
+  "zh-tw": "zh-TW",
+};
 
 function escapeXml(str: string): string {
   return str
@@ -12,30 +21,39 @@ function escapeXml(str: string): string {
 }
 
 export function GET() {
-  const siteUrl = "https://xdev.asia";
-  const posts = getAllPosts();
-
   // Google News sitemap should only include articles from the last 2 days
   const twoDaysAgo = new Date();
   twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
-  const recentPosts = posts.filter((post) => {
-    if (!post.published_at) return false;
-    return new Date(post.published_at) >= twoDaysAgo;
-  });
+  const recentLocalizedPosts = LOCALES.flatMap((locale) =>
+    getAllPosts(locale)
+      .filter((post) => {
+        if (!post.published_at) return false;
+        return new Date(post.published_at) >= twoDaysAgo;
+      })
+      .map((post) => ({ locale, post }))
+  )
+    .sort(
+      (a, b) =>
+        new Date(b.post.published_at || 0).getTime() -
+        new Date(a.post.published_at || 0).getTime()
+    )
+    // Google News sitemap limit: 1000 URLs.
+    .slice(0, 1000);
 
-  const urlEntries = recentPosts
-    .map((post) => {
+  const urlEntries = recentLocalizedPosts
+    .map(({ locale, post }) => {
       const pubDate = post.published_at
         ? new Date(post.published_at).toISOString()
         : new Date().toISOString();
+      const loc = `${SITE_URL}${localizedPath(locale, `/blog/${post.slug}/`)}`;
 
       return `  <url>
-    <loc>${escapeXml(`${siteUrl}/blog/${post.slug}/`)}</loc>
+    <loc>${escapeXml(loc)}</loc>
     <news:news>
       <news:publication>
         <news:name>xDev Asia</news:name>
-        <news:language>vi</news:language>
+        <news:language>${NEWS_LANGUAGE[locale]}</news:language>
       </news:publication>
       <news:publication_date>${pubDate}</news:publication_date>
       <news:title>${escapeXml(post.title)}</news:title>

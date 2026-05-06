@@ -15,6 +15,7 @@ import TableOfContents from "@/components/TableOfContents";
 import TextToSpeech from "@/components/TextToSpeech";
 import TranslateButton from "@/components/TranslateButton";
 import { formatDate, getAllPosts, getAuthorById, getPost, getPostLanguageLinks, getPostSlugs } from "@/lib/data";
+import { LOCALE_HREFLANG } from "@/lib/i18n/config";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -37,12 +38,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const canonicalUrl = `${SITE_URL}/blog/${slug}/`;
     const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
     const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
+    const languageLinks = getPostLanguageLinks(post).filter((link) => link.available);
+    const languageAlternates = Object.fromEntries(
+        languageLinks.map((link) => [LOCALE_HREFLANG[link.locale], `${SITE_URL}${link.href}`])
+    );
 
     return {
         title: post.title,
         description: post.excerpt || post.title,
         alternates: {
             canonical: canonicalUrl,
+            languages: {
+                ...languageAlternates,
+                "x-default": canonicalUrl,
+            },
         },
         openGraph: {
             title: post.title,
@@ -96,7 +105,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     const articleJsonLd = {
         "@context": "https://schema.org",
-        "@type": "Article",
+        "@type": "NewsArticle",
         headline: post.title,
         description: post.excerpt || post.title,
         image: imageUrl,
@@ -121,6 +130,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             "@type": "WebPage",
             "@id": canonicalUrl,
         },
+        isAccessibleForFree: true,
         ...(post.category ? { articleSection: post.category.name } : {}),
         inLanguage: "vi",
         ...(post.tags.length > 0 ? { keywords: post.tags.map((t) => t.name).join(", ") } : {}),

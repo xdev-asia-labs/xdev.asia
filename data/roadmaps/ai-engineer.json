@@ -1,0 +1,2077 @@
+{
+  "slug": "ai-engineer",
+  "title": "AI Engineer",
+  "headline": "Roadmap AI Engineer cho sản phẩm AI production",
+  "description": "Lộ trình AI Engineer tập trung vào LLM application stack: prompt contract, structured output, RAG, agents, evals, guardrails, observability, deployment và tối ưu chi phí.",
+  "category": "role",
+  "intro": "AI Engineer là người biến năng lực của model thành tính năng sản phẩm đáng tin cậy. Vai trò này nằm giữa software engineering, data, ML platform, security và product: hiểu model đủ sâu để thiết kế prompt/RAG/agent đúng, nhưng ưu tiên shipping hệ thống AI có metric, eval, fallback và vận hành được.",
+  "why_now": "Từ 2025-2026, phần khó của GenAI không còn là gọi API model, mà là đưa hệ thống nondeterministic vào production: kiểm soát hallucination, đánh giá chất lượng, bảo vệ khỏi prompt injection, tích hợp tool an toàn, tối ưu latency/cost và tạo feedback loop từ dữ liệu thực tế.",
+  "icon": "🧠",
+  "theme": "cyan",
+  "stats": {
+    "phases": 7,
+    "duration": "6-12 tháng",
+    "level": "Software Engineer -> Production AI Engineer",
+    "certs": "AWS AI Practitioner / Azure AI Engineer / GCP Professional ML Engineer / NVIDIA DLI"
+  },
+  "tags": [
+    "LLM",
+    "RAG",
+    "Agents",
+    "Evals",
+    "Guardrails",
+    "Prompt Engineering",
+    "Vector DB",
+    "MLOps",
+    "AI Security"
+  ],
+  "tracks": [
+    {
+      "id": "beginner",
+      "label": "Track A - Software Engineer",
+      "target": "Developer đã vững web/API/backend, muốn chuyển sang build ứng dụng AI production.",
+      "weeklyHours": "6-8 giờ/tuần",
+      "focusPhases": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "outcomes": [
+        "Build được AI feature có prompt contract, schema output và test case",
+        "Thiết kế RAG cơ bản có chunking, retrieval eval và citation",
+        "Có portfolio 1 AI assistant production-ready với monitoring tối thiểu"
+      ]
+    },
+    {
+      "id": "transitioner",
+      "label": "Track B - ML/Data/DevOps Transitioner",
+      "target": "Người đã làm ML/Data/DevOps muốn đi sâu vào LLM application, agents và vận hành GenAI.",
+      "weeklyHours": "4-6 giờ/tuần",
+      "focusPhases": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "outcomes": [
+        "Đưa RAG/agent vào CI bằng eval dataset và regression suite",
+        "Thiết kế guardrails, tool permission và audit log cho workflow có rủi ro",
+        "Vận hành AI service với tracing, cost dashboard, fallback và release policy"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "AI Engineer khác ML Engineer thế nào?",
+      "answer": "ML Engineer thường tập trung data pipeline, training, serving và model lifecycle. AI Engineer trong bối cảnh GenAI tập trung nhiều hơn vào application layer: prompt/RAG/agent/tooling/evals/guardrails/observability và tích hợp AI vào sản phẩm."
+    },
+    {
+      "question": "Có cần học deep learning từ đầu không?",
+      "answer": "Cần hiểu nền tảng token, embedding, attention, fine-tuning, latency và trade-off model, nhưng không nhất thiết phải tự train foundation model. Với vai trò AI Engineer sản phẩm, ưu tiên software engineering, evals, RAG, security và production operations."
+    },
+    {
+      "question": "Nên bắt đầu bằng RAG hay agents?",
+      "answer": "Bắt đầu bằng prompt contract và RAG trước. Agents chỉ nên thêm khi workflow cần quyết định linh hoạt, tool use nhiều bước hoặc trạng thái dài. Nếu bài toán có flow rõ, deterministic workflow thường dễ test và dễ vận hành hơn."
+    }
+  ],
+  "phases": [
+    {
+      "phase": 1,
+      "title": "AI Application Foundations",
+      "subtitle": "Nền tảng software, model literacy và tư duy sản phẩm AI",
+      "duration": "3-4 tuần",
+      "theme": "cyan",
+      "goals": [
+        "Hiểu vai trò AI Engineer trong product team",
+        "Nắm lifecycle của AI feature từ idea -> prototype -> eval -> release",
+        "Biết các ràng buộc nền tảng: token, context, latency, cost, privacy"
+      ],
+      "deliverables": [
+        "AI feature brief",
+        "Model capability matrix",
+        "Risk register bản đầu cho một tính năng AI"
+      ],
+      "projects": [
+        "Thiết kế mini AI assistant trả lời FAQ sản phẩm với API backend và logging cơ bản"
+      ],
+      "items": [
+        {
+          "name": "Vai trò AI Engineer trong product team",
+          "detail": "Phân biệt AI Engineer, ML Engineer, Data Scientist, Backend Engineer, Product Manager và BA; xác định ai chịu trách nhiệm model, data, eval, guardrail, release và incident.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "3h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Role matrix",
+            "AI feature lifecycle",
+            "Production readiness checklist"
+          ],
+          "resourceLinks": [
+            {
+              "label": "AI Engineer là gì? Từ prototype LLM đến sản phẩm AI production",
+              "url": "/blog/ai-engineer-production-readiness",
+              "type": "article"
+            },
+            {
+              "label": "Workflow vs Agent: khi nào cần agent, khi nào chỉ cần code rõ ràng?",
+              "url": "/blog/workflow-vs-agent-tool-calling",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Vẽ role matrix cho một AI feature: product, backend, data, security, legal, AI engineer",
+            "Mô tả lifecycle: prototype, eval dataset, staging, release, monitoring, incident response",
+            "Liệt kê 5 rủi ro production của AI feature: hallucination, privacy leak, prompt injection, cost spike, latency spike",
+            "Chọn một use case nhỏ và viết AI feature brief trong 1 trang",
+            "Hoàn thành Viết AI feature brief 1 trang cho một assistant FAQ.",
+            "Nộp role matrix + production readiness checklist để tự chứng minh đã làm được.",
+            "Tự review: nêu được owner của quality, safety, cost, release và incident."
+          ],
+          "quiz": [
+            {
+              "q": "AI Engineer sản phẩm thường chịu trách nhiệm chính phần nào?",
+              "options": [
+                "Chỉ train foundation model từ đầu",
+                "Thiết kế và vận hành prompt, RAG, tool use, evals và guardrails cho AI feature",
+                "Chỉ làm dashboard BI",
+                "Chỉ viết tài liệu nghiệp vụ"
+              ],
+              "answer": 1,
+              "explanation": "AI Engineer sản phẩm tập trung biến model thành tính năng vận hành được: prompt contract, retrieval, eval, safety, observability và integration."
+            },
+            {
+              "q": "Vì sao AI feature cần eval trước khi release?",
+              "options": [
+                "Vì output AI có tính biến thiên và test truyền thống không đủ bao phủ chất lượng",
+                "Vì không cần viết unit test nữa",
+                "Vì eval thay thế hoàn toàn monitoring production",
+                "Vì eval chỉ dùng để chọn UI màu đẹp hơn"
+              ],
+              "answer": 0,
+              "explanation": "Generative AI nondeterministic, nên cần eval dataset và metric để phát hiện regression chất lượng qua từng thay đổi model, prompt, retrieval hoặc tool."
+            }
+          ],
+          "lab": "viết AI feature brief 1 trang cho một assistant FAQ",
+          "artifact": "role matrix + production readiness checklist",
+          "checklist": [
+            "nêu được owner của quality, safety, cost, release và incident"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: viết AI feature brief 1 trang cho một assistant FAQ.",
+            "Tạo được artifact: role matrix + production readiness checklist.",
+            "Tự đánh giá được: nêu được owner của quality, safety, cost, release và incident."
+          ]
+        },
+        {
+          "name": "Python, TypeScript và API backend cho AI apps",
+          "detail": "Củng cố nền tảng build service: REST/HTTP streaming, async jobs, queue, retries, timeout, idempotency, typed config và secret management.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "beginner"
+          ],
+          "resources": [
+            "FastAPI or Next.js API routes",
+            "TypeScript typing",
+            "Queue and retry patterns"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Backend foundation cho AI apps: Python, TypeScript, streaming, queue và secret",
+              "url": "/blog/backend-ai-apps-python-typescript",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Build một endpoint gọi model có timeout, retry có giới hạn và request id",
+            "Thêm streaming response hoặc background job cho tác vụ dài",
+            "Tách config theo environment và lưu API key bằng secret manager hoặc env var",
+            "Log input metadata, latency, token usage và lỗi mà không lưu raw PII",
+            "Hoàn thành Build endpoint AI có timeout, retry, request_id và output validation.",
+            "Nộp API contract + logging schema + env config checklist để tự chứng minh đã làm được.",
+            "Tự review: chạy được endpoint và debug được lỗi timeout/invalid output."
+          ],
+          "quiz": [
+            {
+              "q": "Một AI endpoint production tối thiểu cần log gì để debug?",
+              "options": [
+                "Chỉ raw prompt đầy đủ",
+                "Request id, latency, model version, token usage, error type và metadata đã redact",
+                "Chỉ status 200/500",
+                "Không cần log vì model provider đã lo"
+              ],
+              "answer": 1,
+              "explanation": "Trace và metadata đã redact giúp debug mà không làm lộ dữ liệu nhạy cảm."
+            },
+            {
+              "q": "Khi model trả invalid JSON, cách xử lý nào an toàn hơn?",
+              "options": [
+                "Parse bằng regex rồi ghi DB",
+                "Retry có giới hạn hoặc fallback sau khi validate schema fail",
+                "Bỏ qua validation",
+                "Tăng temperature"
+              ],
+              "answer": 1,
+              "explanation": "Output model là untrusted data. Cần schema validation, retry có giới hạn và fallback rõ."
+            }
+          ],
+          "lab": "build endpoint AI có timeout, retry, request_id và output validation",
+          "artifact": "API contract + logging schema + env config checklist",
+          "checklist": [
+            "chạy được endpoint và debug được lỗi timeout/invalid output"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: build endpoint AI có timeout, retry, request_id và output validation.",
+            "Tạo được artifact: API contract + logging schema + env config checklist.",
+            "Tự đánh giá được: chạy được endpoint và debug được lỗi timeout/invalid output."
+          ]
+        },
+        {
+          "name": "LLM mental model: token, context, embedding, fine-tuning",
+          "detail": "Hiểu cách LLM nhận prompt, giới hạn context window, vai trò embedding, trade-off giữa prompt/RAG/fine-tuning và các yếu tố ảnh hưởng cost/latency.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "6h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Token budget",
+            "Embedding overview",
+            "Prompt vs RAG vs fine-tuning decision tree"
+          ],
+          "resourceLinks": [
+            {
+              "label": "LLM mental model: token, context window, embedding, RAG và fine-tuning",
+              "url": "/blog/llm-mental-model-token-context-embedding",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Ước lượng token budget cho system prompt, user input, retrieved context và output",
+            "So sánh khi nào dùng prompt-only, RAG, fine-tuning hoặc tool calling",
+            "Tạo embedding cho một bộ FAQ nhỏ và tìm top-k câu liên quan",
+            "Ghi lại trade-off giữa model nhỏ/nhanh/rẻ và model mạnh/chậm/đắt",
+            "Hoàn thành Tính token budget và so sánh prompt-only, RAG, fine-tuning cho 1 use case.",
+            "Nộp decision tree Prompt vs RAG vs Fine-tuning để tự chứng minh đã làm được.",
+            "Tự review: giải thích được context window, embedding và token cost bằng ví dụ."
+          ],
+          "quiz": [
+            {
+              "q": "Embedding chủ yếu dùng để làm gì trong RAG?",
+              "options": [
+                "Mã hóa password",
+                "So sánh độ tương đồng ngữ nghĩa để tìm context liên quan",
+                "Giảm latency UI",
+                "Thay thế hoàn toàn access control"
+              ],
+              "answer": 1,
+              "explanation": "Embedding biến nội dung thành vector để semantic search, nhưng vẫn cần metadata và permission filter."
+            },
+            {
+              "q": "Khi tài liệu thay đổi thường xuyên, hướng nào thường phù hợp hơn fine-tuning?",
+              "options": [
+                "RAG với re-index/freshness policy",
+                "Tăng output tokens",
+                "Xóa eval dataset",
+                "Dùng temperature cao hơn"
+              ],
+              "answer": 0,
+              "explanation": "RAG phù hợp hơn cho knowledge base sống vì có thể cập nhật retrieval index mà không train lại model."
+            }
+          ],
+          "lab": "tính token budget và so sánh prompt-only, RAG, fine-tuning cho 1 use case",
+          "artifact": "decision tree Prompt vs RAG vs Fine-tuning",
+          "checklist": [
+            "giải thích được context window, embedding và token cost bằng ví dụ"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: tính token budget và so sánh prompt-only, RAG, fine-tuning cho 1 use case.",
+            "Tạo được artifact: decision tree Prompt vs RAG vs Fine-tuning.",
+            "Tự đánh giá được: giải thích được context window, embedding và token cost bằng ví dụ."
+          ]
+        },
+        {
+          "name": "AI product framing và success metrics",
+          "detail": "Chuyển yêu cầu mơ hồ như 'thêm AI chatbot' thành bài toán có user journey, scope, risk, success metric, guardrail metric và go/no-go criteria.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "4h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "AI feature brief",
+            "Success metric map",
+            "Go/no-go checklist"
+          ],
+          "learningSteps": [
+            "Chọn một workflow có pain point rõ và xác định AI giúp giảm thời gian, tăng chất lượng hay giảm lỗi",
+            "Viết success metrics: task completion, answer helpfulness, escalation rate, latency, cost per task",
+            "Viết guardrail metrics: unsafe answer rate, citation missing rate, hallucination report rate",
+            "Định nghĩa scope không làm trong phiên bản đầu để tránh over-agentic",
+            "Hoàn thành Chuyển yêu cầu 'thêm AI chatbot' thành scope, metric và risk register.",
+            "Nộp AI feature brief + success/guardrail metrics để tự chứng minh đã làm được.",
+            "Tự review: có go/no-go criteria và fallback rõ ràng."
+          ],
+          "resourceLinks": [
+            {
+              "label": "AI Engineer là gì? Từ prototype LLM đến sản phẩm AI production",
+              "url": "/blog/ai-engineer-production-readiness",
+              "type": "article"
+            }
+          ],
+          "quiz": [
+            {
+              "q": "Success metric tốt cho AI support assistant nên đo gì?",
+              "options": [
+                "Số lần gọi model càng nhiều càng tốt",
+                "Task completion, answer helpfulness, escalation rate, latency và cost per task",
+                "Màu giao diện",
+                "Số dòng prompt"
+              ],
+              "answer": 1,
+              "explanation": "Metric cần gắn với giá trị sản phẩm và khả năng vận hành, không chỉ hoạt động kỹ thuật."
+            },
+            {
+              "q": "Guardrail metric dùng để làm gì?",
+              "options": [
+                "Đo rủi ro như unsafe answer, hallucination report, citation missing hoặc PII leak",
+                "Thay thế toàn bộ success metric",
+                "Chỉ dùng khi thiết kế logo",
+                "Làm model nhanh hơn"
+              ],
+              "answer": 0,
+              "explanation": "Guardrail metric giúp release AI có ranh giới an toàn và điều kiện go/no-go rõ."
+            }
+          ],
+          "lab": "chuyển yêu cầu 'thêm AI chatbot' thành scope, metric và risk register",
+          "artifact": "AI feature brief + success/guardrail metrics",
+          "checklist": [
+            "có go/no-go criteria và fallback rõ ràng"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: chuyển yêu cầu 'thêm AI chatbot' thành scope, metric và risk register.",
+            "Tạo được artifact: AI feature brief + success/guardrail metrics.",
+            "Tự đánh giá được: có go/no-go criteria và fallback rõ ràng."
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "title": "Prompt Contracts & Structured Outputs",
+      "subtitle": "Prompt engineering như một contract có test, schema và versioning",
+      "duration": "4-5 tuần",
+      "theme": "blue",
+      "goals": [
+        "Thiết kế prompt có role, context, constraints và output schema rõ",
+        "Dùng structured output/tool calling để giảm parsing lỗi",
+        "Tạo regression suite cho prompt và model changes"
+      ],
+      "deliverables": [
+        "Prompt contract v1",
+        "JSON schema cho output",
+        "Prompt regression dataset 30-50 cases"
+      ],
+      "projects": [
+        "Build bộ phân loại ticket CSKH trả về JSON hợp lệ, có confidence và routing reason"
+      ],
+      "items": [
+        {
+          "name": "Prompt contract và instruction hierarchy",
+          "detail": "Viết prompt như contract: role, nhiệm vụ, context, policy, output format, examples, refusal behavior và precedence giữa system/developer/user/tool.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "5h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Prompt template",
+            "Few-shot examples",
+            "Prompt changelog"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Prompt contract và structured output: cách biến prompt thành API contract",
+              "url": "/blog/prompt-contract-structured-output-ai",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Viết prompt contract cho một task phân loại ticket",
+            "Thêm positive examples, negative examples và edge cases",
+            "Tách policy không đổi khỏi context thay đổi theo request",
+            "Version prompt và ghi changelog mỗi lần chỉnh behavior",
+            "Hoàn thành Viết prompt contract versioned cho ticket classifier.",
+            "Nộp prompt contract + changelog + examples để tự chứng minh đã làm được.",
+            "Tự review: prompt có role, task, context, rules, output format và refusal behavior."
+          ],
+          "quiz": [
+            {
+              "q": "Prompt contract tốt nên có gì?",
+              "options": [
+                "Chỉ một câu hỏi ngắn để model tự đoán",
+                "Nhiệm vụ, context, constraints, output format, examples và cách xử lý ngoại lệ",
+                "Không cần output format vì model tự biết",
+                "Chỉ cần tăng temperature"
+              ],
+              "answer": 1,
+              "explanation": "Prompt contract rõ giúp hành vi ổn định, dễ test và dễ review khi thay model hoặc thay yêu cầu."
+            },
+            {
+              "q": "Prompt changelog hữu ích nhất khi nào?",
+              "options": [
+                "Khi cần truy vết vì sao behavior thay đổi sau mỗi version",
+                "Khi muốn prompt dài hơn",
+                "Khi không có eval",
+                "Khi chỉ demo nội bộ"
+              ],
+              "answer": 0,
+              "explanation": "Prompt là contract sống, cần version và changelog như code/config production."
+            }
+          ],
+          "lab": "viết prompt contract versioned cho ticket classifier",
+          "artifact": "prompt contract + changelog + examples",
+          "checklist": [
+            "prompt có role, task, context, rules, output format và refusal behavior"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: viết prompt contract versioned cho ticket classifier.",
+            "Tạo được artifact: prompt contract + changelog + examples.",
+            "Tự đánh giá được: prompt có role, task, context, rules, output format và refusal behavior."
+          ]
+        },
+        {
+          "name": "Structured output, JSON schema và validation",
+          "detail": "Dùng structured output hoặc schema validation để buộc output có dạng máy đọc được, xử lý invalid output bằng retry, repair hoặc fallback.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "JSON schema",
+            "Pydantic/Zod validators",
+            "Output repair policy"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Prompt contract và structured output: cách biến prompt thành API contract",
+              "url": "/blog/prompt-contract-structured-output-ai",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Thiết kế schema cho output có enum, required fields và confidence",
+            "Validate output bằng Zod hoặc Pydantic trước khi ghi DB",
+            "Xử lý invalid schema bằng retry có giới hạn và error classification",
+            "Viết test cho các case model trả thiếu field, sai enum hoặc text ngoài JSON",
+            "Hoàn thành Validate output bằng JSON schema/Zod/Pydantic và retry khi invalid.",
+            "Nộp output schema + repair policy để tự chứng minh đã làm được.",
+            "Tự review: backend không parse free-form text cho downstream workflow."
+          ],
+          "quiz": [
+            {
+              "q": "Vì sao structured output quan trọng trong AI app?",
+              "options": [
+                "Để UI luôn có animation đẹp",
+                "Để backend nhận dữ liệu máy đọc được, validate được và giảm lỗi parsing tự do",
+                "Để không cần kiểm tra input",
+                "Để model không bao giờ sai"
+              ],
+              "answer": 1,
+              "explanation": "Structured output không đảm bảo đúng tuyệt đối, nhưng giúp hệ thống validate, retry, fallback và tích hợp downstream đáng tin cậy hơn."
+            },
+            {
+              "q": "Structured output vẫn cần business validation vì sao?",
+              "options": [
+                "Schema chỉ kiểm tra shape/type, không tự đảm bảo business rule đúng",
+                "Schema làm model không bao giờ sai",
+                "Validation chỉ dành cho frontend",
+                "Không cần nếu model mạnh"
+              ],
+              "answer": 0,
+              "explanation": "JSON hợp lệ vẫn có thể sai enum, sai ngữ nghĩa hoặc vi phạm policy nếu không validate business rules."
+            }
+          ],
+          "lab": "validate output bằng JSON schema/Zod/Pydantic và retry khi invalid",
+          "artifact": "output schema + repair policy",
+          "checklist": [
+            "backend không parse free-form text cho downstream workflow"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: validate output bằng JSON schema/Zod/Pydantic và retry khi invalid.",
+            "Tạo được artifact: output schema + repair policy.",
+            "Tự đánh giá được: backend không parse free-form text cho downstream workflow."
+          ]
+        },
+        {
+          "name": "Model selection, temperature và latency/cost trade-off",
+          "detail": "Chọn model theo task: classification, extraction, reasoning, summarization, coding, multimodal; đo latency, token usage, quality và cost per successful task.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Model matrix",
+            "Cost calculator",
+            "Latency benchmark"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Model selection cho AI Engineer: chọn model theo chất lượng, latency và cost",
+              "url": "/blog/model-selection-cost-latency-ai",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Chạy cùng một eval set qua 2-3 model khác nhau",
+            "Đo quality, latency p50/p95, input/output tokens và cost",
+            "Thiết kế routing: task dễ dùng model nhỏ, task khó hoặc low confidence dùng model mạnh",
+            "Ghi quyết định model bằng ADR ngắn",
+            "Hoàn thành Benchmark cùng eval set qua 3 model/cấu hình.",
+            "Nộp model comparison table + ADR chọn model để tự chứng minh đã làm được.",
+            "Tự review: tính được cost per successful task, p95 latency và invalid output rate."
+          ],
+          "quiz": [
+            {
+              "q": "Metric nào tốt hơn cost/request khi so sánh model?",
+              "options": [
+                "Cost per successful task",
+                "Số chữ trong prompt",
+                "Tên model dài hay ngắn",
+                "Số màu trong UI"
+              ],
+              "answer": 0,
+              "explanation": "Model rẻ nhưng fail nhiều có thể đắt hơn tính theo task thành công."
+            },
+            {
+              "q": "Model routing nghĩa là gì?",
+              "options": [
+                "Dùng một model cho mọi task",
+                "Route task dễ sang model nhỏ, task khó/low confidence sang model mạnh hoặc human review",
+                "Random chọn model",
+                "Chỉ đổi model khi deploy lỗi"
+              ],
+              "answer": 1,
+              "explanation": "Routing giúp cân bằng quality, latency và cost theo độ khó/rủi ro của task."
+            }
+          ],
+          "lab": "benchmark cùng eval set qua 3 model/cấu hình",
+          "artifact": "model comparison table + ADR chọn model",
+          "checklist": [
+            "tính được cost per successful task, p95 latency và invalid output rate"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: benchmark cùng eval set qua 3 model/cấu hình.",
+            "Tạo được artifact: model comparison table + ADR chọn model.",
+            "Tự đánh giá được: tính được cost per successful task, p95 latency và invalid output rate."
+          ]
+        },
+        {
+          "name": "Prompt regression tests",
+          "detail": "Tạo bộ test cho prompt: golden examples, edge cases, adversarial cases, format checks và human review để phát hiện prompt/model regression.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Golden dataset",
+            "Edge-case suite",
+            "CI prompt test"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Evaluation-driven AI Engineering: eval dataset, rubrics, graders và release gates",
+              "url": "/blog/eval-driven-ai-engineering",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Thu thập 30-50 inputs đại diện cho normal, edge và adversarial cases",
+            "Định nghĩa expected label, expected JSON shape và rubrics cho quality",
+            "Chạy regression mỗi khi đổi prompt, model, schema hoặc retrieval logic",
+            "Gắn failed cases vào prompt changelog để học từ lỗi thật",
+            "Hoàn thành Tạo 50 prompt regression cases và chạy lại khi đổi prompt/model.",
+            "Nộp golden dataset + regression report để tự chứng minh đã làm được.",
+            "Tự review: biết block release khi correctness hoặc schema validity tụt."
+          ],
+          "quiz": [
+            {
+              "q": "Khi nào nên chạy prompt regression tests?",
+              "options": [
+                "Khi đổi prompt, model, schema, retrieval logic hoặc safety policy",
+                "Chỉ cuối năm",
+                "Chỉ khi user khen",
+                "Không cần nếu có demo"
+              ],
+              "answer": 0,
+              "explanation": "Mỗi thay đổi có thể tạo regression hành vi nên cần chạy lại eval set."
+            },
+            {
+              "q": "Golden dataset nên có gì ngoài happy path?",
+              "options": [
+                "Edge cases, adversarial cases, missing data và historical failures",
+                "Chỉ 5 câu dễ",
+                "Chỉ câu hỏi do model tự tạo",
+                "Chỉ dữ liệu tiếng Anh"
+              ],
+              "answer": 0,
+              "explanation": "Dataset phải đại diện cho rủi ro thật, không chỉ demo đẹp."
+            }
+          ],
+          "lab": "tạo 50 prompt regression cases và chạy lại khi đổi prompt/model",
+          "artifact": "golden dataset + regression report",
+          "checklist": [
+            "biết block release khi correctness hoặc schema validity tụt"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: tạo 50 prompt regression cases và chạy lại khi đổi prompt/model.",
+            "Tạo được artifact: golden dataset + regression report.",
+            "Tự đánh giá được: biết block release khi correctness hoặc schema validity tụt."
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "title": "Retrieval-Augmented Generation",
+      "subtitle": "RAG có nguồn, có đo lường và có chiến lược dữ liệu",
+      "duration": "5-7 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Thiết kế ingestion, chunking, embedding và retrieval pipeline",
+        "Đánh giá context precision/recall thay vì chỉ xem demo trả lời hay",
+        "Kết nối RAG với citation, freshness, permissions và feedback loop"
+      ],
+      "deliverables": [
+        "RAG architecture diagram",
+        "Retrieval eval set",
+        "Citation and source policy"
+      ],
+      "projects": [
+        "Build trợ lý hỏi đáp tài liệu nội bộ với citation, permission filter và eval dashboard đơn giản"
+      ],
+      "items": [
+        {
+          "name": "Data ingestion, chunking và metadata strategy",
+          "detail": "Chuẩn hóa tài liệu từ Markdown/PDF/HTML/DB, chunk theo cấu trúc, gắn metadata, version, permission và freshness để retrieval có ngữ cảnh đúng.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Chunking playbook",
+            "Metadata schema",
+            "Document versioning"
+          ],
+          "resourceLinks": [
+            {
+              "label": "RAG từ gốc: ingestion, chunking, metadata, vector search và hybrid retrieval",
+              "url": "/blog/rag-ingestion-vector-hybrid-retrieval",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Ingest 20-50 tài liệu khác định dạng vào một format trung gian",
+            "Thử chunk theo heading, paragraph và sliding window rồi so sánh kết quả retrieval",
+            "Gắn metadata: source, owner, updated_at, access_level, product_area",
+            "Viết policy xóa hoặc re-index khi tài liệu đổi",
+            "Hoàn thành Ingest 20 tài liệu, chunk theo heading và gắn metadata.",
+            "Nộp metadata schema + re-index policy để tự chứng minh đã làm được.",
+            "Tự review: chunk có source, owner, updated_at, product_area và access_level."
+          ],
+          "quiz": [
+            {
+              "q": "Metadata nào quan trọng cho RAG enterprise?",
+              "options": [
+                "source, updated_at, owner, access_level, tenant/product_area",
+                "Màu nền tài liệu",
+                "Tên file không cần version",
+                "Số emoji trong doc"
+              ],
+              "answer": 0,
+              "explanation": "Metadata giúp filter đúng quyền, freshness, owner và domain trước khi đưa context vào prompt."
+            },
+            {
+              "q": "Chunk quá lớn thường gây vấn đề gì?",
+              "options": [
+                "Context nhiễu, tốn token và retrieval kém chính xác",
+                "Model tự train lại",
+                "Không cần citation",
+                "Giảm cost tuyệt đối"
+              ],
+              "answer": 0,
+              "explanation": "Chunk quá lớn làm context loãng và khó xác định đoạn hỗ trợ answer."
+            }
+          ],
+          "lab": "ingest 20 tài liệu, chunk theo heading và gắn metadata",
+          "artifact": "metadata schema + re-index policy",
+          "checklist": [
+            "chunk có source, owner, updated_at, product_area và access_level"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: ingest 20 tài liệu, chunk theo heading và gắn metadata.",
+            "Tạo được artifact: metadata schema + re-index policy.",
+            "Tự đánh giá được: chunk có source, owner, updated_at, product_area và access_level."
+          ]
+        },
+        {
+          "name": "Embeddings, vector search và hybrid retrieval",
+          "detail": "Dùng embedding/vector database, BM25/hybrid search, reranking và filters để lấy đúng context cho câu hỏi, tránh top-k theo cảm giác.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "10h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Vector DB",
+            "Hybrid retrieval",
+            "Reranking"
+          ],
+          "resourceLinks": [
+            {
+              "label": "RAG từ gốc: ingestion, chunking, metadata, vector search và hybrid retrieval",
+              "url": "/blog/rag-ingestion-vector-hybrid-retrieval",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Index bộ tài liệu với embedding model phù hợp ngôn ngữ và domain",
+            "So sánh dense retrieval, keyword search và hybrid retrieval",
+            "Thêm metadata filters cho product, tenant hoặc permission",
+            "Benchmark top-k, rerank và threshold để giảm context noise",
+            "Hoàn thành So sánh dense search, keyword search và hybrid retrieval.",
+            "Nộp retrieval benchmark top-k + threshold notes để tự chứng minh đã làm được.",
+            "Tự review: dùng metadata filter trước khi đưa context vào prompt."
+          ],
+          "quiz": [
+            {
+              "q": "RAG giúp giảm hallucination bằng cách nào?",
+              "options": [
+                "Bắt model luôn trả lời dài hơn",
+                "Cung cấp context liên quan từ nguồn dữ liệu ngoài trước khi model tạo câu trả lời",
+                "Xóa hết system prompt",
+                "Tăng temperature lên cao"
+              ],
+              "answer": 1,
+              "explanation": "RAG đưa dữ liệu liên quan và cập nhật vào prompt, giúp model bám nguồn hơn. Tuy nhiên vẫn cần eval, citation và guardrails."
+            },
+            {
+              "q": "Hybrid retrieval hữu ích nhất khi nào?",
+              "options": [
+                "Khi query có mã lỗi, SKU, endpoint hoặc thuật ngữ chính xác",
+                "Khi không có dữ liệu",
+                "Khi muốn bỏ metadata",
+                "Khi không cần eval"
+              ],
+              "answer": 0,
+              "explanation": "Keyword search vẫn mạnh với token chính xác; semantic search mạnh với paraphrase. Hybrid kết hợp cả hai."
+            }
+          ],
+          "lab": "so sánh dense search, keyword search và hybrid retrieval",
+          "artifact": "retrieval benchmark top-k + threshold notes",
+          "checklist": [
+            "dùng metadata filter trước khi đưa context vào prompt"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: so sánh dense search, keyword search và hybrid retrieval.",
+            "Tạo được artifact: retrieval benchmark top-k + threshold notes.",
+            "Tự đánh giá được: dùng metadata filter trước khi đưa context vào prompt."
+          ]
+        },
+        {
+          "name": "Grounded answer, citation và refusal",
+          "detail": "Thiết kế prompt trả lời dựa trên context, cite nguồn, nói rõ khi thiếu dữ liệu và không bịa thông tin ngoài tài liệu.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Citation format",
+            "No-answer policy",
+            "Source attribution"
+          ],
+          "resourceLinks": [
+            {
+              "label": "RAG groundedness: citation, no-answer policy và đánh giá retrieval",
+              "url": "/blog/rag-groundedness-evaluation",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Thiết kế answer schema gồm answer, citations, confidence và missing_info",
+            "Viết prompt yêu cầu chỉ dùng retrieved context cho factual claims",
+            "Thêm no-answer behavior khi context recall thấp hoặc không có nguồn phù hợp",
+            "Kiểm tra cases model cite sai nguồn hoặc trả lời ngoài context",
+            "Hoàn thành Thêm answer schema gồm answer, citations, confidence và missing_info.",
+            "Nộp citation policy + no-answer policy để tự chứng minh đã làm được.",
+            "Tự review: model biết từ chối khi context thiếu hoặc mâu thuẫn."
+          ],
+          "quiz": [
+            {
+              "q": "Khi retrieved context không đủ, behavior tốt nhất là gì?",
+              "options": [
+                "Bịa câu trả lời hợp lý",
+                "Từ chối hoặc hỏi thêm thông tin, kèm missing_info/next_action",
+                "Ẩn citation",
+                "Tăng temperature"
+              ],
+              "answer": 1,
+              "explanation": "No-answer policy giúp giảm hallucination và giữ niềm tin của user."
+            },
+            {
+              "q": "Citation tốt cần hỗ trợ điều gì?",
+              "options": [
+                "Claim quan trọng trong answer",
+                "Trang trí UI",
+                "Thay thế permission check",
+                "Làm output dài hơn"
+              ],
+              "answer": 0,
+              "explanation": "Citation phải cho phép user/auditor kiểm tra nguồn của factual claims."
+            }
+          ],
+          "lab": "thêm answer schema gồm answer, citations, confidence và missing_info",
+          "artifact": "citation policy + no-answer policy",
+          "checklist": [
+            "model biết từ chối khi context thiếu hoặc mâu thuẫn"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: thêm answer schema gồm answer, citations, confidence và missing_info.",
+            "Tạo được artifact: citation policy + no-answer policy.",
+            "Tự đánh giá được: model biết từ chối khi context thiếu hoặc mâu thuẫn."
+          ]
+        },
+        {
+          "name": "Retrieval evaluation",
+          "detail": "Đo retrieval bằng context recall, context precision, answer groundedness, citation accuracy và user feedback thay vì chỉ đọc vài câu trả lời demo.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "10h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "RAG eval dataset",
+            "Context recall/precision",
+            "Groundedness rubric"
+          ],
+          "resourceLinks": [
+            {
+              "label": "RAG groundedness: citation, no-answer policy và đánh giá retrieval",
+              "url": "/blog/rag-groundedness-evaluation",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Tạo 100 câu hỏi có expected supporting documents",
+            "Đo top-k retrieval có chứa tài liệu đúng hay không",
+            "Đánh giá answer groundedness và citation accuracy bằng rubric",
+            "Dùng failed cases để chỉnh chunking, metadata, query rewrite hoặc reranking",
+            "Hoàn thành Tạo 100 câu hỏi có expected supporting documents.",
+            "Nộp RAG eval report context recall/precision/groundedness để tự chứng minh đã làm được.",
+            "Tự review: phân biệt được lỗi retrieval, lỗi prompt và lỗi citation."
+          ],
+          "quiz": [
+            {
+              "q": "Context recall đo gì?",
+              "options": [
+                "Retrieved contexts có chứa tài liệu/đoạn đúng cần thiết hay không",
+                "Model viết dài không",
+                "Số người dùng online",
+                "Màu chart"
+              ],
+              "answer": 0,
+              "explanation": "Nếu retrieval không lấy đúng nguồn, model khó trả lời grounded dù prompt tốt."
+            },
+            {
+              "q": "Nếu answer sai, bước debug nào nên làm trước?",
+              "options": [
+                "Kiểm tra retrieved docs có đúng không",
+                "Đổi màu UI",
+                "Xóa toàn bộ eval",
+                "Tăng max tokens vô hạn"
+              ],
+              "answer": 0,
+              "explanation": "RAG lỗi có thể đến từ retrieval, prompt, model hoặc citation mapping; retrieval là lớp cần tách riêng để đo."
+            }
+          ],
+          "lab": "tạo 100 câu hỏi có expected supporting documents",
+          "artifact": "RAG eval report context recall/precision/groundedness",
+          "checklist": [
+            "phân biệt được lỗi retrieval, lỗi prompt và lỗi citation"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: tạo 100 câu hỏi có expected supporting documents.",
+            "Tạo được artifact: RAG eval report context recall/precision/groundedness.",
+            "Tự đánh giá được: phân biệt được lỗi retrieval, lỗi prompt và lỗi citation."
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "title": "Tool Use, Workflows & Agents",
+      "subtitle": "Từ deterministic workflow đến agent có tool permission và trace",
+      "duration": "5-6 tuần",
+      "theme": "violet",
+      "goals": [
+        "Phân biệt workflow, single-agent và multi-agent",
+        "Thiết kế tool schema an toàn, idempotent và dễ eval",
+        "Biết khi nào không nên dùng agent"
+      ],
+      "deliverables": [
+        "Agent/workflow decision record",
+        "Tool schema catalog",
+        "Agent trace eval set"
+      ],
+      "projects": [
+        "Build AI operations assistant có thể tra cứu order, tạo draft ticket và yêu cầu xác nhận trước hành động ghi dữ liệu"
+      ],
+      "items": [
+        {
+          "name": "Workflow vs agent decision framework",
+          "detail": "Chọn deterministic workflow khi flow rõ; dùng agent khi bài toán cần quyết định linh hoạt, tool choice động, nhiều bước và không thể hard-code toàn bộ path.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Workflow-agent decision tree",
+            "Complexity budget",
+            "Failure mode list"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Workflow vs Agent: khi nào cần agent, khi nào chỉ cần code rõ ràng?",
+              "url": "/blog/workflow-vs-agent-tool-calling",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Vẽ flow deterministic cho một use case có 3 bước rõ",
+            "Liệt kê điểm nào cần model quyết định động và điểm nào nên hard-code",
+            "So sánh latency/cost/eval effort giữa workflow và agent",
+            "Viết ADR chọn workflow hoặc agent cho use case cụ thể",
+            "Hoàn thành Thiết kế cùng một use case bằng workflow và agent rồi so sánh.",
+            "Nộp workflow-agent decision record để tự chứng minh đã làm được.",
+            "Tự review: nêu được khi nào không nên dùng agent."
+          ],
+          "quiz": [
+            {
+              "q": "Khi nào nên ưu tiên workflow thay vì agent?",
+              "options": [
+                "Khi flow nghiệp vụ rõ, có bước cố định và dễ encode bằng code",
+                "Khi muốn hệ thống khó test hơn",
+                "Khi không có API nào để gọi",
+                "Khi cần model tự quyết định mọi thứ dù task đơn giản"
+              ],
+              "answer": 0,
+              "explanation": "Workflow deterministic thường rẻ, nhanh, dễ kiểm soát và dễ eval hơn khi quy trình đã rõ."
+            },
+            {
+              "q": "Hybrid workflow-agent thường an toàn hơn vì sao?",
+              "options": [
+                "Code giữ policy/boundaries, agent xử lý phần linh hoạt trong phạm vi hẹp",
+                "Agent được toàn quyền",
+                "Không cần eval",
+                "Không cần permission"
+              ],
+              "answer": 0,
+              "explanation": "Hybrid cho phép linh hoạt có kiểm soát, nhất là với tool write hoặc domain rủi ro."
+            }
+          ],
+          "lab": "thiết kế cùng một use case bằng workflow và agent rồi so sánh",
+          "artifact": "workflow-agent decision record",
+          "checklist": [
+            "nêu được khi nào không nên dùng agent"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: thiết kế cùng một use case bằng workflow và agent rồi so sánh.",
+            "Tạo được artifact: workflow-agent decision record.",
+            "Tự đánh giá được: nêu được khi nào không nên dùng agent."
+          ]
+        },
+        {
+          "name": "Tool calling, function schema và idempotency",
+          "detail": "Thiết kế tool với input schema rõ, permission, dry-run, idempotency key, timeout, retry policy và human confirmation cho hành động rủi ro.",
+          "type": "tool",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "Tool schema",
+            "Permission matrix",
+            "Dry-run mode"
+          ],
+          "resourceLinks": [
+            {
+              "label": "MCP, tool schema và permission: thiết kế tools an toàn cho AI agents",
+              "url": "/blog/mcp-tool-permission-agent-security",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Viết schema cho 3 tools: search, create draft, update record",
+            "Phân loại tool read-only, write, external side effect và sensitive",
+            "Thêm dry-run và confirmation step cho write tool",
+            "Log tool input/output đã redact PII và gắn trace id",
+            "Hoàn thành Thiết kế 3 tools read/draft/write có schema và dry-run.",
+            "Nộp tool catalog + permission matrix để tự chứng minh đã làm được.",
+            "Tự review: write tool có confirmation, idempotency key và audit log."
+          ],
+          "quiz": [
+            {
+              "q": "Tool write production cần gì để retry an toàn?",
+              "options": [
+                "Idempotency key",
+                "Temperature cao",
+                "Tên tool thật ngắn",
+                "Không cần audit"
+              ],
+              "answer": 0,
+              "explanation": "Idempotency giúp retry không tạo side effect lặp như gửi nhiều email hoặc refund nhiều lần."
+            },
+            {
+              "q": "Tool nào thường cần confirmation?",
+              "options": [
+                "Tool read-only search docs",
+                "Tool có side effect như gửi email, cập nhật CRM hoặc refund",
+                "Tool format text nội bộ",
+                "Tool tính token"
+              ],
+              "answer": 1,
+              "explanation": "Write/external side-effect tools có rủi ro nên cần dry-run/confirmation/approval."
+            }
+          ],
+          "lab": "thiết kế 3 tools read/draft/write có schema và dry-run",
+          "artifact": "tool catalog + permission matrix",
+          "checklist": [
+            "write tool có confirmation, idempotency key và audit log"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: thiết kế 3 tools read/draft/write có schema và dry-run.",
+            "Tạo được artifact: tool catalog + permission matrix.",
+            "Tự đánh giá được: write tool có confirmation, idempotency key và audit log."
+          ]
+        },
+        {
+          "name": "Agent memory, state và context engineering",
+          "detail": "Quản lý state dài hạn, short-term context, user preference, retrieved memory và compaction để agent không mất ngữ cảnh hoặc kéo dữ liệu sai.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "State model",
+            "Memory policy",
+            "Context budget"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Agent memory, context engineering và trajectory evaluation",
+              "url": "/blog/agent-memory-context-trajectory-eval",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Tách state runtime, conversation summary, user preference và domain memory",
+            "Thiết kế rule khi nào ghi memory, khi nào chỉ dùng trong session",
+            "Thêm context budget: phần nào luôn có, phần nào retrieve theo nhu cầu",
+            "Kiểm tra lỗi memory stale, memory poisoning và cross-user leak",
+            "Hoàn thành Tách runtime state, conversation summary, user preference và domain memory.",
+            "Nộp memory policy + context budget map để tự chứng minh đã làm được.",
+            "Tự review: chặn được stale memory, memory poisoning và cross-user leak."
+          ],
+          "quiz": [
+            {
+              "q": "Vì sao không nên lưu mọi user input vào memory dài hạn?",
+              "options": [
+                "Có thể lưu suy đoán sai, PII hoặc instruction độc hại",
+                "Vì memory luôn miễn phí",
+                "Vì model không dùng memory",
+                "Vì làm UI xấu"
+              ],
+              "answer": 0,
+              "explanation": "Memory cần policy, TTL, ownership, review và khả năng xóa."
+            },
+            {
+              "q": "Context engineering là gì?",
+              "options": [
+                "Chọn đúng thông tin đưa vào prompt theo budget và mục tiêu",
+                "Nhét toàn bộ lịch sử vào prompt",
+                "Tăng font size",
+                "Chỉ viết system prompt dài"
+              ],
+              "answer": 0,
+              "explanation": "Context tốt là đủ và đúng, không phải càng nhiều càng tốt."
+            }
+          ],
+          "lab": "tách runtime state, conversation summary, user preference và domain memory",
+          "artifact": "memory policy + context budget map",
+          "checklist": [
+            "chặn được stale memory, memory poisoning và cross-user leak"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: tách runtime state, conversation summary, user preference và domain memory.",
+            "Tạo được artifact: memory policy + context budget map.",
+            "Tự đánh giá được: chặn được stale memory, memory poisoning và cross-user leak."
+          ]
+        },
+        {
+          "name": "Agent trace và trajectory evaluation",
+          "detail": "Đánh giá agent không chỉ bằng final answer mà còn bằng tool trajectory: tool đúng, thứ tự đúng, argument đúng, số bước hợp lý và không lặp vô hạn.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "10h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "Agent trace dataset",
+            "Trajectory metrics",
+            "Loop detection"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Agent memory, context engineering và trajectory evaluation",
+              "url": "/blog/agent-memory-context-trajectory-eval",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Thu thập 30 agent tasks có expected tools và expected final answer",
+            "Đo exact/in-order/any-order tool trajectory cho từng task",
+            "Bắt lỗi tool argument sai, tool dư, tool thiếu và loop",
+            "Dùng trace failure để sửa prompt, tool description hoặc workflow boundaries",
+            "Hoàn thành Chấm 30 agent tasks theo expected tools và argument correctness.",
+            "Nộp trajectory eval dataset + failure taxonomy để tự chứng minh đã làm được.",
+            "Tự review: phát hiện tool sai, tool thừa, tool thiếu và loop."
+          ],
+          "quiz": [
+            {
+              "q": "Trajectory eval đo gì?",
+              "options": [
+                "Tool nào được gọi, thứ tự, argument, số bước và loop",
+                "Chỉ final answer nghe hay không",
+                "Màu logo",
+                "Số file trong repo"
+              ],
+              "answer": 0,
+              "explanation": "Agent có thể final answer ổn nhưng dùng tool sai hoặc gây side effect nguy hiểm."
+            },
+            {
+              "q": "Một lỗi trajectory nguy hiểm là gì?",
+              "options": [
+                "Agent gọi send_email trước khi user confirmation",
+                "Agent trả lời ngắn",
+                "Agent dùng dark mode",
+                "Agent có ít icon"
+              ],
+              "answer": 0,
+              "explanation": "Tool write/external side effect cần confirmation và permission gate trước khi thực thi."
+            }
+          ],
+          "lab": "chấm 30 agent tasks theo expected tools và argument correctness",
+          "artifact": "trajectory eval dataset + failure taxonomy",
+          "checklist": [
+            "phát hiện tool sai, tool thừa, tool thiếu và loop"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: chấm 30 agent tasks theo expected tools và argument correctness.",
+            "Tạo được artifact: trajectory eval dataset + failure taxonomy.",
+            "Tự đánh giá được: phát hiện tool sai, tool thừa, tool thiếu và loop."
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "title": "Evaluation-Driven AI Engineering",
+      "subtitle": "Evals, test data, human review và release gates",
+      "duration": "4-6 tuần",
+      "theme": "amber",
+      "goals": [
+        "Biến chất lượng AI thành metric có thể chạy lại",
+        "Kết hợp offline eval, online feedback và human review",
+        "Dùng eval làm release gate cho prompt/model/RAG changes"
+      ],
+      "deliverables": [
+        "Eval plan",
+        "Golden dataset",
+        "Release gate policy"
+      ],
+      "projects": [
+        "Tạo eval harness chạy CI cho prompt/RAG/agent và xuất report so sánh phiên bản"
+      ],
+      "items": [
+        {
+          "name": "Eval objective, dataset và rubrics",
+          "detail": "Định nghĩa mục tiêu eval, nguồn dữ liệu, typical/edge/adversarial cases, metric và rubric đủ rõ để người khác review đồng nhất.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Eval plan",
+            "Rubric template",
+            "Dataset card"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Evaluation-driven AI Engineering: eval dataset, rubrics, graders và release gates",
+              "url": "/blog/eval-driven-ai-engineering",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Viết eval objective cho task Q&A hoặc extraction",
+            "Tạo dataset gồm typical, edge, adversarial và historical production cases",
+            "Viết rubric chấm helpfulness, correctness, groundedness và safety",
+            "Gắn dataset version để so sánh kết quả theo thời gian",
+            "Hoàn thành Viết rubric 1-5 cho correctness, groundedness, helpfulness và safety.",
+            "Nộp eval plan + dataset card để tự chứng minh đã làm được.",
+            "Tự review: dataset có typical, edge, adversarial và production cases."
+          ],
+          "quiz": [
+            {
+              "q": "Eval dataset tốt nên gồm loại case nào?",
+              "options": [
+                "Chỉ những câu hỏi dễ để score cao",
+                "Typical, edge, adversarial, domain-specific và case từ production feedback",
+                "Chỉ random text không liên quan",
+                "Chỉ câu hỏi model tự tạo và không cần review"
+              ],
+              "answer": 1,
+              "explanation": "Dataset cần đại diện cho hành vi thật và rủi ro thật, bao gồm edge/adversarial cases để tránh tối ưu quá hẹp."
+            },
+            {
+              "q": "Rubric tốt cần đặc điểm gì?",
+              "options": [
+                "Tiêu chí cụ thể để reviewer chấm nhất quán",
+                "Mơ hồ để linh hoạt",
+                "Không cần ví dụ",
+                "Chỉ một mức pass/fail cho mọi task"
+              ],
+              "answer": 0,
+              "explanation": "Rubric cụ thể giúp human review và LLM judge ít lệch hơn."
+            }
+          ],
+          "lab": "viết rubric 1-5 cho correctness, groundedness, helpfulness và safety",
+          "artifact": "eval plan + dataset card",
+          "checklist": [
+            "dataset có typical, edge, adversarial và production cases"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: viết rubric 1-5 cho correctness, groundedness, helpfulness và safety.",
+            "Tạo được artifact: eval plan + dataset card.",
+            "Tự đánh giá được: dataset có typical, edge, adversarial và production cases."
+          ]
+        },
+        {
+          "name": "Automated graders và human-in-the-loop",
+          "detail": "Dùng exact match, schema checks, LLM-as-judge, pairwise comparison và human review cho các case ambiguous hoặc high-risk.",
+          "type": "tool",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "Judge prompt",
+            "Pairwise eval",
+            "Human review queue"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Evaluation-driven AI Engineering: eval dataset, rubrics, graders và release gates",
+              "url": "/blog/eval-driven-ai-engineering",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Tách metric objective như JSON validity khỏi metric subjective như helpfulness",
+            "Viết judge rubric có tiêu chí và thang điểm cụ thể",
+            "Dùng pairwise comparison khi so sánh hai phiên bản prompt/model",
+            "Đưa failed hoặc low-confidence samples vào human review queue",
+            "Hoàn thành Kết hợp schema check, exact match, LLM judge và human review queue.",
+            "Nộp grader config + human review SOP để tự chứng minh đã làm được.",
+            "Tự review: biết metric nào objective, metric nào cần human calibration."
+          ],
+          "quiz": [
+            {
+              "q": "Metric nào thường objective hơn?",
+              "options": [
+                "JSON schema validity",
+                "Helpfulness tổng quát",
+                "Tone dễ chịu",
+                "Mức sáng tạo"
+              ],
+              "answer": 0,
+              "explanation": "Schema validity có thể kiểm bằng code; helpfulness thường cần rubric/judge/human calibration."
+            },
+            {
+              "q": "Khi nào cần human review?",
+              "options": [
+                "Case ambiguous, high-risk, low confidence hoặc failed judge calibration",
+                "Mọi request không phân biệt",
+                "Không bao giờ",
+                "Chỉ khi UI lỗi"
+              ],
+              "answer": 0,
+              "explanation": "Human review nên tập trung vào vùng rủi ro và vùng metric tự động chưa tin cậy."
+            }
+          ],
+          "lab": "kết hợp schema check, exact match, LLM judge và human review queue",
+          "artifact": "grader config + human review SOP",
+          "checklist": [
+            "biết metric nào objective, metric nào cần human calibration"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: kết hợp schema check, exact match, LLM judge và human review queue.",
+            "Tạo được artifact: grader config + human review SOP.",
+            "Tự đánh giá được: biết metric nào objective, metric nào cần human calibration."
+          ]
+        },
+        {
+          "name": "Continuous evaluation trong CI/CD",
+          "detail": "Chạy eval khi đổi prompt, retrieval, model, tool schema hoặc safety policy; đặt threshold để block release nếu regression vượt ngưỡng.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "10h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "CI eval job",
+            "Regression threshold",
+            "Eval report"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Evaluation-driven AI Engineering: eval dataset, rubrics, graders và release gates",
+              "url": "/blog/eval-driven-ai-engineering",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Tạo command chạy eval offline từ dataset cố định",
+            "Xuất report gồm quality score, latency, cost và failed examples",
+            "Cấu hình CI chạy eval khi thay prompt/model/RAG code",
+            "Đặt policy: block nếu correctness giảm hoặc unsafe rate tăng vượt ngưỡng",
+            "Hoàn thành Tạo command eval và fail CI khi regression vượt ngưỡng.",
+            "Nộp CI eval report + release gate policy để tự chứng minh đã làm được.",
+            "Tự review: release bị block khi unsafe rate tăng hoặc correctness giảm."
+          ],
+          "quiz": [
+            {
+              "q": "Release gate cho AI nên block khi nào?",
+              "options": [
+                "Unsafe rate tăng hoặc correctness/groundedness giảm vượt ngưỡng",
+                "Logo hơi nhỏ",
+                "Prompt ngắn hơn",
+                "Dataset có thêm case"
+              ],
+              "answer": 0,
+              "explanation": "Release gate bảo vệ chất lượng và safety khi đổi prompt/model/RAG/tool."
+            },
+            {
+              "q": "Eval report CI nên ghi thêm gì ngoài score?",
+              "options": [
+                "Failed examples, latency, token usage và cost",
+                "Chỉ ngày chạy",
+                "Chỉ tên branch",
+                "Không cần lưu"
+              ],
+              "answer": 0,
+              "explanation": "Failed examples và cost/latency giúp debug trade-off, không chỉ biết pass/fail."
+            }
+          ],
+          "lab": "tạo command eval và fail CI khi regression vượt ngưỡng",
+          "artifact": "CI eval report + release gate policy",
+          "checklist": [
+            "release bị block khi unsafe rate tăng hoặc correctness giảm"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: tạo command eval và fail CI khi regression vượt ngưỡng.",
+            "Tạo được artifact: CI eval report + release gate policy.",
+            "Tự đánh giá được: release bị block khi unsafe rate tăng hoặc correctness giảm."
+          ]
+        },
+        {
+          "name": "Online feedback và data flywheel",
+          "detail": "Thu thập thumbs up/down, correction, escalation, user comments và production traces để cập nhật eval set, prompt và retrieval pipeline.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Feedback schema",
+            "Sampling policy",
+            "Dataset growth process"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Evaluation-driven AI Engineering: eval dataset, rubrics, graders và release gates",
+              "url": "/blog/eval-driven-ai-engineering",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Thêm feedback event vào AI response: rating, reason, corrected_answer, trace_id",
+            "Sample production cases theo risk, low confidence và negative feedback",
+            "Review và promote failed cases vào eval dataset",
+            "Định kỳ so sánh eval score với feedback thực tế để tránh metric lệch",
+            "Hoàn thành Thu feedback event và promote failed cases vào eval dataset.",
+            "Nộp feedback schema + sampling policy để tự chứng minh đã làm được.",
+            "Tự review: mỗi incident/negative feedback tạo được eval case mới."
+          ],
+          "quiz": [
+            {
+              "q": "Negative feedback production nên dùng ra sao?",
+              "options": [
+                "Review và promote case phù hợp vào eval dataset",
+                "Xóa đi để score đẹp",
+                "Chỉ đọc cho vui",
+                "Dùng làm logo"
+              ],
+              "answer": 0,
+              "explanation": "Feedback thật là nguồn tạo eval cases mạnh nhất cho vòng cải tiến."
+            },
+            {
+              "q": "Feedback event nên có gì?",
+              "options": [
+                "rating, reason, correction nếu có, trace_id và metadata đã redact",
+                "Password user",
+                "Raw secret",
+                "Không cần trace id"
+              ],
+              "answer": 0,
+              "explanation": "Trace id giúp nối feedback với prompt/model/retrieval/tool call để debug."
+            }
+          ],
+          "lab": "thu feedback event và promote failed cases vào eval dataset",
+          "artifact": "feedback schema + sampling policy",
+          "checklist": [
+            "mỗi incident/negative feedback tạo được eval case mới"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: thu feedback event và promote failed cases vào eval dataset.",
+            "Tạo được artifact: feedback schema + sampling policy.",
+            "Tự đánh giá được: mỗi incident/negative feedback tạo được eval case mới."
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "title": "Safety, Security & Governance",
+      "subtitle": "Prompt injection, data privacy, guardrails và policy controls",
+      "duration": "4-6 tuần",
+      "theme": "rose",
+      "goals": [
+        "Nhận diện rủi ro LLM application phổ biến",
+        "Thiết kế input/output guardrails và tool permission",
+        "Chuẩn bị governance cho dữ liệu, audit và incident response"
+      ],
+      "deliverables": [
+        "LLM threat model",
+        "Guardrail policy",
+        "Incident runbook"
+      ],
+      "projects": [
+        "Threat model cho một RAG/agent app và thêm kiểm tra prompt injection, PII redaction, output moderation"
+      ],
+      "items": [
+        {
+          "name": "OWASP LLM risks và threat modeling",
+          "detail": "Hiểu prompt injection, sensitive information disclosure, insecure output handling, excessive agency, supply chain và data poisoning trong LLM apps.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "LLM threat model",
+            "Risk register",
+            "Abuse cases"
+          ],
+          "resourceLinks": [
+            {
+              "label": "LLM Security và Guardrails: prompt injection, PII, excessive agency và output safety",
+              "url": "/blog/llm-security-owasp-guardrails",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Map OWASP LLM risks vào ứng dụng RAG/agent của bạn",
+            "Viết abuse cases: prompt injection qua tài liệu, tool misuse, data leak",
+            "Xếp hạng risk theo likelihood, impact và detectability",
+            "Chọn mitigation cụ thể cho top 5 risks",
+            "Hoàn thành Viết abuse cases cho RAG/agent app theo LLM risks.",
+            "Nộp LLM threat model + risk register để tự chứng minh đã làm được.",
+            "Tự review: có mitigation cho prompt injection, data leak và excessive agency."
+          ],
+          "quiz": [
+            {
+              "q": "Prompt injection nguy hiểm nhất khi nào?",
+              "options": [
+                "Khi model chỉ viết thơ và không có dữ liệu",
+                "Khi model đọc input không tin cậy hoặc retrieved document rồi có quyền gọi tool/tiết lộ dữ liệu",
+                "Khi UI dùng font nhỏ",
+                "Khi không dùng dark mode"
+              ],
+              "answer": 1,
+              "explanation": "Prompt injection có thể biến dữ liệu không tin cậy thành instruction giả, đặc biệt nguy hiểm khi agent có tool quyền cao hoặc truy cập dữ liệu nhạy cảm."
+            },
+            {
+              "q": "Threat model LLM app nên bắt đầu từ đâu?",
+              "options": [
+                "Dữ liệu không tin cậy, quyền tool, sensitive data và impact nếu model sai",
+                "Màu nền",
+                "Tên model",
+                "Số bài blog"
+              ],
+              "answer": 0,
+              "explanation": "Rủi ro LLM nằm ở input không tin cậy, tool agency, data access và output handling."
+            }
+          ],
+          "lab": "viết abuse cases cho RAG/agent app theo LLM risks",
+          "artifact": "LLM threat model + risk register",
+          "checklist": [
+            "có mitigation cho prompt injection, data leak và excessive agency"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: viết abuse cases cho RAG/agent app theo LLM risks.",
+            "Tạo được artifact: LLM threat model + risk register.",
+            "Tự đánh giá được: có mitigation cho prompt injection, data leak và excessive agency."
+          ]
+        },
+        {
+          "name": "Input/output guardrails",
+          "detail": "Thiết kế kiểm tra trước/sau model: moderation, PII redaction, policy classification, groundedness checks, refusal, safe completion và escalation.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Guardrail pipeline",
+            "PII redaction",
+            "Escalation policy"
+          ],
+          "resourceLinks": [
+            {
+              "label": "LLM Security và Guardrails: prompt injection, PII, excessive agency và output safety",
+              "url": "/blog/llm-security-owasp-guardrails",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Thêm input classifier cho unsafe, sensitive hoặc out-of-scope requests",
+            "Redact PII trong logs và telemetry",
+            "Kiểm tra output có chứa thông tin bị cấm, citation thiếu hoặc lời khuyên rủi ro",
+            "Định nghĩa fallback: refuse, ask clarification, escalate human hoặc safe template",
+            "Hoàn thành Thêm pre-model và post-model checks cho một AI endpoint.",
+            "Nộp guardrail pipeline + escalation policy để tự chứng minh đã làm được.",
+            "Tự review: unsafe, PII, ungrounded và out-of-scope requests có fallback."
+          ],
+          "quiz": [
+            {
+              "q": "Guardrail tốt nên đặt ở đâu?",
+              "options": [
+                "Trước model, trong prompt/policy, sau model và quanh tool calls",
+                "Chỉ một câu system prompt",
+                "Chỉ frontend",
+                "Chỉ sau khi incident"
+              ],
+              "answer": 0,
+              "explanation": "Defense-in-depth cần nhiều lớp vì một lớp có thể fail."
+            },
+            {
+              "q": "Post-model check thường kiểm tra gì?",
+              "options": [
+                "Unsafe output, PII, schema validity, groundedness/citation và tool call validity",
+                "Màu nút",
+                "Số lượt xem",
+                "Tên file"
+              ],
+              "answer": 0,
+              "explanation": "Output model là untrusted data, cần kiểm trước khi hiển thị hoặc hành động."
+            }
+          ],
+          "lab": "thêm pre-model và post-model checks cho một AI endpoint",
+          "artifact": "guardrail pipeline + escalation policy",
+          "checklist": [
+            "unsafe, PII, ungrounded và out-of-scope requests có fallback"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: thêm pre-model và post-model checks cho một AI endpoint.",
+            "Tạo được artifact: guardrail pipeline + escalation policy.",
+            "Tự đánh giá được: unsafe, PII, ungrounded và out-of-scope requests có fallback."
+          ]
+        },
+        {
+          "name": "Tool permission và least privilege cho agents",
+          "detail": "Giới hạn quyền tool theo user, tenant, action type và risk level; thêm confirmation, approval workflow, audit log và rate limits.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "Permission matrix",
+            "Approval flow",
+            "Audit log schema"
+          ],
+          "resourceLinks": [
+            {
+              "label": "MCP, tool schema và permission: thiết kế tools an toàn cho AI agents",
+              "url": "/blog/mcp-tool-permission-agent-security",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Phân loại tools theo read/write/external-side-effect/sensitive",
+            "Gắn permission theo role và tenant trước khi model thấy tool",
+            "Yêu cầu user confirmation trước khi gọi tool ghi dữ liệu hoặc gửi thông tin ra ngoài",
+            "Log tool calls với trace id, actor, arguments đã redact, result và decision reason",
+            "Hoàn thành Lọc tool list theo role, tenant, action type và risk level.",
+            "Nộp least-privilege tool permission matrix để tự chứng minh đã làm được.",
+            "Tự review: user không có quyền thì agent cũng không có quyền."
+          ],
+          "quiz": [
+            {
+              "q": "Least privilege cho agent nghĩa là gì?",
+              "options": [
+                "Agent chỉ thấy và gọi tools đúng quyền của user/context",
+                "Agent thấy mọi tool để thông minh hơn",
+                "Không cần auth",
+                "Tool nào cũng read-only"
+              ],
+              "answer": 0,
+              "explanation": "User không có quyền thì agent cũng không có quyền; tool list nên được filter trước."
+            },
+            {
+              "q": "Audit log tool call nên có gì?",
+              "options": [
+                "trace id, actor, tenant, tool name, arguments đã redact, permission decision, result",
+                "Raw PII đầy đủ",
+                "Chỉ final answer",
+                "Không cần nếu có confirmation"
+              ],
+              "answer": 0,
+              "explanation": "Audit log giúp điều tra incident và chứng minh action đã được kiểm soát."
+            }
+          ],
+          "lab": "lọc tool list theo role, tenant, action type và risk level",
+          "artifact": "least-privilege tool permission matrix",
+          "checklist": [
+            "user không có quyền thì agent cũng không có quyền"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: lọc tool list theo role, tenant, action type và risk level.",
+            "Tạo được artifact: least-privilege tool permission matrix.",
+            "Tự đánh giá được: user không có quyền thì agent cũng không có quyền."
+          ]
+        },
+        {
+          "name": "Data governance, privacy và compliance basics",
+          "detail": "Quản lý dữ liệu training/eval/logs/retrieval: consent, retention, tenant isolation, access control, encryption, deletion request và auditability.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "6h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "Data inventory",
+            "Retention policy",
+            "Tenant isolation checklist"
+          ],
+          "resourceLinks": [
+            {
+              "label": "LLM Security và Guardrails: prompt injection, PII, excessive agency và output safety",
+              "url": "/blog/llm-security-owasp-guardrails",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Lập data inventory cho prompt, response, retrieved docs, eval data và traces",
+            "Xác định dữ liệu nào có PII, secrets, customer confidential hoặc regulated data",
+            "Thiết kế retention và deletion policy cho logs/evals",
+            "Kiểm tra cross-tenant leak trong retrieval và memory",
+            "Hoàn thành Lập data inventory cho prompt, response, logs, evals và retrieved docs.",
+            "Nộp retention/deletion policy + tenant isolation checklist để tự chứng minh đã làm được.",
+            "Tự review: biết dữ liệu nào chứa PII, secrets hoặc customer confidential."
+          ],
+          "quiz": [
+            {
+              "q": "Data inventory AI app nên liệt kê gì?",
+              "options": [
+                "Prompt, response, retrieved docs, logs, eval data, traces và retention",
+                "Chỉ source code",
+                "Chỉ ảnh banner",
+                "Không cần nếu dùng API ngoài"
+              ],
+              "answer": 0,
+              "explanation": "AI app xử lý nhiều loại dữ liệu; cần biết nơi lưu, quyền truy cập và retention."
+            },
+            {
+              "q": "Cross-tenant leak trong RAG thường do thiếu gì?",
+              "options": [
+                "Tenant/access metadata filter",
+                "Ảnh minh họa",
+                "Temperature",
+                "Số quiz"
+              ],
+              "answer": 0,
+              "explanation": "RAG enterprise bắt buộc filter theo tenant và permission trước khi đưa context vào model."
+            }
+          ],
+          "lab": "lập data inventory cho prompt, response, logs, evals và retrieved docs",
+          "artifact": "retention/deletion policy + tenant isolation checklist",
+          "checklist": [
+            "biết dữ liệu nào chứa PII, secrets hoặc customer confidential"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: lập data inventory cho prompt, response, logs, evals và retrieved docs.",
+            "Tạo được artifact: retention/deletion policy + tenant isolation checklist.",
+            "Tự đánh giá được: biết dữ liệu nào chứa PII, secrets hoặc customer confidential."
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "title": "Production Operations & Career Portfolio",
+      "subtitle": "Observability, cost, deployment, incident và portfolio chứng minh năng lực",
+      "duration": "5-8 tuần",
+      "theme": "teal",
+      "goals": [
+        "Deploy AI service có monitoring, rollback và fallback",
+        "Tối ưu latency/cost bằng caching, batching, routing và token budget",
+        "Hoàn thiện portfolio AI Engineer có demo, eval report và postmortem"
+      ],
+      "deliverables": [
+        "Production runbook",
+        "Cost/latency dashboard",
+        "Portfolio case study"
+      ],
+      "projects": [
+        "Ship end-to-end AI assistant: RAG + tool use + eval CI + guardrails + observability + cost report"
+      ],
+      "items": [
+        {
+          "name": "LLM observability và tracing",
+          "detail": "Trace prompt, model call, retrieval, tool calls, latency, tokens, cost, eval labels và user feedback để debug hệ thống AI theo từng span.",
+          "type": "tool",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "Trace schema",
+            "Latency dashboard",
+            "Feedback correlation"
+          ],
+          "resourceLinks": [
+            {
+              "label": "AI observability, cost optimization và deployment",
+              "url": "/blog/ai-observability-cost-deployment",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Gắn trace id xuyên suốt request, retrieval, model call và tool calls",
+            "Log tokens, cost, latency p50/p95, error type và model version",
+            "Kết nối feedback tiêu cực với trace để debug nguyên nhân",
+            "Tạo dashboard theo route/use case/model/retrieval version",
+            "Hoàn thành Gắn trace id qua request, retrieval, model call, tool call và feedback.",
+            "Nộp trace schema + latency/cost dashboard để tự chứng minh đã làm được.",
+            "Tự review: debug được một câu trả lời sai từ trace đến failed eval case."
+          ],
+          "quiz": [
+            {
+              "q": "Thông tin nào nên có trong trace của một AI request?",
+              "options": [
+                "Chỉ màu nút submit",
+                "Prompt/model version, retrieval docs, tool calls, latency, token usage, cost, error và feedback id",
+                "Chỉ tên người dùng dạng raw PII",
+                "Không cần trace vì đã có console.log"
+              ],
+              "answer": 1,
+              "explanation": "AI observability cần đủ context để debug chất lượng, chi phí và lỗi nhưng vẫn phải redact dữ liệu nhạy cảm."
+            },
+            {
+              "q": "Khi user báo AI trả lời sai, trace giúp kiểm tra gì?",
+              "options": [
+                "Prompt/model version, retrieved docs, tool calls, latency, token usage và feedback",
+                "Chỉ màu UI",
+                "Chỉ user agent browser",
+                "Không giúp gì"
+              ],
+              "answer": 0,
+              "explanation": "Trace giúp tìm lỗi nằm ở retrieval, prompt, model, tool hay guardrail."
+            }
+          ],
+          "lab": "gắn trace id qua request, retrieval, model call, tool call và feedback",
+          "artifact": "trace schema + latency/cost dashboard",
+          "checklist": [
+            "debug được một câu trả lời sai từ trace đến failed eval case"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: gắn trace id qua request, retrieval, model call, tool call và feedback.",
+            "Tạo được artifact: trace schema + latency/cost dashboard.",
+            "Tự đánh giá được: debug được một câu trả lời sai từ trace đến failed eval case."
+          ]
+        },
+        {
+          "name": "Latency và cost optimization",
+          "detail": "Tối ưu bằng prompt compaction, caching, model routing, streaming, batch jobs, parallel retrieval, context pruning và rate/spend limits.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Cost dashboard",
+            "Caching policy",
+            "Model routing"
+          ],
+          "resourceLinks": [
+            {
+              "label": "AI observability, cost optimization và deployment",
+              "url": "/blog/ai-observability-cost-deployment",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Đo cost per successful task thay vì chỉ cost per request",
+            "Thêm caching cho stable prompts, embeddings và retrieval results",
+            "Route task dễ sang model rẻ hơn và task khó sang model mạnh hơn",
+            "Đặt spend alert, rate limit và degradation mode khi vượt ngân sách",
+            "Hoàn thành áp dụng caching, context pruning và model routing cho một endpoint.",
+            "Nộp cost optimization report để tự chứng minh đã làm được.",
+            "Tự review: giảm cost/latency mà không làm tụt eval score quá ngưỡng."
+          ],
+          "quiz": [
+            {
+              "q": "Tối ưu cost nào thường an toàn trước?",
+              "options": [
+                "Cache stable results, prune context, route task dễ sang model nhỏ và đo eval regression",
+                "Cắt hết guardrails",
+                "Xóa eval",
+                "Không log token"
+              ],
+              "answer": 0,
+              "explanation": "Tối ưu phải đi cùng eval để không giảm chất lượng/safety ngoài ý muốn."
+            },
+            {
+              "q": "Vì sao cần đo cost per successful task?",
+              "options": [
+                "Vì retry/failure/escalation làm cost thực khác cost/request",
+                "Vì dễ trang trí dashboard",
+                "Vì không cần latency",
+                "Vì model nào cũng như nhau"
+              ],
+              "answer": 0,
+              "explanation": "Cost/request thấp không có nghĩa cost sản phẩm thấp nếu failure rate cao."
+            }
+          ],
+          "lab": "áp dụng caching, context pruning và model routing cho một endpoint",
+          "artifact": "cost optimization report",
+          "checklist": [
+            "giảm cost/latency mà không làm tụt eval score quá ngưỡng"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: áp dụng caching, context pruning và model routing cho một endpoint.",
+            "Tạo được artifact: cost optimization report.",
+            "Tự đánh giá được: giảm cost/latency mà không làm tụt eval score quá ngưỡng."
+          ]
+        },
+        {
+          "name": "Deployment, rollback và incident response",
+          "detail": "Đưa AI app lên staging/production với feature flags, canary, rollback prompt/model, safety kill switch, incident runbook và postmortem.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": [
+            "transitioner"
+          ],
+          "resources": [
+            "Deployment checklist",
+            "Feature flags",
+            "Incident runbook"
+          ],
+          "resourceLinks": [
+            {
+              "label": "AI observability, cost optimization và deployment",
+              "url": "/blog/ai-observability-cost-deployment",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Tách staging và production project/key/model settings",
+            "Dùng feature flag để canary prompt/model/RAG changes",
+            "Chuẩn bị rollback cho prompt version, model version và retrieval index",
+            "Viết postmortem mẫu cho sự cố hallucination hoặc cost spike",
+            "Hoàn thành Release prompt/model bằng feature flag và chuẩn bị rollback.",
+            "Nộp deployment checklist + incident runbook để tự chứng minh đã làm được.",
+            "Tự review: có kill switch, rollback prompt/model/index và postmortem template."
+          ],
+          "quiz": [
+            {
+              "q": "AI app cần version những gì ngoài code?",
+              "options": [
+                "Prompt, model, retrieval index, tool schema, guardrail policy và eval dataset",
+                "Chỉ package.json",
+                "Chỉ favicon",
+                "Không cần version"
+              ],
+              "answer": 0,
+              "explanation": "Hành vi AI phụ thuộc nhiều config/tài sản ngoài code; cần version để rollback."
+            },
+            {
+              "q": "Kill switch hữu ích khi nào?",
+              "options": [
+                "Khi có incident safety/cost/tool misuse cần tắt nhanh feature hoặc quyền tool",
+                "Khi muốn đổi theme",
+                "Khi build warning",
+                "Khi user đăng nhập"
+              ],
+              "answer": 0,
+              "explanation": "Kill switch giảm blast radius trong incident production."
+            }
+          ],
+          "lab": "release prompt/model bằng feature flag và chuẩn bị rollback",
+          "artifact": "deployment checklist + incident runbook",
+          "checklist": [
+            "có kill switch, rollback prompt/model/index và postmortem template"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: release prompt/model bằng feature flag và chuẩn bị rollback.",
+            "Tạo được artifact: deployment checklist + incident runbook.",
+            "Tự đánh giá được: có kill switch, rollback prompt/model/index và postmortem template."
+          ]
+        },
+        {
+          "name": "Portfolio, certifications và interview readiness",
+          "detail": "Đóng gói năng lực bằng case study có architecture, trade-offs, eval report, safety review, cost report, demo video và lesson learned.",
+          "type": "cert",
+          "level": "intermediate",
+          "estimatedTime": "12h",
+          "recommendedFor": [
+            "beginner",
+            "transitioner"
+          ],
+          "resources": [
+            "Portfolio case study",
+            "Demo script",
+            "Certification plan"
+          ],
+          "resourceLinks": [
+            {
+              "label": "Portfolio AI Engineer: case study, eval report, safety review và chứng chỉ nên học",
+              "url": "/blog/ai-engineer-portfolio-certifications",
+              "type": "article"
+            }
+          ],
+          "learningSteps": [
+            "Viết case study: problem, users, architecture, data, eval, guardrails, deployment",
+            "Đính kèm eval report trước/sau khi tối ưu prompt/RAG",
+            "Chuẩn bị câu trả lời interview về trade-off: RAG vs fine-tuning, workflow vs agent, speed vs quality",
+            "Chọn certification phù hợp mục tiêu: cloud AI, ML platform hoặc GenAI fundamentals",
+            "Hoàn thành Viết case study AI Engineer có demo, eval, safety và cost section.",
+            "Nộp portfolio case study + interview story bank để tự chứng minh đã làm được.",
+            "Tự review: giải thích được trade-off RAG vs fine-tuning, workflow vs agent, speed vs quality."
+          ],
+          "quiz": [
+            {
+              "q": "Portfolio AI Engineer mạnh nên có gì ngoài demo?",
+              "options": [
+                "Architecture, eval report, safety review, cost/latency report và trade-offs",
+                "Chỉ video chatbot",
+                "Chỉ badge chứng chỉ",
+                "Chỉ screenshot UI"
+              ],
+              "answer": 0,
+              "explanation": "Portfolio production cần chứng minh tư duy engineering, đo lường và vận hành."
+            },
+            {
+              "q": "Trong interview, câu trade-off nào rất thường gặp?",
+              "options": [
+                "RAG vs fine-tuning, workflow vs agent, quality vs latency/cost",
+                "Logo tròn hay vuông",
+                "Dùng font nào",
+                "Màu card nào"
+              ],
+              "answer": 0,
+              "explanation": "AI Engineer cần giải thích quyết định kiến trúc theo trade-off thực tế."
+            }
+          ],
+          "lab": "viết case study AI Engineer có demo, eval, safety và cost section",
+          "artifact": "portfolio case study + interview story bank",
+          "checklist": [
+            "giải thích được trade-off RAG vs fine-tuning, workflow vs agent, speed vs quality"
+          ],
+          "outcomes": [
+            "Làm được mini-lab: viết case study AI Engineer có demo, eval, safety và cost section.",
+            "Tạo được artifact: portfolio case study + interview story bank.",
+            "Tự đánh giá được: giải thích được trade-off RAG vs fine-tuning, workflow vs agent, speed vs quality."
+          ]
+        }
+      ]
+    }
+  ]
+}

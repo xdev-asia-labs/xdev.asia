@@ -3,6 +3,7 @@ export const dynamic = "force-static";
 import type { MetadataRoute } from "next";
 import {
   getAllPosts,
+  getPostLanguageLinks,
   getAllSeries,
   getSeriesSlugsWithCategory,
   getSeriesCategories,
@@ -59,12 +60,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Blog posts
   const posts = getAllPosts();
-  const postPages: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}/`,
-    lastModified: post.published_at || now,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const postPages: MetadataRoute.Sitemap = posts.map((post) => {
+    const canonical = `${SITE_URL}/blog/${post.slug}/`;
+    const languageLinks = getPostLanguageLinks(post).filter((link) => link.available);
+    const languageAlternates = Object.fromEntries(
+      languageLinks.map((link) => [LOCALE_HREFLANG[link.locale], `${SITE_URL}${link.href}`])
+    );
+
+    return {
+      url: canonical,
+      lastModified: post.published_at || now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+      alternates: {
+        languages: {
+          ...languageAlternates,
+          "x-default": canonical,
+        },
+      },
+    };
+  });
 
   // Topic pages
   const topics = getAvailableTopics();

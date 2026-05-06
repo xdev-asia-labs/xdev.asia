@@ -30,8 +30,9 @@ import {
   getTagBySlug,
   type TagStats,
 } from "@/lib/data";
-import { localizedPath, type Locale } from "@/lib/i18n/config";
+import { LOCALE_HREFLANG, LOCALE_HTML_LANG, localizedPath, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -179,14 +180,26 @@ export async function localizedBlogPostMetadata(
   const { slug } = await params;
   const post = getPost(slug, locale);
   if (!post) return {};
+  const canonicalUrl = `${SITE_URL}${href(locale, `/blog/${slug}/`)}`;
+  const languageLinks = getPostLanguageLinks(post).filter((link) => link.available);
+  const languageAlternates = Object.fromEntries(
+    languageLinks.map((link) => [LOCALE_HREFLANG[link.locale], `${SITE_URL}${link.href}`])
+  );
+
   return {
     title: post.title,
     description: post.excerpt || post.title,
-    alternates: { canonical: `${SITE_URL}${href(locale, `/blog/${slug}/`)}` },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        ...languageAlternates,
+        "x-default": `${SITE_URL}/blog/${slug}/`,
+      },
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt || post.title,
-      url: `${SITE_URL}${href(locale, `/blog/${slug}/`)}`,
+      url: canonicalUrl,
       siteName: "xDev Asia",
       type: "article",
     },
@@ -506,9 +519,45 @@ export async function LocalizedBlogPostPage({
   const post = getPost(slug, locale);
   if (!post) notFound();
   const dict = getDictionary(locale);
+  const canonicalUrl = `${SITE_URL}${href(locale, `/blog/${slug}/`)}`;
+  const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
+  const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: post.title,
+    description: post.excerpt || post.title,
+    image: imageUrl,
+    datePublished: post.published_at || post.created_at,
+    dateModified: post.published_at || post.created_at,
+    author: {
+      "@type": "Person",
+      name: post.author.name,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "xDev Asia",
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/images/logo/logo-vertical-light.png`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
+    inLanguage: LOCALE_HTML_LANG[locale],
+    isAccessibleForFree: true,
+  };
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <nav className="flex items-center gap-2 text-xs font-medium text-zinc-500 mb-8">
         <Link href={href(locale, "/")} className="hover:text-brand-600 transition-colors">
           xDev

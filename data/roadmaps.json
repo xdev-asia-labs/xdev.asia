@@ -1,17 +1,32 @@
 [
   {
     "slug": "ba",
-    "title": "AI-Era Business Analyst (BA)",
-    "description": "Lộ trình BA thời AI: AI-assisted discovery, requirements engineering, API/data literacy, governance và đo lường tác động sản phẩm.",
+    "title": "Business Analyst (Business & Software BA)",
+    "description": "Lộ trình BA nghiệp vụ và Software BA: BABOK, SDLC, Agile/Scrum, BRD/SRS, user story, BPMN/UML, API/data, UAT, governance và AI-assisted workflow.",
     "category": "role",
-    "icon": "🤖",
+    "icon": "📋",
     "theme": "blue",
     "stats": {
       "phases": 7,
       "duration": "8-14 tháng",
-      "level": "Người mới -> AI-ready Senior BA",
-      "certs": "ECBA / CBAP / PMI-PBA / AI Product"
+      "level": "Người mới -> Senior Business/Software BA",
+      "certs": "ECBA / CCBA / CBAP / PMI-PBA / IIBA-AAC"
     },
-    "tags": ["AI BA", "Requirements", "Prompt", "API", "SQL", "Governance"]
+    "tags": ["Business BA", "Software BA", "BABOK", "SDLC", "Requirements", "SRS", "UAT", "API", "Governance"]
+  },
+  {
+    "slug": "ai-engineer",
+    "title": "AI Engineer",
+    "description": "Lộ trình AI Engineer tập trung vào LLM application stack: prompt contract, structured output, RAG, agents, evals, guardrails, observability, deployment và tối ưu chi phí.",
+    "category": "role",
+    "icon": "🧠",
+    "theme": "cyan",
+    "stats": {
+      "phases": 7,
+      "duration": "6-12 tháng",
+      "level": "Software Engineer -> Production AI Engineer",
+      "certs": "AWS AI Practitioner / Azure AI Engineer / GCP Professional ML Engineer / NVIDIA DLI"
+    },
+    "tags": ["LLM", "RAG", "Agents", "Evals", "Guardrails", "Prompt Engineering", "Vector DB", "MLOps", "AI Security"]
   }
 ]
