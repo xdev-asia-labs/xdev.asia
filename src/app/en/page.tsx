@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import LocaleStubPage, { buildLocaleStubMetadata } from "@/components/LocaleStubPage";
+import { HomePage } from "../page";
 
-export const metadata: Metadata = buildLocaleStubMetadata("en");
+export const metadata: Metadata = {
+  title: "xDev Asia — Programming, AI, DevOps & Technology",
+  description: "Knowledge sharing platform for programming, AI, DevOps and technology.",
+  alternates: { canonical: "/en/" },
+};
 
 export default function Page() {
-  return <LocaleStubPage locale="en" />;
+  return <HomePage locale="en" />;
 }

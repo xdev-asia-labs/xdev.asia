@@ -4,13 +4,64 @@ import Link from "next/link";
 import { IconBook, IconClock, IconStar } from "./Icons";
 import SkeletonImage from "./SkeletonImage";
 
-export default function SeriesCard({ series, priority = false, basePath }: { series: SeriesIndex; priority?: boolean; basePath?: string }) {
-    const seriesPath = basePath ? `${basePath}/${series.slug}/` : `/series/${series.category?.slug || "uncategorized"}/${series.slug}/`;
-    const levelLabels: Record<string, string> = {
+const LEVEL_LABELS: Record<string, Record<string, string>> = {
+    vi: {
         beginner: "Cơ bản",
         intermediate: "Trung cấp",
         advanced: "Nâng cao",
-    };
+    },
+    en: {
+        beginner: "Beginner",
+        intermediate: "Intermediate",
+        advanced: "Advanced",
+    },
+    ja: {
+        beginner: "初級",
+        intermediate: "中級",
+        advanced: "上級",
+    },
+    "zh-tw": {
+        beginner: "初級",
+        intermediate: "中級",
+        advanced: "進階",
+    },
+};
+
+function localeFromPrefix(localePrefix: string): keyof typeof LEVEL_LABELS {
+    if (localePrefix === "/en" || localePrefix === "/ja" || localePrefix === "/zh-tw") {
+        return localePrefix.slice(1) as keyof typeof LEVEL_LABELS;
+    }
+    return "vi";
+}
+
+function lessonLabel(count: number, locale: keyof typeof LEVEL_LABELS): string {
+    if (locale === "en") return `${count} lessons`;
+    if (locale === "ja") return `${count}レッスン`;
+    if (locale === "zh-tw") return `${count} 課`;
+    return `${count} bài`;
+}
+
+function updatingLabel(locale: keyof typeof LEVEL_LABELS): string {
+    if (locale === "en") return "Updating";
+    if (locale === "ja") return "更新中";
+    if (locale === "zh-tw") return "更新中";
+    return "Đang cập nhật";
+}
+
+export default function SeriesCard({
+    series,
+    priority = false,
+    basePath,
+    localePrefix = "",
+}: {
+    series: SeriesIndex;
+    priority?: boolean;
+    basePath?: string;
+    localePrefix?: string;
+}) {
+    const seriesPath = basePath ? `${basePath}/${series.slug}/` : `/series/${series.category?.slug || "uncategorized"}/${series.slug}/`;
+    const cardLocale = localeFromPrefix(localePrefix);
+    const levelLabels = LEVEL_LABELS[cardLocale];
 
     const levelColors: Record<string, string> = {
         beginner: "text-white bg-emerald-500/90",
@@ -63,7 +114,7 @@ export default function SeriesCard({ series, priority = false, basePath }: { ser
                 {visibleTags.length > 0 && (
                     <div className="mt-2.5 flex flex-wrap gap-1.5">
                         {visibleTags.map((tag) => (
-                            <Link key={tag.slug} href={`/tags/${tag.slug}/`} className="tag-pill text-[10px] px-2 py-0.5">
+                            <Link key={tag.slug} href={`${localePrefix}/tags/${tag.slug}/`} className="tag-pill text-[10px] px-2 py-0.5">
                                 {tag.name}
                             </Link>
                         ))}
@@ -75,7 +126,7 @@ export default function SeriesCard({ series, priority = false, basePath }: { ser
                         {series.lesson_count > 0 && (
                             <span className="flex items-center gap-1.5">
                                 <IconBook size={13} className="text-zinc-400" />
-                                {series.lesson_count} bài
+                                {lessonLabel(series.lesson_count, cardLocale)}
                             </span>
                         )}
                         {Number(series.duration_hours) > 0 && (
@@ -88,7 +139,7 @@ export default function SeriesCard({ series, priority = false, basePath }: { ser
                             </>
                         )}
                         {series.lesson_count === 0 && (!series.duration_hours || series.duration_hours === 0) && (
-                            <span className="text-[11px] text-zinc-300 italic">Đang cập nhật</span>
+                            <span className="text-[11px] text-zinc-300 italic">{updatingLabel(cardLocale)}</span>
                         )}
                     </div>
                     {series.average_rating > 0 && (

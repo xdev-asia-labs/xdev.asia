@@ -24,15 +24,36 @@ interface LanguageSwitcherProps {
 /**
  * Builds a path that swaps the locale prefix.
  * - vi (default) lives at "/", others at "/<locale>/...".
- * - Non-default locale routes currently exist for locale landing pages only;
- *   fallback there instead of pushing users into an exported 404.
+ * - Non-default locale routes exist for translated content sections.
+ *   Fallback to the locale landing page for routes that are still vi-only.
  */
 function buildLocalizedPath(pathname: string, target: Locale): string {
   const base = stripLocale(pathname);
-  if (target !== DEFAULT_LOCALE && base !== "/") {
+  const normalizedBase = base === "/" ? base : base.replace(/\/$/, "");
+  const targetBase = normalizedBase.startsWith("/blog/page/") ? "/blog/" : base;
+  const localizedRoutes = [
+    "/blog",
+    "/series",
+    "/lessons",
+    "/pages",
+    "/search",
+    "/tags",
+    "/programming",
+    "/devops",
+    "/database",
+    "/security",
+    "/linux",
+    "/architecture",
+    "/cloud",
+  ];
+  const hasLocalizedRoute =
+    targetBase === "/" ||
+    localizedRoutes.some((route) => targetBase === route || targetBase.startsWith(`${route}/`));
+
+  if (target !== DEFAULT_LOCALE && !hasLocalizedRoute) {
     return localizedPath(target, "/");
   }
-  return localizedPath(target, base);
+  return localizedPath(target, targetBase);
 }
 
 export default function LanguageSwitcher({

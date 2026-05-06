@@ -3,6 +3,7 @@ import AISummary from "@/components/AISummary";
 import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
 import CodeExplainer from "@/components/CodeExplainer";
+import ContentLanguageSwitcher from "@/components/ContentLanguageSwitcher";
 import ContentGate from "@/components/ContentGate";
 import ContentRenderer from "@/components/ContentRenderer";
 import GiscusComments from "@/components/GiscusComments";
@@ -13,7 +14,7 @@ import ShareButtons from "@/components/ShareButtons";
 import TableOfContents from "@/components/TableOfContents";
 import TextToSpeech from "@/components/TextToSpeech";
 import TranslateButton from "@/components/TranslateButton";
-import { formatDate, getAllPosts, getAuthorById, getPost, getPostSlugs } from "@/lib/data";
+import { formatDate, getAllPosts, getAuthorById, getPost, getPostLanguageLinks, getPostSlugs } from "@/lib/data";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -209,6 +210,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             </div>
                         </Link>
                     </div>
+
+                    <ContentLanguageSwitcher
+                        links={getPostLanguageLinks(post)}
+                        currentLocale="vi"
+                        className="mt-6"
+                    />
 
                     {post.tags.length > 0 && (
                         <div className="mt-6 flex flex-wrap gap-2">

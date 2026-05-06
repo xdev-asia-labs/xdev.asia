@@ -10,6 +10,13 @@ interface HeroBannerProps {
     profileLabel?: string;
     postCount: number;
     seriesCount: number;
+    greetingPrefix?: string;
+    primaryHref?: string;
+    primaryLabel?: string;
+    secondaryHref?: string;
+    secondaryLabel?: string;
+    postStatLabel?: string;
+    seriesStatLabel?: string;
 }
 
 export default function HeroBanner2026({
@@ -18,10 +25,17 @@ export default function HeroBanner2026({
     profileLabel = "Personal Tech Blog · 2026",
     postCount,
     seriesCount,
+    greetingPrefix = "Xin chào, mình là",
+    primaryHref = "/series/",
+    primaryLabel = "Khám phá Series",
+    secondaryHref = "/blog/",
+    secondaryLabel = "Đọc Blog",
+    postStatLabel = "Bài viết",
+    seriesStatLabel = "Series",
 }: HeroBannerProps) {
     const stats = [
-        { value: postCount, label: "Bài viết", icon: IconCode },
-        { value: seriesCount, label: "Series", icon: IconBook },
+        { value: postCount, label: postStatLabel, icon: IconCode },
+        { value: seriesCount, label: seriesStatLabel, icon: IconBook },
     ];
 
     return (
@@ -43,7 +57,7 @@ export default function HeroBanner2026({
 
                         {/* Headline */}
                         <h1 className="hero-headline-dark animate-fade-in-up" style={{ animationDelay: "120ms" }}>
-                            Xin chào, mình là{" "}
+                            {greetingPrefix}{" "}
                             <span className="hero-name-highlight">{profileName}</span>
                         </h1>
 
@@ -53,14 +67,14 @@ export default function HeroBanner2026({
 
                         {/* CTA Buttons with shine effect */}
                         <div className="mt-10 flex flex-wrap gap-3 animate-fade-in-up" style={{ animationDelay: "360ms" }}>
-                            <Link href="/series/" className="btn-hero-primary btn-shine">
+                            <Link href={primaryHref} className="btn-hero-primary btn-shine">
                                 <IconBook size={16} />
-                                Khám phá Series
+                                {primaryLabel}
                                 <IconArrowRight size={14} />
                             </Link>
-                            <Link href="/blog/" className="btn-hero-secondary">
+                            <Link href={secondaryHref} className="btn-hero-secondary">
                                 <IconCode size={16} />
-                                Đọc Blog
+                                {secondaryLabel}
                             </Link>
                         </div>
 

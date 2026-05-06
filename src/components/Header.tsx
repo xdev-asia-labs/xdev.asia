@@ -8,7 +8,8 @@ import { IconMenu, IconClose, IconSearch, IconChevronDown, IconBrain, IconCode, 
 import DarkModeToggle from "./DarkModeToggle";
 import UserMenu from "./UserMenu";
 import LanguageSwitcher from "./LanguageSwitcher";
-import type { Locale } from "@/lib/i18n/config";
+import { detectLocaleFromPath, localePrefix as getLocalePrefix, type Locale } from "@/lib/i18n/config";
+import { getClientDictionary } from "@/lib/i18n/client-dictionaries";
 
 /* ────────────────────────────────────────
    Icon map – maps category.icon string → component
@@ -71,26 +72,47 @@ const DEFAULT_STRINGS: HeaderStrings = {
 
 export default function Header({
     topics = [],
+    topicsByLocale,
     strings = DEFAULT_STRINGS,
     localePrefix = "",
     locale = "vi",
 }: {
     topics?: NavTopic[];
+    topicsByLocale?: Partial<Record<Locale, NavTopic[]>>;
     strings?: HeaderStrings;
     localePrefix?: string;
     locale?: Locale;
 }) {
+    const pathname = usePathname();
+    const activeLocale = detectLocaleFromPath(pathname || "/");
+    const activePrefix = getLocalePrefix(activeLocale);
+    const activeDict = getClientDictionary(activeLocale);
+    const activeStrings: HeaderStrings = {
+        blog: activeDict.nav.blog,
+        series: activeDict.nav.series,
+        exam_prep: activeDict.nav.exam_prep,
+        roadmap: activeDict.nav.roadmap,
+        about: activeDict.nav.about,
+        topics: activeDict.nav.topics,
+        view_all_posts: activeDict.nav.view_all_posts,
+        search: activeDict.nav.search,
+        mcp: activeDict.nav.mcp,
+        skip_to_content: activeDict.nav.skip_to_content,
+        toggle_menu: activeDict.nav.toggle_menu,
+    };
+    const localizedPrefix = activePrefix || localePrefix;
+    const activeTopics = topicsByLocale?.[activeLocale] ?? topics;
+    const localizedHref = (path: string) => `${localizedPrefix}${path}`;
     const navLinks = [
-        { href: `${localePrefix}/blog/`, label: strings.blog },
-        { href: `${localePrefix}/series/`, label: strings.series },
-        { href: `${localePrefix}/luyen-thi/`, label: strings.exam_prep },
-        { href: `${localePrefix}/roadmap/`, label: strings.roadmap },
-        { href: `${localePrefix}/pages/ve-toi/`, label: strings.about },
+        { href: localizedHref("/blog/"), label: activeStrings.blog },
+        { href: localizedHref("/series/"), label: activeStrings.series },
+        { href: "/luyen-thi/", label: activeStrings.exam_prep },
+        { href: "/roadmap/", label: activeStrings.roadmap },
+        { href: localizedHref("/pages/ve-toi/"), label: activeStrings.about },
     ];
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const pathname = usePathname();
 
     const closeAll = useCallback(() => {
         setMobileMenuOpen(false);
@@ -118,7 +140,7 @@ export default function Header({
         <header className="sticky top-0 z-50 glass">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-                    <Link href="/" className="flex items-center gap-1 group relative shrink-0">
+                    <Link href={localizedPrefix || "/"} className="flex items-center gap-1 group relative shrink-0">
                         <Image
                             src="/images/logo/logo-vertical-light.svg"
                             alt="xDev"
@@ -156,7 +178,7 @@ export default function Header({
                         ))}
 
                         {/* Topics Dropdown */}
-                        {topics.length > 0 && (
+                        {activeTopics.length > 0 && (
                             <div className="relative" ref={dropdownRef}>
                                 <button
                                     onClick={() => setTopicDropdownOpen(!topicDropdownOpen)}
@@ -165,7 +187,7 @@ export default function Header({
                                         : "text-zinc-600 hover:text-brand-600 hover:bg-zinc-50"
                                         }`}
                                 >
-                                    {strings.topics}
+                                    {activeStrings.topics}
                                     <IconChevronDown
                                         size={13}
                                         className={`transition-transform duration-300 ${topicDropdownOpen ? "rotate-180" : ""}`}
@@ -177,10 +199,10 @@ export default function Header({
                                         : "opacity-0 scale-95 -translate-y-1 pointer-events-none"
                                         }`}
                                 >
-                                    {topics.map((topic) => (
+                                    {activeTopics.map((topic) => (
                                         <Link
                                             key={topic.slug}
-                                            href={`${localePrefix}/${topic.slug}/`}
+                                            href={localizedHref(`/${topic.slug}/`)}
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-zinc-600 hover:text-brand-600 hover:bg-brand-50/60 transition-colors"
                                             onClick={() => setTopicDropdownOpen(false)}
                                         >
@@ -190,12 +212,12 @@ export default function Header({
                                     ))}
                                     <div className="border-t border-zinc-100 mt-1 pt-1">
                                         <Link
-                                            href={`${localePrefix}/blog/`}
+                                            href={localizedHref("/blog/")}
                                             className="flex items-center gap-3 px-4 py-2 text-sm text-brand-600 font-medium hover:bg-brand-50/60 transition-colors"
                                             onClick={() => setTopicDropdownOpen(false)}
                                         >
                                             <IconCode size={15} />
-                                            {strings.view_all_posts}
+                                            {activeStrings.view_all_posts}
                                         </Link>
                                     </div>
                                 </div>
@@ -204,38 +226,38 @@ export default function Header({
 
                         {/* MCP — highlighted */}
                         <Link
-                            href={`${localePrefix}/mcp/`}
+                            href="/mcp/"
                             className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${isActive("/mcp")
                                 ? "bg-brand-600 text-white shadow-md shadow-brand-500/30"
                                 : "bg-linear-to-r from-brand-500 to-indigo-500 text-white shadow-md shadow-brand-500/25 hover:shadow-lg hover:shadow-brand-500/40 hover:scale-105"
                                 }`}
                         >
                             <IconPlug size={14} />
-                            {strings.mcp}
+                            {activeStrings.mcp}
                             <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                         </Link>
 
                         {/* Search */}
                         <Link
-                            href={`${localePrefix}/search/`}
+                            href={localizedHref("/search/")}
                             className="ml-1.5 p-2 rounded-lg text-zinc-400 hover:text-brand-600 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-                            aria-label={strings.search}
+                            aria-label={activeStrings.search}
                         >
                             <IconSearch size={18} />
                         </Link>
                         <DarkModeToggle />
-                        <LanguageSwitcher currentLocale={locale} />
+                        <LanguageSwitcher currentLocale={activeLocale || locale} />
                         <UserMenu />
                     </div>
 
                     {/* Mobile */}
                     <div className="flex md:hidden items-center gap-0.5">
                         <DarkModeToggle />
-                        <LanguageSwitcher currentLocale={locale} variant="compact" />
+                        <LanguageSwitcher currentLocale={activeLocale || locale} variant="compact" />
                         <Link
-                            href={`${localePrefix}/search/`}
+                            href={localizedHref("/search/")}
                             className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
-                            aria-label={strings.search}
+                            aria-label={activeStrings.search}
                         >
                             <IconSearch size={20} />
                         </Link>
@@ -244,7 +266,7 @@ export default function Header({
                             id="mobile-menu-toggle"
                             className="p-2 rounded-lg text-zinc-500 hover:text-brand-600 hover:bg-zinc-50 transition-colors"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            aria-label={strings.toggle_menu}
+                            aria-label={activeStrings.toggle_menu}
                         >
                             {mobileMenuOpen ? <IconClose size={22} /> : <IconMenu size={22} />}
                         </button>
@@ -271,23 +293,23 @@ export default function Header({
                         </Link>
                     ))}
                     <Link
-                        href={`${localePrefix}/mcp/`}
+                        href="/mcp/"
                         className="flex items-center gap-2 mx-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-linear-to-r from-brand-500 to-indigo-500 text-white shadow-md"
                     >
                         <IconPlug size={16} />
-                        {strings.mcp}
+                        {activeStrings.mcp}
                         <span className="ml-auto text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">NEW</span>
                     </Link>
-                    {topics.length > 0 && (
+                    {activeTopics.length > 0 && (
                         <>
                             <div className="pt-3 pb-1 px-4">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{strings.topics}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{activeStrings.topics}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-1">
-                                {topics.map((topic) => (
+                                {activeTopics.map((topic) => (
                                     <Link
                                         key={topic.slug}
-                                        href={`${localePrefix}/${topic.slug}/`}
+                                        href={localizedHref(`/${topic.slug}/`)}
                                         className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:text-brand-600 hover:bg-zinc-50 transition-colors"
                                     >
                                         <TopicIcon icon={topic.icon} size={14} className="text-zinc-400" />

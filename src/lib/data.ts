@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { listMdxRelativePaths, readMdxDocument, readMdxDocumentByRelativePath, renderMdxBodyToHtml } from "./content";
+import { DEFAULT_LOCALE, LOCALES, localizedPath, type Locale } from "./i18n/config";
 import type {
     Author,
     Category,
@@ -30,13 +31,23 @@ function fileExists(filePath: string): boolean {
   return fs.existsSync(path.join(dataDir, filePath));
 }
 
+function localizedCollection(collection: string, locale: Locale = DEFAULT_LOCALE): string {
+  return locale === DEFAULT_LOCALE ? collection : `${locale}/${collection}`;
+}
+
+function getLocalizedContentDir(collection: string, locale: Locale = DEFAULT_LOCALE): string {
+  return path.join(process.cwd(), "content", localizedCollection(collection, locale));
+}
+
 // Resolve series slug to compound slug for categorized directory structure
 // e.g. "ai-llm-tu-co-ban-den-nang-cao" → "ai-machine-learning/ai-llm-tu-co-ban-den-nang-cao"
-let _seriesSlugMap: Map<string, string> | null = null;
+const seriesSlugMaps = new Map<Locale, Map<string, string>>();
 
-function getSeriesSlugMap(): Map<string, string> {
-  if (_seriesSlugMap) return _seriesSlugMap;
-  const seriesDir = path.join(process.cwd(), "content", "series");
+function getSeriesSlugMap(locale: Locale = DEFAULT_LOCALE): Map<string, string> {
+  const cached = seriesSlugMaps.get(locale);
+  if (cached) return cached;
+
+  const seriesDir = getLocalizedContentDir("series", locale);
   const map = new Map<string, string>();
   if (!fs.existsSync(seriesDir)) return map;
 
@@ -57,12 +68,15 @@ function getSeriesSlugMap(): Map<string, string> {
     }
   }
 
-  _seriesSlugMap = map;
+  seriesSlugMaps.set(locale, map);
   return map;
 }
 
-export function resolveSeriesCompoundSlug(seriesSlug: string): string {
-  return getSeriesSlugMap().get(seriesSlug) || seriesSlug;
+export function resolveSeriesCompoundSlug(
+  seriesSlug: string,
+  locale: Locale = DEFAULT_LOCALE
+): string {
+  return getSeriesSlugMap(locale).get(seriesSlug) || seriesSlug;
 }
 
 type PostFrontmatter = Omit<Post, "content" | "comments"> & {
@@ -78,8 +92,14 @@ type LessonFrontmatter = Omit<Lesson, "content" | "course"> & {
   course_slug?: string;
 };
 
-function buildSectionsFromLessonFiles(seriesSlug: string): Section[] | null {
-  const seriesCollection = `series/${resolveSeriesCompoundSlug(seriesSlug)}`;
+function buildSectionsFromLessonFiles(
+  seriesSlug: string,
+  locale: Locale = DEFAULT_LOCALE
+): Section[] | null {
+  const seriesCollection = localizedCollection(
+    `series/${resolveSeriesCompoundSlug(seriesSlug, locale)}`,
+    locale
+  );
   const lessonPaths = listMdxRelativePaths(seriesCollection)
     .filter((p) => p.includes("/lessons/") && !p.endsWith("/index"));
 
@@ -133,15 +153,26 @@ function normalizeLessonSlugFromPath(lessonPath: string): string {
   return fileName.replace(/^\d+-/, "");
 }
 
-function getLessonMdxDocument(seriesSlug: string, lessonSlug: string): { data: LessonFrontmatter; content: string } | null {
-  const compoundSlug = resolveSeriesCompoundSlug(seriesSlug);
-  const directDoc = readMdxDocument<LessonFrontmatter>(`series/${compoundSlug}/chapters`, lessonSlug);
+function getLessonMdxDocument(
+  seriesSlug: string,
+  lessonSlug: string,
+  locale: Locale = DEFAULT_LOCALE
+): { data: LessonFrontmatter; content: string } | null {
+  const compoundSlug = resolveSeriesCompoundSlug(seriesSlug, locale);
+  const seriesCollection = localizedCollection(`series/${compoundSlug}`, locale);
+  const directDoc = readMdxDocument<LessonFrontmatter>(
+    `${seriesCollection}/chapters`,
+    lessonSlug
+  );
   if (directDoc) return directDoc;
 
-  const lessonPaths = listMdxRelativePaths(`series/${compoundSlug}`)
+  const lessonPaths = listMdxRelativePaths(seriesCollection)
     .filter((relativePath) => relativePath.includes("/lessons/") && !relativePath.endsWith("/index"));
   for (const lessonPath of lessonPaths) {
-    const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`series/${compoundSlug}`, lessonPath);
+    const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(
+      seriesCollection,
+      lessonPath
+    );
     if (!mdxLesson) continue;
 
     const frontmatterSlug = mdxLesson.data.slug || "";
@@ -225,13 +256,14 @@ function collectPostsFromCollection(collection: string): PostIndex[] {
     .filter((post): post is PostIndex => post !== null);
 }
 
-function getAllPostsFromMdx(): PostIndex[] {
-  return sortByPublishedDate(collectPostsFromCollection("blog"));
+function getAllPostsFromMdx(locale: Locale = DEFAULT_LOCALE): PostIndex[] {
+  return sortByPublishedDate(collectPostsFromCollection(localizedCollection("blog", locale)));
 }
 
-function getPostFromMdx(slug: string): Post | null {
-  for (const relPath of listMdxRelativePaths("blog")) {
-    const document = readMdxDocumentByRelativePath<PostFrontmatter>("blog", relPath);
+function getPostFromMdx(slug: string, locale: Locale = DEFAULT_LOCALE): Post | null {
+  const collection = localizedCollection("blog", locale);
+  for (const relPath of listMdxRelativePaths(collection)) {
+    const document = readMdxDocumentByRelativePath<PostFrontmatter>(collection, relPath);
     if (!document) continue;
     if (document.data.slug === slug) {
       return {
@@ -245,11 +277,14 @@ function getPostFromMdx(slug: string): Post | null {
 }
 
 
-function getAllSeriesFromMdx(): SeriesIndex[] {
-  const slugMap = getSeriesSlugMap();
+function getAllSeriesFromMdx(locale: Locale = DEFAULT_LOCALE): SeriesIndex[] {
+  const slugMap = getSeriesSlugMap(locale);
   const series = [...slugMap.entries()]
     .map(([slug, compoundSlug]) => {
-      const document = readMdxDocument<SeriesFrontmatter>("series", compoundSlug);
+      const document = readMdxDocument<SeriesFrontmatter>(
+        localizedCollection("series", locale),
+        compoundSlug
+      );
       if (!document) return null;
 
       const data = document.data;
@@ -279,14 +314,17 @@ function getAllSeriesFromMdx(): SeriesIndex[] {
   return sortByPublishedDate(series);
 }
 
-function getSeriesFromMdx(slug: string): Series | null {
-  const document = readMdxDocument<SeriesFrontmatter>("series", resolveSeriesCompoundSlug(slug));
+function getSeriesFromMdx(slug: string, locale: Locale = DEFAULT_LOCALE): Series | null {
+  const document = readMdxDocument<SeriesFrontmatter>(
+    localizedCollection("series", locale),
+    resolveSeriesCompoundSlug(slug, locale)
+  );
   if (!document) return null;
 
   return normalizeSeries({
     ...document.data,
     content: renderMdxBodyToHtml(document.content),
-  } satisfies Series);
+  } satisfies Series, locale);
 }
 
 function createFallbackSections(series: Series): Section[] {
@@ -321,9 +359,9 @@ function createFallbackSections(series: Series): Section[] {
   ];
 }
 
-function normalizeSeries(series: Series): Series {
+function normalizeSeries(series: Series, locale: Locale = DEFAULT_LOCALE): Series {
   // Try to build sections from actual lesson files on disk
-  const fileSections = buildSectionsFromLessonFiles(series.slug);
+  const fileSections = buildSectionsFromLessonFiles(series.slug, locale);
   if (fileSections && fileSections.length > 0) {
     return { ...series, sections: fileSections };
   }
@@ -339,14 +377,109 @@ function normalizeSeries(series: Series): Series {
 }
 
 // Static content pages (content/pages/*.md)
-export function getStaticPage(slug: string): { title: string; content: string } | null {
+export function getStaticPage(
+  slug: string,
+  locale: Locale = DEFAULT_LOCALE
+): { title: string; content: string } | null {
   type PageFrontmatter = { title: string; slug?: string };
-  const doc = readMdxDocument<PageFrontmatter>("pages", slug);
+  const doc = readMdxDocument<PageFrontmatter>(localizedCollection("pages", locale), slug);
   if (!doc) return null;
   return {
     title: doc.data.title,
     content: renderMdxBodyToHtml(doc.content),
   };
+}
+
+export interface ContentLanguageLink {
+  locale: Locale;
+  href: string;
+  title?: string;
+  available: boolean;
+}
+
+function unavailableLanguageLink(locale: Locale): ContentLanguageLink {
+  return {
+    locale,
+    href: localizedPath(locale, "/"),
+    available: false,
+  };
+}
+
+export function getPostLanguageLinks(post: Post | PostIndex): ContentLanguageLink[] {
+  return LOCALES.map((locale) => {
+    const localizedPost =
+      getAllPosts(locale).find((item) => item.id === post.id) ??
+      getAllPosts(locale).find((item) => item.slug === post.slug);
+
+    if (!localizedPost) return unavailableLanguageLink(locale);
+
+    return {
+      locale,
+      href: localizedPath(locale, `/blog/${localizedPost.slug}/`),
+      title: localizedPost.title,
+      available: true,
+    };
+  });
+}
+
+export function getSeriesLanguageLinks(series: Series | SeriesIndex): ContentLanguageLink[] {
+  return LOCALES.map((locale) => {
+    const localizedSeries =
+      getAllSeries(locale).find((item) => item.id === series.id) ??
+      getAllSeries(locale).find((item) => item.slug === series.slug);
+
+    if (!localizedSeries) return unavailableLanguageLink(locale);
+
+    return {
+      locale,
+      href: localizedPath(
+        locale,
+        `/series/${localizedSeries.category?.slug || "uncategorized"}/${localizedSeries.slug}/`
+      ),
+      title: localizedSeries.title,
+      available: true,
+    };
+  });
+}
+
+export function getLessonLanguageLinks(series: Series, lesson: Lesson): ContentLanguageLink[] {
+  return LOCALES.map((locale) => {
+    const localizedSeriesIndex =
+      getAllSeries(locale).find((item) => item.id === series.id) ??
+      getAllSeries(locale).find((item) => item.slug === series.slug);
+
+    if (!localizedSeriesIndex) return unavailableLanguageLink(locale);
+
+    const localizedSeries = getSeries(localizedSeriesIndex.slug, locale);
+    if (!localizedSeries) return unavailableLanguageLink(locale);
+
+    const localizedLesson = localizedSeries.sections
+      .flatMap((section) => section.lessons)
+      .find((item) => item.id === lesson.id || item.slug === lesson.slug);
+
+    if (!localizedLesson) return unavailableLanguageLink(locale);
+
+    return {
+      locale,
+      href: localizedPath(locale, `/lessons/${localizedSeries.slug}/${localizedLesson.slug}/`),
+      title: localizedLesson.title,
+      available: true,
+    };
+  });
+}
+
+export function getStaticPageLanguageLinks(slug: string): ContentLanguageLink[] {
+  return LOCALES.map((locale) => {
+    const page = getStaticPage(slug, locale);
+    if (!page) return unavailableLanguageLink(locale);
+
+    return {
+      locale,
+      href: localizedPath(locale, `/pages/${slug}/`),
+      title: page.title,
+      available: true,
+    };
+  });
 }
 
 // Settings
@@ -422,33 +555,35 @@ export function getAuthorById(id?: string): Author {
 }
 
 // Posts (content/blog/)
-export function getAllPosts(): PostIndex[] {
-  return getAllPostsFromMdx();
+export function getAllPosts(locale: Locale = DEFAULT_LOCALE): PostIndex[] {
+  return getAllPostsFromMdx(locale);
 }
 
-export function getPost(slug: string): Post | null {
-  return getPostFromMdx(slug);
+export function getPost(slug: string, locale: Locale = DEFAULT_LOCALE): Post | null {
+  return getPostFromMdx(slug, locale);
 }
 
-export function getPostSlugs(): string[] {
-  return getAllPosts().map((p) => p.slug);
+export function getPostSlugs(locale: Locale = DEFAULT_LOCALE): string[] {
+  return getAllPosts(locale).map((p) => p.slug);
 }
 
 // Series (content/series/)
-export function getAllSeries(): SeriesIndex[] {
-  return getAllSeriesFromMdx();
+export function getAllSeries(locale: Locale = DEFAULT_LOCALE): SeriesIndex[] {
+  return getAllSeriesFromMdx(locale);
 }
 
-export function getSeries(slug: string): Series | null {
-  return getSeriesFromMdx(slug);
+export function getSeries(slug: string, locale: Locale = DEFAULT_LOCALE): Series | null {
+  return getSeriesFromMdx(slug, locale);
 }
 
-export function getSeriesSlugs(): string[] {
-  return getAllSeries().map((item) => item.slug);
+export function getSeriesSlugs(locale: Locale = DEFAULT_LOCALE): string[] {
+  return getAllSeries(locale).map((item) => item.slug);
 }
 
-export function getSeriesSlugsWithCategory(): { category: string; slug: string }[] {
-  return getAllSeries().map((item) => ({
+export function getSeriesSlugsWithCategory(
+  locale: Locale = DEFAULT_LOCALE
+): { category: string; slug: string }[] {
+  return getAllSeries(locale).map((item) => ({
     category: item.category?.slug || "uncategorized",
     slug: item.slug,
   }));
@@ -459,27 +594,31 @@ export interface SeriesCategory {
   name: string;
 }
 
-export function getSeriesCategories(): SeriesCategory[] {
-  const seriesItems = getAllSeries();
+export function getSeriesCategories(locale: Locale = DEFAULT_LOCALE): SeriesCategory[] {
+  const seriesItems = getAllSeries(locale);
   const map = new Map<string, string>();
   for (const s of seriesItems) {
-    if (s.category) {
+    if (s.category?.slug) {
       map.set(s.category.slug, s.category.name);
     }
   }
   return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
 }
 
-export function getSeriesByCategory(categorySlug: string): SeriesIndex[] {
-  return getAllSeries().filter((s) => s.category?.slug === categorySlug);
+export function getSeriesByCategory(
+  categorySlug: string,
+  locale: Locale = DEFAULT_LOCALE
+): SeriesIndex[] {
+  return getAllSeries(locale).filter((s) => s.category?.slug === categorySlug);
 }
 
 // Lessons
 export function getLesson(
   seriesSlug: string,
-  lessonSlug: string
+  lessonSlug: string,
+  locale: Locale = DEFAULT_LOCALE
 ): Lesson | null {
-  const mdxLesson = getLessonMdxDocument(seriesSlug, lessonSlug);
+  const mdxLesson = getLessonMdxDocument(seriesSlug, lessonSlug, locale);
   if (mdxLesson) {
     const frontmatter = mdxLesson.data;
     const course = frontmatter.course ?? {
@@ -508,7 +647,7 @@ export function getLesson(
     return readJSON<Lesson>(filePath);
   }
 
-  const series = getSeries(seriesSlug);
+  const series = getSeries(seriesSlug, locale);
   if (!series) return null;
 
   for (const section of series.sections) {
@@ -542,18 +681,24 @@ export function getLesson(
   return null;
 }
 
-export function getSeriesLessonSlugs(): { seriesSlug: string; lessonSlug: string }[] {
-  const seriesItems = getAllSeries();
+export function getSeriesLessonSlugs(
+  locale: Locale = DEFAULT_LOCALE
+): { seriesSlug: string; lessonSlug: string }[] {
+  const seriesItems = getAllSeries(locale);
   const slugs: { seriesSlug: string; lessonSlug: string }[] = [];
 
   for (const series of seriesItems) {
-    const compoundSlug = resolveSeriesCompoundSlug(series.slug);
-    const mdxLessonPaths = listMdxRelativePaths(`series/${compoundSlug}`)
+    const compoundSlug = resolveSeriesCompoundSlug(series.slug, locale);
+    const seriesCollection = localizedCollection(`series/${compoundSlug}`, locale);
+    const mdxLessonPaths = listMdxRelativePaths(seriesCollection)
       .filter((relativePath) => relativePath.includes("/lessons/") && !relativePath.endsWith("/index"));
     if (mdxLessonPaths.length > 0) {
       const uniqueSlugs = new Set<string>();
       for (const lessonPath of mdxLessonPaths) {
-        const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(`series/${compoundSlug}`, lessonPath);
+        const mdxLesson = readMdxDocumentByRelativePath<LessonFrontmatter>(
+          seriesCollection,
+          lessonPath
+        );
         if (!mdxLesson) continue;
 
         const lessonSlug = mdxLesson.data.slug || normalizeLessonSlugFromPath(lessonPath) || "";
@@ -567,7 +712,7 @@ export function getSeriesLessonSlugs(): { seriesSlug: string; lessonSlug: string
       continue;
     }
 
-    const fullSeries = getSeries(series.slug);
+    const fullSeries = getSeries(series.slug, locale);
     if (!fullSeries) continue;
     for (const section of fullSeries.sections) {
       for (const lesson of section.lessons) {
@@ -587,31 +732,36 @@ export interface Topic {
   postCount: number;
 }
 
-export function getAvailableTopics(): Topic[] {
+export function getAvailableTopics(locale: Locale = DEFAULT_LOCALE): Topic[] {
   const categories = getCategories().filter((c) => c.type === "blog");
-  const posts = getAllPosts();
+  const posts = getAllPosts(locale);
 
   // Count posts per category slug
   const countMap = new Map<string, number>();
+  const nameMap = new Map<string, string>();
   for (const post of posts) {
     if (post.category) {
       countMap.set(post.category.slug, (countMap.get(post.category.slug) || 0) + 1);
+      nameMap.set(post.category.slug, post.category.name);
     }
   }
 
   return categories
     .map((cat) => ({
       slug: cat.slug,
-      name: cat.name,
+      name: locale === DEFAULT_LOCALE ? cat.name : nameMap.get(cat.slug) || cat.name,
       icon: cat.icon || "code",
-      description: cat.description || "",
+      description: locale === DEFAULT_LOCALE ? cat.description || "" : "",
       postCount: countMap.get(cat.slug) || 0,
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function getPostsByTopic(topicSlug: string): PostIndex[] {
-  return getAllPosts().filter((p) => p.category?.slug === topicSlug);
+export function getPostsByTopic(
+  topicSlug: string,
+  locale: Locale = DEFAULT_LOCALE
+): PostIndex[] {
+  return getAllPosts(locale).filter((p) => p.category?.slug === topicSlug);
 }
 
 export interface TagStats extends Tag {
@@ -624,7 +774,7 @@ function normalizeTagNameFromSlug(slug: string): string {
   return tagNameFromSlug(slug);
 }
 
-export function getTagStats(): TagStats[] {
+export function getTagStats(locale: Locale = DEFAULT_LOCALE): TagStats[] {
   const tagsFromData = getTags();
   const map = new Map<string, TagStats>();
 
@@ -638,7 +788,7 @@ export function getTagStats(): TagStats[] {
     });
   }
 
-  for (const post of getAllPosts()) {
+  for (const post of getAllPosts(locale)) {
     for (const tag of post.tags) {
       const current = map.get(tag.slug) ?? {
         name: tag.name || normalizeTagNameFromSlug(tag.slug),
@@ -653,7 +803,7 @@ export function getTagStats(): TagStats[] {
     }
   }
 
-  for (const series of getAllSeries()) {
+  for (const series of getAllSeries(locale)) {
     for (const tag of series.tags) {
       const current = map.get(tag.slug) ?? {
         name: tag.name || normalizeTagNameFromSlug(tag.slug),
@@ -674,20 +824,26 @@ export function getTagStats(): TagStats[] {
   });
 }
 
-export function getTagBySlug(slug: string): TagStats | null {
-  return getTagStats().find((tag) => tag.slug === slug) ?? null;
+export function getTagBySlug(slug: string, locale: Locale = DEFAULT_LOCALE): TagStats | null {
+  return getTagStats(locale).find((tag) => tag.slug === slug) ?? null;
 }
 
-export function getPostsByTag(tagSlug: string): PostIndex[] {
-  return getAllPosts().filter((post) => post.tags.some((tag) => tag.slug === tagSlug));
+export function getPostsByTag(
+  tagSlug: string,
+  locale: Locale = DEFAULT_LOCALE
+): PostIndex[] {
+  return getAllPosts(locale).filter((post) => post.tags.some((tag) => tag.slug === tagSlug));
 }
 
-export function getSeriesByTag(tagSlug: string): SeriesIndex[] {
-  return getAllSeries().filter((series) => series.tags.some((tag) => tag.slug === tagSlug));
+export function getSeriesByTag(
+  tagSlug: string,
+  locale: Locale = DEFAULT_LOCALE
+): SeriesIndex[] {
+  return getAllSeries(locale).filter((series) => series.tags.some((tag) => tag.slug === tagSlug));
 }
 
-export function getActiveTagSlugs(): string[] {
-  return getTagStats()
+export function getActiveTagSlugs(locale: Locale = DEFAULT_LOCALE): string[] {
+  return getTagStats(locale)
     .filter((tag) => tag.totalCount > 0)
     .map((tag) => tag.slug);
 }
@@ -703,10 +859,11 @@ export interface SearchItem {
   url: string;
 }
 
-export function buildSearchIndex(): SearchItem[] {
+export function buildSearchIndex(locale: Locale = DEFAULT_LOCALE): SearchItem[] {
   const items: SearchItem[] = [];
+  const prefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
 
-  for (const post of getAllPosts()) {
+  for (const post of getAllPosts(locale)) {
     items.push({
       type: "post",
       title: post.title,
@@ -714,11 +871,11 @@ export function buildSearchIndex(): SearchItem[] {
       excerpt: post.excerpt || "",
       category: post.category?.name || "",
       tags: post.tags.map((t) => t.name),
-      url: `/blog/${post.slug}/`,
+      url: `${prefix}/blog/${post.slug}/`,
     });
   }
 
-  for (const series of getAllSeries()) {
+  for (const series of getAllSeries(locale)) {
     items.push({
       type: "series",
       title: series.title,
@@ -726,7 +883,7 @@ export function buildSearchIndex(): SearchItem[] {
       excerpt: series.description || "",
       category: series.category?.name || "",
       tags: series.tags.map((t) => t.name),
-      url: `/series/${series.category?.slug || "uncategorized"}/${series.slug}/`,
+      url: `${prefix}/series/${series.category?.slug || "uncategorized"}/${series.slug}/`,
     });
   }
 
@@ -739,9 +896,15 @@ export function getAllReviews(): Review[] {
 }
 
 // Helpers
-export function formatDate(dateStr: string | null): string {
+export function formatDate(dateStr: string | null, locale: Locale = DEFAULT_LOCALE): string {
   if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("vi-VN", {
+  const dateLocale: Record<Locale, string> = {
+    vi: "vi-VN",
+    en: "en-US",
+    ja: "ja-JP",
+    "zh-tw": "zh-TW",
+  };
+  return new Date(dateStr).toLocaleDateString(dateLocale[locale], {
     year: "numeric",
     month: "long",
     day: "numeric",

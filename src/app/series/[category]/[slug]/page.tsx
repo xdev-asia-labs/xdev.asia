@@ -1,11 +1,12 @@
 import BookmarkButton from "@/components/BookmarkButton";
+import ContentLanguageSwitcher from "@/components/ContentLanguageSwitcher";
 import ContentRenderer from "@/components/ContentRenderer";
 import GiscusComments from "@/components/GiscusComments";
 import { IconBook, IconChevronRight, IconClock, IconEye, IconStar } from "@/components/Icons";
 import { SeriesProgressBar, LessonCheckbox } from "@/components/SeriesProgress";
 import ShareButtons from "@/components/ShareButtons";
 import TableOfContents from "@/components/TableOfContents";
-import { getAuthorById, getSeries, getSeriesCategories, getSeriesSlugsWithCategory } from "@/lib/data";
+import { getAuthorById, getSeries, getSeriesCategories, getSeriesLanguageLinks, getSeriesSlugsWithCategory } from "@/lib/data";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -184,6 +185,12 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
                                     ))}
                                 </div>
                             )}
+
+                            <ContentLanguageSwitcher
+                                links={getSeriesLanguageLinks(series)}
+                                currentLocale="vi"
+                                className="mt-6"
+                            />
                         </div>
 
                         {/* Right: Featured Image */}

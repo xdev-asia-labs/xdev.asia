@@ -7,12 +7,126 @@ import SeriesCard from "@/components/SeriesCard";
 import SkeletonImage from "@/components/SkeletonImage";
 import { formatDate, getAllPosts, getAllSeries, getSeriesByCategory, getSettings } from "@/lib/data";
 import { buildKnowledgeGraph } from "@/lib/graph";
+import { DEFAULT_LOCALE, localizedPath, type Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 const SITE_URL = "https://xdev.asia";
+
+const HOME_COPY: Record<Locale, {
+    knowledgeTitle: string;
+    knowledgeSubtitle: (nodes: number, edges: number) => string;
+    knowledgeCta: string;
+    aiTitle: string;
+    aiSubtitle: string;
+    aiViewAll: string;
+    featuredSeriesTitle: string;
+    featuredSeriesSubtitle: string;
+    latestPostsTitle: string;
+    latestPostsSubtitle: string;
+    ctaTitle: string;
+    ctaBody: string;
+    ctaSeries: string;
+    ctaBlog: string;
+    greetingPrefix: string;
+    heroSeriesCta: string;
+    heroBlogCta: string;
+    postStatLabel: string;
+    seriesStatLabel: string;
+    minutesRead: (minutes: number) => string;
+}> = {
+    vi: {
+        knowledgeTitle: "Bản đồ tri thức",
+        knowledgeSubtitle: (nodes, edges) => `Khám phá mối liên kết giữa ${nodes} chủ đề và ${edges} liên kết.`,
+        knowledgeCta: "Xem toàn màn hình",
+        aiTitle: "Chuỗi bài học AI",
+        aiSubtitle: "Từ Machine Learning, Deep Learning đến LLM, Fine-tuning, RAG và MLOps - tất cả đều hands-on.",
+        aiViewAll: "Xem tất cả AI Series",
+        featuredSeriesTitle: "Series nổi bật",
+        featuredSeriesSubtitle: "Kubernetes, Nginx, PostgreSQL, Spring Boot - phát triển kỹ năng từ cơ bản đến nâng cao.",
+        latestPostsTitle: "Bài viết mới nhất",
+        latestPostsSubtitle: "Cập nhật tin tức, kiến thức công nghệ mới nhất.",
+        ctaTitle: "Cùng nhau học hỏi tại",
+        ctaBody: "Blog, series, và dự án open source - tất cả đều miễn phí. Mình viết từ kinh nghiệm thực tế hàng ngày.",
+        ctaSeries: "Xem Series",
+        ctaBlog: "Đọc Blog",
+        greetingPrefix: "Xin chào, mình là",
+        heroSeriesCta: "Khám phá Series",
+        heroBlogCta: "Đọc Blog",
+        postStatLabel: "Bài viết",
+        seriesStatLabel: "Series",
+        minutesRead: (minutes) => `${minutes} phút đọc`,
+    },
+    en: {
+        knowledgeTitle: "Knowledge map",
+        knowledgeSubtitle: (nodes, edges) => `Explore the links between ${nodes} topics and ${edges} connections.`,
+        knowledgeCta: "Open full view",
+        aiTitle: "AI learning paths",
+        aiSubtitle: "From Machine Learning and Deep Learning to LLMs, fine-tuning, RAG and MLOps - all hands-on.",
+        aiViewAll: "View all AI series",
+        featuredSeriesTitle: "Featured series",
+        featuredSeriesSubtitle: "Kubernetes, Nginx, PostgreSQL, Spring Boot - build skills from fundamentals to advanced practice.",
+        latestPostsTitle: "Latest posts",
+        latestPostsSubtitle: "Fresh updates, technical notes and practical engineering knowledge.",
+        ctaTitle: "Learn together at",
+        ctaBody: "Blog posts, series and open source projects - all free, written from day-to-day practical experience.",
+        ctaSeries: "View series",
+        ctaBlog: "Read blog",
+        greetingPrefix: "Hi, I am",
+        heroSeriesCta: "Explore series",
+        heroBlogCta: "Read blog",
+        postStatLabel: "Posts",
+        seriesStatLabel: "Series",
+        minutesRead: (minutes) => `${minutes} min read`,
+    },
+    ja: {
+        knowledgeTitle: "ナレッジマップ",
+        knowledgeSubtitle: (nodes, edges) => `${nodes} 個のトピックと ${edges} 個のつながりを探索します。`,
+        knowledgeCta: "全画面で見る",
+        aiTitle: "AI 学習シリーズ",
+        aiSubtitle: "Machine Learning、Deep Learning から LLM、Fine-tuning、RAG、MLOps まで、実践中心で学べます。",
+        aiViewAll: "AI シリーズをすべて見る",
+        featuredSeriesTitle: "注目シリーズ",
+        featuredSeriesSubtitle: "Kubernetes、Nginx、PostgreSQL、Spring Boot などを基礎から応用まで学べます。",
+        latestPostsTitle: "最新記事",
+        latestPostsSubtitle: "技術ニュース、実践知識、エンジニアリングの学びを更新しています。",
+        ctaTitle: "一緒に学ぶ場所",
+        ctaBody: "ブログ、シリーズ、オープンソースプロジェクトを無料で公開しています。日々の実務経験から書いています。",
+        ctaSeries: "シリーズを見る",
+        ctaBlog: "ブログを読む",
+        greetingPrefix: "こんにちは、私は",
+        heroSeriesCta: "シリーズを見る",
+        heroBlogCta: "ブログを読む",
+        postStatLabel: "記事",
+        seriesStatLabel: "シリーズ",
+        minutesRead: (minutes) => `${minutes}分で読めます`,
+    },
+    "zh-tw": {
+        knowledgeTitle: "知識地圖",
+        knowledgeSubtitle: (nodes, edges) => `探索 ${nodes} 個主題與 ${edges} 個連結之間的關係。`,
+        knowledgeCta: "開啟全螢幕",
+        aiTitle: "AI 學習系列",
+        aiSubtitle: "從 Machine Learning、Deep Learning 到 LLM、Fine-tuning、RAG 與 MLOps，全部以實作為核心。",
+        aiViewAll: "查看所有 AI 系列",
+        featuredSeriesTitle: "精選系列",
+        featuredSeriesSubtitle: "Kubernetes、Nginx、PostgreSQL、Spring Boot - 從基礎到進階逐步建立能力。",
+        latestPostsTitle: "最新文章",
+        latestPostsSubtitle: "更新技術新聞、實務知識與工程經驗。",
+        ctaTitle: "一起在這裡學習",
+        ctaBody: "部落格、系列文章與開源專案全部免費，內容來自日常實務經驗。",
+        ctaSeries: "查看系列",
+        ctaBlog: "閱讀文章",
+        greetingPrefix: "你好，我是",
+        heroSeriesCta: "探索系列",
+        heroBlogCta: "閱讀文章",
+        postStatLabel: "文章",
+        seriesStatLabel: "系列",
+        minutesRead: (minutes) => `${minutes} 分鐘閱讀`,
+    },
+};
 
 export const metadata: Metadata = {
     title: "xDev Asia — Blog lập trình, AI, DevOps & Công nghệ",
@@ -52,12 +166,20 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-    const allPosts = getAllPosts();
-    const allSeriesItems = getAllSeries();
+    return <HomePage locale={DEFAULT_LOCALE} />;
+}
+
+export function HomePage({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
+    const allPosts = getAllPosts(locale);
+    const allSeriesItems = getAllSeries(locale);
     const posts = allPosts.slice(0, 6);
+    const dict = getDictionary(locale);
+    const copy = HOME_COPY[locale];
+    const href = (path: string) => localizedPath(locale, path);
+    const prefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
 
     // AI series — highlighted
-    const aiSeries = getSeriesByCategory("ai-machine-learning");
+    const aiSeries = getSeriesByCategory("ai-machine-learning", locale);
 
     // Featured series — non-AI, sorted by enrollment/rating
     const otherSeries = allSeriesItems
@@ -77,9 +199,12 @@ export default function Home() {
         "@context": "https://schema.org",
         "@type": "WebSite",
         name: "xDev Asia",
-        url: SITE_URL,
-        description: "Blog cá nhân chia sẻ kiến thức lập trình, AI, Machine Learning, DevOps, kiến trúc hệ thống và công nghệ từ kinh nghiệm thực tế.",
-        inLanguage: "vi",
+        url: `${SITE_URL}${href("/")}`,
+        description:
+            locale === DEFAULT_LOCALE
+                ? "Blog cá nhân chia sẻ kiến thức lập trình, AI, Machine Learning, DevOps, kiến trúc hệ thống và công nghệ từ kinh nghiệm thực tế."
+                : dict.home.hero_subtitle,
+        inLanguage: locale,
         publisher: {
             "@type": "Person",
             name: profileName,
@@ -87,7 +212,7 @@ export default function Home() {
         },
         potentialAction: {
             "@type": "SearchAction",
-            target: `${SITE_URL}/search/?q={search_term_string}`,
+            target: `${SITE_URL}${href("/search/")}?q={search_term_string}`,
             "query-input": "required name=search_term_string",
         },
     };
@@ -101,11 +226,22 @@ export default function Home() {
             {/* ─── Hero ─── */}
             <HeroBanner2026
                 siteName={settings.site_name || "xDev"}
-                tagline={settings.site_tagline || settings.site_description || "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế"}
+                tagline={
+                    locale === DEFAULT_LOCALE
+                        ? settings.site_tagline || settings.site_description || "Chia sẻ kiến thức lập trình, AI, DevOps và công nghệ từ kinh nghiệm thực tế"
+                        : dict.home.hero_subtitle
+                }
                 profileName={settings.profile_name || "Duy Tran"}
                 profileLabel={settings.profile_label || "Personal Tech Blog · 2026"}
                 postCount={allPosts.length}
                 seriesCount={allSeriesItems.length}
+                greetingPrefix={copy.greetingPrefix}
+                primaryHref={href("/series/")}
+                primaryLabel={copy.heroSeriesCta}
+                secondaryHref={href("/blog/")}
+                secondaryLabel={copy.heroBlogCta}
+                postStatLabel={copy.postStatLabel}
+                seriesStatLabel={copy.seriesStatLabel}
             />
 
             {/* ─── Knowledge Graph Preview ─── */}
@@ -129,9 +265,9 @@ export default function Home() {
                                     </svg>
                                     Knowledge Graph
                                 </div>
-                                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Bản đồ tri thức</h2>
+                                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-2">{copy.knowledgeTitle}</h2>
                                 <p className="text-sm text-slate-400 max-w-md mx-auto">
-                                    Khám phá mối liên kết giữa {graphData.nodes.length} chủ đề và {graphData.edges.length} liên kết.
+                                    {copy.knowledgeSubtitle(graphData.nodes.length, graphData.edges.length)}
                                 </p>
                             </div>
                         </ScrollReveal>
@@ -139,10 +275,10 @@ export default function Home() {
                             <div className="relative rounded-2xl border border-white/6 bg-[#0d1117] overflow-hidden shadow-2xl shadow-black/40">
                                 <KnowledgeGraph data={graphData} className="h-90 sm:h-105 lg:h-120" />
                                 <Link
-                                    href="/knowledge-graph"
+                                    href="/knowledge-graph/"
                                     className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 py-3 bg-linear-to-t from-[#0d1117] via-[#0d1117]/90 to-transparent text-sm font-medium text-indigo-300 hover:text-indigo-200 transition-colors"
                                 >
-                                    Xem toàn màn hình
+                                    {copy.knowledgeCta}
                                     <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                                         <polyline points="15 3 21 3 21 9" />
                                         <polyline points="9 21 3 21 3 15" />
@@ -173,15 +309,15 @@ export default function Home() {
                                         AI & Machine Learning
                                     </div>
                                     <h2 className="section-title">
-                                        Chuỗi bài học AI
+                                        {copy.aiTitle}
                                     </h2>
                                     <p className="section-subtitle">
-                                        Từ Machine Learning, Deep Learning đến LLM, Fine-tuning, RAG và MLOps — tất cả đều hands-on.
+                                        {copy.aiSubtitle}
                                     </p>
                                 </div>
-                                <Link href="/series/ai-machine-learning/" className="link-brand shrink-0 self-start md:self-auto">
+                                <Link href={href("/series/ai-machine-learning/")} className="link-brand shrink-0 self-start md:self-auto">
                                     <IconBrain size={15} />
-                                    Xem tất cả AI Series
+                                    {copy.aiViewAll}
                                     <IconArrowRight size={14} />
                                 </Link>
                             </div>
@@ -190,7 +326,12 @@ export default function Home() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {aiSeries.slice(0, 8).map((series, index) => (
                                 <ScrollReveal key={series.id} delay={index * 80}>
-                                    <SeriesCard series={series} priority={index < 2} />
+                                    <SeriesCard
+                                        series={series}
+                                        priority={index < 2}
+                                        basePath={`${prefix}/series/${series.category?.slug || "uncategorized"}`}
+                                        localePrefix={prefix}
+                                    />
                                 </ScrollReveal>
                             ))}
                         </div>
@@ -209,13 +350,13 @@ export default function Home() {
                                         <IconBook size={14} />
                                         Series
                                     </div>
-                                    <h2 className="section-title">Series nổi bật</h2>
+                                    <h2 className="section-title">{copy.featuredSeriesTitle}</h2>
                                     <p className="section-subtitle">
-                                        Kubernetes, Nginx, PostgreSQL, Spring Boot — phát triển kỹ năng từ cơ bản đến nâng cao.
+                                        {copy.featuredSeriesSubtitle}
                                     </p>
                                 </div>
-                                <Link href="/series/" className="link-brand shrink-0 self-start md:self-auto">
-                                    Xem tất cả
+                                <Link href={href("/series/")} className="link-brand shrink-0 self-start md:self-auto">
+                                    {dict.common.view_all}
                                     <IconArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             </div>
@@ -223,7 +364,12 @@ export default function Home() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {otherSeries.map((series, index) => (
                                 <ScrollReveal key={series.id} delay={index * 80}>
-                                    <SeriesCard series={series} priority={index === 0} />
+                                    <SeriesCard
+                                        series={series}
+                                        priority={index === 0}
+                                        basePath={`${prefix}/series/${series.category?.slug || "uncategorized"}`}
+                                        localePrefix={prefix}
+                                    />
                                 </ScrollReveal>
                             ))}
                         </div>
@@ -242,13 +388,13 @@ export default function Home() {
                                         <IconCode size={14} />
                                         Blog
                                     </div>
-                                    <h2 className="section-title">Bài viết mới nhất</h2>
+                                    <h2 className="section-title">{copy.latestPostsTitle}</h2>
                                     <p className="section-subtitle">
-                                        Cập nhật tin tức, kiến thức công nghệ mới nhất.
+                                        {copy.latestPostsSubtitle}
                                     </p>
                                 </div>
-                                <Link href="/blog/" className="link-brand shrink-0 self-start md:self-auto">
-                                    Xem tất cả
+                                <Link href={href("/blog/")} className="link-brand shrink-0 self-start md:self-auto">
+                                    {dict.common.view_all}
                                     <IconArrowRight size={14} />
                                 </Link>
                             </div>
@@ -258,7 +404,7 @@ export default function Home() {
                         <div className="bento-grid">
                             {/* Featured — large, spans 2 rows on lg */}
                             {featuredPost && (
-                                <Link href={`/blog/${featuredPost.slug}/`} className="bento-featured group block">
+                                <Link href={href(`/blog/${featuredPost.slug}/`)} className="bento-featured group block">
                                     <article className="post-card rounded-2xl overflow-hidden h-full flex flex-col">
                                         <div className="relative aspect-[4/3] lg:aspect-auto lg:flex-1 overflow-hidden bg-surface-100 min-h-48">
                                             <SkeletonImage
@@ -300,9 +446,9 @@ export default function Home() {
                                                 )}
                                                 <span className="font-medium text-zinc-600">{featuredPost.author.name}</span>
                                                 <span className="w-0.5 h-0.5 rounded-full bg-zinc-300" />
-                                                <time dateTime={featuredPost.published_at ?? undefined}>{formatDate(featuredPost.published_at)}</time>
+                                                <time dateTime={featuredPost.published_at ?? undefined}>{formatDate(featuredPost.published_at, locale)}</time>
                                                 {featuredPost.reading_time && (
-                                                    <><span className="w-0.5 h-0.5 rounded-full bg-zinc-300" /><span>{featuredPost.reading_time} phút đọc</span></>
+                                                    <><span className="w-0.5 h-0.5 rounded-full bg-zinc-300" /><span>{copy.minutesRead(featuredPost.reading_time)}</span></>
                                                 )}
                                             </div>
                                         </div>
@@ -312,7 +458,7 @@ export default function Home() {
 
                             {/* Side posts (2) — stack next to featured on lg */}
                             {sidePosts.slice(0, 2).map((post) => (
-                                <Link key={post.id} href={`/blog/${post.slug}/`} className="bento-side group block">
+                                <Link key={post.id} href={href(`/blog/${post.slug}/`)} className="bento-side group block">
                                     <article className="post-card rounded-xl overflow-hidden flex flex-row h-full">
                                         <div className="relative w-28 sm:w-32 lg:w-36 shrink-0 bg-surface-100">
                                             <SkeletonImage
@@ -333,7 +479,7 @@ export default function Home() {
                                             <div className="flex items-center gap-2 text-[11px] text-zinc-400">
                                                 <span className="font-medium text-zinc-500">{post.author.name}</span>
                                                 {post.reading_time && (
-                                                    <><span className="w-0.5 h-0.5 rounded-full bg-zinc-300" /><span>{post.reading_time} phút</span></>
+                                                    <><span className="w-0.5 h-0.5 rounded-full bg-zinc-300" /><span>{copy.minutesRead(post.reading_time)}</span></>
                                                 )}
                                             </div>
                                         </div>
@@ -344,7 +490,7 @@ export default function Home() {
                             {/* Bottom small posts (3) */}
                             {sidePosts.slice(2, 5).map((post) => (
                                 <div key={post.id} className="bento-small">
-                                    <PostCard post={post} />
+                                    <PostCard post={post} localePrefix={prefix} />
                                 </div>
                             ))}
                         </div>
@@ -363,25 +509,25 @@ export default function Home() {
 
                             <div className="relative z-10">
                                 <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
-                                    Cùng nhau học hỏi tại{" "}
+                                    {copy.ctaTitle}{" "}
                                     <span className="text-blue-200">xDev</span>
                                 </h2>
                                 <p className="text-blue-200/80 mb-6 max-w-xl mx-auto text-sm md:text-base">
-                                    Blog, series, và dự án open source — tất cả đều miễn phí. Mình viết từ kinh nghiệm thực tế hàng ngày.
+                                    {copy.ctaBody}
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                                     <Link
-                                        href="/series/"
+                                        href={href("/series/")}
                                         className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm bg-white text-blue-700 shadow-lg shadow-blue-900/20 hover:shadow-blue-900/30 transition-all duration-300 hover:-translate-y-0.5"
                                     >
                                         <IconBook size={16} />
-                                        Xem Series
+                                        {copy.ctaSeries}
                                     </Link>
                                     <Link
-                                        href="/blog/"
+                                        href={href("/blog/")}
                                         className="inline-flex justify-center items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white/90 border border-white/25 hover:bg-white/10 transition-all duration-200"
                                     >
-                                        Đọc Blog
+                                        {copy.ctaBlog}
                                         <IconArrowRight size={14} />
                                     </Link>
                                 </div>

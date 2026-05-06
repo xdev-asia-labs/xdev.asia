@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getLesson, getSeriesLessonSlugs, getSeries, formatDuration, resolveSeriesCompoundSlug } from "@/lib/data";
+import { getLesson, getLessonLanguageLinks, getSeriesLessonSlugs, getSeries, formatDuration, resolveSeriesCompoundSlug } from "@/lib/data";
+import ContentLanguageSwitcher from "@/components/ContentLanguageSwitcher";
 import ContentRenderer from "@/components/ContentRenderer";
 import { IconChevronRight, IconClock } from "@/components/Icons";
 import { LessonCheckbox, SeriesProgressBar } from "@/components/SeriesProgress";
@@ -202,6 +203,13 @@ export default async function LessonPage({
                                 <p className="text-lg text-zinc-500 leading-relaxed">
                                     {lesson.description}
                                 </p>
+                            )}
+                            {series && (
+                                <ContentLanguageSwitcher
+                                    links={getLessonLanguageLinks(series, lesson)}
+                                    currentLocale="vi"
+                                    className="mt-6"
+                                />
                             )}
                         </div>
 

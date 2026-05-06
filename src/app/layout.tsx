@@ -27,7 +27,17 @@ const inter = Inter({
 });
 
 const settings = getSettings();
-const navTopics: NavTopic[] = getAvailableTopics().map(({ slug, name, icon }) => ({ slug, name, icon }));
+const navTopics: NavTopic[] = getAvailableTopics()
+  .filter(({ postCount }) => postCount > 0)
+  .map(({ slug, name, icon }) => ({ slug, name, icon }));
+const navTopicsByLocale = Object.fromEntries(
+  LOCALES.map((loc) => [
+    loc,
+    getAvailableTopics(loc)
+      .filter(({ postCount }) => postCount > 0)
+      .map(({ slug, name, icon }) => ({ slug, name, icon })),
+  ])
+) as Record<Locale, NavTopic[]>;
 const siteContextJson = JSON.stringify(buildSearchIndex());
 const SITE_URL = "https://xdev.asia";
 
@@ -51,11 +61,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * Root layout — always renders with the default locale (vi). Static
- * generation friendly. Non-default locales are served by the dedicated stub
- * pages under app/en, app/ja, app/zh-tw which use the same shell but pass a
- * different `locale` prop down via their own page metadata. The language
- * switcher remembers the user's preference in a cookie for future visits.
+ * Root layout renders the shared shell. Locale-specific pages under app/en,
+ * app/ja, and app/zh-tw provide translated content while client shell pieces
+ * derive their active locale from the pathname after hydration.
  */
 export default function RootLayout({
   children,
@@ -128,6 +136,7 @@ export default function RootLayout({
           </a>
           <Header
             topics={navTopics}
+            topicsByLocale={navTopicsByLocale}
             strings={headerStrings}
             localePrefix={prefix}
             locale={locale}

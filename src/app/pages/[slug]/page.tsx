@@ -1,4 +1,5 @@
-import { getStaticPage } from "@/lib/data";
+import { getStaticPage, getStaticPageLanguageLinks } from "@/lib/data";
+import ContentLanguageSwitcher from "@/components/ContentLanguageSwitcher";
 import ContentRenderer from "@/components/ContentRenderer";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -38,6 +39,11 @@ export default async function StaticPage({ params }: { params: Promise<{ slug: s
     return (
         <main className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
             <h1 className="text-3xl font-bold text-zinc-900 mb-8">{page.title}</h1>
+            <ContentLanguageSwitcher
+                links={getStaticPageLanguageLinks(slug)}
+                currentLocale="vi"
+                className="mb-8"
+            />
             <ContentRenderer html={page.content} className="prose prose-zinc max-w-none" />
         </main>
     );

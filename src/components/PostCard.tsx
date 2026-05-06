@@ -1,4 +1,5 @@
 import { formatDate } from "@/lib/data";
+import type { Locale } from "@/lib/i18n/config";
 import type { PostIndex } from "@/lib/types";
 import { getValidImageUrl } from "@/utils/image";
 import Image from "next/image";
@@ -6,13 +7,38 @@ import Link from "next/link";
 import { IconClock } from "./Icons";
 import SkeletonImage from "./SkeletonImage";
 
-export default function PostCard({ post, priority = false }: { post: PostIndex; priority?: boolean }) {
+function readTimeLabel(minutes: number, localePrefix: string): string {
+    if (localePrefix === "/en") return `${minutes} min`;
+    if (localePrefix === "/ja") return `${minutes}分`;
+    if (localePrefix === "/zh-tw") return `${minutes} 分鐘`;
+    return `${minutes} phút`;
+}
+
+function localeFromPrefix(localePrefix: string): Locale {
+    if (localePrefix === "/en" || localePrefix === "/ja" || localePrefix === "/zh-tw") {
+        return localePrefix.slice(1) as Locale;
+    }
+    return "vi";
+}
+
+export default function PostCard({
+    post,
+    priority = false,
+    localePrefix = "",
+}: {
+    post: PostIndex;
+    priority?: boolean;
+    localePrefix?: string;
+}) {
     const imageUrl = getValidImageUrl(post.featured_image, post.slug);
     const visibleTags = post.tags?.slice(0, 3) ?? [];
+    const postHref = `${localePrefix}/blog/${post.slug}/`;
+    const authorHref = localePrefix ? `${localePrefix}/pages/ve-toi/` : "/gioi-thieu/";
+    const dateLocale = localeFromPrefix(localePrefix);
 
     return (
         <article className="group post-card rounded-2xl overflow-hidden flex flex-col h-full">
-            <Link href={`/blog/${post.slug}/`} className="block">
+            <Link href={postHref} className="block">
                 <div className="relative aspect-[16/9] overflow-hidden bg-surface-100">
                     <SkeletonImage
                         src={imageUrl}
@@ -31,7 +57,7 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
                 </div>
             </Link>
             <div className="p-5 flex flex-col flex-1">
-                <Link href={`/blog/${post.slug}/`}>
+                <Link href={postHref}>
                     <h2 className="text-[0.95rem] font-bold text-zinc-900 group-hover:text-brand-600 transition-colors duration-200 line-clamp-2 leading-snug">
                         {post.title}
                     </h2>
@@ -46,7 +72,7 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
                 {visibleTags.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-1.5">
                         {visibleTags.map((tag) => (
-                            <Link key={tag.slug} href={`/tags/${tag.slug}/`} className="tag-pill text-[10px] px-2 py-0.5">
+                            <Link key={tag.slug} href={`${localePrefix}/tags/${tag.slug}/`} className="tag-pill text-[10px] px-2 py-0.5">
                                 {tag.name}
                             </Link>
                         ))}
@@ -55,7 +81,7 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
 
                 {/* Meta */}
                 <div className="mt-3 pt-3 border-t border-zinc-100 flex items-center gap-2.5 text-xs text-zinc-400">
-                    <Link href="/gioi-thieu/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+                    <Link href={authorHref} className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
                         {post.author?.avatar ? (
                             <Image
                                 src={getValidImageUrl(post.author.avatar, post.author.name)}
@@ -74,14 +100,14 @@ export default function PostCard({ post, priority = false }: { post: PostIndex; 
                     </Link>
                     <span className="w-0.5 h-0.5 rounded-full bg-zinc-300 shrink-0" />
                     <time dateTime={post.published_at ?? undefined} className="shrink-0">
-                        {formatDate(post.published_at)}
+                        {formatDate(post.published_at, dateLocale)}
                     </time>
                     {post.reading_time && (
                         <>
                             <span className="w-0.5 h-0.5 rounded-full bg-zinc-300 shrink-0" />
                             <span className="flex items-center gap-1 shrink-0">
                                 <IconClock size={11} />
-                                {post.reading_time} phút
+                                {readTimeLabel(post.reading_time, localePrefix)}
                             </span>
                         </>
                     )}
