@@ -9,7 +9,8 @@ duration_minutes: 55
 is_free: true
 video_url: null
 sort_order: 6
-section_title: "Domain 2: Container Orchestration (22%)"
+locale: ja
+section_title: "ドメイン2：コンテナオーケストレーション（22%）"
 course:
   id: lt-kcna-series-001
   title: 'KCNA試験対策 — Kubernetes and Cloud Native Associate'

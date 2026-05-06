@@ -1,14 +1,15 @@
 ---
-id: kcna-d2-l01
+id: kcna-d2-l05
 title: 'Lesson 5: Container Runtimes & OCI Standards'
 slug: 05-container-runtimes-oci
 description: >-
-  Docker vs containerd vs CRI-O. OCI Image Spec, OCI Runtime Spec.
-  Container lifecycle. Image layers and registries.
+  OCI (Open Container Initiative), container runtime interface (CRI).
+  Docker, containerd, CRI-O. Image layers, registries and image lifecycle.
 duration_minutes: 50
 is_free: true
 video_url: null
 sort_order: 5
+locale: en
 section_title: "Domain 2: Container Orchestration (22%)"
 course:
   id: lt-kcna-series-001

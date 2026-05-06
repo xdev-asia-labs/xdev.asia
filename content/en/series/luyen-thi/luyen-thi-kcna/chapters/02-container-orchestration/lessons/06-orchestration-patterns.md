@@ -1,15 +1,15 @@
 ---
-id: kcna-d2-l02
+id: kcna-d2-l06
 title: 'Lesson 6: Container Orchestration Patterns'
 slug: 06-orchestration-patterns
 description: >-
-  Scheduling, resource management, high availability.
-  Multi-tenancy. Namespace isolation. Resource quotas.
-  Horizontal Pod Autoscaler, Vertical Pod Autoscaler.
-duration_minutes: 50
+  Scheduling, auto-scaling (HPA, VPA, Cluster Autoscaler), resource requests
+  and limits, namespaces, multi-tenancy and Kubernetes upgrade strategies.
+duration_minutes: 55
 is_free: true
 video_url: null
 sort_order: 6
+locale: en
 section_title: "Domain 2: Container Orchestration (22%)"
 course:
   id: lt-kcna-series-001

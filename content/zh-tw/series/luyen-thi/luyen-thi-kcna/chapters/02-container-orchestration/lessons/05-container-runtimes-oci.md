@@ -9,7 +9,8 @@ duration_minutes: 50
 is_free: true
 video_url: null
 sort_order: 5
-section_title: "Domain 2: Container Orchestration (22%)"
+locale: zh-tw
+section_title: "領域2：容器編排（22%）"
 course:
   id: lt-kcna-series-001
   title: 'KCNA 認證備考 — Kubernetes and Cloud Native Associate'
