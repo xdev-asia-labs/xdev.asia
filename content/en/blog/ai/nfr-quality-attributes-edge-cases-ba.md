@@ -221,6 +221,27 @@ The Architect helps design the solution, but the BA must ensure business needs, 
 
 Happy path is usually easy. The part that causes production incidents lies in the edge case.
 
+## Full NFR example for the scheduling feature
+
+| ID | Quality attributes | Measurable Requirement | How to test/verify |
+|---|---|---|---|
+| NFR-PERF-001 | Performance | The slot list page must load in under 2 seconds at p95 when there are 300 concurrent users and 10,000 slots/day. | Load test before release, monitor p95 latency on dashboard. |
+| NFR-AVAIL-001 | Availability | The scheduling function requires 99.5% availability during business hours 08:00-20:00. | Monitoring uptime, incident reports. |
+| NFR-SEC-001 | Security | Only the customer who owns the appointment can view/change/cancel that appointment. | Permission test, negative test with another user's appointment_id. |
+| NFR-AUDIT-001 | Auditability | Each time you create, change, or cancel a schedule, you must record actor, timestamp, old_status, new_status, reason. | Check the audit log in the test case. |
+| NFR-ACC-001 | Accessibility | The booking form can be operated by keyboard and the screen reader can read labels/errors. | WCAG checklist, keyboard-only test. |
+| NFR-OBS-001 | Observability | There are metrics for booking_success, slot_unavailable, notification_failed. | Dashboard has enough metrics after staging test. |
+
+Edge case catalog:
+
+| Edge cases | Expected behavior |
+|---|---|
+| Two customers confirm the same slot within 1 second | Only one appointment can be Confirmed; The remaining request is received `SLOT_UNAVAILABLE`. |
+| Customer reschedules with exactly 4 hours left | If the policy is "at least 4 hours", the system allows >= 4 hours. |
+| Email service error | Appointment is still Confirmed, notification retry 3 times and create alert if failed. |
+| Consultant became inactive after the customer was viewing slot | Submit blocked, showing consultant is no longer available. |
+| User opens the link to cancel an expired calendar | The system displays instructions to call the hotline, but does not cancel automatically. |
+
 ## Reference source
 
 - IEEE/ISO/IEC 29148-2018: https://standards.ieee.org/ieee/29148/6937/

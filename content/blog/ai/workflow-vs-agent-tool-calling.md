@@ -7,7 +7,7 @@ excerpt: >-
   dễ test hơn. Agent chỉ nên dùng khi bài toán cần quyết định linh hoạt và tool choice động.
 featured_image: /images/blog/workflow-vs-agent-tool-calling.png
 type: blog
-reading_time: 10
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T10:35:00.000000Z'
@@ -39,6 +39,62 @@ Thiết kế cùng một support assistant bằng workflow và agent, so sánh l
 - Flow có thật sự cần agent không?
 - Tool write có confirmation không?
 - Có eval trajectory không?
+
+## Ví dụ đầy đủ: cùng một use case, workflow hay agent?
+
+Use case: xử lý yêu cầu "Tạo bản nháp refund reply cho ticket và cập nhật CRM note".
+
+### Thiết kế bằng workflow
+
+~~~text
+1. Classify ticket intent.
+2. Retrieve refund policy.
+3. Generate draft reply.
+4. Validate output schema.
+5. Show draft to support agent.
+6. Nếu agent approve, gọi API update CRM note.
+~~~
+
+Workflow phù hợp khi các bước rõ, thứ tự ổn định và write action phải có kiểm soát.
+
+### Thiết kế bằng agent
+
+Tools:
+
+~~~json
+[
+  {"name": "search_policy", "mode": "read"},
+  {"name": "get_customer_contract", "mode": "read"},
+  {"name": "draft_reply", "mode": "draft"},
+  {"name": "update_crm_note", "mode": "write", "requires_confirmation": true}
+]
+~~~
+
+Agent phù hợp hơn nếu câu hỏi có nhiều đường đi khác nhau, ví dụ phải tự quyết định cần xem policy, contract, invoice hay escalation history.
+
+### Decision record mẫu
+
+| Câu hỏi | Workflow | Agent |
+| --- | --- | --- |
+| Thứ tự bước có ổn định không? | Có | Không chắc |
+| Tool write có rủi ro không? | Có, cần confirmation | Có, càng cần giới hạn quyền |
+| Có cần planner tự chọn nhiều tool không? | Không nhiều | Có thể |
+| Debug khi sai có dễ không? | Dễ hơn | Khó hơn, cần trajectory eval |
+
+Decision: bắt đầu bằng workflow. Chỉ thêm agent planner cho bước research khi số loại ticket tăng và workflow rẽ nhánh quá nhiều.
+
+### Trajectory kỳ vọng nếu dùng agent
+
+~~~json
+[
+  {"tool": "search_policy", "args": {"query": "enterprise annual refund onboarding"}},
+  {"tool": "get_customer_contract", "args": {"customer_id": "cus_123"}},
+  {"tool": "draft_reply", "args": {"tone": "supportive", "include_citations": true}},
+  {"tool": "update_crm_note", "args": {"ticket_id": "TCK-1842", "note_status": "draft_only"}}
+]
+~~~
+
+Nếu agent gọi "update_crm_note" trước khi có approval, đó là failure dù answer nghe hay. Với agent, bạn phải test cả đường đi, không chỉ test câu trả lời cuối.
 
 ## 1. Workflow là gì?
 

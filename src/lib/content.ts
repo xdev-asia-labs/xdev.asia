@@ -11,6 +11,14 @@ import rehypeStringify from "rehype-stringify";
 const contentRoot = path.join(process.cwd(), "content");
 const legacyContentHosts = ["https://x-lms.test", "http://x-lms.test", "https://xdev.asia", "http://xdev.asia"];
 
+type CollectionIndex = {
+  slugToRelativePath: Map<string, string>;
+  relativePaths: string[];
+  relativePathSet: Set<string>;
+};
+
+const collectionIndexCache = new Map<string, CollectionIndex>();
+
 function getCollectionDir(collection: string): string {
   return path.join(contentRoot, collection);
 }
@@ -37,37 +45,57 @@ function walkDirectoryForMdx(rootDir: string, currentDir = rootDir): string[] {
   return mdxFiles;
 }
 
-export function listMdxSlugs(collection: string): string[] {
+function buildCollectionIndex(collection: string): CollectionIndex {
   const directory = getCollectionDir(collection);
-  if (!fs.existsSync(directory)) return [];
+  if (!fs.existsSync(directory)) {
+    return {
+      slugToRelativePath: new Map<string, string>(),
+      relativePaths: [],
+      relativePathSet: new Set<string>(),
+    };
+  }
 
-  const slugs = new Set<string>();
-  const entries = fs.readdirSync(directory, { withFileTypes: true });
+  const relativePaths = walkDirectoryForMdx(directory).sort();
+  const slugToRelativePath = new Map<string, string>();
 
-  for (const entry of entries) {
-    if (entry.isFile() && entry.name.endsWith(".md")) {
-      slugs.add(entry.name.replace(/\.md$/, ""));
+  for (const relativePath of relativePaths) {
+    if (!relativePath.includes("/")) {
+      slugToRelativePath.set(relativePath, relativePath);
       continue;
     }
 
-    if (entry.isDirectory()) {
-      const indexPath = path.join(directory, entry.name, "index.md");
-      if (fs.existsSync(indexPath)) {
-        slugs.add(entry.name);
-      }
+    if (relativePath.endsWith("/index")) {
+      const slug = relativePath.slice(0, -"/index".length).split("/").at(-1);
+      if (slug) slugToRelativePath.set(slug, relativePath);
     }
   }
 
-  return [...slugs].sort();
+  return {
+    slugToRelativePath,
+    relativePaths,
+    relativePathSet: new Set(relativePaths),
+  };
+}
+
+function getCollectionIndex(collection: string): CollectionIndex {
+  const cached = collectionIndexCache.get(collection);
+  if (cached) return cached;
+
+  const index = buildCollectionIndex(collection);
+  collectionIndexCache.set(collection, index);
+  return index;
+}
+
+export function listMdxSlugs(collection: string): string[] {
+  return [...getCollectionIndex(collection).slugToRelativePath.keys()].sort();
 }
 
 export function readMdxDocument<T>(collection: string, slug: string): { data: T; content: string } | null {
   const collectionDir = getCollectionDir(collection);
-  const directPath = path.join(collectionDir, `${slug}.md`);
-  const indexPath = path.join(collectionDir, slug, "index.md");
-  const filePath = fs.existsSync(directPath) ? directPath : indexPath;
-  if (!fs.existsSync(filePath)) return null;
+  const relativePath = getCollectionIndex(collection).slugToRelativePath.get(slug);
+  if (!relativePath) return null;
 
+  const filePath = path.join(collectionDir, `${relativePath}.md`);
   const source = fs.readFileSync(filePath, "utf-8");
   const document = matter(source);
   return {
@@ -77,15 +105,14 @@ export function readMdxDocument<T>(collection: string, slug: string): { data: T;
 }
 
 export function listMdxRelativePaths(collection: string): string[] {
-  const directory = getCollectionDir(collection);
-  if (!fs.existsSync(directory)) return [];
-  return walkDirectoryForMdx(directory).sort();
+  return [...getCollectionIndex(collection).relativePaths];
 }
 
 export function readMdxDocumentByRelativePath<T>(collection: string, relativePath: string): { data: T; content: string } | null {
-  const filePath = path.join(getCollectionDir(collection), `${relativePath}.md`);
-  if (!fs.existsSync(filePath)) return null;
+  const index = getCollectionIndex(collection);
+  if (!index.relativePathSet.has(relativePath)) return null;
 
+  const filePath = path.join(getCollectionDir(collection), `${relativePath}.md`);
   const source = fs.readFileSync(filePath, "utf-8");
   const document = matter(source);
   return {

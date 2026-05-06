@@ -217,7 +217,37 @@ Go/No-Go không nên cảm tính. Dùng scorecard:
 
 Nếu có "At risk", phải ghi owner và mitigation.
 
-## 9. Với AI feature thì thêm gì?
+## 9. Ví dụ UAT script đầy đủ
+
+UAT scenario: Customer books and reschedules a consultation.
+
+| Field | Value |
+|---|---|
+| Scenario ID | UAT-BOOK-002 |
+| Persona | Existing customer |
+| Objective | Xác nhận khách có thể đặt lịch và đổi lịch trước cutoff 4 giờ. |
+| Preconditions | Customer active, consultant A có slot 09:00 và 10:00 ngày mai, email service enabled. |
+| Test data | customer_id = CUS-1001, consultant_id = CON-2001, slot_09 = SLOT-0900, slot_10 = SLOT-1000. |
+
+Steps:
+
+| Step | Action | Expected result | Evidence |
+|---|---|---|---|
+| 1 | Customer mở trang đặt lịch. | Danh sách consultant và slot trống hiển thị dưới 2 giây. | Screenshot slot list. |
+| 2 | Chọn consultant A, slot 09:00. | Nút xác nhận enabled, thông tin lịch đúng. | Screenshot confirmation page. |
+| 3 | Bấm xác nhận. | Appointment tạo với status Confirmed, có confirmation code. | Appointment ID. |
+| 4 | Kiểm tra email. | Email xác nhận đến trong 1 phút, không chứa dữ liệu nhạy cảm. | Email screenshot. |
+| 5 | Đổi lịch sang slot 10:00. | Slot cũ mở lại, slot mới Confirmed, audit log ghi old/new slot. | Audit log ID. |
+| 6 | Thử đổi lịch sang appointment của user khác. | Hệ thống trả 403. | Error screenshot. |
+
+Exit criteria cho scenario này:
+
+- Không có defect severity High/Critical.
+- Business user xác nhận wording dễ hiểu.
+- CSKH xác nhận SOP xử lý exception dưới 4 giờ.
+- QA xác nhận regression cho duplicate booking pass.
+
+## 10. Với AI feature thì thêm gì?
 
 Nếu feature có AI, UAT cần thêm:
 

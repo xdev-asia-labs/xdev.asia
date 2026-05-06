@@ -268,6 +268,57 @@ Dev/QA needs to know what the system does in each situation, not just "improve t
 
 Without a version, the team will argue "I thought the previous version was different". Each baseline needs version, date, and approver.
 
+## More complete artifact example: from BRD to SRS
+
+### BRD sample for scheduling feature
+
+| Section | Content |
+|---|---|
+| Business problem | 38% of customers have to call the hotline at least twice to schedule a consultation; Customer service takes a lot of time to check slots manually. |
+| Objective | In the 3 months after release, reduce scheduling calls by 40% and reduce double bookings to less than 1%. |
+| Scope MVP | View consultants, see available slots, book appointments, reschedule, cancel appointments, receive confirmation email. |
+| Out of scope | Billing, recurring appointments, advanced CRM integration, group scheduling. |
+| Stakeholders | Customer, Customer Service, consultant, Sales Manager, Compliance, Engineering, QA. |
+| Success metrics | Booking completion rate, hotline booking call volume, no-show rate, double booking incident. |
+
+### SRS sample for the same feature
+
+| ID | Requirements | Priorities | Source |
+|---|---|---|---|
+| FR-001 | The system displays a list of consultants with available slots in the next 14 days. | Must | Workshop 2026-05-06 |
+| FR-002 | Customers can reserve an available slot and receive a confirmation code. | Must | PO |
+| FR-003 | Customers can reschedule if there are more than 4 hours before the appointment time. | Must | Ops policy |
+| FR-004 | Consultants can view appointment schedules by date and filter by status. | Should | Consultant interviews |
+| NFR-001 | The API creates an appointment response in under 2 seconds at p95 with 300 concurrent users. | Must | Engineering |
+
+### Acceptance criteria sample
+
+```gherkin
+Scenario: Slot bị người khác đặt trước khi khách xác nhận
+  Given khách đang xem slot 09:00 của consultant A
+  And slot đó vừa được khách khác xác nhận
+  When khách bấm "Xác nhận đặt lịch"
+  Then hệ thống không tạo appointment
+  And hiển thị message "Slot này vừa được đặt. Vui lòng chọn giờ khác."
+  And gợi ý ít nhất 3 slot thay thế nếu có
+```
+
+### Data and error sample
+
+| Field | Type | Rule |
+|---|---|---|
+| appointment_id | string | Generated, unique |
+| customer_id | string | Required, active customer |
+| consultant_id | string | Required, active consultant |
+| slot_id | string | Required, available at confirmation time |
+| status | enum | Pending, Confirmed, Cancelled, Completed, NoShow |
+
+| Error code | When does it happen | UI messages |
+|---|---|---|
+| SLOT_UNAVAILABLE | Slot has been booked or locked | This slot has just been placed. Please choose another time. |
+| RESCHEDULE_WINDOW_EXPIRED | Guests reschedule for less than 4 hours | Appointment scheduled soon. Please call the hotline for support. |
+| CONSULTANT_INACTIVE | Consultant no longer accepts appointments | Consultant is currently unavailable. Please choose someone else. |
+
 ## Reference source
 
 - IEEE/ISO/IEC 29148-2018: https://standards.ieee.org/ieee/29148/6937/

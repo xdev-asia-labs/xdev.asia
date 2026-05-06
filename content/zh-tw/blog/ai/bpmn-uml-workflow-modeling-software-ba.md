@@ -188,6 +188,51 @@ BPMN 幫助企業了解流程。技術團隊了解互動的序列圖。用於理
 
 如果使用者故事說一種方式，BPMN 說一種方式，測試案例說另一種方式，那麼團隊將失去對 BA 文件的信任。圖表需要透過 SRS/backlog 進行追蹤或至少進行審查。
 
+## 全包模型範例
+
+特點：重新安排諮詢。
+
+### BPMN 總結
+
+```text
+Customer lane:
+  Open appointment detail -> Click Reschedule -> Select new slot -> Confirm
+
+System lane:
+  Validate owner -> Validate appointment status -> Validate cutoff -> Validate slot
+  Gateway:
+    All valid -> Update appointment -> Release old slot -> Lock new slot -> Send notification
+    Invalid owner -> Return 403
+    Cutoff expired -> Show hotline message
+    Slot unavailable -> Show alternative slots
+
+CSKH lane:
+  Handle exception for cutoff-expired case if customer calls hotline
+```
+
+### 狀態轉換
+
+|來自 |活動 |條件|大|
+|---|---|---|---|
+|已確認 |客戶重新安排 |所有者，>= 4 小時，有新的時段可用 |已確認 |
+|已確認 |客戶取消 |業主，>= 4 小時 |取消 |
+|已確認 |時間流逝|預約時間已到，顧客缺席 |沒有出現 |
+|已確認 |諮詢結束 |會議結束 |已完成 |
+
+### 序列摘要
+
+```text
+Customer -> Web App: confirm reschedule(new_slot_id)
+Web App -> Appointment API: PATCH /appointments/{id}/reschedule
+Appointment API -> Auth Service: check owner
+Appointment API -> Schedule Service: reserve new slot + release old slot
+Appointment API -> Audit Log: write old_slot/new_slot
+Appointment API -> Notification Service: send reschedule email
+Appointment API -> Web App: updated appointment
+```
+
+這個圖表套件幫助每個團隊正確閱讀他們的部分：業務部門看到 BPMN，開發人員看到序列/API 接觸點，QA 看到狀態轉換和異常路徑。
+
 ## 練習練習
 
 選擇退款、安排或審核等流程。創建：

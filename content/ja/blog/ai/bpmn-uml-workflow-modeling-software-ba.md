@@ -188,6 +188,51 @@ BPMN は、企業がプロセスを理解するのに役立ちます。技術チ
 
 ユーザーストーリーが一方的に言い、BPMN が一方的に言い、テストケースが一方的に言ってしまうと、チームは BA 文書に対する信頼を失うことになります。図はトレースするか、少なくとも SRS/バックログでレビューする必要があります。
 
+## フルパッケージモデルの例
+
+機能: 相談のスケジュールを変更します。
+
+### BPMN の概要
+
+```text
+Customer lane:
+  Open appointment detail -> Click Reschedule -> Select new slot -> Confirm
+
+System lane:
+  Validate owner -> Validate appointment status -> Validate cutoff -> Validate slot
+  Gateway:
+    All valid -> Update appointment -> Release old slot -> Lock new slot -> Send notification
+    Invalid owner -> Return 403
+    Cutoff expired -> Show hotline message
+    Slot unavailable -> Show alternative slots
+
+CSKH lane:
+  Handle exception for cutoff-expired case if customer calls hotline
+```
+
+### 状態遷移
+
+|から |イベント |条件 |大きい |
+|---|---|---|---|
+|確認済み |顧客のスケジュール変更 |オーナー、4 時間以上、新しいスロットが利用可能 |確認済み |
+|確認済み |顧客がキャンセル |オーナー、4 時間以上 |キャンセルされました |
+|確認済み |時間が経つ |予約時間に達しましたが、顧客が不在 |ノーショー |
+|確認済み |コンサルティングはセッションを完了します |セッションが完了しました |完了 |
+
+### シーケンスの概要
+
+```text
+Customer -> Web App: confirm reschedule(new_slot_id)
+Web App -> Appointment API: PATCH /appointments/{id}/reschedule
+Appointment API -> Auth Service: check owner
+Appointment API -> Schedule Service: reserve new slot + release old slot
+Appointment API -> Audit Log: write old_slot/new_slot
+Appointment API -> Notification Service: send reschedule email
+Appointment API -> Web App: updated appointment
+```
+
+このダイアグラム パッケージは、各チームが自分の部分を正しく読み取るのに役立ちます。ビジネスは BPMN を確認し、開発はシーケンス/API タッチポイントを確認し、QA は状態遷移と例外パスを確認します。
+
 ## 練習問題を練習する
 
 返金、スケジュール、レビューなどのプロセスを選択します。作成:

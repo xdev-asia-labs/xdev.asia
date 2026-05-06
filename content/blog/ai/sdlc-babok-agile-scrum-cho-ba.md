@@ -202,6 +202,43 @@ Tạo một bảng với 8 dòng SDLC. Với mỗi dòng, điền:
 
 Sau đó chọn một feature bạn biết và điền thật. Nếu không điền được, đó là khoảng trống cần học.
 
+## Ví dụ end-to-end theo SDLC: appointment booking
+
+| Giai đoạn | BA làm gì | Artifact mẫu | Ai review |
+|---|---|---|---|
+| Discover | Phỏng vấn CSKH, consultant, sales manager; lấy số liệu double booking/no-show. | Problem statement, stakeholder map, current-state BPMN. | Ops Lead, PO. |
+| Analyze | So sánh 3 option: nâng cấp sheet, mua tool đặt lịch, build trong customer portal. | Business case, option analysis, risk log. | PO, Engineering Lead, Finance. |
+| Define | Chốt scope MVP: search slot, book, reschedule, cancel, notification. | BRD lightweight, SRS, business rules, NFR. | Business stakeholder, Dev, QA. |
+| Design | Review wireframe, sequence API, state diagram appointment. | Wireframe notes, API/data contract, state transition table. | UX, Dev, QA. |
+| Build | Làm rõ ticket trong sprint, xử lý change và open question. | Jira stories, AC, decision log. | Scrum team. |
+| Test | Mapping AC sang test scenario, hỗ trợ defect triage. | Test scenario matrix, defect triage notes. | QA, BA, PO. |
+| Release | Chuẩn bị UAT, training CSKH, go/no-go. | UAT plan, readiness checklist, release note. | PO, Ops, Support. |
+| Evaluate | So sánh metric sau release với objective. | Benefits realization report. | Product, Business sponsor. |
+
+Một story đủ "Ready" trước sprint:
+
+```gherkin
+Feature: Customer books a consultation slot
+
+Business value:
+- Reduce hotline booking calls
+- Prevent double booking
+
+Rules:
+- BR-001: A confirmed slot cannot be booked by another customer
+- BR-002: Customer can reschedule only if appointment starts in more than 4 hours
+
+Acceptance criteria:
+Scenario: Book available slot
+  Given the customer selects an available slot
+  When the customer confirms the booking
+  Then the appointment status is Confirmed
+  And the selected slot is locked
+  And confirmation email is sent within 1 minute
+```
+
+Đây là cách nối BABOK, SDLC và Scrum: BABOK giúp BA biết hoạt động phân tích nào cần làm; SDLC cho biết hoạt động nằm ở đâu; Scrum giúp đóng gói output thành backlog item có thể build/test.
+
 ## Nguồn tham khảo
 
 - IIBA BABOK Guide: https://www.iiba.org/standards-and-resources/babok/

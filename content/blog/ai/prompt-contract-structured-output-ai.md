@@ -45,6 +45,109 @@ Viết ticket classifier prompt contract, JSON schema, 20 test cases và retry p
 - Schema có enum/required fields không?
 - Có changelog prompt không?
 
+## Ví dụ đầy đủ: ticket classifier prompt contract
+
+Dưới đây là một prompt contract đủ để backend dùng như một phần của API, không phải một đoạn prompt trôi nổi.
+
+### Contract
+
+~~~text
+Prompt name: ticket-classifier
+Version: ticket-classifier@2026-05-06
+Owner: ai-platform-team
+
+Role:
+Bạn là classifier cho support ticket của SaaS B2B.
+
+Task:
+Phân loại ticket vào đúng category, urgency và routing reason.
+
+Allowed categories:
+- billing
+- technical
+- account
+- security
+- other
+
+Rules:
+- Chỉ chọn category trong danh sách.
+- Không trả lời khách hàng.
+- Nếu ticket thiếu dữ liệu để phân loại, dùng category = "other" và confidence <= 0.4.
+- Nếu ticket có dấu hiệu security incident, urgency phải là "high".
+- Output chỉ là JSON hợp lệ theo schema.
+~~~
+
+### JSON Schema
+
+~~~json
+{
+  "type": "object",
+  "required": ["category", "urgency", "confidence", "routing_reason"],
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": ["billing", "technical", "account", "security", "other"]
+    },
+    "urgency": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "routing_reason": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 240
+    }
+  },
+  "additionalProperties": false
+}
+~~~
+
+### Test case mẫu
+
+~~~json
+{
+  "input": {
+    "subject": "Cannot access admin console",
+    "body": "Our SSO users get 403 after yesterday's SAML certificate rotation.",
+    "customer_tier": "enterprise"
+  },
+  "expected": {
+    "category": "account",
+    "urgency": "high",
+    "must_include_reason_terms": ["SSO", "403", "enterprise"]
+  }
+}
+~~~
+
+### Output đạt yêu cầu
+
+~~~json
+{
+  "category": "account",
+  "urgency": "high",
+  "confidence": 0.83,
+  "routing_reason": "Enterprise users cannot access admin console after SSO/SAML certificate rotation and receive 403."
+}
+~~~
+
+### Output phải reject
+
+~~~json
+{
+  "category": "login_problem",
+  "urgency": "critical",
+  "confidence": 1.2,
+  "routing_reason": "This is probably SSO"
+}
+~~~
+
+Lý do reject: category không nằm trong enum, urgency không hợp lệ, confidence vượt 1. Đây là nơi schema bảo vệ workflow khỏi output nghe có vẻ đúng nhưng không thể tin để tự động hóa.
+
 ## 1. Prompt contract gồm những gì?
 
 Một prompt contract tốt thường có:

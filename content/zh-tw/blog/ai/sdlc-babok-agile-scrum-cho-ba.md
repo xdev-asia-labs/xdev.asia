@@ -218,6 +218,43 @@ BA 並非單獨擁有“完成的定義”，但 BA 應該有助於團隊確保 
 
 然後選擇一個你知道的特徵並填寫它。如果你不能填寫它，那就是一個需要學習的空白。
 
+## 根據 SDLC 的端到端範例：預約
+
+|相| BA 做什麼 |範例工件 |誰評論 |
+|---|---|---|---|
+|發現 |訪談客戶服務人員、顧問、銷售經理；取得雙重預訂/缺席資料。 |問題陳述、利害關係人地圖、當前狀態 BPMN。 |營運主管，PO。 |
+|分析 |比較 3 個選項：升級表、購買排程工具、內建客戶入口網站。 |商業案例、選擇權分析、風險日誌。 | PO，工程主管，財務。 |
+|定義 |關閉 MVP 範圍：搜尋插槽、預約、重新排程、取消、通知。 | BRD 輕量級、SRS、業務規則、NFR。 |業務利害關係人、開發人員、品質檢查人員。 |
+|設計|查看線框圖、序列 API、狀態預約圖。 |線框圖註釋、API/資料契約、狀態轉換表。 |使用者體驗、開發、品質檢查。 |
+|建構 |在衝刺期間澄清問題單、處理變更和開放問題。 | Jira 故事、AC、決策日誌。 | Scrum 團隊。 |
+|測試|將 AC 映射到測試場景，支援缺陷分類。 |測試場景矩陣、缺陷分類註解。 |品質保證、文學學士、採購訂單。 |
+|發布 | UAT 準備、客戶服務培訓、執行/不執行。 | UAT 計劃、準備清單、發行說明。 | PO、營運、支援。 |
+|評價 |將發布後指標與目標進行比較。 |效益實現報告。 |產品、商業贊助商。 |
+
+在衝刺之前已經「準備好」的故事：
+
+```gherkin
+Feature: Customer books a consultation slot
+
+Business value:
+- Reduce hotline booking calls
+- Prevent double booking
+
+Rules:
+- BR-001: A confirmed slot cannot be booked by another customer
+- BR-002: Customer can reschedule only if appointment starts in more than 4 hours
+
+Acceptance criteria:
+Scenario: Book available slot
+  Given the customer selects an available slot
+  When the customer confirms the booking
+  Then the appointment status is Confirmed
+  And the selected slot is locked
+  And confirmation email is sent within 1 minute
+```
+
+以下是如何連接 BABOK、SDLC 和 Scrum：BABOK 幫助 BA 知道要進行哪些分析活動； SDLC 顯示活動所在位置； Scrum 幫助將輸出打包到可以建置/測試的積壓項目中。
+
 ## 參考來源
 
 - IIBA BABOK 指引： https://www.iiba.org/standards-and-resources/babok/

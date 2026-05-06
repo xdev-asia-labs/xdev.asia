@@ -173,6 +173,51 @@ Software bug thường nằm ở exception: slot vừa bị người khác đặ
 
 Nếu user story nói một kiểu, BPMN nói một kiểu, test case nói kiểu khác, team sẽ mất niềm tin vào tài liệu BA. Diagram cần được trace hoặc ít nhất được review cùng SRS/backlog.
 
+## Ví dụ model package đầy đủ
+
+Feature: đổi lịch tư vấn.
+
+### BPMN summary
+
+```text
+Customer lane:
+  Open appointment detail -> Click Reschedule -> Select new slot -> Confirm
+
+System lane:
+  Validate owner -> Validate appointment status -> Validate cutoff -> Validate slot
+  Gateway:
+    All valid -> Update appointment -> Release old slot -> Lock new slot -> Send notification
+    Invalid owner -> Return 403
+    Cutoff expired -> Show hotline message
+    Slot unavailable -> Show alternative slots
+
+CSKH lane:
+  Handle exception for cutoff-expired case if customer calls hotline
+```
+
+### State transition
+
+| From | Event | Condition | To |
+|---|---|---|---|
+| Confirmed | Customer reschedules | Owner, >= 4 giờ, new slot available | Confirmed |
+| Confirmed | Customer cancels | Owner, >= 4 giờ | Cancelled |
+| Confirmed | Time passes | Appointment time reached, customer absent | NoShow |
+| Confirmed | Consultant completes session | Session done | Completed |
+
+### Sequence summary
+
+```text
+Customer -> Web App: confirm reschedule(new_slot_id)
+Web App -> Appointment API: PATCH /appointments/{id}/reschedule
+Appointment API -> Auth Service: check owner
+Appointment API -> Schedule Service: reserve new slot + release old slot
+Appointment API -> Audit Log: write old_slot/new_slot
+Appointment API -> Notification Service: send reschedule email
+Appointment API -> Web App: updated appointment
+```
+
+Diagram package này giúp mỗi nhóm đọc đúng phần của mình: business xem BPMN, Dev xem sequence/API touchpoint, QA xem state transition và exception path.
+
 ## Bài tập thực hành
 
 Chọn một quy trình như refund, đặt lịch hoặc duyệt hồ sơ. Tạo:

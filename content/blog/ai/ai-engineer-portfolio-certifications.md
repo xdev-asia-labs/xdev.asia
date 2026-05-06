@@ -7,7 +7,7 @@ excerpt: >-
   eval report, safety review, cost report, incident thinking và roadmap học chứng chỉ hợp lý.
 featured_image: /images/blog/ai-engineer-portfolio-certifications.png
 type: blog
-reading_time: 10
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T11:05:00.000000Z'
@@ -37,6 +37,75 @@ Viết case study 1 trang cho project AI assistant của bạn, kèm eval report
 - Có trade-off RAG vs fine-tuning không?
 - Có cost/latency numbers không?
 - Có demo safety case không?
+
+## Ví dụ đầy đủ: case study portfolio đủ sức đi phỏng vấn
+
+Một project portfolio tốt không chỉ ghi "built RAG chatbot". Nó phải chứng minh bạn biết đưa AI feature qua vòng đời production.
+
+### Cấu trúc case study
+
+~~~text
+Title:
+Refund Policy Assistant for B2B SaaS Support
+
+Problem:
+Support agents mất 6 phút để đọc policy và draft câu trả lời refund.
+
+Constraints:
+- Policy thay đổi hàng tuần.
+- Answer phải có citation.
+- AI không được tự gửi email hoặc cam kết refund.
+
+Solution:
+- RAG với metadata filter và citation.
+- Prompt contract structured output.
+- Human approval trước khi gửi.
+- Eval gate trước release.
+~~~
+
+### Architecture summary
+
+~~~text
+User ticket
+  -> API endpoint with auth
+  -> query rewrite
+  -> hybrid retrieval with ACL/version filter
+  -> prompt contract
+  -> model structured output
+  -> schema validation
+  -> groundedness check
+  -> draft shown to support agent
+  -> feedback stored for eval
+~~~
+
+### Metrics để show
+
+| Metric | Before | After |
+| --- | ---: | ---: |
+| Avg draft time | 6 phút | 75 giây |
+| Citation accuracy | N/A | 96% |
+| No-answer correctness | N/A | 91% |
+| Invalid JSON rate | N/A | 0.6% |
+| Cost/request | N/A | $0.004 |
+
+### Interview story bank
+
+- Trade-off: Vì sao chọn RAG thay vì fine-tuning?
+- Reliability: Làm gì khi model trả output invalid?
+- Security: Agent có quyền gì, write action được chặn ra sao?
+- Evaluation: Dataset gồm case nào, release gate thế nào?
+- Operations: Debug một answer sai từ trace ra sao?
+
+### Artifact nên đính kèm
+
+- GitHub repo có README rõ.
+- Demo video 3-5 phút.
+- Eval report có bảng metric.
+- Screenshot trace hoặc dashboard đã che dữ liệu nhạy cảm.
+- Prompt contract versioned.
+- Threat model ngắn.
+
+Nếu case study của bạn trả lời được các câu trên, portfolio không còn là "mình có làm chatbot", mà là "mình biết ship AI system có kiểm soát".
 
 ## 1. Project nên có đủ vòng đời
 

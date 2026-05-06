@@ -219,6 +219,43 @@ Create a table with 8 SDLC lines. For each line, enter:
 
 Then choose a feature you know and fill it in. If you can't fill it in, it's a gap that needs studying.
 
+## End-to-end example according to SDLC: appointment booking
+
+| Phase | What do BAs do | Sample Artifact | Who reviews |
+|---|---|---|---|
+| Discover | Interview customer service staff, consultants, sales managers; Get double booking/no-show data. | Problem statement, stakeholder map, current-state BPMN. | Ops Lead, PO. |
+| Analyze | Compare 3 options: upgrade sheet, buy scheduling tool, build in customer portal. | Business case, option analysis, risk log. | PO, Engineering Lead, Finance. |
+| Define | Closing MVP scope: search slot, book, reschedule, cancel, notification. | BRD lightweight, SRS, business rules, NFR. | Business stakeholders, Dev, QA. |
+| Design | Review wireframe, sequence API, state appointment diagram. | Wireframe notes, API/data contract, state transition table. | UX, Dev, QA. |
+| Build | Clarify tickets during the sprint, handle changes and open questions. | Jira stories, AC, decision log. | Scrum team. |
+| Test | Mapping AC to test scenarios, supporting defect triage. | Test scenario matrix, defect triage notes. | QA, BA, PO. |
+| Release | UAT preparation, customer service training, go/no-go. | UAT plan, readiness checklist, release notes. | PO, Ops, Support. |
+| Evaluate | Compare post-release metrics with objectives. | Benefits realization report. | Product, Business sponsor. |
+
+A story that is "Ready" enough before the sprint:
+
+```gherkin
+Feature: Customer books a consultation slot
+
+Business value:
+- Reduce hotline booking calls
+- Prevent double booking
+
+Rules:
+- BR-001: A confirmed slot cannot be booked by another customer
+- BR-002: Customer can reschedule only if appointment starts in more than 4 hours
+
+Acceptance criteria:
+Scenario: Book available slot
+  Given the customer selects an available slot
+  When the customer confirms the booking
+  Then the appointment status is Confirmed
+  And the selected slot is locked
+  And confirmation email is sent within 1 minute
+```
+
+Here's how to connect BABOK, SDLC and Scrum: BABOK helps BA know which analysis activities to do; The SDLC shows where the activity is located; Scrum helps package output into backlog items that can be built/tested.
+
 ## Reference source
 
 - IIBA BABOK Guide: https://www.iiba.org/standards-and-resources/babok/

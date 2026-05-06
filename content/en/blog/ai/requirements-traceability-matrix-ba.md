@@ -181,6 +181,33 @@ Requirement without source is very dangerous. When an argument occurs, BA doesn'
 
 If you do not trace to the test, you have not proven that the requirement has been verified.
 
+## More complete RTM example for booking
+
+| Req ID | Requirements | Rule | Design/API | Test cases | UAT scenarios | Status |
+|---|---|---|---|---|---|---|
+| REQ-001 | Guests view available slots in the next 14 days. | BR-001 | `GET /consultants/{id}/slots` | TC-001 | UAT-001 | Approved |
+| REQ-002 | Customers book available slots. | BR-002 | `POST /appointments` | TC-002, TC-003 | UAT-002 | Approved |
+| REQ-003 | Confirmed slots are not visible to other customers. | BR-003 | Slot locking design | TC-004 | UAT-003 | Approved |
+| REQ-004 | Customers reschedule at least 4 hours before appointment time. | BR-004 | `PATCH /appointments/{id}/reschedule` | TC-005, TC-006 | UAT-004 | Print Review |
+| REQ-005 | Customers cancel appointments at least 4 hours before appointment. | BR-005 | `PATCH /appointments/{id}/cancel` | TC-007 | UAT-005 | Print Review |
+| REQ-006 | The system sends a confirmation email after booking. | BR-006 | Notification service | TC-008 | UAT-006 | Approved |
+| REQ-007 | Consultant views appointment schedule by day. | BR-007 | Consulting calendar page | TC-009 | UAT-007 | Draft |
+
+Change request example:
+
+> CR-014: Business wants to change the reschedule rule from 4 hours to 2 hours.
+
+Impact from RTM:
+
+- `REQ-004` need update.
+- `BR-004` change threshold.
+- Validation API changed `PATCH /appointments/{id}/reschedule`.
+- `TC-005`, `TC-006`, `UAT-004` need to update expected result.
+- UI copy in error message needs to be changed from "4 hours" to "2 hours".
+- Customer service SOP needs to be updated because customers call less than 2 hours before receiving manual support.
+
+This is why RTM should live with the backlog, not a file that you just created and then forgot about.
+
 ## Practice exercises
 
 Choose a feature that has 5 user stories. Create RTM with columns:

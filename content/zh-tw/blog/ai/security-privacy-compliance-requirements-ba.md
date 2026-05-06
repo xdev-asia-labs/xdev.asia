@@ -212,6 +212,41 @@ Then hệ thống trả 403 và ghi security event
 
 放棄隱私通常會導致資料模型、使用者介面、同意流程和工作保留發生代價高昂的改變。
 
+## 調度的安全/隱私範例
+
+存取矩陣：
+
+|角色 |檢視行事曆 |建立行事曆 |變更/取消行程 |檢視電話號碼 |出口|
+|---|---|---|---|---|---|
+|客戶 |只是我的日曆|是的 |只是根據截止規則的我的日曆 |我的|沒有 |
+|諮詢 |已分配時間表 |沒有 |沒有 |蒙面|沒有 |
+|客戶服務 |客戶日曆 |客人有變化 |是的，按照 SOP |有理由就全力支持|沒有 |
+|銷售經理|團隊儀表板|沒有 |沒有 |蒙面|是的，需要審核 |
+|管理員 |完整|是的 |是的 |完整|是的，需要批准 |
+
+安全驗收標準：
+
+```gherkin
+Scenario: Customer tries to view another customer's appointment
+  Given customer A is logged in
+  When customer A opens /appointments/APT-of-customer-B
+  Then the system returns 403
+  And no appointment details are displayed
+  And a security event is logged
+```
+
+隱私要求：
+
+|身分證 |要求|
+|---|---|
+| PRIV-001 |預約表格僅收集全名、電子郵件、電話號碼和可選的諮詢原因。 |
+| PRIV-002 |如果服務不需要敏感訊息，顧問不應索取敏感資訊的原因。 |
+| PRIV-003 |根據內部政策，預約資料將保存 7 年，如果沒有法律義務，則將匿名。 |
+| PRIV-004 |郵件/簡訊提醒不包含敏感訊息，僅包含時間、顧問和日曆管理連結。 |
+| AUD-001 |每次匯出預約資料都必須記錄user_id、角色、時間戳記、篩選器、行號、原因。 |
+
+BA 應該將此部分包含在 SRS 或安全要求部分中，而不會讓開發人員想知道「哪個角色可以看到什麼」。
+
 ## 參考來源
 
 - IIBA BABOK 指引： https://www.iiba.org/standards-and-resources/babok/

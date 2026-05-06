@@ -38,6 +38,64 @@ Ingest 20 tài liệu, chunk theo heading, gắn metadata, chạy 50 câu hỏi 
 - Có re-index policy không?
 - Có hybrid search cho mã lỗi/SKU/API không?
 
+## Ví dụ đầy đủ: ingestion pipeline cho 20 tài liệu policy
+
+Bạn có 20 tài liệu nội bộ: refund policy, pricing plan, API limits, security FAQ, onboarding guide. Mục tiêu là biến chúng thành index dùng được cho RAG.
+
+### Metadata schema
+
+~~~json
+{
+  "doc_id": "refund-policy-v3",
+  "title": "Refund Policy",
+  "section": "Enterprise annual contract",
+  "source_url": "https://internal/wiki/refund-policy",
+  "owner": "product-ops",
+  "updated_at": "2026-04-20",
+  "product_area": "billing",
+  "access_level": "support_internal",
+  "version": "v3"
+}
+~~~
+
+### Chunk mẫu
+
+~~~json
+{
+  "chunk_id": "refund-policy-v3#enterprise-annual-contract#002",
+  "text": "Enterprise annual contracts are eligible for refund review within 30 days only when onboarding has not started and no custom integration work has been delivered.",
+  "metadata": {
+    "doc_id": "refund-policy-v3",
+    "section": "Enterprise annual contract",
+    "updated_at": "2026-04-20",
+    "access_level": "support_internal"
+  }
+}
+~~~
+
+### Query pipeline
+
+1. Normalize query và detect language.
+2. Rewrite query nếu quá mơ hồ, ví dụ "refund annual enterprise before onboarding".
+3. Apply metadata filter trước: "access_level <= user_access", "product_area = billing".
+4. Dense vector search lấy top 20.
+5. Keyword/BM25 search lấy top 20.
+6. Merge và rerank còn top 5.
+7. Loại chunk cũ nếu có version mới cùng doc.
+8. Đưa top 5 vào prompt kèm citation ids.
+
+### Hybrid retrieval debug table
+
+| Query | Dense hit | Keyword hit | Rerank top 1 | Kết luận |
+| --- | --- | --- | --- | --- |
+| refund annual enterprise | policy overview | annual contract section | annual contract section | Tốt |
+| charged twice invoice unpaid | billing FAQ | duplicate charge policy | duplicate charge policy | Tốt |
+| can I cancel after onboarding | cancellation guide | refund policy | onboarding exception | Cần thêm synonym |
+
+### Cách tự kiểm tra
+
+Lấy 30 query thật hoặc tự viết. Với mỗi query, ghi expected "doc_id". Nếu top-5 không chứa source đúng, lỗi nằm ở ingestion/retrieval, chưa cần đổ lỗi cho model.
+
 ## 1. Ingestion không chỉ là đọc file
 
 Ingestion pipeline cần biến dữ liệu thô thành dạng search được.

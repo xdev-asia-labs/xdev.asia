@@ -36,6 +36,67 @@ Tạo 30 agent tasks với expected tools/arguments, chạy agent và chấm too
 - Có chặn memory poisoning không?
 - Có phát hiện loop/tool thừa không?
 
+## Ví dụ đầy đủ: thiết kế memory cho account assistant
+
+Assistant hỗ trợ customer success muốn nhớ "khách hàng thích trả lời ngắn" và "đang migration từ plan cũ". Không phải thứ gì cũng nên nhét vào memory lâu dài.
+
+### Phân loại memory
+
+| Loại | Ví dụ | TTL | Có dùng cho prompt không? |
+| --- | --- | --- | --- |
+| Runtime state | Tool vừa gọi, task hiện tại | Trong request | Có |
+| Conversation summary | User đang hỏi về refund | Theo session | Có |
+| User preference | Thích câu trả lời ngắn, tiếng Việt | 90 ngày | Có, nếu user cho phép |
+| Domain memory | Account đang migration plan | Theo CRM source | Chỉ dùng nếu source còn valid |
+| Sensitive data | Token, password, full card number | Không lưu | Không |
+
+### Context budget map
+
+~~~json
+{
+  "system_rules": 900,
+  "user_preferences": 200,
+  "session_summary": 500,
+  "retrieved_account_context": 1200,
+  "tool_results": 1800,
+  "available_response": 600
+}
+~~~
+
+### Memory write policy
+
+~~~text
+Only write memory when:
+- Information is stable beyond the current conversation.
+- User explicitly states preference or business system confirms it.
+- The memory has source, timestamp and owner.
+
+Never write:
+- Secrets, passwords, payment details.
+- One-off frustration as permanent preference.
+- Model guesses.
+~~~
+
+### Trajectory eval case
+
+Expected trajectory cho câu: "Draft a short answer about refund for Acme's migration case."
+
+~~~json
+[
+  {"step": 1, "expected_tool": "get_account_context", "must_include_args": ["account_id"]},
+  {"step": 2, "expected_tool": "search_policy", "must_include_args": ["refund", "migration"]},
+  {"step": 3, "expected_tool": "draft_reply", "must_include_args": ["short_tone"]}
+]
+~~~
+
+Failure examples:
+
+- Agent dùng memory cũ "Acme is on legacy plan" dù CRM đã cập nhật.
+- Agent đưa payment detail vào prompt dù không cần.
+- Agent loop gọi "search_policy" 6 lần với query gần giống nhau.
+
+Memory tốt không phải là nhớ thật nhiều. Memory tốt là nhớ đúng thứ, đúng thời hạn, có nguồn và có quyền xóa.
+
 ## 1. State không giống memory
 
 Trong agent app, nên tách:

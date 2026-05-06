@@ -198,6 +198,42 @@ Many bugs occur when data falls into a combination of conditions that no one men
 
 Business rules change according to policy. Without version/effective date, it is difficult for the team to audit why the system made that decision at that time.
 
+## More complete decision table example
+
+Use case: customer changes consultation schedule.
+
+Business rules:
+
+| RuleID | Rule |
+|---|---|
+| BR-001 | Only customers who own an appointment can reschedule online. |
+| BR-002 | Appointment must be in Confirmed state. |
+| BR-003 | The appointment start time must be at least 4 hours away. |
+| BR-004 | New slots must be available at the time of confirmation. |
+| BR-005 | If rescheduling is successful, the old slot must be reopened. |
+
+Decision table:
+
+| Conditions/Results | R1 | R2 | R3 | R4 | R5 |
+|---|---:|---:|---:|---:|---:|
+| User is owner director | Y | N | Y | Y | Y |
+| Status = Confirmed | Y | - | N | Y | Y |
+| >= 4 hours remaining | Y | - | - | N | Y |
+| New slots available | Y | - | - | - | N |
+| **Decision** | Allow reschedule | Reject | Reject | Reject | Reject |
+| **Reason code** | OK | NOT_OWNER | INVALID_STATUS | CUTOFF_EXPIRED | SLOT_UNAVAILABLE |
+| **User message** | Reschedule successfully | You do not have the right to change this date | Appointment schedule cannot be changed | Schedule coming soon, please call hotline | This slot has just been placed |
+
+Mapping to test cases:
+
+| Rule columns | Test cases |
+|---|---|
+| R1 | TC-RS-001 rescheduled successfully |
+| R2 | TC-RS-002 user changes someone else's schedule |
+| R3 | TC-RS-003 appointment Cancelled cannot be changed |
+| R4 | TC-RS-004 reschedule under 4 hours |
+| R5 | TC-RS-005 new slot just booked |
+
 ## Practice exercises
 
 Choose a feature you are familiar with like scheduling, applying discount codes or approving refunds. Write:

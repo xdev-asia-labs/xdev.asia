@@ -215,6 +215,41 @@ Audit is necessary, but logging raw PII/token/password is a big risk.
 
 Leaving privacy behind often leads to costly changes to the data model, UI, consent flow and job retention.
 
+## Security/privacy example for scheduling
+
+Access matrix:
+
+| Role | View calendar | Create calendar | Change/cancel schedule | View phone number | Export |
+|---|---|---|---|---|---|
+| Customers | Just my calendar | Yes | Just my calendar according to the cutoff rule | Mine | No |
+| Consulting | Schedule assigned | No | No | Masked | No |
+| Customer care | Customer Calendar | There is a change of guests | Yes as per SOP | Full if there is a reason to support | No |
+| Sales Manager | Team dashboard | No | No | Masked | Yes, need audit |
+| Admin | Full | Yes | Yes | Full | Yes, approval required |
+
+Security acceptance criteria:
+
+```gherkin
+Scenario: Customer tries to view another customer's appointment
+  Given customer A is logged in
+  When customer A opens /appointments/APT-of-customer-B
+  Then the system returns 403
+  And no appointment details are displayed
+  And a security event is logged
+```
+
+Privacy requirements:
+
+| ID | Requirements |
+|---|---|
+| PRIV-001 | The booking form only collects full name, email, phone number and optional consultation reason. |
+| PRIV-002 | Reasons why consultants should not request sensitive information if it is not needed for the service. |
+| PRIV-003 | Appointment data is kept for 7 years according to internal policy, then anonymized if there is no legal obligation. |
+| PRIV-004 | Email/SMS reminder does not contain sensitive information, only contains time, consultant and calendar management link. |
+| AUD-001 | Every export of appointment data must record user_id, role, timestamp, filter, line number, reason. |
+
+The BA should include this section in the SRS or security requirement section, without leaving the Dev wondering "which role can see what".
+
 ## Reference source
 
 - IIBA BABOK Guide: https://www.iiba.org/standards-and-resources/babok/

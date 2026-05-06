@@ -179,6 +179,35 @@ No need to code like a developer. But you need to read and understand the API co
 
 Each requirement should be able to answer: what goal does it serve, what users, what metrics.
 
+## End-to-end example: schedule an online consultation
+
+Suppose the company has a financial consulting team. Customers are calling the hotline to make an appointment, staff are manually entering it into Google Sheet. The problem is that the schedule overlaps, the customer forgets the schedule, and the manager has no no-show data.
+
+### Output of Business BA
+
+| Part | Good writing examples |
+|---|---|
+| Problem statement | It takes customers an average of 12 minutes to make an appointment via the hotline; 18% of schedules were entered incorrectly or changed multiple times, increasing customer service load and reducing consultation participation rates. |
+| Business objective | 40% reduction in hotline calls related to scheduling for 3 months; Reduce double booking to less than 1%; increased attendance from 62% to 75%. |
+| Stakeholders | Customers, customer service, consultant, sales manager, compliance, IT support. |
+| Current process | Customer calls hotline -> Customer service checks sheet -> asks consultant -> enters schedule -> sends email manually. |
+| Future process | Customers choose consultant/slot on the web -> slot holding system -> send email/SMS -> Customer service only handles exceptions. |
+| Policy | Guests can reschedule at least 4 hours before the appointment time; Cancellations under 4 hours must call the hotline. |
+
+### Output of Software BA
+
+| Artifact | Example |
+|---|---|
+| User stories | As a customer, I want to book an available consultation slot online so that I can schedule without calling hotline. |
+| Acceptance criteria | Given an empty slot, when the customer confirms the appointment, then the system creates the appointment in Confirmed state and sends a confirmation email. |
+| Business rules | BR-001: Confirmed slot is not displayed to other customers. BR-002: Guests can only reschedule at least 4 hours before the appointment time. |
+| Data fields | appointment_id, customer_id, consultant_id, slot_id, status, channel, confirmation_code, created_at. |
+| touchpoint API | `POST /appointments`, `PATCH /appointments/{id}/reschedule`, `GET /consultants/{id}/slots`. |
+| Error case | If the slot has just been booked by someone else, return it `SLOT_UNAVAILABLE` and displays 3 alternate slots. |
+| UAT scenarios | Customer successfully booked, rescheduled before 4 hours, try rescheduling less than 4 hours, consultant sees today's schedule. |
+
+Point to see: Business BA helps organizations unify **problems, values ​​and processes**. Software BA helps the build team unify **behavior, data, rules, API, errors and tests**.
+
 ## Reference source
 
 - IIBA BABOK Guide: https://www.iiba.org/standards-and-resources/babok/

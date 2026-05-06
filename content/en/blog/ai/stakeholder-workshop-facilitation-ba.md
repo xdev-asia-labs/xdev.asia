@@ -194,7 +194,45 @@ Subject: Recap Workshop - Booking MVP Future Process
 - Tech Lead: review API impact.
 ```
 
-## 7. Use AI after the workshop
+## 7. Complete workshop output example
+
+Workshop: Future-state appointment booking.
+
+Decision log:
+
+| ID | Decision | Rationale | Owner |
+|---|---|---|---|
+| DEC-001 | MVP only supports 1:1 scheduling, does not support group bookings. | 92% of current bookings are 1:1, reducing initial release scope. | PO |
+| DEC-002 | Cutoff for rescheduling/cancellation is 4 hours. | Consultants need enough time to fill empty slots. | Ops Lead |
+| DEC-003 | Send email first, SMS included in phase 2. | SMS costs need further approval. | Marketing |
+
+Business rules:
+
+| RuleID | Rule | Source |
+|---|---|---|
+| BR-001 | Confirmed Slot is not visible to other guests. | Ops Lead |
+| BR-002 | Customers can only reschedule when the appointment begins at least 4 hours later. | Sales Manager |
+| BR-003 | Customer service can change the customer's replacement schedule if there is a support reason. | Customer Service Lead |
+| BR-004 | Consultants are not allowed to delete Confirmed customer calendars themselves. | Compliance |
+
+Open questions:
+
+| ID | Question | Owner | Due |
+|---|---|---|---|
+| OQ-001 | Do you need to send a calendar invite? `.ics` no? | Marketing | 2026-05-10 |
+| OQ-002 | How long does a no-show take from the appointment time? | Ops Lead | 2026-05-11 |
+| OQ-003 | How long does data appointment keep? | Compliance | 2026-05-12 |
+
+Action items:
+
+| Tasks | Owner | Output |
+|---|---|---|
+| Update BPMN future state | BA | Diagram v1.1 |
+| Write lightweight SRS | BA | SRS v0.1 |
+| Check slot holding API | Dev Lead | Feasibility note |
+| Draft test scenarios | QA Lead | Test matrix |
+
+## 8. Use AI after the workshop
 
 AI is useful to:
 
@@ -210,7 +248,7 @@ But BA must check:
 - Is the decision approved by the right person?
 - Is an open question automatically interpreted by AI as a decision?
 
-## 8. Common errors
+## 9. Common errors
 
 **Error 1: No decision maker**
 

@@ -182,7 +182,29 @@ Defect trong UAT thường rơi vào 3 loại:
 
 BA cần phân biệt rõ. Không phải mọi phản hồi UAT đều là bug.
 
-## 9. Lỗi thường gặp
+## 9. Ví dụ defect triage đầy đủ
+
+Feature: đổi lịch tư vấn online.
+
+| Bug | Mô tả | Severity | Priority | BA phân tích | Quyết định |
+|---|---|---|---|---|---|
+| BUG-101 | Khách đổi lịch dưới 4 giờ vẫn thành công. | High | P0 | Vi phạm BR-003, ảnh hưởng trực tiếp vận hành consultant. | Fix trước release, thêm regression test cutoff. |
+| BUG-102 | Email xác nhận gửi 2 lần khi double click. | Medium | P1 | Có thể do thiếu idempotency hoặc UI không disable button. | Fix trong sprint, thêm test duplicate submit. |
+| BUG-103 | Message lỗi ghi "2 giờ" thay vì "4 giờ". | Low | P0 | Severity thấp nhưng priority cao vì gây sai policy với khách. | Fix copy trước UAT sign-off. |
+| BUG-104 | Consultant dashboard load 5 giây. | Medium | P2 | Không chặn release nếu dưới threshold NFR? Cần so với NFR-PERF. | Engineering đo p95, nếu > NFR thì fix. |
+| BUG-105 | CSKH không biết cách đổi lịch thay khách. | Not bug | P2 | Đây là training/SOP issue, không phải defect phần mềm. | Update SOP và training note. |
+
+BA nên hỏi trong triage:
+
+- Bug này vi phạm requirement/rule nào?
+- Có workaround không?
+- Có ảnh hưởng legal/compliance/customer trust không?
+- Có cần update AC/test case không?
+- Đây là bug, requirement gap hay change request?
+
+Kết quả triage tốt phải để lại quyết định rõ: fix now, fix later, reject, convert to change request, hoặc training issue.
+
+## 10. Lỗi thường gặp
 
 **Lỗi 1: QA không được tham gia refinement**
 

@@ -163,6 +163,35 @@ Không cần code như developer. Nhưng bạn cần đọc hiểu API contract,
 
 Mỗi requirement nên trả lời được: nó phục vụ mục tiêu nào, người dùng nào, metric nào.
 
+## Ví dụ end-to-end: đặt lịch tư vấn online
+
+Giả sử công ty có đội tư vấn tài chính. Khách hàng đang gọi hotline để đặt lịch, nhân viên nhập thủ công vào Google Sheet. Vấn đề là lịch bị trùng, khách quên lịch, manager không có số liệu no-show.
+
+### Output của Business BA
+
+| Phần | Ví dụ viết tốt |
+|---|---|
+| Problem statement | Khách hàng mất trung bình 12 phút để đặt lịch qua hotline; 18% lịch bị nhập sai hoặc đổi nhiều lần, làm tăng tải CSKH và giảm tỷ lệ tham gia tư vấn. |
+| Business objective | Giảm 40% cuộc gọi hotline liên quan đến đặt lịch trong 3 tháng; giảm double booking xuống dưới 1%; tăng attendance từ 62% lên 75%. |
+| Stakeholder | Khách hàng, CSKH, consultant, sales manager, compliance, IT support. |
+| Current process | Khách gọi hotline -> CSKH kiểm tra sheet -> hỏi consultant -> nhập lịch -> gửi email thủ công. |
+| Future process | Khách chọn consultant/slot trên web -> hệ thống giữ slot -> gửi email/SMS -> CSKH chỉ xử lý exception. |
+| Policy | Khách được đổi lịch trước giờ hẹn tối thiểu 4 giờ; hủy dưới 4 giờ phải gọi hotline. |
+
+### Output của Software BA
+
+| Artifact | Ví dụ |
+|---|---|
+| User story | As a customer, I want to book an available consultation slot online so that I can schedule without calling hotline. |
+| Acceptance criteria | Given slot còn trống, when khách xác nhận đặt lịch, then hệ thống tạo appointment ở trạng thái Confirmed và gửi email xác nhận. |
+| Business rule | BR-001: Slot đã Confirmed không được hiển thị cho khách khác. BR-002: Khách chỉ được đổi lịch trước giờ hẹn ít nhất 4 giờ. |
+| Data fields | appointment_id, customer_id, consultant_id, slot_id, status, channel, confirmation_code, created_at. |
+| API touchpoint | `POST /appointments`, `PATCH /appointments/{id}/reschedule`, `GET /consultants/{id}/slots`. |
+| Error case | Nếu slot vừa bị người khác đặt, trả `SLOT_UNAVAILABLE` và hiển thị 3 slot thay thế. |
+| UAT scenario | Khách đặt lịch thành công, đổi lịch trước 4 giờ, thử đổi lịch dưới 4 giờ, consultant xem lịch ngày hôm nay. |
+
+Điểm cần thấy: Business BA giúp tổ chức thống nhất **vấn đề, value và quy trình**. Software BA giúp team build thống nhất **behavior, data, rule, API, lỗi và test**.
+
 ## Nguồn tham khảo
 
 - IIBA BABOK Guide: https://www.iiba.org/standards-and-resources/babok/

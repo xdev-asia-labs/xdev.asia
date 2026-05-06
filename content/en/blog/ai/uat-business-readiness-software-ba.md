@@ -232,7 +232,37 @@ Go/No-Go should not be emotional. Use scorecards:
 
 If there is "At risk", owner and mitigation must be recorded.
 
-## 9. What should I add to the AI ​​feature?
+## 9. Full UAT script example
+
+UAT scenario: Customer books and reschedules a consultation.
+
+| Field | Value |
+|---|---|
+| Scenario ID | UAT-BOOK-002 |
+| Personas | Existing customer |
+| Objective | Confirm that guests can book and reschedule 4 hours before cutoff. |
+| Preconditions | Customer active, consultant A has slots 09:00 and 10:00 tomorrow, email service enabled. |
+| Test data | customer_id = CUS-1001, consultant_id = CON-2001, slot_09 = SLOT-0900, slot_10 = SLOT-1000. |
+
+Steps:
+
+| Step | Action | Expected result | Evidence |
+|---|---|---|---|
+| 1 | Customer opens the booking page. | The list of consultants and empty slots displays in less than 2 seconds. | Screenshot slot list. |
+| 2 | Select consultant A, slot 09:00. | Confirmation button enabled, calendar information is correct. | Screenshot confirmation page. |
+| 3 | Click confirm. | Appointment created with status Confirmed, with confirmation code. | Appointment ID. |
+| 4 | Check email. | The confirmation email arrives within 1 minute, containing no sensitive data. | Email screenshot. |
+| 5 | Reschedule to 10:00 slot. | Old slot reopened, new slot Confirmed, audit log records old/new slot. | Audit log ID. |
+| 6 | Try rescheduling to another user's appointment. | Pay system 403. | Error screenshot. |
+
+Exit criteria for this scenario:
+
+- There is no High/Critical severity defect.
+- Business users confirm that the wording is easy to understand.
+- Customer service confirms exception handling SOP in under 4 hours.
+- QA confirms regression for duplicate booking pass.
+
+## 10. What should I add to the AI ​​feature?
 
 If the feature has AI, UAT needs to add:
 

@@ -167,6 +167,33 @@ Requirement không có source rất nguy hiểm. Khi tranh luận xảy ra, BA k
 
 Nếu không trace đến test, bạn chưa chứng minh được requirement đã được kiểm chứng.
 
+## Ví dụ RTM đầy đủ hơn cho đặt lịch
+
+| Req ID | Requirement | Rule | Design/API | Test case | UAT scenario | Status |
+|---|---|---|---|---|---|---|
+| REQ-001 | Khách xem slot còn trống trong 14 ngày tới. | BR-001 | `GET /consultants/{id}/slots` | TC-001 | UAT-001 | Approved |
+| REQ-002 | Khách đặt slot còn trống. | BR-002 | `POST /appointments` | TC-002, TC-003 | UAT-002 | Approved |
+| REQ-003 | Slot đã Confirmed không hiển thị cho khách khác. | BR-003 | Slot locking design | TC-004 | UAT-003 | Approved |
+| REQ-004 | Khách đổi lịch trước giờ hẹn ít nhất 4 giờ. | BR-004 | `PATCH /appointments/{id}/reschedule` | TC-005, TC-006 | UAT-004 | In Review |
+| REQ-005 | Khách hủy lịch trước giờ hẹn ít nhất 4 giờ. | BR-005 | `PATCH /appointments/{id}/cancel` | TC-007 | UAT-005 | In Review |
+| REQ-006 | Hệ thống gửi email xác nhận sau khi đặt lịch. | BR-006 | Notification service | TC-008 | UAT-006 | Approved |
+| REQ-007 | Consultant xem lịch hẹn theo ngày. | BR-007 | Consultant calendar page | TC-009 | UAT-007 | Draft |
+
+Ví dụ change request:
+
+> CR-014: Business muốn đổi rule reschedule từ 4 giờ xuống 2 giờ.
+
+Impact từ RTM:
+
+- `REQ-004` cần update.
+- `BR-004` đổi threshold.
+- API validation đổi ở `PATCH /appointments/{id}/reschedule`.
+- `TC-005`, `TC-006`, `UAT-004` cần update expected result.
+- UI copy trong message lỗi cần đổi từ "4 giờ" sang "2 giờ".
+- SOP của CSKH cần cập nhật vì khách gọi dưới 2 giờ mới được hỗ trợ thủ công.
+
+Đây là lý do RTM nên sống cùng backlog, không phải file làm cho có rồi bỏ quên.
+
 ## Bài tập thực hành
 
 Chọn một feature có 5 user stories. Tạo RTM với các cột:

@@ -7,7 +7,7 @@ excerpt: >-
   typed config, secret management, request id và logging không làm lộ dữ liệu nhạy cảm.
 featured_image: /images/blog/backend-ai-apps-python-typescript.png
 type: blog
-reading_time: 11
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T10:05:00.000000Z'
@@ -37,6 +37,94 @@ Tạo endpoint phân loại ticket trả JSON, validate schema, retry 1 lần kh
 - Output có schema không?
 - Retry có giới hạn không?
 - Log có raw PII không?
+
+## Ví dụ đầy đủ: endpoint AI có timeout, validation và trace
+
+Giả sử bạn cần build endpoint phân loại ticket support. Yêu cầu production không phải là "gọi model được", mà là gọi model xong hệ thống vẫn debug, retry và bảo vệ downstream được.
+
+### API contract
+
+~~~http
+POST /api/ai/ticket-classification
+Authorization: Bearer <token>
+X-Request-Id: req_20260506_001
+Content-Type: application/json
+~~~
+
+~~~json
+{
+  "ticket_id": "TCK-1842",
+  "subject": "Payment failed for annual plan",
+  "body": "We were charged twice but the invoice still says unpaid.",
+  "customer_tier": "enterprise",
+  "locale": "en-US"
+}
+~~~
+
+Response hợp lệ:
+
+~~~json
+{
+  "ticket_id": "TCK-1842",
+  "category": "billing",
+  "urgency": "high",
+  "confidence": 0.86,
+  "routing_reason": "Enterprise customer reports duplicate charge and unpaid invoice state.",
+  "model": "fast-model-v1",
+  "prompt_version": "ticket-classifier@2026-05-06",
+  "request_id": "req_20260506_001"
+}
+~~~
+
+### Pydantic schema tối thiểu
+
+~~~python
+from typing import Literal
+from pydantic import BaseModel, Field
+
+class TicketClassification(BaseModel):
+    ticket_id: str
+    category: Literal["billing", "technical", "account", "security", "other"]
+    urgency: Literal["low", "medium", "high"]
+    confidence: float = Field(ge=0, le=1)
+    routing_reason: str = Field(min_length=12, max_length=240)
+    model: str
+    prompt_version: str
+    request_id: str
+~~~
+
+### Luồng xử lý nên có
+
+1. Nhận request và tạo "request_id" nếu client chưa gửi.
+2. Validate input bằng schema.
+3. Gọi model với timeout ngắn, ví dụ 12 giây.
+4. Parse structured output.
+5. Validate output bằng schema.
+6. Nếu invalid, retry một lần với repair prompt.
+7. Nếu vẫn invalid, trả "needs_review", không đẩy ticket vào routing tự động.
+8. Log trace gồm input hash, model, prompt version, latency, token usage, validation result.
+
+### Log event mẫu
+
+~~~json
+{
+  "event": "ai.ticket_classification.completed",
+  "request_id": "req_20260506_001",
+  "ticket_id": "TCK-1842",
+  "prompt_version": "ticket-classifier@2026-05-06",
+  "model": "fast-model-v1",
+  "latency_ms": 1840,
+  "input_tokens": 612,
+  "output_tokens": 92,
+  "output_valid": true,
+  "retry_count": 0,
+  "category": "billing"
+}
+~~~
+
+### Cách tự kiểm tra
+
+Chạy 5 input lỗi: thiếu "body", "customer_tier" lạ, body quá dài, tiếng Việt, prompt injection yêu cầu bỏ JSON. Endpoint đạt yêu cầu khi tất cả lỗi đều trả response có kiểm soát, không crash, không trả output ngoài schema và log đủ "request_id".
 
 ## 1. Endpoint gọi model không nên quá "mỏng"
 

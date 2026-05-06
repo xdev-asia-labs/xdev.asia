@@ -38,6 +38,78 @@ Tạo eval harness cho RAG assistant: 100 cases, expected docs, rubric groundedn
 - Rubric có đủ cụ thể không?
 - Release gate có block regression không?
 
+## Ví dụ đầy đủ: eval plan cho ticket classifier
+
+Bạn muốn release prompt mới cho ticket classifier. Thay vì đọc 10 output thấy ổn, hãy tạo eval plan nhỏ nhưng có sức chặn regression.
+
+### Dataset card
+
+~~~text
+Dataset: ticket-classifier-regression-v1
+Size: 200 cases
+Owner: ai-platform-team
+Last updated: 2026-05-06
+
+Distribution:
+- billing: 50
+- technical: 45
+- account: 35
+- security: 30
+- other: 20
+- adversarial / prompt injection: 20
+~~~
+
+### Rubric
+
+| Metric | Pass threshold | Cách chấm |
+| --- | ---: | --- |
+| Category accuracy | >= 90% | Exact match với expected category |
+| Urgency accuracy | >= 88% | Exact match hoặc accepted alternate |
+| Invalid JSON rate | <= 1% | Schema validation |
+| Security false negative | 0 case critical | Security ticket không được route sai low/medium |
+| Explanation quality | >= 4/5 | Human review 30 sample |
+
+### Eval output mẫu
+
+~~~json
+{
+  "run_id": "eval_20260506_1130",
+  "prompt_version": "ticket-classifier@2026-05-06",
+  "model": "balanced",
+  "results": {
+    "category_accuracy": 0.915,
+    "urgency_accuracy": 0.89,
+    "invalid_json_rate": 0.005,
+    "security_false_negative": 0,
+    "explanation_quality_avg": 4.2
+  },
+  "decision": "pass"
+}
+~~~
+
+### Release gate trong CI
+
+~~~yaml
+ai_eval_gate:
+  block_if:
+    category_accuracy_below: 0.90
+    urgency_accuracy_below: 0.88
+    invalid_json_rate_above: 0.01
+    security_false_negative_above: 0
+~~~
+
+### Cách tự kiểm tra
+
+Lấy 5 output sai nhất, viết failure taxonomy:
+
+- Prompt hiểu sai intent.
+- Input thiếu dữ liệu.
+- Category overlap.
+- Schema invalid.
+- Policy/security conflict.
+
+Sau đó thêm mỗi lỗi ít nhất một case mới vào dataset. Eval dataset phải sống cùng production, không phải file tạo một lần cho đẹp.
+
 ## 1. Eval objective
 
 Đừng bắt đầu bằng tool. Bắt đầu bằng câu hỏi:

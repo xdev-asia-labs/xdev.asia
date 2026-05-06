@@ -199,6 +199,41 @@ Audit là cần thiết, nhưng log raw PII/token/password là rủi ro lớn.
 
 Privacy để sau thường dẫn đến sửa data model, UI, consent flow và retention job rất tốn kém.
 
+## Ví dụ security/privacy cho đặt lịch
+
+Access matrix:
+
+| Role | Xem lịch | Tạo lịch | Đổi/hủy lịch | Xem số điện thoại | Export |
+|---|---|---|---|---|---|
+| Customer | Chỉ lịch của mình | Có | Chỉ lịch của mình theo rule cutoff | Của mình | Không |
+| Consultant | Lịch được assign | Không | Không | Masked | Không |
+| CSKH | Lịch khách hàng | Có thay khách | Có theo SOP | Full nếu có lý do support | Không |
+| Sales Manager | Team dashboard | Không | Không | Masked | Có, cần audit |
+| Admin | Full | Có | Có | Full | Có, cần approval |
+
+Security acceptance criteria:
+
+```gherkin
+Scenario: Customer tries to view another customer's appointment
+  Given customer A is logged in
+  When customer A opens /appointments/APT-of-customer-B
+  Then the system returns 403
+  And no appointment details are displayed
+  And a security event is logged
+```
+
+Privacy requirements:
+
+| ID | Requirement |
+|---|---|
+| PRIV-001 | Form đặt lịch chỉ thu thập họ tên, email, số điện thoại và lý do tư vấn tùy chọn. |
+| PRIV-002 | Lý do tư vấn không được yêu cầu thông tin nhạy cảm nếu không cần cho dịch vụ. |
+| PRIV-003 | Appointment data được giữ 7 năm theo policy nội bộ, sau đó anonymize nếu không còn nghĩa vụ pháp lý. |
+| PRIV-004 | Email/SMS reminder không chứa thông tin nhạy cảm, chỉ chứa thời gian, consultant và link quản lý lịch. |
+| AUD-001 | Mọi lần export dữ liệu lịch hẹn phải ghi user_id, role, timestamp, filter, số dòng, reason. |
+
+BA nên đưa phần này vào SRS hoặc security requirement section, không để Dev tự hỏi "role nào xem được gì".
+
 ## Nguồn tham khảo
 
 - IIBA BABOK Guide: https://www.iiba.org/standards-and-resources/babok/

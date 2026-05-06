@@ -182,7 +182,39 @@ QA cần:
 
 Nếu QA không hiểu business rule, test pass vẫn có thể sai nghiệp vụ.
 
-## 10. Lỗi thường gặp
+## 10. Ví dụ handoff pack đầy đủ
+
+Feature: Customer reschedules consultation appointment.
+
+| Phần | Nội dung handoff |
+|---|---|
+| Business value | Giảm cuộc gọi CSKH khi khách cần đổi lịch, nhưng vẫn bảo vệ lịch làm việc của consultant. |
+| Scope | Khách đổi lịch online trước giờ hẹn ít nhất 4 giờ. |
+| Out of scope | Đổi lịch dưới 4 giờ, đổi consultant khác domain, đổi lịch nhóm. |
+| Business rules | BR-001: chỉ owner appointment được đổi. BR-002: chỉ đổi nếu appointment status = Confirmed. BR-003: chỉ đổi trước giờ hẹn >= 4 giờ. |
+| UX notes | Nếu đổi thành công, hiển thị confirmation code mới; nếu fail do cutoff, hiển thị hotline. |
+| API/data | `PATCH /appointments/{id}/reschedule`, request gồm `new_slot_id`, `reason`, `idempotency_key`. |
+| NFR | Response p95 dưới 2 giây; ghi audit log old_slot/new_slot. |
+
+Test scenario matrix:
+
+| Scenario | Test data | Expected result |
+|---|---|---|
+| Đổi sang slot còn trống trước 4 giờ | appointment Confirmed, starts in 24h | Status vẫn Confirmed, slot cũ mở lại, slot mới bị khóa. |
+| Đổi dưới 4 giờ | appointment starts in 3h30m | Không đổi lịch, hiển thị hotline. |
+| Đổi sang slot vừa bị đặt | new_slot_id unavailable | Không đổi lịch, gợi ý slot khác. |
+| User đổi appointment của người khác | appointment_id không thuộc user | Trả 403, ghi security event. |
+| Submit 2 lần do double click | cùng idempotency_key | Chỉ có một lần đổi lịch. |
+
+Open questions:
+
+| ID | Question | Owner | Deadline |
+|---|---|---|---|
+| OQ-001 | Đổi lịch có gửi SMS hay chỉ email? | Marketing | 2026-05-10 |
+| OQ-002 | Consultant có được reject lịch đã đổi không? | Ops Lead | 2026-05-10 |
+| OQ-003 | Có tính no-show nếu khách đổi nhiều lần không? | Sales Manager | 2026-05-11 |
+
+## 11. Lỗi thường gặp
 
 **Lỗi 1: Handoff bằng cách gửi link Confluence**
 

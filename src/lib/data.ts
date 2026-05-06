@@ -35,10 +35,6 @@ function localizedCollection(collection: string, locale: Locale = DEFAULT_LOCALE
   return locale === DEFAULT_LOCALE ? collection : `${locale}/${collection}`;
 }
 
-function getLocalizedContentDir(collection: string, locale: Locale = DEFAULT_LOCALE): string {
-  return path.join(process.cwd(), "content", localizedCollection(collection, locale));
-}
-
 // Resolve series slug to compound slug for categorized directory structure
 // e.g. "ai-llm-tu-co-ban-den-nang-cao" → "ai-machine-learning/ai-llm-tu-co-ban-den-nang-cao"
 const seriesSlugMaps = new Map<Locale, Map<string, string>>();
@@ -47,25 +43,24 @@ function getSeriesSlugMap(locale: Locale = DEFAULT_LOCALE): Map<string, string> 
   const cached = seriesSlugMaps.get(locale);
   if (cached) return cached;
 
-  const seriesDir = getLocalizedContentDir("series", locale);
   const map = new Map<string, string>();
-  if (!fs.existsSync(seriesDir)) return map;
+  const seriesPaths = listMdxRelativePaths(localizedCollection("series", locale)).filter((relativePath) =>
+    relativePath.endsWith("/index")
+  );
 
-  for (const entry of fs.readdirSync(seriesDir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const entryDir = path.join(seriesDir, entry.name);
+  for (const indexPath of seriesPaths) {
+    const segments = indexPath.split("/");
 
-    if (fs.existsSync(path.join(entryDir, "index.md"))) {
-      map.set(entry.name, entry.name);
+    // Flat series structure: <series-slug>/index
+    if (segments.length === 2) {
+      map.set(segments[0], segments[0]);
       continue;
     }
 
-    for (const sub of fs.readdirSync(entryDir, { withFileTypes: true })) {
-      if (!sub.isDirectory()) continue;
-      if (fs.existsSync(path.join(entryDir, sub.name, "index.md"))) {
-        map.set(sub.name, `${entry.name}/${sub.name}`);
-      }
-    }
+    // Categorized series structure: <category>/<series-slug>/index
+    const seriesSlug = segments[segments.length - 2];
+    const compoundSlug = segments.slice(0, -1).join("/");
+    map.set(seriesSlug, compoundSlug);
   }
 
   seriesSlugMaps.set(locale, map);

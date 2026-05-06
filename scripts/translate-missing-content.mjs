@@ -59,6 +59,7 @@ function parseArgs() {
     fixViLeftovers: false,
     onlyUntracked: false,
     includes: [],
+    refresh: false,
   };
 
   for (let i = 0; i < args.length; i += 1) {
@@ -83,6 +84,8 @@ function parseArgs() {
       options.onlyUntracked = true;
     } else if (arg === "--include" || arg === "--includes") {
       options.includes.push(...(args[++i] || "").split(",").filter(Boolean));
+    } else if (arg === "--refresh") {
+      options.refresh = true;
     } else {
       throw new Error(`Unknown argument: ${arg}`);
     }
@@ -199,7 +202,7 @@ function findMissing(options) {
       const relPath = path.relative(sourceBase, sourcePath);
       if (!shouldIncludeRelPath(relPath, options.includes)) continue;
       for (const locale of options.locales) {
-        if (localeMaps[locale].has(String(id))) continue;
+        if (!options.refresh && localeMaps[locale].has(String(id))) continue;
         missing.push({
           root,
           locale,

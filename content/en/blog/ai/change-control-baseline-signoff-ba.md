@@ -199,6 +199,40 @@ Without a baseline, no one knows what "change" is compared to what.
 
 A small change in code can be huge in terms of UAT, training, legal or support.
 
+## Complete change request example
+
+Change request:
+
+| Field | Value |
+|---|---|
+| CR ID | CR-014 |
+| Request | Changed reschedule/cancel cutoff from 4 hours to 2 hours. |
+| Requested by | Sales Manager |
+| Reason | Customers complain about lack of flexibility when consultation schedules change during the day. |
+| Current baseline | SRS Appointment Booking v1.0 |
+| Target release | v1.1 |
+
+Impact analysis:
+
+| Area | Impact |
+|---|---|
+| Business rules | BR-004, BR-005 changed threshold from 4h to 2h. |
+| UX copy | Error message changed from "4 hours ago" to "2 hours ago". |
+| API validation | `PATCH /reschedule` and `PATCH /cancel` change cutoff rule. |
+| QA | Update TC-RS-004, TC-CAN-003, add boundary test exactly 2 hours. |
+| UAT | Business user reruns UAT-004 and UAT-005. |
+| Ops/SOP | Customer service only handles manual calls when customers call for less than 2 hours. |
+| Risk | Consultants have little time to fill empty slots, and can increase idle time. |
+
+Decision:
+
+| Decision | Approved with pilot |
+|---|---|
+| Scope | Applicable to consulting groups in Ho Chi Minh City for 2 weeks. |
+| Success metrics | No-show does not increase more than 3%; hotline complaints reduced by at least 15%. |
+| Owner | PO tracks metrics, BA updates requirements, QA updates regression. |
+| Rollback | If no-show increases > 3%, return to 4h cutoff using config. |
+
 ## Practice exercises
 
 Take a requirement you once wrote. Create:

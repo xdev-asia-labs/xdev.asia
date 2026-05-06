@@ -177,7 +177,45 @@ Subject: Recap Workshop - Booking MVP Future Process
 - Tech Lead: review API impact.
 ```
 
-## 7. Dùng AI sau workshop
+## 7. Ví dụ workshop output hoàn chỉnh
+
+Workshop: Future-state appointment booking.
+
+Decision log:
+
+| ID | Decision | Rationale | Owner |
+|---|---|---|---|
+| DEC-001 | MVP chỉ hỗ trợ đặt lịch 1:1, chưa hỗ trợ đặt nhóm. | 92% booking hiện tại là 1:1, giảm scope release đầu. | PO |
+| DEC-002 | Cutoff đổi/hủy lịch là 4 giờ. | Consultant cần đủ thời gian lấp slot trống. | Ops Lead |
+| DEC-003 | Gửi email trước, SMS đưa vào phase 2. | Chi phí SMS cần duyệt thêm. | Marketing |
+
+Business rules:
+
+| Rule ID | Rule | Source |
+|---|---|---|
+| BR-001 | Slot Confirmed không hiển thị cho khách khác. | Ops Lead |
+| BR-002 | Khách chỉ được đổi lịch khi appointment bắt đầu sau ít nhất 4 giờ. | Sales Manager |
+| BR-003 | CSKH có thể đổi lịch thay khách nếu có lý do support. | CSKH Lead |
+| BR-004 | Consultant không được tự xóa lịch khách đã Confirmed. | Compliance |
+
+Open questions:
+
+| ID | Question | Owner | Due |
+|---|---|---|---|
+| OQ-001 | Có cần gửi calendar invite `.ics` không? | Marketing | 2026-05-10 |
+| OQ-002 | No-show tính sau bao lâu kể từ giờ hẹn? | Ops Lead | 2026-05-11 |
+| OQ-003 | Data appointment giữ bao lâu? | Compliance | 2026-05-12 |
+
+Action items:
+
+| Task | Owner | Output |
+|---|---|---|
+| Cập nhật BPMN future state | BA | Diagram v1.1 |
+| Viết SRS lightweight | BA | SRS v0.1 |
+| Check API giữ slot | Dev Lead | Feasibility note |
+| Draft test scenarios | QA Lead | Test matrix |
+
+## 8. Dùng AI sau workshop
 
 AI rất hữu ích để:
 
@@ -193,7 +231,7 @@ Nhưng BA phải kiểm tra:
 - Decision có đúng người approve không?
 - Open question có bị AI tự giải thích thành decision không?
 
-## 8. Lỗi thường gặp
+## 9. Lỗi thường gặp
 
 **Lỗi 1: Không có decision maker**
 

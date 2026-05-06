@@ -199,7 +199,39 @@ QA needs:
 
 If QA does not understand business rules, the test pass can still be wrong.
 
-## 10. Common errors
+## 10. Full handoff pack example
+
+Feature: Customer reschedules consultation appointment.
+
+| Part | Handoff content |
+|---|---|
+| Business value | Reduce customer service calls when customers need to reschedule, but still protect the consultant's work schedule. |
+| Scope | Customers can reschedule online at least 4 hours before the appointment time. |
+| Out of scope | Change schedule for less than 4 hours, change consultant to different domain, change group schedule. |
+| Business rules | BR-001: only owner manager can be changed. BR-002: only change if appointment status = Confirmed. BR-003: only change >= 4 hours before appointment time. |
+| UX notes | If the change is successful, the new confirmation code will be displayed; If failed due to cutoff, display hotline. |
+| API/data | `PATCH /appointments/{id}/reschedule`, request includes `new_slot_id`, `reason`, `idempotency_key`. |
+| NFR | Response p95 under 2 seconds; write audit log old_slot/new_slot. |
+
+Test scenario matrix:
+
+| Scenario | Test data | Expected result |
+|---|---|---|
+| Change to available slot before 4 hours | appointment Confirmed, starts in 24h | Status is still Confirmed, old slot reopened, new slot locked. |
+| Exchange under 4 hours | appointment starts in 3h30m | Do not change the schedule or display the hotline. |
+| Change to the slot that was just placed | new_slot_id unavailable | Do not reschedule, suggest another slot. |
+| User changes someone else's appointment | appointment_id is not part of user | Returns 403, writes security event. |
+| Submitted twice due to double click | same idempotency_key | There is only one rescheduling. |
+
+Open questions:
+
+| ID | Question | Owner | Deadlines |
+|---|---|---|---|
+| OQ-001 | Reschedule to send SMS or just email? | Marketing | 2026-05-10 |
+| OQ-002 | Can a consultant reject the changed schedule? | Ops Lead | 2026-05-10 |
+| OQ-003 | Is there a no-show if the customer changes multiple times? | Sales Manager | 2026-05-11 |
+
+## 11. Common errors
 
 **Error 1: Handoff by sending Confluence link**
 

@@ -241,6 +241,67 @@ Happy path is usually easy. The new error is where user experience and support c
 
 In order creation, payment, scheduling, and retry transactions, there may be duplicates. BA should ask early so that business rules and UX are not missing.
 
+## More complete API contract example
+
+Endpoints:
+
+```http
+PATCH /appointments/{appointment_id}/reschedule
+```
+
+Business rules:
+
+- User must be the owner or customer service with support rights.
+- Appointment must be in Confirmed state.
+- Sales start time is at least 4 hours.
+- New slots must be available.
+- Request retry cannot be created multiple times.
+
+Request:
+
+```json
+{
+  "new_slot_id": "SLOT-20260507-1000",
+  "reason": "Customer requested a later time",
+  "idempotency_key": "a9c6d2f0-7e2b-4b15-a4b9-118e6f21c001"
+}
+```
+
+Response success:
+
+```json
+{
+  "appointment_id": "APT-20260506-001",
+  "old_slot_id": "SLOT-20260507-0900",
+  "new_slot_id": "SLOT-20260507-1000",
+  "status": "Confirmed",
+  "updated_at": "2026-05-06T10:30:00Z"
+}
+```
+
+Validation and errors:
+
+| Code | HTTP | Cause | User messages | Retry |
+|---|---:|---|---|---|
+| NOT_OWNER | 403 | User does not own sales | You do not have the right to change this schedule. | No |
+| INVALID_STATUS | 409 | Appointment is not Confirmed | This appointment cannot be changed. | No |
+| CUTOFF_EXPIRED | 409 | Less than 4 hours left | Schedule coming soon. Please call hotline. | No |
+| SLOT_UNAVAILABLE | 409 | New slot just placed | This slot has just been placed. Please choose another time. | Yes, choose another slot |
+| DUPLICATE_REQUEST | 200 | Same idempotency_key | Returns the result of the first request. | Safe |
+
+Audit log:
+
+| Field | Meaning |
+|---|---|
+| actor_id | Who changed the schedule |
+| actor_role | Customer/Customer Service/Admin |
+| appointment_id | Schedule changed |
+| old_slot_id/new_slot_id | Before and after |
+| reasons | Reason for change |
+| timestamp | Time |
+
+This is enough detail for Dev to implement, QA to write contract/negative tests, and business to understand why the system rejects each case.
+
 ## Reference source
 
 - IEEE/ISO/IEC 29148-2018: https://standards.ieee.org/ieee/29148/6937/

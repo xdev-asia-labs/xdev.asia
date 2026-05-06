@@ -7,7 +7,7 @@ excerpt: >-
   chất lượng, latency, token usage và cost per successful task.
 featured_image: /images/blog/model-selection-cost-latency-ai.png
 type: blog
-reading_time: 9
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T10:20:00.000000Z'
@@ -41,6 +41,54 @@ Chạy 50 cases qua 2-3 model hoặc cấu hình, lập bảng quality, p95 late
 - Có cost per successful task không?
 - Có threshold low confidence không?
 - Có route sang human review không?
+
+## Ví dụ đầy đủ: chọn model bằng bảng trade-off
+
+Giả sử bạn có endpoint "draft_support_reply". Mục tiêu là trả draft trong dưới 4 giây, cost dưới 0.8 cent mỗi request, citation không sai quá 2%.
+
+### Eval set nhỏ để benchmark
+
+| Nhóm case | Số lượng | Mục tiêu |
+| --- | ---: | --- |
+| Câu hỏi policy thường gặp | 80 | Correctness cao |
+| Câu hỏi thiếu dữ liệu | 30 | Biết hỏi lại hoặc từ chối |
+| Câu hỏi có policy conflict | 20 | Không đoán |
+| Prompt injection | 20 | Bám system rules |
+| Tiếng Việt và tiếng Anh trộn | 50 | Ổn định đa ngôn ngữ |
+
+### Bảng benchmark mẫu
+
+| Model | Correctness | Citation accuracy | Invalid JSON | p95 latency | Cost/request |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| small-fast | 82% | 91% | 1.8% | 1.2s | $0.001 |
+| balanced | 90% | 96% | 0.7% | 2.8s | $0.004 |
+| large-reasoning | 94% | 98% | 0.3% | 8.9s | $0.026 |
+
+### Quyết định mẫu
+
+Chọn "balanced" làm default vì đạt SLA 4 giây và citation accuracy trên 95%. Dùng "small-fast" cho intent classification hoặc query rewrite. Chỉ route sang "large-reasoning" khi case có tag "policy_conflict" hoặc "high_value_customer".
+
+### ADR ngắn
+
+~~~text
+Decision:
+Use balanced model for support reply drafting.
+
+Context:
+Need p95 latency < 4s, citation accuracy >= 95%, cost/request < $0.008.
+
+Consequences:
+- Meets latency and quality target.
+- More expensive than small-fast but cheaper than large-reasoning.
+- Add fallback route to large-reasoning for policy conflict cases.
+
+Release gate:
+Block release if citation accuracy < 95% or invalid JSON > 1%.
+~~~
+
+### Cách tự kiểm tra
+
+Đừng hỏi "model nào thông minh nhất?". Hãy hỏi "model nào hoàn thành task này với quality, latency và cost chấp nhận được?". Nếu bạn chưa có eval set, mọi lựa chọn model đều là cảm tính.
 
 ## 1. Đừng chỉ đo accuracy
 

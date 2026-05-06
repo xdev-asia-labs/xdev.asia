@@ -7,7 +7,7 @@ excerpt: >-
   latency, feedback, rollback, feature flags và incident runbook.
 featured_image: /images/blog/ai-observability-cost-deployment.png
 type: blog
-reading_time: 13
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T11:00:00.000000Z'
@@ -35,6 +35,66 @@ Gắn tracing cho một AI endpoint, cố tình tạo lỗi retrieval sai rồi 
 - Prompt/model/retrieval index có version không?
 - Có cost dashboard không?
 - Có rollback và kill switch không?
+
+## Ví dụ đầy đủ: debug một answer sai bằng trace
+
+Incident: khách hỏi về refund Enterprise annual. Assistant trả lời "được refund trong 30 ngày" nhưng bỏ điều kiện onboarding chưa bắt đầu.
+
+### Trace cần có
+
+~~~json
+{
+  "trace_id": "trc_20260506_0091",
+  "user_id": "support_42",
+  "tenant_id": "acme",
+  "feature": "refund_answer_draft",
+  "prompt_version": "refund-rag@2026-05-06",
+  "model": "balanced",
+  "latency_ms": 3120,
+  "cost_usd": 0.0042,
+  "retrieval": {
+    "query": "enterprise annual refund 30 days",
+    "top_chunks": [
+      "refund-policy-v3#overview#001",
+      "refund-policy-v2#enterprise#004"
+    ]
+  },
+  "eval_labels": {
+    "groundedness": "fail",
+    "citation_accuracy": "partial"
+  }
+}
+~~~
+
+### Phân tích lỗi
+
+| Span | Quan sát | Kết luận |
+| --- | --- | --- |
+| Query rewrite | Thiếu từ "onboarding" | Retrieval không lấy đúng section điều kiện |
+| Retrieval | Lấy cả policy v2 cũ | Metadata/version filter thiếu |
+| Generation | Answer kết luận quá mạnh | Prompt thiếu no-answer/condition rule |
+| Citation | Cite overview quá rộng | Citation mapping chưa đủ chi tiết |
+
+### Fix plan
+
+1. Thêm metadata filter "latest_version = true".
+2. Cải thiện query rewrite để giữ entity "onboarding".
+3. Thêm eval case "Enterprise annual refund after onboarding started".
+4. Update prompt yêu cầu nêu điều kiện trước khi kết luận.
+5. Release bằng feature flag cho 10% traffic nội bộ.
+
+### Cost optimization không làm mù observability
+
+Bạn có thể giảm cost bằng cache, context pruning và model routing. Nhưng không được xóa trace cần để debug. Nếu sau khi tối ưu bạn không còn biết answer lấy từ chunk nào, đó là tối ưu sai.
+
+### Dashboard tối thiểu
+
+- p50/p95 latency theo feature.
+- Cost per successful task.
+- Invalid output rate.
+- Retrieval no-hit rate.
+- Groundedness fail rate.
+- Top prompt versions gây lỗi.
 
 ## 1. Trace một request AI
 

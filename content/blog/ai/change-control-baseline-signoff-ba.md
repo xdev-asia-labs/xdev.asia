@@ -180,6 +180,40 @@ Không có baseline thì không ai biết "đổi" là đổi so với cái gì.
 
 Một thay đổi nhỏ trong code có thể rất lớn về UAT, training, legal hoặc support.
 
+## Ví dụ change request hoàn chỉnh
+
+Change request:
+
+| Field | Value |
+|---|---|
+| CR ID | CR-014 |
+| Request | Đổi cutoff reschedule/cancel từ 4 giờ xuống 2 giờ. |
+| Requested by | Sales Manager |
+| Reason | Khách hàng phàn nàn không linh hoạt khi lịch tư vấn thay đổi trong ngày. |
+| Current baseline | SRS Appointment Booking v1.0 |
+| Target release | v1.1 |
+
+Impact analysis:
+
+| Area | Impact |
+|---|---|
+| Business rule | BR-004, BR-005 đổi threshold từ 4h sang 2h. |
+| UX copy | Message lỗi đổi từ "trước 4 giờ" sang "trước 2 giờ". |
+| API validation | `PATCH /reschedule` và `PATCH /cancel` đổi cutoff rule. |
+| QA | Update TC-RS-004, TC-CAN-003, thêm boundary test đúng 2h. |
+| UAT | Business user rerun UAT-004 và UAT-005. |
+| Ops/SOP | CSKH chỉ xử lý thủ công khi khách gọi dưới 2h. |
+| Risk | Consultant có ít thời gian lấp slot trống, có thể tăng idle time. |
+
+Decision:
+
+| Decision | Approved with pilot |
+|---|---|
+| Scope | Áp dụng cho nhóm consultant tại TP.HCM trong 2 tuần. |
+| Success metric | No-show không tăng quá 3%; hotline complaint giảm ít nhất 15%. |
+| Owner | PO theo dõi metric, BA update requirement, QA update regression. |
+| Rollback | Nếu no-show tăng > 3%, quay lại cutoff 4h bằng config. |
+
 ## Bài tập thực hành
 
 Lấy một requirement bạn từng viết. Tạo:

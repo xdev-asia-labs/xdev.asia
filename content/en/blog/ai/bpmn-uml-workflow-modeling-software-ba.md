@@ -192,6 +192,51 @@ Software bugs often lie in exceptions: slot has just been reserved by someone el
 
 If user stories say one way, BPMN says one way, test cases say another, the team will lose trust in BA documents. Diagram needs to be traced or at least reviewed with SRS/backlog.
 
+## Full package model example
+
+Feature: reschedule consultation.
+
+### BPMN summary
+
+```text
+Customer lane:
+  Open appointment detail -> Click Reschedule -> Select new slot -> Confirm
+
+System lane:
+  Validate owner -> Validate appointment status -> Validate cutoff -> Validate slot
+  Gateway:
+    All valid -> Update appointment -> Release old slot -> Lock new slot -> Send notification
+    Invalid owner -> Return 403
+    Cutoff expired -> Show hotline message
+    Slot unavailable -> Show alternative slots
+
+CSKH lane:
+  Handle exception for cutoff-expired case if customer calls hotline
+```
+
+### State transition
+
+| From | Events | Conditions | Big |
+|---|---|---|---|
+| Confirmed | Customer reschedules | Owner, >= 4 hours, new slots available | Confirmed |
+| Confirmed | Customer cancels | Owner, >= 4 hours | Cancelled |
+| Confirmed | Time passes | Appointment time reached, customer absent | NoShow |
+| Confirmed | Consulting completes session | Session done | Completed |
+
+### Sequence summary
+
+```text
+Customer -> Web App: confirm reschedule(new_slot_id)
+Web App -> Appointment API: PATCH /appointments/{id}/reschedule
+Appointment API -> Auth Service: check owner
+Appointment API -> Schedule Service: reserve new slot + release old slot
+Appointment API -> Audit Log: write old_slot/new_slot
+Appointment API -> Notification Service: send reschedule email
+Appointment API -> Web App: updated appointment
+```
+
+This diagram package helps each team read their part correctly: business sees BPMN, Dev sees sequence/API touchpoint, QA sees state transition and exception path.
+
 ## Practice exercises
 
 Select a process such as refund, schedule or review. Create:

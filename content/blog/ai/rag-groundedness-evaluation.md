@@ -7,7 +7,7 @@ excerpt: >-
   context precision/recall, groundedness rubric và feedback loop từ production.
 featured_image: /images/blog/rag-groundedness-evaluation.png
 type: blog
-reading_time: 11
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T10:30:00.000000Z'
@@ -37,6 +37,68 @@ Tạo 100 câu hỏi có expected supporting docs, đo top-3 recall và chấm g
 - Answer có citation đúng đoạn không?
 - Model có từ chối khi thiếu nguồn không?
 - Có tách lỗi retrieval với lỗi generation không?
+
+## Ví dụ đầy đủ: chấm một câu trả lời RAG
+
+User hỏi:
+
+> Gói Enterprise annual có được refund nếu đã bắt đầu onboarding chưa?
+
+Retrieved context:
+
+~~~json
+[
+  {
+    "chunk_id": "refund-policy-v3#enterprise-annual-contract#002",
+    "text": "Enterprise annual contracts are eligible for refund review within 30 days only when onboarding has not started and no custom integration work has been delivered."
+  },
+  {
+    "chunk_id": "onboarding-guide-v2#kickoff#001",
+    "text": "Onboarding starts when the kickoff call is completed and the implementation plan is approved by the customer."
+  }
+]
+~~~
+
+### Answer tốt
+
+~~~json
+{
+  "status": "answered",
+  "answer": "Không chắc được refund tự động. Với Enterprise annual, refund chỉ được review trong 30 ngày khi onboarding chưa bắt đầu và chưa có custom integration work. Nếu kickoff đã hoàn tất và implementation plan đã được duyệt, case này cần support/legal review.",
+  "citations": [
+    "refund-policy-v3#enterprise-annual-contract#002",
+    "onboarding-guide-v2#kickoff#001"
+  ],
+  "confidence": 0.82,
+  "missing_info": ["ngày ký hợp đồng", "kickoff đã hoàn tất chưa", "có custom integration work chưa"]
+}
+~~~
+
+### Answer xấu
+
+~~~json
+{
+  "status": "answered",
+  "answer": "Có, khách Enterprise luôn được refund trong 30 ngày.",
+  "citations": ["refund-policy-v3#enterprise-annual-contract#002"],
+  "confidence": 0.95
+}
+~~~
+
+Lỗi: câu "luôn được refund" không có trong context. Citation có tồn tại nhưng không support claim. Đây là citation-looking-good nhưng groundedness fail.
+
+### Rubric chấm tay
+
+| Metric | Điểm 0 | Điểm 1 | Điểm 2 |
+| --- | --- | --- | --- |
+| Context recall | Không lấy nguồn đúng | Lấy một phần | Lấy đủ nguồn chính |
+| Groundedness | Có claim bịa | Hầu hết đúng nhưng thiếu điều kiện | Tất cả claim quan trọng có nguồn |
+| Citation accuracy | Cite sai hoặc quá rộng | Cite đúng doc sai section | Cite đúng chunk/section |
+| No-answer behavior | Đoán khi thiếu dữ liệu | Có nói thiếu nhưng vẫn kết luận mạnh | Nêu rõ thiếu gì và next action |
+
+### Cách tự kiểm tra
+
+Với 20 câu khó nhất, đừng chỉ nhìn answer. Hãy highlight từng factual claim trong answer, rồi nối nó với chunk hỗ trợ. Claim nào không nối được thì tính là ungrounded.
 
 ## 1. Grounded answer là gì?
 

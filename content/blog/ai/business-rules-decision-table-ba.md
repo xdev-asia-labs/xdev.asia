@@ -179,6 +179,42 @@ Nhiều bug xảy ra khi dữ liệu rơi vào tổ hợp điều kiện không 
 
 Rule nghiệp vụ thay đổi theo policy. Nếu không có version/effective date, team rất khó audit tại sao hệ thống quyết định như vậy ở thời điểm đó.
 
+## Ví dụ decision table đầy đủ hơn
+
+Use case: khách đổi lịch tư vấn.
+
+Business rules:
+
+| Rule ID | Rule |
+|---|---|
+| BR-001 | Chỉ customer sở hữu appointment mới được đổi lịch online. |
+| BR-002 | Appointment phải ở trạng thái Confirmed. |
+| BR-003 | Thời điểm bắt đầu appointment phải còn ít nhất 4 giờ. |
+| BR-004 | Slot mới phải còn trống tại thời điểm xác nhận. |
+| BR-005 | Nếu đổi lịch thành công, slot cũ phải được mở lại. |
+
+Decision table:
+
+| Điều kiện / Kết quả | R1 | R2 | R3 | R4 | R5 |
+|---|---:|---:|---:|---:|---:|
+| User là owner appointment | Y | N | Y | Y | Y |
+| Status = Confirmed | Y | - | N | Y | Y |
+| Còn >= 4 giờ | Y | - | - | N | Y |
+| Slot mới available | Y | - | - | - | N |
+| **Decision** | Allow reschedule | Reject | Reject | Reject | Reject |
+| **Reason code** | OK | NOT_OWNER | INVALID_STATUS | CUTOFF_EXPIRED | SLOT_UNAVAILABLE |
+| **User message** | Đổi lịch thành công | Bạn không có quyền đổi lịch này | Lịch hẹn không thể đổi | Lịch sắp diễn ra, vui lòng gọi hotline | Slot này vừa được đặt |
+
+Mapping sang test case:
+
+| Rule column | Test case |
+|---|---|
+| R1 | TC-RS-001 đổi lịch thành công |
+| R2 | TC-RS-002 user đổi lịch của người khác |
+| R3 | TC-RS-003 appointment Cancelled không đổi được |
+| R4 | TC-RS-004 đổi lịch dưới 4 giờ |
+| R5 | TC-RS-005 slot mới vừa bị đặt |
+
 ## Bài tập thực hành
 
 Chọn một feature bạn quen thuộc như đặt lịch, áp mã giảm giá hoặc duyệt refund. Viết:

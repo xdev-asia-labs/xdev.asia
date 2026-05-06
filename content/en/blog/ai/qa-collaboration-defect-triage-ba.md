@@ -198,7 +198,29 @@ Defects in UAT usually fall into 3 categories:
 
 BA needs to differentiate clearly. Not every UAT response is a bug.
 
-## 9. Common errors
+## 9. Full defect triage example
+
+Feature: reschedule online consultation.
+
+| Bugs | Description | Severity | Priorities | BA analysis | Decision |
+|---|---|---|---|---|---|
+| BUG-101 | Customers who reschedule for less than 4 hours are still successful. | High | P0 | Violation of BR-003, directly affecting consultant operations. | Fix before release, add regression test cutoff. |
+| BUG-102 | Confirmation email sent twice when double clicked. | Medium | P1 | It could be due to lack of idempotency or the UI not disabling the button. | Fix in sprint, add test duplicate submit. |
+| BUG-103 | The error message says "2 hours" instead of "4 hours". | Low | P0 | Severity is low but priority is high because it causes wrong policies for customers. | Fix copy before UAT sign-off. |
+| BUG-104 | Consultant dashboard loads 5 seconds. | Medium | P2 | Not blocking release if below NFR threshold? Need to compare with NFR-PERF. | Engineer measures p95, if > NFR then fix. |
+| BUG-105 | Customer service does not know how to change the customer's schedule. | Not bugs | P2 | This is a training/SOP issue, not a software defect. | Update SOP and training notes. |
+
+BA should ask during triage:
+
+- Which requirement/rule does this bug violate?
+- Is there a workaround?
+- Does it affect legal/compliance/customer trust?
+- Do I need to update AC/test cases?
+- Is this a bug, requirement gap or change request?
+
+Good triage results must leave clear decisions: fix now, fix later, reject, convert to change request, or training issue.
+
+## 10. Common errors
 
 **Error 1: QA is not allowed to participate in refinement**
 

@@ -7,7 +7,7 @@ excerpt: >-
   context window, embeddings, RAG, fine-tuning và trade-off giữa chúng.
 featured_image: /images/blog/llm-mental-model-token-context-embedding.png
 type: blog
-reading_time: 10
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T10:10:00.000000Z'
@@ -35,6 +35,60 @@ Lấy 20 FAQ, chạy prompt-only và RAG đơn giản, so sánh câu nào đúng
 - Có token budget không?
 - Có biết dữ liệu nào nằm ngoài context không?
 - Có decision tree Prompt/RAG/Fine-tuning không?
+
+## Ví dụ đầy đủ: chọn Prompt, RAG hay Fine-tuning cho support assistant
+
+Một team muốn assistant trả lời câu hỏi về policy nội bộ. Có 300 trang tài liệu, thay đổi mỗi tuần, người dùng hỏi bằng tiếng Việt và tiếng Anh.
+
+### Bước 1: tính context budget
+
+Giả sử model có context window 128k token. Bạn không nên nhồi hết 300 trang vào prompt, vì:
+
+- Chi phí mỗi request tăng mạnh.
+- Model dễ bị nhiễu bởi đoạn không liên quan.
+- Policy mới và cũ có thể mâu thuẫn.
+- Latency khó kiểm soát.
+
+Một budget thực tế hơn:
+
+| Thành phần | Token dự kiến |
+| --- | ---: |
+| System prompt và policy rules | 900 |
+| Conversation history tóm tắt | 700 |
+| User question | 120 |
+| Retrieved context top 5 chunks | 4,500 |
+| Output answer + citation | 500 |
+| Safety margin | 1,000 |
+
+Tổng khoảng 7,720 token. Đây là con số bạn có thể đo, tối ưu và đưa vào cost model.
+
+### Bước 2: decision table
+
+| Lựa chọn | Khi nào dùng | Vì sao |
+| --- | --- | --- |
+| Prompt-only | Rules ngắn, ít thay đổi, không cần knowledge lớn | Nhanh và rẻ nhất |
+| RAG | Knowledge lớn, thay đổi thường xuyên, cần citation | Không phải train lại khi tài liệu đổi |
+| Fine-tuning | Cần style/format ổn định hoặc phân loại pattern lặp lại | Tốt cho behavior, không tốt để nhét facts mới |
+| Hybrid | RAG cho facts, fine-tune hoặc prompt contract cho format | Production thường rơi vào nhóm này |
+
+### Bước 3: embedding mental model
+
+Embedding không "hiểu" tài liệu như người. Nó biến text thành vector để tìm đoạn gần nghĩa với query. Vì vậy query "refund sau 30 ngày" có thể kéo được đoạn "cancellation policy after the first billing cycle" nếu semantic gần nhau.
+
+Nhưng embedding cũng có lỗi:
+
+- Từ khóa pháp lý nhỏ có thể bị bỏ qua.
+- Query mơ hồ lấy nhầm policy.
+- Chunk thiếu heading làm mất ngữ cảnh.
+- Tài liệu cũ và mới cùng được retrieve nếu metadata không lọc.
+
+### Bài tập có đáp án mẫu
+
+Use case: "Người dùng hỏi giới hạn API theo từng plan".
+
+Lựa chọn tốt: RAG, vì giới hạn plan là facts thay đổi theo thời gian và cần citation.
+
+Không nên fine-tune chỉ để model nhớ giới hạn API, vì mỗi lần pricing thay đổi bạn phải train hoặc update lại. Nếu cần tone trả lời ổn định, hãy dùng prompt contract hoặc fine-tune nhẹ cho style, còn facts vẫn lấy từ RAG.
 
 ## 1. Token là đơn vị chi phí và ngữ cảnh
 

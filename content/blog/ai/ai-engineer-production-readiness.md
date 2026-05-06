@@ -7,7 +7,7 @@ excerpt: >-
   metric, eval, guardrail, fallback, logging và quy trình vận hành rõ ràng.
 featured_image: /images/blog/ai-engineer-production-readiness.png
 type: blog
-reading_time: 10
+reading_time: 12
 view_count: 0
 meta: null
 published_at: '2026-05-06T10:00:00.000000Z'
@@ -37,6 +37,56 @@ Chọn một chatbot FAQ hoặc ticket assistant. Viết 1 trang AI feature brie
 - Có owner cho quality/safety/cost không?
 - Có eval trước release không?
 - Có fallback khi model lỗi không?
+
+## Ví dụ đầy đủ: đưa một FAQ assistant từ demo lên production
+
+Giả sử product team muốn làm assistant trả lời câu hỏi chính sách hoàn tiền cho khách hàng SaaS B2B. Demo hiện tại chỉ có một prompt trong notebook và một vài câu hỏi thử bằng tay.
+
+### Input từ product
+
+~~~text
+User story:
+As a support agent, I want an AI assistant to draft refund policy answers
+so that I can respond faster while still following the latest policy.
+
+Success metric:
+- Giảm thời gian draft câu trả lời từ 6 phút xuống dưới 90 giây.
+- 95% câu trả lời có citation đúng chính sách.
+- 0 câu trả lời tự ý cam kết hoàn tiền khi policy không nói rõ.
+~~~
+
+### Feature brief mẫu
+
+| Mục | Nội dung mẫu |
+| --- | --- |
+| User | Support agent nội bộ, không phải end user |
+| Task | Draft câu trả lời, không tự gửi cho khách hàng |
+| Data | Refund policy, contract metadata, ticket content |
+| Guardrail | Nếu thiếu plan/region/contract date thì trả "needs_more_context" |
+| Human review | Agent phải đọc và bấm gửi thủ công |
+| Rollback | Feature flag "ai_refund_draft_enabled" |
+
+### Role matrix mẫu
+
+| Area | Owner | Trách nhiệm |
+| --- | --- | --- |
+| Prompt và eval | AI Engineer | Prompt contract, regression set, release gate |
+| Policy source | Product Ops | Duy trì policy, version và owner |
+| API/runtime | Backend Engineer | Endpoint, auth, rate limit, logs |
+| Legal risk | Legal/Compliance | Review refusal và wording rủi ro |
+| Support workflow | Support Lead | Đánh giá draft có giúp agent làm nhanh hơn không |
+
+### Production readiness checklist
+
+- Có eval dataset tối thiểu 100 câu hỏi, bao gồm case thiếu dữ liệu và policy conflict.
+- Mỗi answer lưu trace gồm prompt version, model, retrieved docs, latency, token cost.
+- Có kill switch để tắt AI draft mà không deploy code mới.
+- Có dashboard theo dõi citation accuracy, refusal rate, invalid output rate.
+- Có postmortem template nếu assistant trả lời sai chính sách.
+
+### Definition of done
+
+Node này không hoàn thành khi bạn "hiểu AI Engineer là gì". Nó hoàn thành khi bạn có thể chỉ vào một AI feature cụ thể và nói rõ: ai sở hữu quality, đo chất lượng bằng gì, fail thì rollback thế nào, dữ liệu nào được dùng, người dùng cuối cùng được phép tin output ở mức nào.
 
 ## 1. AI Engineer làm gì?
 

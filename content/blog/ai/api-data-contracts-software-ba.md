@@ -222,6 +222,67 @@ Happy path thường dễ. Lỗi mới là nơi user experience và support cost
 
 Trong các giao dịch tạo đơn, thanh toán, đặt lịch, retry có thể tạo trùng. BA nên hỏi sớm để business rule và UX không bị thiếu.
 
+## Ví dụ API contract đầy đủ hơn
+
+Endpoint:
+
+```http
+PATCH /appointments/{appointment_id}/reschedule
+```
+
+Business rule:
+
+- User phải là owner hoặc CSKH có quyền support.
+- Appointment phải ở trạng thái Confirmed.
+- Thời gian bắt đầu appointment còn ít nhất 4 giờ.
+- Slot mới phải available.
+- Request retry không được tạo nhiều lần đổi lịch.
+
+Request:
+
+```json
+{
+  "new_slot_id": "SLOT-20260507-1000",
+  "reason": "Customer requested a later time",
+  "idempotency_key": "a9c6d2f0-7e2b-4b15-a4b9-118e6f21c001"
+}
+```
+
+Response success:
+
+```json
+{
+  "appointment_id": "APT-20260506-001",
+  "old_slot_id": "SLOT-20260507-0900",
+  "new_slot_id": "SLOT-20260507-1000",
+  "status": "Confirmed",
+  "updated_at": "2026-05-06T10:30:00Z"
+}
+```
+
+Validation và error:
+
+| Code | HTTP | Cause | User message | Retry |
+|---|---:|---|---|---|
+| NOT_OWNER | 403 | User không sở hữu appointment | Bạn không có quyền đổi lịch này. | No |
+| INVALID_STATUS | 409 | Appointment không phải Confirmed | Lịch hẹn này không thể đổi. | No |
+| CUTOFF_EXPIRED | 409 | Còn dưới 4 giờ | Lịch sắp diễn ra. Vui lòng gọi hotline. | No |
+| SLOT_UNAVAILABLE | 409 | Slot mới vừa bị đặt | Slot này vừa được đặt. Vui lòng chọn giờ khác. | Yes, chọn slot khác |
+| DUPLICATE_REQUEST | 200 | Cùng idempotency_key | Trả lại kết quả request đầu tiên. | Safe |
+
+Audit log:
+
+| Field | Meaning |
+|---|---|
+| actor_id | Ai đổi lịch |
+| actor_role | Customer/CSKH/Admin |
+| appointment_id | Lịch bị đổi |
+| old_slot_id/new_slot_id | Trước và sau |
+| reason | Lý do đổi |
+| timestamp | Thời điểm |
+
+Đây là mức chi tiết đủ để Dev implement, QA viết contract/negative tests, và business hiểu vì sao hệ thống từ chối từng trường hợp.
+
 ## Nguồn tham khảo
 
 - IEEE/ISO/IEC 29148-2018: https://standards.ieee.org/ieee/29148/6937/
