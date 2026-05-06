@@ -1,0 +1,100 @@
+---
+id: 019c9617-fb80-70a6-9003-6e17ae121e1f
+title: 第 11 課：Patroni 回調
+slug: bai-11-patroni-callbacks
+description: 建立回調腳本（on_start、on_stop、on_role_change）、編寫通知自訂腳本並與監控系統整合。
+duration_minutes: 285
+is_free: true
+video_url: null
+sort_order: 11
+section_title: 第三部分：集群管理
+course:
+  id: 019c9617-fad7-7170-97f5-55c1940af2f5
+  title: PostgreSQL 透過 Patroni 和 etcd 實現高可用性
+  slug: postgresql-high-availability-voi-patroni-etcd
+locale: zh-tw
+---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-4015" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-4015)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="894" cy="252" r="22" fill="#f472b6" opacity="0.07"/>
+    <circle cx="688" cy="66" r="14" fill="#f472b6" opacity="0.09"/>
+    <circle cx="982" cy="140" r="36" fill="#f472b6" opacity="0.11"/>
+    <circle cx="776" cy="214" r="28" fill="#f472b6" opacity="0.13"/>
+    <circle cx="1070" cy="288" r="20" fill="#f472b6" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f472b6" opacity="0.15"/>
+    <line x1="600" y1="212" x2="1100" y2="292" stroke="#f472b6" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="242" x2="1050" y2="312" stroke="#f472b6" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1035.38268590218,198.5 1035.38268590218,225.5 1012,239 988.6173140978201,225.5 988.6173140978201,198.5 1012,185" fill="none" stroke="#f472b6" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f472b6"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#f472b6" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f472b6">🔒 DevSecOps — 第 11 課</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">第 11 課：Patroni 回呼__HTMLTAG_53___
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">PostgreSQL 與 Patroni 和 PostgreSQL 高可用性etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">第 3 部分：叢集管理</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia</text>
+</svg><h2 id="m%E1%BB%A5c-ti%C3%AAu">目標___HTMLTAG_66__HTMLTAG_67___學完本課程後，您將：____HTMLTAG_68__HTMLTAG_69__HTMLTAG_70___了解什麼是 Patroni回呼以及何時觸發__HTMLTAG_71__HTMLTAG_72____為生命週期事件實現自訂腳本___HTMLTAG_73__HTMLTAG_74___配置自動化回呼任務___HTMLTAG_75__HTMLTAG_76___處理角色更改（主↔副本）___HTMLTAG_77__HTMLTAG_78___設定通知與監視掛鉤____HTMLTAG_79__HTMLTAG_80___解決回呼失敗___HTMLTAG_81__HTMLTAG_82__HTMLTAG_83___1。回調概述___HTMLTAG_84__HTMLTAG_85___1.1。什麼是回調？ ___HTMLTAG_86__HTMLTAG_87__HTMLTAG_88___回呼</strong>= 自訂腳本由 Patroni 在叢集的<strong>生命週期事件</strong> 執行。 ___HTMLTAG_92__HTMLTAG_93__HTMLTAG_94___使用案例</strong>：____HTMLTAG_96__HTMLTAG_97__HTMLTAG_98___🔔&nbsp;___HTMLT AG_99___通知</strong>：故障轉移時提醒團隊ra___HTMLTAG_101__HTMLTAG_102___🔧&nbsp;<strong>自動化</strong>：更新DNS、負載平衡器設定___HTMLTAG_105__HTMLTAG_106___📊&nbsp;<strong>監控</strong>：將指標推送到監控系統___H TMLTAG_109__HTMLTAG_110___🚦&nbsp;<strong>流量管理</strong>：重定向應用程式流量___HTMLTAG_113__HT MLTAG_114___🔐&nbsp;<strong>安全</strong>：輪替憑證、更新防火牆規則___HTMLTAG_117__HTMLTAG_118___📝 &nbsp;<strong>日誌記錄</strong>：自訂審核日誌____HTMLTAG_121__HTMLTAG_122__HTMLTAG_123___1.2。可用回呼___HTMLTAG_124__HTMLTAG_125___Patroni 提供回呼事件：</p>
+<!--kg-card-begin: html-->
+___HTMLTAG_128__HTMLTAG_129__HTMLTAG_130__HTMLTAG_131____回呼____HTMLTAG_132__HTMLTAG_133____觸發器____HTMLTAG_134__HTMLTAG_135___使用案例_____ __HTMLTAG_137__HTMLTAG_138__HTMLTAG_139__HTMLTAG_140__HTMLTAG_141__HTMLTAG_142___on_start___HTMLTAG_143__HTMLTAG_144__HTMLTAG_SQL145___Postgre啟動前___HTMLTAG_146__HTMLTAG_147___啟動前檢查、掛載卷___HTMLTAG_148__HTMLTAG_149__HTMLTAG_150__HTMLTAG_151__HTMLTAG_152___on_stop___HTMLTAGMLTA153HTMLTAG153HTML停止之前___HTMLTAG_156__HTMLTAG_157___清理、通知應用程式___HTMLTAG_158__HTMLTAG_159__HTMLTAG_160__HTMLTAG_161__HTMLTAG_162___on_restart___HTMLTAG_163__HTTAG163164Ggre9_163__FM10Fs_163__Post重新啟動前___HTMLTAG_166__HTMLTAG_167___日誌重新啟動事件___HTMLTAG_168__HTMLTAG_169__HTMLTAG_170__HTMLTAG_171__HTMLTAG_172____on_reload____HTMLTAG173HTMLTAGMLTAG172____on_reload____HTMLTAGML_173HTML設定重新載入後___HTMLTAG_176__HTMLTAG_177___驗證設定變更___HTMLTAG_178__HTMLTAG_179__HTMLTAG_180__HTMLTAG_181__HTMLTAG_182___on_role_change___HTMLTAG_183 __HTMLTAG_184__HTMLTAG_185___角色變更（主↔副本）___HTMLTAG_186__HTMLTAG_187__HTMLTAG_188___大多數重要___HTMLTAG_189__HTMLTAG_190___&nbsp;</span>;___HTML更新 DNS，LB___HTMLTAG_192__HTMLTAG_193__HTMLTAG_194__HTMLTAG_195__HTMLTAG_196____pre_promote____HTMLTAG_197__HTMLTAG_198__HTMLTAG_199___在副本升級到最終主要檢查到omotion____HTMLTAG_202__HTMLTAG_203__HTMLTAG_204__HTMLTAG_205__HTMLTAG_206___post_promote____HTMLTAG_207__HTMLTAG_208__H TMLTAG_209___副本升級為主要副本後____HTMLTAG_210__HTMLTAG_211___更新監控，發送警報____HTMLTAG_212__HTMLTAG_213__HTMLTAG_214__HTMLTAG_215___
+<!--kg-card-end: html-->
+<h3 id="13-callback-execution-flow">1.3。回呼執行流程___HTMLTAG_218__CODEBLOCK_0__HTMLTAG_219___1.4.回呼環境變數___HTMLTAG_220__HTMLTAG_221___Patroni 傳遞<strong>環境變數<p>Patroni 傳遞<strong>環境變數</strong> 到腳本：___HTML
+<!--kg-card-begin: html-->
+___HTMLTAG_226__HTMLTAG_227__HTMLTAG_228__HTMLTAG_229___變數___HTMLTAG_230__HTMLTAG_231____說明___HTMLTAG_232__HTMLTAG_233___範例___HTMLTAG_23 4______HTMLTAG_235__HTMLTAG_236___<tbody><tr><td style="padding: 5px 10px;"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">_PATRONI_ROLE___HTMLTAG_241__HTMLTAG_242__HT MLTAG_243____之後的目前角色變更___HTMLTAG_244__HTMLTAG_245__HTMLTAG_246___主</code>，<span>___HTMLTAG_249__HTMLTAG_250___副本__HTMLTAG_2551 ___</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">PATRONI_SCOPE</code>___HTMLT AG_258___<td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">叢集名稱___HTMLTAG_260__HTMLTAG_261__HTMLTAG_262___postgres____HTMLTAG_263__HTMLTAG_264__HTMLTAG_265_____ _HTMLTAG_266__HTMLTAG_267__HTMLTAG_268___PATRONI_NAME___HTMLTAG_269__HTMLTAG_270__HTMLTAG_271___節點名稱___HTMLTAG_272__HTMLTAG_273__HTMLTAG_274___node1___HTMLTAG_275__HTMLTAG_276__HTMLTAG_277__HTMLTAG _278__HTMLTAG_279__HTMLTAG_280___PATRONI_CLUSTER_NAME___HTMLTAG_281__HTMLTAG_282__HTMLTAG_283___集群名稱（別名）___HTMLTAG_284__HTMLTAG_285__HTMLTAG_286___postgres___HTMLTAG_287__HTMLTAG_288__HTMLTAG_289__ HTMLTAG_290__HTMLTAG_291__HTMLTAG_292___PATRONI_VERSION___HTMLTAG_293__HTMLTAG_294__HTMLTAG_295___Patroni版本___HT MLTAG_296__HTMLTAG_297__HTMLTAG_298___3.2.0___HTMLTAG_299__HTMLTAG_300__HTMLTAG_301__HTMLTAG_302__HTMLTAG_303___
+<!--kg-card-end: html-->
+<p>對於<code>角色更改</code>：</p>
+<!--kg-card-begin: html-->
+___HTMLTAG_310__HTMLTAG_311__HTMLTAG_312__HTMLTAG_313____變數___HTMLTAG_314__HTMLTAG_315____值___HTMLTAG_316__HTMLTAG_317__ HTMLTAG_318__HTMLTAG_319___<tr>___HTMLTAG_321__HTMLTAG_322___PATRONI_NEW_ROLE___HTMLTAG_323__HTMLTAG_324__HTMLTA G_325___新角色：<span>&nbsp;___HTMLTAG_327__HTMLTAG_328___master___HTMLTAG_329__HTMLTAG_330___</span>或___HTM LTAG_332___&nbsp;___HTMLTAG_333__HTMLTAG_334___副本___HTMLTAG_335__HTMLTAG_336__HTMLTAG_337__HTMLTAG_338__HTMLTAG_339__HTMLTAG_ 340___PATRONI_OLD_ROLE___HTMLTAG_341__HTMLTAG_342__HTMLTAG_343___先前角色___HTMLTAG_344__HTMLTAG_345__HTMLTAG_346__HTMLTAG_347___
+<!--kg-card-end: html-->
+<h2 id="2-configure-callbacks-in-patroni">2。在 Patroni 中設定回呼___HTMLTAG_350__HTMLTAG_351___2.1。基本配置___HTMLTAG_352__HTMLTAG_353__HTMLTAG_354___在patroni.yml</strong>:___HTMLTAG_356__CODEBLOCK_1__HTMLTAG_357__HTMLTAG_358_ __關鍵點</strong>:___HTMLTAG_360__HTMLTAG_361__HTMLTAG_362___路徑必須是<strong>絕對_</strong></li><li>腳本必須是<strong>可執行</strong>(<code>chmod +x</code>)___HTMLTAG_371__HTMLTAG_372___擁有由<strong>postgres</strong>使用者___HTML TAG_375__HTMLTAG_376___應完成<strong>快速</strong>（<30秒）___HTMLTAG_379__HTMLTAG_380___非零退出代碼= 回呼失敗（已記錄但不阻止操作）___HTMLTAG_381__HTMLTAG_382__HTMLTAG_383___2.2。建立回呼目錄___HTMLTAG_384__CODEBLOCK_2__HTMLTAG_385___3。實作回調腳本___HTMLTAG_386__HTMLTAG_387___3.1。 on_start 回呼____HTMLTAG_388__HTMLTAG_389__HTMLTAG_390___用例</strong>：啟動前驗證、安裝檢查.___HTMLTAG_392__HTMLTAG_393__HTMLTAG_394____腳本腳本___MLTAG____/* 。回呼___HTMLTAG_404__HTMLTAG_405__HTMLTAG_406___用例</strong>：正常關閉通知。 ___HTMLTAG_408__HTMLTAG_409__HTMLTAG_410___腳本</strong>：<code>/var/lib/ postgresql/callbacks/on_stop.sh___HTMLTAG_413__HTMLTAG_414__CODEBLOCK_5__HTMLTAG_415__HTMLTAG_416___建立腳本</strong>:___HTMLTAG_418__CODEBLOCK_61917_418__CODEBL 418__COV.回呼（最重要！）___HTMLTAG_420__HTMLTAG_421__HTMLTAG_422___用例</strong>：更新 DNS、負載平衡器、發送通知。 ___HTMLTAG_424__HTMLTAG_425__HTMLTAG_426___腳本</strong>：<code>/var/lib/post gresql/callbacks/on_role_change.sh___HTMLTAG_429__HTMLTAG_430__CODEBLOCK_7__HTMLTAG_431__HTMLTAG_432___建立生產就緒腳本</strong>:___HTMLTAG_4341DEBLF_434547____MLTAG_434。 on_restart 回呼___HTMLTAG_436__HTMLTAG_437__HTMLTAG_438___用例</strong>：日誌重新啟動，通知計畫維護。 ___HTMLTAG_440__CODEBLOCK_9__HTMLTAG_441___3.5。 on_reload 回呼___HTMLTAG_442__HTMLTAG_443__HTMLTAG_444___用例</strong>：驗證設定變更是否已套用.____HTMLTAG_446__CODEBLOCK_10__HTMLTAG_447___HT.6。建立日誌目錄___HTMLTAG_448__CODEBLOCK_11__HTMLTAG_449___4。更新 Patroni 設定___HTMLTAG_450__HTMLTAG_451___4.1。將回呼加入patroni.yml___HTMLTAG_452__HTMLTAG_453__HTMLTAG_454___在所有3個節點</strong>上，編輯___HTMLTA G_456___/etc/patroni/patroni.yml</code>:___HTMLTAG_458__CODEBLOCK_12__HTMLTAG_459___4.2。重新載入 Patroni 設定___HTMLTAG_460__CODEBLOCK_13__HTMLTAG_461___5。測試回呼___HTMLTAG_462__HTMLTAG_463___5.1。測試 on_restart___HTMLTAG_464__CODEBLOCK_14__HTMLTAG_465___5.2。測試 on_reload___HTMLTAG_466__CODEBLOCK_15__HTMLTAG_467___5.3。測試 on_role_change（故障轉移）___HTMLTAG_468__HTMLTAG_469__HTMLTAG_470___⚠️ 重要</strong>：在非生產環境中進行測試！ ___HTMLTAG_472__CODEBLOCK_16__HTMLTAG_473___6。進階回呼範例___HTMLTAG_474__HTMLTAG_475___6.1。使用 nsupdate 更新 DNS___HTMLTAG_476__HTMLTAG_477__HTMLTAG_478___先決條件</strong>：啟用 DDNS 的 BIND DNS 伺服器.</p>___CODEBLOCK_17__HTMLTAG_481___6.2。 HAProxy 後端更新___HTMLTAG_482__HTMLTAG_483__HTMLTAG_484___透過統計套接字</strong>:___HTMLTAG_486__CODEBLOCK_18__HTMLTAG_487___6.3。 Consul服務註冊___HTMLTAG_488__CODEBLOCK_19__HTMLTAG_489___6.4。電子郵件通知___HTMLTAG_490__CODEBLOCK_20__HTMLTAG_491___6.5。 Slack/Teams webhook___HTMLTAG_492__HTMLTAG_493__HTMLTAG_494___詳細 Slack 通知</strong>：___HTMLTAG_496__CODEBLOCK_21__HTMLTAG_497___6.6。指標推送到監控___HTMLTAG_498__HTMLTAG_499__HTMLTAG_500___推送到 Prometheus Pushgateway</strong>:____HTMLTAG_502__CODEBLOCK_22__HTMLTAG_503___7。回調最佳實務___HTMLTAG_504__HTMLTAG_505___✅應該___HTMLTAG_506__HTMLTAG_507__HTMLTAG_508__HTMLTAG_509___保持回呼快速___HTMLTAG_510__HTMLTAG_511__HTMLTAG_5 12___在10-30秒內完成___HTMLTAG_513__HTMLTAG_514___長任務→後台作業___HTMLTAG_515__HTMLTAG_516__HTMLTAG_517__HTMLTAG_ 518__HTMLTAG_519___使用正確的日誌記錄____HTMLTAG_520__HTMLTAG_521__HTMLTAG_522___記錄所有操作___HTMLTAG_523__HTMLTAG_ 524___包含時間戳____HTMLTAG_525__HTMLTAG_526___旋轉日誌____HTMLTAG_527__HTMLTAG_528__HTMLTAG_529__HTMLTAG_530__H TMLTAG_531____優雅地處理錯誤___HTMLTAG_532__HTMLTAG_533__HTMLTAG_534___使用<code>集-e___HTMLTAG_536__ _&nbsp;小心___HTMLTAG_537__HTMLTAG_538___擷取錯誤，記錄，繼續___HTMLTAG_539__HTMLTAG_540___非零退出=警告，而不是失敗___HTMLTAG_ 541__HTMLTAG_542__HTMLTAG_543__HTMLTAG_544__HTMLTAG_545___測試徹底___HTMLTAG_546__HTMLTAG_547__HTMLTAG_548_ __分階段測試___HTMLTAG_549__HTMLTAG_550___模擬所有場景____HTMLTAG_551__HTMLTAG_552___驗證冪等性____HTMLTAG_553__HTMLTAG _554__HTMLTAG_555__HTMLTAG_556__HTMLTAG_557___製作腳本冪等____HTMLTAG_558__HTMLTAG_559__HTMLTAG_560___可以安全地運行多次___HTMLTAG_561__HTMLTAG_562___修改前檢查___HTMLTAG_563__HTMLTAG_564__HTMLTAG_565__HTMLTAG_566__HTMLTAG_56 7____使用絕對路徑____HTMLTAG_568__HTMLTAG_569__HTMLTAG_570___不要依賴路徑___HTMLTAG_571__HTMLTAG_572___指定完整路徑___HTM LTAG_573__HTMLTAG_574__HTMLTAG_575__HTMLTAG_576__HTMLTAG_577___安全憑證____HTMLTAG_578__HTMLTAG_579__HTMLTA G_580___不要對密碼進行硬編碼____HTMLTAG_581__HTMLTAG_582___使用環境變數或機密管理器____HTMLTAG_583__HTMLTAG_584__HTMLTAG_585 __HTMLTAG_586__HTMLTAG_587____監控回呼執行___HTMLTAG_588__HTMLTAG_589__HTMLTAG_590___失敗警報___HTMLTAG_591__HTML TAG_592___追蹤執行時間____HTMLTAG_593__HTMLTAG_594______HTMLTAG_595__HTMLTAG_596__HTMLTAG_597___❌不要___HTMLTAG _598__HTMLTAG_599__HTMLTAG_600__HTMLTAG_601___不要長時間阻塞___HTMLTAG_602__HTMLTAG_603__HTMLTAG_604___Patroni等待回呼____HTMLTAG_605__HTMLTAG_606___長時間延遲 →較慢故障轉移____HTMLTAG_607__HTMLTAG_608__HTMLTAG_609__HTMLTAG_610__HTMLTAG_611___故障轉移期間不依賴網路____HTMLTAG_612__HTMLTAG_613 __HTMLTAG_614___網路可能被分區___HTMLTAG_615__HTMLTAG_616___有後備機制____HTMLTAG_617__HTMLTAG_618__HTMLTAG_619__HTMLTAG_620___<strong>不必要時不要使回呼失敗___HTMLTAG_622__HTMLTAG_623__HTMLTAG_624___即使通知失敗也退出0___HTMLTAG_625__HTMLTAG_626___記錄錯誤但繼續___HTMLTAG_627__HTMLTAG_628__HTMLTAG_629__HTMLTAG_630__HTMLTAG_631___不執行資料庫回呼中的查詢____HTMLTAGML_632HTHTMLPU​​P.或許尚未準備好___HTMLTAG_635__HTMLTAG_636___可能導致死鎖___HTMLTAG_637__HTMLTAG_638__HTMLTAG_639__HTMLTAG_640__HTMLTAG_641_____管理配置____HTMLTAG_645__HTMLTAG_646___使用 Patroni的參數____HTMLTAG_647__HTMLTAG_648__HTMLTAG_649__HTMLTAG_650__HTMLTAG_651___不要使用互動式指令____HTMLTAG_652__HTMLTAG_653__HTMLTAG_654 ___無使用者輸入____HTMLTAG_655__HTMLTAG_656___必須在無人值守的情況下執行____HTMLTAG_657__HTMLTAG_658__HTMLTAG_659__HTMLTAG_660__HTMLTAG_661___8。回呼問題疑難排解___HTMLTAG_662__HTMLTAG_663___8.1。回呼未執行___HTMLTAG_664__HTMLTAG_665__HTMLTAG_666___檢查</strong>：___HTMLTAG_668__CODEBLOCK_23__HTMLTAG_669___8.2。回呼失敗___HTMLTAG_670__HTMLTAG_671__HTMLTAG_672___檢查日誌</strong>：___HTMLTAG_674__CODEBLOCK_24__HTMLTAG_675__HTMLTAG_676_ __常見問題</strong>：___HTMLTAG_678__HTMLTAG_679__HTMLTAG_680__HTMLTAG_681___語法錯誤</strong>：執行<code>bash -n script.sh</code>到檢查___HTMLTAG_685__HTMLTAG_686__HTMLTAG_687___缺少依賴項</strong>：安裝所需的工具（curl、nc等）___HTMLTAG_689__HTMLTAG___：安裝所需的工具（curl、nc等）___HTMLTAG_689__HTMLTAG_6909__ 1___權限被拒絕</strong>：檢查檔案/目錄權限___HTMLTAG_693__HTMLTAG_694__HTMLTAG_695___逾時</strong>：腳本耗時太長___HTMLTAG_697__HTMLTAG_698___MLTAG_698983。導致故障轉移速度緩慢的回呼___HTMLTAG_700__HTMLTAG_701__HTMLTAG_702___測量回呼執行時間</strong>:</p>___CODEBLOCK_25__HTMLTAG_705___9。生產回呼模板___HTMLTAG_706__HTMLTAG_707__HTMLTAG_708___完整的生產就緒模板</strong>：</p>___CODEBLOCK_26__HTMLTAG_711___10。實驗練習___HTMLTAG_712__HTMLTAG_713___實驗1：設定基本回呼___HTMLTAG_714__HTMLTAG_715__HTMLTAG_716___任務</strong>：___HTMLTAG_718__HTMLTAG_719__HT MLTAG_720___建立回呼目錄和腳本___HTMLTAG_721__HTMLTAG_722___將回呼新增至patroni.yml___HTMLTAG_723__HTMLTAG_724___重新載入Patroni____HTMLTAG_725__HTMLTAG_726___使用測試<code>patronictl 重新啟動___HTMLTAG_728__HTMLTAG_729__HTMLTAG_730__HTMLTAG_731___實驗室2：測試故障轉移回呼___HTMLTAG_732__HTMLTAG_733__HTMLTAG_734___任務</strong>：___HTMLTAG_736__HTMLTAG_737__HTMLTAG_738___監控回呼日誌：<code>tailtail - /var/log/patroni/callbacks.log___HTMLTAG_740__HTMLTAG_741__HTMLTAG_742___停止主要：<code>sudo systemctl stop patroni____HTMLTAG_744__HTMLTAGchange_7451HTMLTAGML] Primary___HTMLTAG_747__HTMLTAG_748___檢查標記檔：<code>/tmp/postgres_is_*___HTMLTAG_750__HTMLTAG_751__HTMLTAG_752___重新啟動舊的主要，驗證其作為副本重新加入___HTMLTAG_753__HTMLTAG_754__HTMLTAG_755___實驗 3：實作 Slack 通知___HTMLTAG_756__HTMLTAG_757__HTMLTAG_758___任務</strong>_:___MLTAG____MLTAG_758___任務</strong>_:___MLTAG____760176 webhook URL____HTMLTAG_763__HTMLTAG_764___向 on_role_change.sh 新增通知___HTMLTAG_765__HTMLTAG_766___透過觸發故障轉移進行測試___HTMLTAG_767__HTMLTAG_768______驗證 Slack中收到的訊息____HTMLTAG_769__HTMLTAG_770__HTMLTAG_771___實驗4：測量回呼效能___HTMLTAG_772__HTMLTAG_773__HTMLTAG_774___任務</strong>：___HTMLTAG_776__HTMLTAG_777__HTMLTAG_778___為所有回呼新增計時。 80___觸發各種事件（重新啟動、重新載入、故障轉移）____HTMLTAG_781__HTMLTAG_782___分析回呼執行時間___HTMLTAG_783__HTMLTAG_784___最佳化慢速回呼____HTMLTAG_785__HTMLTAG_786__HTTAG_786__HT117886__HT。摘要___HTMLTAG_788__HTMLTAG_789___關鍵要點___HTMLTAG_790__HTMLTAG_791___✅<strong>回呼</strong>=生命週期的自訂自動化events___HTMLTAG_794__HT MLTAG_795___✅&nbsp;<strong>on_role_change</strong>=故障轉移自動化最關鍵的回呼___HTMLTAG_798__HTMLTAG_799___✅&nbsp;<strong>保留回檔快速</strong>（<30秒）用於快速故障轉移___HTMLTAG_802__HTMLTAG_803___✅&nbsp;<strong>記錄一切</strong>用於調試___HTMLTAG_806__HTMLTAG_807__ _✅&nbsp;<strong>測試徹底</strong>&nbsp;生產前___HTMLTAG_810__HTMLTAG_811___✅&nbsp;<strong>妥善處理錯誤____HTMLTAG___✅&nbsp;<strong>妥善處理錯誤____HTMLTAG_813&nbsp;不要阻止操作__HTMLTAG_814__HTMLTAG_815___常見用例</h3>
+<!--kg-card-begin: html-->
+___HTMLTAG_818__HTMLTAG_819__HTMLTAG_820__HTMLTAG_821___回呼___HTMLTAG_822__HTMLTAG_823___常用操作___HTMLTAG_824__HTMLTAG_825____ __HTMLTAG_826__HTMLTAG_827__HTMLTAG_828______HTMLTAG_829__HTMLTAG_830___啟動時___HTMLTAG_831__HTMLTAG_832__HTMLTAG_833___飛行前檢查、安裝驗證___HTMLTAG_834__HTMLTAG_835__HTMLTAG_836__HTMLTAG_837__HTMLTAG_838___on_stop___HTMLTAG_839__HTMLTAG_840__HTMLTAG_841__ _清理，通知___HTMLTAG_842__HTMLTAG_843__HTMLTAG_844__HTMLTAG_845__HTMLTAG_846___角色變更___HTMLTAG_847__HTMLTAG_848__HTMLTAG_849___更新DNS、LB，發送警報___HTMLTAG_850__HTMLTAG_851__HTMLTAG_852__HTMLTAG_853__HTMLTAG_854___重新啟動時___HTMLTAG_855__HTMLTAG_856__HTMLTAG_857___HTMLTAG_855__HTMLTAG_856__HTMLTAG_857___MLTAG_857___ML_UMLTAGML _859__HTMLTAG_860__HTMLTAG_861__HTMLTAG_862____重新載入___HTMLTAG_863__HTMLTAG_864__HTMLTAG_865___驗證設定值變更___HTMLTAG_866__HTMLTAG_867_____MLG_867__8GML
+<!--kg-card-end: html-->
+<h3 id="architecture-hi%E1%BB%87n-t%E1%BA%A1i">目前架構___HTMLTAG_872__CODEBLOCK_27__HTMLTAG_873___準備第 12 課____HTMLTAG_874__HTMLTAG_875___第 12 課將涵蓋___HTMLTAG_874__HTMLTAG_875___第 12 課將涵蓋___HTMLTAG_8REST76___Patroni API</strong>:___HTMLTAG_878__HTMLTAG_879__HTMLTAG_880___健康檢查端點___HTMLTAG_881__HTMLTAG_882___叢集狀態查詢____HTMLTAG_88 3__HTMLTAG_884___透過API進行設定管理___HTMLTAG_885__HTMLTAG_886___與負載整合平衡器___HTMLTAG_887__HTMLTAG_888___監控與指標</li></ul>

@@ -1,0 +1,822 @@
+---
+id: 019c9617-fb83-7047-bb91-e761d8b60d96
+title: 'レッスン 12: Patroni REST API'
+slug: bai-12-patroni-rest-api
+description: Patroni REST API エンドポイントを使用し、patronictl コマンドをマスターし、CLI と API 経由でクラスター管理を自動化します。
+duration_minutes: 265
+is_free: true
+video_url: null
+sort_order: 12
+section_title: 'パート 3: クラスター管理'
+course:
+  id: 019c9617-fad7-7170-97f5-55c1940af2f5
+  title: Patroni と etcd による PostgreSQL の高可用性
+  slug: postgresql-high-availability-voi-patroni-etcd
+locale: ja
+---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 1.5rem;">
+  <defs>
+    <linearGradient id="bg-9781" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1628"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="340" rx="12" fill="url(#bg-9781)"/>
+
+  <!-- Decorations -->
+  <g>
+    <circle cx="732" cy="206" r="10" fill="#f87171" opacity="0.11"/>
+    <circle cx="864" cy="178" r="26" fill="#f87171" opacity="0.07"/>
+    <circle cx="996" cy="150" r="12" fill="#f87171" opacity="0.13"/>
+    <circle cx="628" cy="122" r="28" fill="#f87171" opacity="0.09"/>
+    <circle cx="760" cy="94" r="14" fill="#f87171" opacity="0.05"/>
+    <circle cx="750" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="750" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="778" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="806" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="834" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="862" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="80" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="108" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="136" r="1.5" fill="#f87171" opacity="0.15"/>
+    <circle cx="890" cy="164" r="1.5" fill="#f87171" opacity="0.15"/>
+    <line x1="600" y1="86" x2="1100" y2="166" stroke="#f87171" stroke-width="0.5" opacity="0.1"/>
+    <line x1="650" y1="116" x2="1050" y2="186" stroke="#f87171" stroke-width="0.5" opacity="0.08"/>
+    <polygon points="1071.507041555162,215.5 1071.507041555162,256.5 1036,277 1000.492958444838,256.5 1000.492958444838,215.5 1036,195" fill="none" stroke="#f87171" stroke-width="1" opacity="0.12"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="60" y="50" width="4" height="60" rx="2" fill="#f87171"/>
+
+  <!-- Category badge -->
+  <rect x="80" y="50" width="121" height="28" rx="14" fill="#f87171" opacity="0.15"/>
+  <text x="92" y="69" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="600" fill="#f87171">🔒 DevSecOps — レッスン 12</text>
+
+  <!-- Title -->
+  <text x="60" y="160" font-family="system-ui,-apple-system,sans-serif" font-size="34" font-weight="700" fill="#f1f5f9">
+      <tspan x="60" dy="0">レッスン 12: Patroni REST API</tspan>
+  </text>
+
+  <!-- Series subtitle -->
+  <text x="60" y="222" font-family="system-ui,-apple-system,sans-serif" font-size="15" fill="#94a3b8" opacity="0.8">Patroni と PostgreSQL の高可用性etcd</text>
+
+  <!-- Section -->
+  <text x="60" y="246" font-family="system-ui,-apple-system,sans-serif" font-size="13" fill="#64748b" opacity="0.6">パート 3: クラスター管理</text>
+
+  <!-- xDev watermark -->
+  <text x="1140" y="320" font-family="system-ui,-apple-system,sans-serif" font-size="12" fill="#475569" text-anchor="end" opacity="0.4">xdev.asia_</text>
+</svg><h2 id="m%E1%BB%A5c-ti%C3%AAu">目標</h2><p>このレッスンを終えると、次のことができるようになります:</p><ul><li>Patroni REST API とエンドポイントを理解する_</li><li>ヘルスチェックに REST API を使用する</li><li>ロードバランサー (HAProxy、HAProxy、 Nginx)_</li><li>クラスターのステータスと構成のクエリ</li><li>カスタム監視の実装</li><li>REST API エンドポイントの保護</li></ul><h2 id="1-rest-api-overview">1。 REST API の概要</h2><h3 id="11-rest-api-l%C3%A0-g%C3%AC">1.1。 REST API とは何ですか?</h3><p>Patroni は、<strong>HTTP REST API</strong>&nbsp;を各ノードで次の目的で公開します:</p><ul><li>🔍&nbsp;<strong>ヘルスチェック</strong>: ロードバランサーはノードの健全性をチェック</li><li>📊&nbsp;<strong>監視</strong>: 外部システムがクラスターの状態をクエリ</li><li>⚙️&nbsp;<strong>管理</strong>: 構成の読み取り、クラスタートポロジー</li><li>🔄&nbsp;<strong>オートメーション</strong>: CI/CD、オーケストレーションツールとの統合</li></ul><h3 id="12-api-configuration">1.2。 API 構成_</h3><p><strong>patroni.yml 内</strong>:</p><pre><code class="language-yaml">restapi:
+  listen: 0.0.0.0:8008        # Listen address and port
+  connect_address: 10.0.1.11:8008  # Advertised address
+  
+  # Optional: Basic authentication
+  # authentication:
+  #   username: admin
+  #   password: secret_password
+  
+  # Optional: SSL/TLS
+  # certfile: /etc/patroni/certs/server.crt
+  # keyfile: /etc/patroni/certs/server.key
+  # cafile: /etc/patroni/certs/ca.crt
+</code></pre><p><strong>デフォルトポート</strong>:&nbsp;<code>8008</code></p><h3 id="13-api-endpoints-overview">1.3。 API エンドポイントの概要</h3>
+<!--kg-card-begin: html-->
+<table class="sc-jTzLTM pLVjq" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word; font-size: 14px; line-height: 1.6; border-collapse: collapse; color: rgb(212, 212, 212); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(30, 30, 30); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><thead><tr><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">_エンドポイント_</th><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">_方法</th><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">_目的_</th><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">使用ケース_</th></tr></thead><tbody><tr><td style="padding: 5px 10px;">__ _HTMLTAG_140___/</code></td><td style="padding: 5px 10px;">GET</td><td style="padding: 5px 10px;">基本ノード情報_</td><td style="padding: 5px 10px;">クイックヘルスチェック</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/プライマリ_</code><span>&nbsp;</span>または<span>&nbsp;_</span><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/master</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">_GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">ノードがプライマリかどうかを確認</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">LB プライマリルーティング_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/レプリカ_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">ノードがレプリカかどうかを確認</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">LB読み取りルーティング_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/読み書き_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">書き込み可能かどうかを確認する(プライマリ)</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">LB書き込みルーティング_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/読み取り専用</code><span>&nbsp;</span>または_<span>&nbsp;</span><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/スタンバイ</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">読み取り専用 (レプリカ) かどうかを確認</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">LB 読み取りルーティング_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/同期</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">同期レプリカかどうかを確認</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">同期レプリカ検出</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/非同期_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">非同期レプリカかどうかを確認_</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">非同期レプリカ検出_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/健康_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">詳細な健康状態check_</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">モニタリング</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">__ _HTMLTAG_248___/patroni</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">詳細なクラスターとノードinfo_</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">高度な監視_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/config_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">クラスター構成DCS_</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">構成検査</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/クラスター_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">すべてのクラスターメンバーinfo_</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">トポロジビュー</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/history_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">GET</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">フェイルオーバー履歴_</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">監査ログ</td></tr></tbody></table>
+<!--kg-card-end: html-->
+<h2 id="2-health-check-endpoints">2.ヘルスチェックエンドポイント</h2><h3 id="21-basic-health-check-get">2.1。基本的なヘルスチェック: GET /</h3><p><strong>目的</strong>: ノードが実行されているかどうかを簡単にチェックします。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/
+
+# Response on PRIMARY:
+# HTTP 200 OK
+# {
+#   "state": "running",
+#   "postmaster_start_time": "2024-11-25 10:30:00.123456+00:00",
+#   "role": "master",
+#   "server_version": 180000,
+#   "cluster_unlocked": false,
+#   "xlog": {
+#     "location": 67108864
+#   },
+#   "timeline": 1,
+#   "database_system_identifier": "7001234567890123456",
+#   "patroni": {
+#     "version": "3.2.0",
+#     "scope": "postgres"
+#   }
+# }
+
+# Response on REPLICA:
+# HTTP 200 OK
+# {
+#   "state": "running",
+#   "postmaster_start_time": "2024-11-25 10:31:15.789012+00:00",
+#   "role": "replica",
+#   "server_version": 180000,
+#   "cluster_unlocked": false,
+#   "xlog": {
+#     "received_location": 67108864,
+#     "replayed_location": 67108864
+#   },
+#   "timeline": 1,
+#   "database_system_identifier": "7001234567890123456",
+#   "patroni": {
+#     "version": "3.2.0",
+#     "scope": "postgres"
+#   }
+# }
+</code></pre><p><strong>応答コード_</strong>:</p><ul><li><strong>200 OK</strong>: ノードは正常で実行中_</li><li><strong>503 サービスは利用できません</strong>: ノードは異常です (PostgreSQL下など)</li></ul><h3 id="22-primary-check-get-primary-or-master">2.2。プライマリ チェック: GET /primary または /master</h3><p><strong>目的</strong>: ノードが現在のプライマリ/リーダーであるかどうかを確認します。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/primary
+
+# On PRIMARY:
+# HTTP 200 OK
+# {
+#   "state": "running",
+#   "role": "master",
+#   "xlog": {
+#     "location": 67108864
+#   }
+# }
+
+# On REPLICA:
+# HTTP 503 Service Unavailable
+# (empty body or error message)
+</code></pre><p><strong>使用例</strong>: ロード バランサーのヘルス チェック<strong>書き込みトラフィック</strong>&nbsp;ルーティングの場合。</p><h3 id="23-replica-check-get-replica">2.3。レプリカ チェック: GET /replica</h3><p><strong>目的</strong>: ノードがレプリカ (スタンバイ) かどうかを確認します。</p><pre><code class="language-bash">curl -s http://10.0.1.12:8008/replica
+
+# On REPLICA:
+# HTTP 200 OK
+# {
+#   "state": "running",
+#   "role": "replica",
+#   "xlog": {
+#     "received_location": 67108864,
+#     "replayed_location": 67108864
+#   }
+# }
+
+# On PRIMARY:
+# HTTP 503 Service Unavailable
+</code></pre><p><strong>: ロード バランサーのヘルス チェック<strong>読み取りトラフィック</strong>&nbsp;ルーティングの場合。</p><h3 id="24-read-write-check-get-read-write">2.4。読み取り/書き込みチェック: GET /read-write__HTMLTAG_344___<p><strong>目的</strong>: ノードが書き込みを受け入れるかどうかを確認します (プライマリ + メンテナンス中ではない)。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/read-write
+
+# Returns 200 if:
+# - Node is primary
+# - Cluster is not paused
+# - No maintenance mode
+</code></pre><h3 id="25-read-only-check-get-read-only-or-standby">2.5。読み取り専用チェック: GET /read-only または /standby</h3><p><strong>目的</strong>: Cノードが読み取り専用レプリカかどうかを確認してください。</p><pre><code class="language-bash">curl -s http://10.0.1.12:8008/read-only
+
+# Returns 200 if:
+# - Node is replica
+# - PostgreSQL is running
+# - Replication lag &lt; threshold (optional)
+</code></pre><p><strong>詳細: ラグ許容範囲</strong>:</p><pre><code class="language-bash"># Check replica with max 1MB lag tolerance
+curl -s "http://10.0.1.12:8008/read-only?lag=1048576"
+
+# Returns 503 if lag &gt; 1MB
+</code></pre><h3 id="26-synchronous-replica-check-get-synchronous">2.6。同期レプリカのチェック: GET /synchronous</h3><p><strong>目的</strong>: ノードが同期レプリカであるかどうかを確認します。</p><pre><code class="language-bash">curl -s http://10.0.1.12:8008/synchronous
+
+# Returns 200 if:
+# - Node is replica
+# - sync_state = 'sync' (from pg_stat_replication)
+</code></pre><h3 id="27-asynchronous-replica-check-get-asynchronous">2.7。非同期レプリカのチェック: GET /asynchronous</h3><p><strong>目的</strong>: ノードが非同期レプリカであるかどうかを確認します。</p><pre><code class="language-bash">curl -s http://10.0.1.13:8008/asynchronous
+
+# Returns 200 if:
+# - Node is replica
+# - sync_state != 'sync'
+</code></pre><h3 id="28-health-endpoint-get-health">2.8。健康エンドポイント: GET /health</h3><p><strong>目的</strong>: 詳細な健康情報。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/health | jq
+
+# Response:
+# {
+#   "state": "running",
+#   "role": "master",
+#   "server_version": 180000,
+#   "cluster_unlocked": false,
+#   "timeline": 1,
+#   "database_system_identifier": "7001234567890123456",
+#   "postmaster_start_time": "2024-11-25 10:30:00.123456+00:00",
+#   "patroni": {
+#     "version": "3.2.0",
+#     "scope": "postgres",
+#     "name": "node1"
+#   },
+#   "replication": [
+#     {
+#       "usename": "replicator",
+#       "application_name": "node2",
+#       "client_addr": "10.0.1.12",
+#       "state": "streaming",
+#       "sync_state": "sync",
+#       "sync_priority": 1
+#     },
+#     {
+#       "usename": "replicator",
+#       "application_name": "node3",
+#       "client_addr": "10.0.1.13",
+#       "state": "streaming",
+#       "sync_state": "async",
+#       "sync_priority": 0
+#     }
+#   ]
+# }
+</code></pre><h2 id="3-cluster-information-endpoints">3。クラスター情報エンドポイント</h2><h3 id="31-detailed-node-info-get-patroni">3.1。詳細なノード情報: GET /patroni</h3><p><strong>目的</strong>: 包括的なノードおよびクラスター情報。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/patroni | jq
+
+# Response (truncated):
+# {
+#   "state": "running",
+#   "postmaster_start_time": "2024-11-25 10:30:00.123456+00:00",
+#   "role": "master",
+#   "server_version": 180000,
+#   "xlog": {
+#     "location": 67108864
+#   },
+#   "timeline": 1,
+#   "cluster_unlocked": false,
+#   "database_system_identifier": "7001234567890123456",
+#   "patroni": {
+#     "version": "3.2.0",
+#     "scope": "postgres",
+#     "name": "node1"
+#   },
+#   "dcs": {
+#     "last_seen": 1700912345,
+#     "ttl": 30
+#   },
+#   "tags": {
+#     "nofailover": false,
+#     "noloadbalance": false,
+#     "clonefrom": false,
+#     "nosync": false
+#   },
+#   "pending_restart": false,
+#   "replication": [...],
+#   "timeline_history": [...]
+# }
+</code></pre><h3 id="32-cluster-configuration-get-config">3.2。クラスター構成: GET /config</h3><p><strong>目的</strong>: DCS からクラスター全体の構成を取得します。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/config | jq
+
+# Response:
+# {
+#   "ttl": 30,
+#   "loop_wait": 10,
+#   "retry_timeout": 10,
+#   "maximum_lag_on_failover": 1048576,
+#   "synchronous_mode": true,
+#   "synchronous_mode_strict": false,
+#   "postgresql": {
+#     "parameters": {
+#       "max_connections": 100,
+#       "shared_buffers": "256MB",
+#       "wal_level": "replica",
+#       "max_wal_senders": 10,
+#       "max_replication_slots": 10,
+#       "hot_standby": "on"
+#     },
+#     "use_pg_rewind": true,
+#     "use_slots": true
+#   }
+# }
+</code></pre><h3 id="33-cluster-members-get-cluster">3.3。クラスター メンバー: GET /cluster</h3><p><strong>目的</strong>: すべてのクラスター メンバーに関する情報を取得します。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/cluster | jq
+
+# Response:
+# {
+#   "members": [
+#     {
+#       "name": "node1",
+#       "role": "leader",
+#       "state": "running",
+#       "api_url": "http://10.0.1.11:8008/patroni",
+#       "host": "10.0.1.11",
+#       "port": 5432,
+#       "timeline": 1,
+#       "lag": 0
+#     },
+#     {
+#       "name": "node2",
+#       "role": "sync_standby",
+#       "state": "running",
+#       "api_url": "http://10.0.1.12:8008/patroni",
+#       "host": "10.0.1.12",
+#       "port": 5432,
+#       "timeline": 1,
+#       "lag": 0
+#     },
+#     {
+#       "name": "node3",
+#       "role": "replica",
+#       "state": "running",
+#       "api_url": "http://10.0.1.13:8008/patroni",
+#       "host": "10.0.1.13",
+#       "port": 5432,
+#       "timeline": 1,
+#       "lag": 0
+#     }
+#   ],
+#   "scope": "postgres"
+# }
+</code></pre><h3 id="34-failover-history-get-history">3.4。フェイルオーバー履歴: GET /history</h3><p><strong>目的</strong>: クラスターのフェイルオーバー/スイッチオーバー履歴を取得します。</p><pre><code class="language-bash">curl -s http://10.0.1.11:8008/history | jq
+
+# Response:
+# [
+#   [
+#     1,  // Timeline
+#     67108864,  // LSN
+#     "no recovery target specified",
+#     "2024-11-25T10:30:00+00:00"
+#   ],
+#   [
+#     2,
+#     134217728,
+#     "no recovery target specified",
+#     "2024-11-25T11:45:30+00:00"
+#   ]
+# ]
+</code></pre><h2 id="4-load-balancer-integration">4。ロード バランサーの統合</h2><h3 id="41-haproxy-configuration">4.1。 HAProxy 構成</h3><p><strong>haproxy.cfg</strong>:</p><pre><code class="language-conf">global
+    log /dev/log local0
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5000
+    timeout client  50000
+    timeout server  50000
+
+# Stats page
+listen stats
+    bind *:7000
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+    stats auth admin:password
+
+# Primary/Write endpoint
+listen postgres-primary
+    bind *:5000
+    mode tcp
+    option tcplog
+    option tcp-check
+    
+    # Health check via Patroni REST API
+    tcp-check connect port 8008
+    tcp-check send GET\ /primary\ HTTP/1.0\r\n\r\n
+    tcp-check expect string HTTP/1.1\ 200
+    
+    default-server inter 3s fall 3 rise 2
+    
+    server node1 10.0.1.11:5432 check port 8008
+    server node2 10.0.1.12:5432 check port 8008
+    server node3 10.0.1.13:5432 check port 8008
+
+# Replicas/Read-only endpoint
+listen postgres-replicas
+    bind *:5001
+    mode tcp
+    option tcplog
+    option tcp-check
+    balance roundrobin
+    
+    # Health check via Patroni REST API
+    tcp-check connect port 8008
+    tcp-check send GET\ /replica\ HTTP/1.0\r\n\r\n
+    tcp-check expect string HTTP/1.1\ 200
+    
+    default-server inter 3s fall 3 rise 2
+    
+    server node1 10.0.1.11:5432 check port 8008
+    server node2 10.0.1.12:5432 check port 8008
+    server node3 10.0.1.13:5432 check port 8008
+
+# Read-write endpoint (primary only)
+listen postgres-read-write
+    bind *:5002
+    mode tcp
+    option tcplog
+    option tcp-check
+    
+    tcp-check connect port 8008
+    tcp-check send GET\ /read-write\ HTTP/1.0\r\n\r\n
+    tcp-check expect string HTTP/1.1\ 200
+    
+    default-server inter 3s fall 3 rise 2
+    
+    server node1 10.0.1.11:5432 check port 8008
+    server node2 10.0.1.12:5432 check port 8008
+    server node3 10.0.1.13:5432 check port 8008
+
+# Read-only endpoint (replicas only)
+listen postgres-read-only
+    bind *:5003
+    mode tcp
+    option tcplog
+    option tcp-check
+    balance leastconn
+    
+    tcp-check connect port 8008
+    tcp-check send GET\ /read-only\ HTTP/1.0\r\n\r\n
+    tcp-check expect string HTTP/1.1\ 200
+    
+    default-server inter 3s fall 3 rise 2
+    
+    server node1 10.0.1.11:5432 check port 8008
+    server node2 10.0.1.12:5432 check port 8008
+    server node3 10.0.1.13:5432 check port 8008
+</code></pre><p><strong>インストールして開始HAProxy</strong>:</p><pre><code class="language-bash"># Install
+sudo apt install -y haproxy
+
+# Configure
+sudo nano /etc/haproxy/haproxy.cfg
+# (paste config above)
+
+# Validate config
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+
+# Start
+sudo systemctl restart haproxy
+sudo systemctl enable haproxy
+
+# Check status
+sudo systemctl status haproxy
+</code></pre><p><strong>HAProxy_</strong>:</p><pre><code class="language-bash"># Connect to primary (port 5000)
+psql -h haproxy_host -p 5000 -U app_user -d myapp -c "SELECT pg_is_in_recovery();"
+# Should return: f (false = primary)
+
+# Connect to replica (port 5001)
+psql -h haproxy_host -p 5001 -U app_user -d myapp -c "SELECT pg_is_in_recovery();"
+# Should return: t (true = replica)
+
+# View HAProxy stats
+curl http://haproxy_host:7000/stats
+# Or open in browser: http://haproxy_host:7000/stats
+</code></pre><h3 id="42-nginx-with-stream-module">4.2 をテストします。 Nginx (ストリーム モジュールあり)</h3><p><strong>nginx.conf</strong>:</p><pre><code class="language-nginx">stream {
+    # Upstream for primary
+    upstream postgres_primary {
+        least_conn;
+        server 10.0.1.11:5432 max_fails=3 fail_timeout=10s;
+        server 10.0.1.12:5432 max_fails=3 fail_timeout=10s backup;
+        server 10.0.1.13:5432 max_fails=3 fail_timeout=10s backup;
+    }
+    
+    # Upstream for replicas
+    upstream postgres_replicas {
+        least_conn;
+        server 10.0.1.11:5432 max_fails=3 fail_timeout=10s;
+        server 10.0.1.12:5432 max_fails=3 fail_timeout=10s;
+        server 10.0.1.13:5432 max_fails=3 fail_timeout=10s;
+    }
+    
+    # Primary endpoint
+    server {
+        listen 5000;
+        proxy_pass postgres_primary;
+        proxy_connect_timeout 5s;
+        proxy_timeout 300s;
+    }
+    
+    # Replicas endpoint
+    server {
+        listen 5001;
+        proxy_pass postgres_replicas;
+        proxy_connect_timeout 5s;
+        proxy_timeout 300s;
+    }
+}
+</code></pre><p><strong>注</strong>: Nginx ストリーム モジュール&nbsp;<strong> ではありませんHTTP ヘルスチェック</strong>&nbsp;を直接サポートします。外部スクリプトが必要か、代わりに HAProxy を使用してください。</p><h3 id="43-health-check-script-for-external-lb">4.3。外部 LB のヘルスチェック スクリプト</h3><p><strong>クラウド ロード バランサーのスクリプト</strong>&nbsp;(AWS ALB、GCP LB、など):_</p><pre><code class="language-bash">#!/bin/bash
+# /usr/local/bin/patroni_health_check.sh
+
+set -e
+
+NODE_IP="$1"
+PORT="${2:-8008}"
+ENDPOINT="${3:-/primary}"  # or /replica
+
+RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "http://${NODE_IP}:${PORT}${ENDPOINT}")
+
+if [ "$RESPONSE" = "200" ]; then
+    echo "Healthy"
+    exit 0
+else
+    echo "Unhealthy (HTTP $RESPONSE)"
+    exit 1
+fi
+</code></pre><p><strong>使用法</strong>:_</p><pre><code class="language-bash"># Check if node is primary
+./patroni_health_check.sh 10.0.1.11 8008 /primary
+
+# Check if node is replica
+./patroni_health_check.sh 10.0.1.12 8008 /replica
+</code></pre><h2 id="5-monitoring-integration">5。モニタリングの統合</h2><h3 id="51-prometheus-exporter">5.1。 Prometheus エクスポーター_</h3><p><strong>カスタム クエリで postgres_exporter を使用</strong>:__HTMLTAG_448___<pre><code class="language-bash"># Install postgres_exporter
+wget https://github.com/prometheus-community/postgres_exporter/releases/download/v0.15.0/postgres_exporter-0.15.0.linux-amd64.tar.gz
+tar -xzf postgres_exporter-0.15.0.linux-amd64.tar.gz
+sudo mv postgres_exporter-0.15.0.linux-amd64/postgres_exporter /usr/local/bin/
+
+# Create systemd service
+sudo tee /etc/systemd/system/postgres_exporter.service &gt; /dev/null &lt;&lt; EOF
+[Unit]
+Description=PostgreSQL Exporter
+After=network.target
+
+[Service]
+Type=simple
+User=postgres
+Environment="DATA_SOURCE_NAME=postgresql://exporter:password@localhost:5432/postgres?sslmode=disable"
+ExecStart=/usr/local/bin/postgres_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl start postgres_exporter
+sudo systemctl enable postgres_exporter
+</code></pre><p><strong>Patroni のカスタム クエリメトリクス_</strong>:_</p><pre><code class="language-yaml"># /etc/postgres_exporter/queries.yaml
+
+patroni_info:
+  query: |
+    SELECT 
+      CASE WHEN pg_is_in_recovery() THEN 'replica' ELSE 'primary' END as role,
+      1 as value
+  metrics:
+    - role:
+        usage: "LABEL"
+        description: "PostgreSQL role"
+    - value:
+        usage: "GAUGE"
+        description: "Node role indicator"
+</code></pre><h3 id="52-custom-monitoring-script">5.2。カスタム監視スクリプト</h3><p><strong>REST API を使用した Python スクリプト</strong>:</p><pre><code class="language-python">#!/usr/bin/env python3
+# /usr/local/bin/patroni_monitor.py
+
+import requests
+import json
+import sys
+
+NODES = [
+    "http://10.0.1.11:8008",
+    "http://10.0.1.12:8008",
+    "http://10.0.1.13:8008"
+]
+
+def check_cluster():
+    results = []
+    
+    for node_url in NODES:
+        try:
+            response = requests.get(f"{node_url}/patroni", timeout=5)
+            data = response.json()
+            
+            results.append({
+                "node": data["patroni"]["name"],
+                "role": data["role"],
+                "state": data["state"],
+                "timeline": data["timeline"],
+                "lag": data.get("xlog", {}).get("replayed_location", 0)
+            })
+        except Exception as e:
+            print(f"Error checking {node_url}: {e}", file=sys.stderr)
+            results.append({
+                "node": node_url,
+                "role": "unknown",
+                "state": "unreachable",
+                "error": str(e)
+            })
+    
+    return results
+
+def main():
+    cluster_status = check_cluster()
+    
+    print(json.dumps(cluster_status, indent=2))
+    
+    # Check if we have a leader
+    leaders = [n for n in cluster_status if n.get("role") == "master"]
+    
+    if len(leaders) != 1:
+        print(f"ERROR: Expected 1 leader, found {len(leaders)}", file=sys.stderr)
+        sys.exit(1)
+    
+    # Check all nodes reachable
+    unreachable = [n for n in cluster_status if n.get("state") == "unreachable"]
+    
+    if unreachable:
+        print(f"WARNING: {len(unreachable)} nodes unreachable", file=sys.stderr)
+        sys.exit(1)
+    
+    print("Cluster is healthy")
+    sys.exit(0)
+
+if __name__ == "__main__":
+    main()
+</code></pre><p><strong>実行モニタリング</strong>:</p><pre><code class="language-bash">python3 /usr/local/bin/patroni_monitor.py
+
+# Output:
+# [
+#   {
+#     "node": "node1",
+#     "role": "master",
+#     "state": "running",
+#     "timeline": 1,
+#     "lag": 0
+#   },
+#   {
+#     "node": "node2",
+#     "role": "replica",
+#     "state": "running",
+#     "timeline": 1,
+#     "lag": 0
+#   },
+#   {
+#     "node": "node3",
+#     "role": "replica",
+#     "state": "running",
+#     "timeline": 1,
+#     "lag": 0
+#   }
+# ]
+# Cluster is healthy
+</code></pre><h3 id="53-grafana-dashboard-query-examples">5.3。グラファナダッシュボードd クエリの例_</h3><p><strong>PromQL クエリ</strong>:</p><pre><code class="language-promql"># Node role
+patroni_info{role="primary"}
+
+# Replication lag
+pg_stat_replication_replay_lag_seconds
+
+# Timeline
+patroni_timeline
+
+# Number of replicas
+count(patroni_info{role="replica"})
+
+# Synchronous replica status
+patroni_sync_state{sync_state="sync"}
+</code></pre><h2 id="6-secure-rest-api">6。安全な REST API_</h2><h3 id="61-enable-authentication">6.1。認証を有効にする_</h3><p><strong>patroni.yml内</strong>:</p><pre><code class="language-yaml">restapi:
+  listen: 0.0.0.0:8008
+  connect_address: 10.0.1.11:8008
+  
+  # Basic authentication
+  authentication:
+    username: admin
+    password: secure_password_here
+</code></pre><p><strong>でアクセス認証_</strong>:_</p><pre><code class="language-bash"># Using curl
+curl -u admin:secure_password_here http://10.0.1.11:8008/patroni
+
+# Or with header
+curl -H "Authorization: Basic $(echo -n admin:secure_password_here | base64)" \
+  http://10.0.1.11:8008/patroni
+</code></pre><h3 id="62-enable-ssltls">6.2。 SSL/TLS を有効にする</h3><p><strong>証明書を生成</strong>:</p><pre><code class="language-bash"># Create CA
+openssl genrsa -out ca.key 4096
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt \
+  -subj "/CN=Patroni-CA"
+
+# Create server certificate
+openssl genrsa -out server.key 4096
+openssl req -new -key server.key -out server.csr \
+  -subj "/CN=node1.example.com"
+
+# Sign with CA
+openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key \
+  -set_serial 01 -out server.crt
+
+# Set permissions
+sudo chown postgres:postgres server.key server.crt ca.crt
+sudo chmod 600 server.key
+</code></pre><p><strong>で構成するpatroni.yml_</strong>:</p><pre><code class="language-yaml">restapi:
+  listen: 0.0.0.0:8008
+  connect_address: 10.0.1.11:8008
+  
+  certfile: /etc/patroni/certs/server.crt
+  keyfile: /etc/patroni/certs/server.key
+  cafile: /etc/patroni/certs/ca.crt
+  
+  # Optional: Require client certificates
+  # verify_client: required
+  
+  authentication:
+    username: admin
+    password: secure_password_here
+</code></pre><p><strong>HTTPS によるアクセス_</strong>:</p><pre><code class="language-bash">curl -k -u admin:secure_password_here https://10.0.1.11:8008/patroni
+
+# Or with CA certificate
+curl --cacert /etc/patroni/certs/ca.crt \
+  -u admin:secure_password_here \
+  https://10.0.1.11:8008/patroni
+</code></pre><h3 id="63-firewall-rules">6.3。ファイアウォール ルール_</h3><pre><code class="language-bash"># Allow REST API only from specific IPs
+sudo ufw allow from 10.0.1.0/24 to any port 8008
+sudo ufw allow from &lt;load_balancer_ip&gt; to any port 8008
+sudo ufw allow from &lt;monitoring_server_ip&gt; to any port 8008
+
+# Deny from everywhere else
+sudo ufw deny 8008
+</code></pre><h2 id="7-advanced-rest-api-usage">7。高度な REST API の使用法_</h2><h3 id="71-scripted-failover-check">7.1。スクリプト化されたフェイルオーバー チェック</h3><pre><code class="language-bash">#!/bin/bash
+# Check if failover is safe
+
+CLUSTER_URL="http://10.0.1.11:8008/cluster"
+
+# Get cluster info
+CLUSTER_DATA=$(curl -s "$CLUSTER_URL")
+
+# Count healthy replicas
+HEALTHY_REPLICAS=$(echo "$CLUSTER_DATA" | jq '[.members[] | select(.role != "leader" and .state == "running")] | length')
+
+if [ "$HEALTHY_REPLICAS" -ge 1 ]; then
+    echo "Safe to failover: $HEALTHY_REPLICAS healthy replicas"
+    exit 0
+else
+    echo "NOT safe to failover: only $HEALTHY_REPLICAS healthy replicas"
+    exit 1
+fi
+</code></pre><h3 id="72-get-primary-endpoint-dynamically">7.2。プライマリ エンドポイントを動的に取得</h3><pre><code class="language-bash">#!/bin/bash
+# Get current primary IP:port
+
+get_primary() {
+    for NODE in 10.0.1.11 10.0.1.12 10.0.1.13; do
+        RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "http://${NODE}:8008/primary")
+        if [ "$RESPONSE" = "200" ]; then
+            echo "${NODE}:5432"
+            return 0
+        fi
+    done
+    echo "No primary found" &gt;&amp;2
+    return 1
+}
+
+PRIMARY=$(get_primary)
+echo "Current primary: $PRIMARY"
+
+# Use in connection string
+psql "host=$(echo $PRIMARY | cut -d: -f1) port=5432 user=app_user dbname=myapp"
+</code></pre><h3 id="73-monitor-replication-lag">7.3。レプリケーションの遅延_</h3><pre><code class="language-bash">#!/bin/bash
+# Alert if replication lag &gt; threshold
+
+THRESHOLD_MB=100
+
+for NODE in 10.0.1.11 10.0.1.12 10.0.1.13; do
+    LAG=$(curl -s "http://${NODE}:8008/patroni" | jq '.replication[]? | select(.sync_state != "sync") | .replay_lag' | wc -l)
+    
+    if [ "$LAG" -gt "$THRESHOLD_MB" ]; then
+        echo "ALERT: Node $NODE replication lag &gt; ${THRESHOLD_MB}MB"
+        # Send notification
+    fi
+done
+</code></pre><h2 id="8-lab-exercises">8を監視します。ラボ演習</h2><h3 id="lab-1-explore-rest-api-endpoints">ラボ 1: REST API エンドポイントを調べる</h3><p><strong>タスク</strong>:</p><ol><li>それぞれのすべてのエンドポイントをクエリするノード_</li><li>プライマリとレプリカ間の応答を比較</li><li>プライマリとレプリカでどちらのエンドポイントが 200 を返すかを特定</li></ol><pre><code class="language-bash"># Test script
+for ENDPOINT in / /primary /replica /read-write /read-only /health /patroni; do
+    echo "=== $ENDPOINT ==="
+    for NODE in 10.0.1.11 10.0.1.12 10.0.1.13; do
+        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://${NODE}:8008${ENDPOINT}")
+        echo "  Node $NODE: $HTTP_CODE"
+    done
+done
+</code></pre><h3 id="lab-2-setup-haproxy">ラボ 2: セットアップHAProxy</h3><p><strong>タスク</strong>:</p><ol><li>HAProxy をインストール_</li><li>Patroni ヘルスで構成するチェック_</li><li>書き込みトラフィックをプライマリのみに送信</li><li>レプリカに分散した読み取りトラフィックをテスト_</li><li>フェイルオーバーをトリガーし、HAProxy リダイレクトが自動的に確認する</li></ol><h3 id="lab-3-create-monitoring-dashboard">ラボ 3: モニタリングを作成するダッシュボード</h3><p><strong>タスク</strong>:</p><ol><li>すべてのノードをクエリするPythonスクリプトの作成_</li><li>クラスタートポロジの表示_</li><li>レプリケーションの表示ラグ_</li><li>現在のプライマリを強調表示_</li><li>5 秒ごとに実行</li></ol><h3 id="lab-4-secure-rest-api">ラボ 4: 安全な REST API_</h3><p><strong>タスク</strong>:</p><ol><li>基本認証を有効にする</li><li>SSL証明書を生成</li><li>構成HTTPS_</li><li>auth + SSL を使用するようにcurlコマンドを更新_</li><li>ファイアウォールルールを構成</li></ol><h2 id="9-troubleshooting-rest-api">9。 REST API</h2><h3 id="91-rest-api-not-responding">9.1 のトラブルシューティング。 REST API が応答しません</h3><p><strong>Check</strong>:</p><pre><code class="language-bash"># 1. Verify Patroni is running
+sudo systemctl status patroni
+
+# 2. Check if port is listening
+sudo netstat -tlnp | grep 8008
+
+# 3. Check firewall
+sudo ufw status | grep 8008
+
+# 4. Test locally
+curl http://localhost:8008/
+
+# 5. Check logs
+sudo journalctl -u patroni -n 50 | grep -i rest
+</code></pre><h3 id="92-wrong-http-codes-returned">9.2。間違った HTTP コードが返されました</h3><p><strong>デバッグ</strong>:</p>___コードブロック_36___<h3 id="93-ssltls-errors">9.3。 SSL/TLS エラー</h3><p><strong>Check</strong>:</p><pre><code class="language-bash"># Verify certificate
+openssl x509 -in /etc/patroni/certs/server.crt -text -noout
+
+# Check certificate matches key
+openssl x509 -modulus -noout -in server.crt | md5sum
+openssl rsa -modulus -noout -in server.key | md5sum
+# Should match
+
+# Test SSL connection
+openssl s_client -connect 10.0.1.11:8008 -CAfile ca.crt
+</code></pre><h2 id="10-t%E1%BB%95ng-k%E1%BA%BFt">10。概要</h2><h3 id="key-endpoints-summary">主要エンドポイントの概要</h3>
+<!--kg-card-begin: html-->
+<table class="sc-jTzLTM pLVjq" style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe WPC&quot;, &quot;Segoe UI&quot;, Ubuntu, &quot;Droid Sans&quot;, sans-serif; overflow-wrap: break-word; font-size: 14px; line-height: 1.6; border-collapse: collapse; color: rgb(212, 212, 212); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(30, 30, 30); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><thead><tr><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">_エンドポイント_</th><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">使用時に200を返す_</th><th style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.69); padding: 5px 10px; border-top-color: rgba(255, 255, 255, 0.69); border-right-color: rgba(255, 255, 255, 0.69); border-left-color: rgba(255, 255, 255, 0.69);">使用ケース_</th></tr></thead><tbody><tr><td style="padding: 5px 10px;"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/プライマリ_</code></td><td style="padding: 5px 10px;">ノードはプライマリ</td><td style="padding: 5px 10px;">LB書き込みルーティング_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/レプリカ_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">ノードはレプリカ</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">LB読み取りルーティング</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/読み取り/書き込み</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">ノードは書き込みを受け入れる</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">書き込みエンドポイント_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/読み取り専用</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">ノードは読み取り専用レプリカです</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">読み取りエンドポイント_</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/health</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">ノードは正常です</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">詳細モニタリング</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/patroni</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">常に (詳細情報)</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">詳細モニタリング</td></tr><tr><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);"><code style="font-family: Menlo, Monaco, Consolas, &quot;Droid Sans Mono&quot;, &quot;Courier New&quot;, monospace, &quot;Droid Sans Fallback&quot;; color: rgb(215, 186, 125); background-color: rgba(255, 255, 255, 0.1); padding: 1px 3px; border-radius: 4px;">/クラスター_</code></td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">常に (すべてのメンバー)</td><td style="padding: 5px 10px; border-top: 1px solid rgba(255, 255, 255, 0.18); border-right-color: rgba(255, 255, 255, 0.18); border-bottom-color: rgba(255, 255, 255, 0.18); border-left-color: rgba(255, 255, 255, 0.18);">トポロジ表示_</td></tr></tbody></table>
+<!--kg-card-end: html-->
+<h3 id="integration-checklist">統合チェックリスト</h3><ul><li>&nbsp;すべてのノードからアクセス可能な REST API_</li><li>&nbsp;ヘルスチェックが設定された HAProxy</li><li>&nbsp;システム クエリ REST のモニタリングAPI</li><li>&nbsp;認証有効</li><li>&nbsp;SSL/TLS 設定済み (本番環境)</li><li>&nbsp;ファイアウォールルール設定済み</li><li>&nbsp;ヘルスチェックスクリプトテスト済み</li></ul><h3 id="architecture-hi%E1%BB%87n-t%E1%BA%A1i">現在のアーキテクチャ</h3><pre><code class="language-text">✅ 3 VMs prepared (Bài 4)
+✅ PostgreSQL 18 installed (Bài 5)
+✅ etcd cluster running (Bài 6)
+✅ Patroni installed (Bài 7)
+✅ Patroni configured (Bài 8)
+✅ Cluster bootstrapped (Bài 9)
+✅ Replication configured (Bài 10)
+✅ Callbacks implemented (Bài 11)
+✅ REST API integrated (Bài 12)
+
+Next: Failover management
+</code></pre><h3 id="chu%E1%BA%A9n-b%E1%BB%8B-cho-b%C3%A0i-13">レッスン 13 の準備</h3><p>レッスン 13 では<strong>フェイルオーバーとスイッチオーバー_</strong>:</p><ul><li>自動フェイルオーバープロセス</li><li>手動スイッチオーバー_</li><li>フェイルオーバーシナリオとテスト</li><li>リーダーにおけるDCSの役割選挙_</li><li>ダウンタイムを最小限に抑える戦略</li></ul>
