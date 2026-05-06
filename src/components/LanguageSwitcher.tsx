@@ -8,7 +8,9 @@ import {
   LOCALE_LABELS,
   LOCALE_FLAGS,
   DEFAULT_LOCALE,
-  isLocale,
+  detectLocaleFromPath,
+  localizedPath,
+  stripLocale,
   type Locale,
 } from "@/lib/i18n/config";
 
@@ -22,17 +24,15 @@ interface LanguageSwitcherProps {
 /**
  * Builds a path that swaps the locale prefix.
  * - vi (default) lives at "/", others at "/<locale>/...".
+ * - Non-default locale routes currently exist for locale landing pages only;
+ *   fallback there instead of pushing users into an exported 404.
  */
 function buildLocalizedPath(pathname: string, target: Locale): string {
-  const segments = pathname.split("/").filter(Boolean);
-  const first = segments[0]?.toLowerCase();
-
-  // Strip existing locale prefix (if any).
-  const rest = first && isLocale(first) ? segments.slice(1) : segments;
-  const base = rest.length > 0 ? `/${rest.join("/")}` : "/";
-
-  if (target === DEFAULT_LOCALE) return base;
-  return base === "/" ? `/${target}` : `/${target}${base}`;
+  const base = stripLocale(pathname);
+  if (target !== DEFAULT_LOCALE && base !== "/") {
+    return localizedPath(target, "/");
+  }
+  return localizedPath(target, base);
 }
 
 export default function LanguageSwitcher({
@@ -41,6 +41,7 @@ export default function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const activeLocale = pathname ? detectLocaleFromPath(pathname) : currentLocale;
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +60,7 @@ export default function LanguageSwitcher({
   const switchTo = useCallback(
     (target: Locale) => {
       close();
-      if (target === currentLocale) return;
+      if (target === activeLocale) return;
       const next = buildLocalizedPath(pathname || "/", target);
       // Persist user choice for future visits.
       try {
@@ -69,7 +70,7 @@ export default function LanguageSwitcher({
       }
       router.push(next);
     },
-    [close, currentLocale, pathname, router]
+    [activeLocale, close, pathname, router]
   );
 
   return (
@@ -86,10 +87,10 @@ export default function LanguageSwitcher({
         aria-expanded={open}
       >
         <span className="text-base leading-none" aria-hidden="true">
-          {LOCALE_FLAGS[currentLocale]}
+          {LOCALE_FLAGS[activeLocale]}
         </span>
         {variant !== "compact" && (
-          <span className="hidden sm:inline">{LOCALE_LABELS[currentLocale]}</span>
+          <span className="hidden sm:inline">{LOCALE_LABELS[activeLocale]}</span>
         )}
         <IconChevronDown
           size={12}
@@ -105,7 +106,7 @@ export default function LanguageSwitcher({
         role="listbox"
       >
         {LOCALES.map((loc) => {
-          const active = loc === currentLocale;
+          const active = loc === activeLocale;
           return (
             <button
               key={loc}
