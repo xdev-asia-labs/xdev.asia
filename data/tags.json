@@ -118,5 +118,45 @@
   {
     "name": "HandsOn",
     "slug": "handson"
+  },
+  {
+    "name": "Vietnam Health",
+    "slug": "vietnam-health"
+  },
+  {
+    "name": "HAPI FHIR",
+    "slug": "hapi-fhir"
+  },
+  {
+    "name": "SMART on FHIR",
+    "slug": "smart-on-fhir"
+  },
+  {
+    "name": "Interoperability",
+    "slug": "interoperability"
+  },
+  {
+    "name": "EHR",
+    "slug": "ehr"
+  },
+  {
+    "name": "OAuth2",
+    "slug": "oauth2"
+  },
+  {
+    "name": "Bulk Data",
+    "slug": "bulk-data"
+  },
+  {
+    "name": "CDS Hooks",
+    "slug": "cds-hooks"
+  },
+  {
+    "name": "REST API",
+    "slug": "rest-api"
+  },
+  {
+    "name": "DevOps",
+    "slug": "devops"
   }
 ]

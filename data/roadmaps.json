@@ -28,5 +28,20 @@
       "certs": "AWS AI Practitioner / Azure AI Engineer / GCP Professional ML Engineer / NVIDIA DLI"
     },
     "tags": ["LLM", "RAG", "Agents", "Evals", "Guardrails", "Prompt Engineering", "Vector DB", "MLOps", "AI Security"]
+  },
+  {
+    "slug": "hl7-fhir",
+    "title": "HL7 FHIR Practitioner",
+    "description": "Lộ trình HL7 FHIR end-to-end: nền tảng interoperability y tế (HL7 v2, CDA, terminology), Resource/RESTful API, profiling/Implementation Guide, SMART on FHIR, Bulk Data, CDS Hooks và vận hành HAPI/Azure/GCP FHIR trong production.",
+    "category": "skill",
+    "icon": "🏥",
+    "theme": "rose",
+    "stats": {
+      "phases": 7,
+      "duration": "6-10 tháng",
+      "level": "Software/Data Engineer hoặc BA y tế -> Production FHIR Practitioner",
+      "certs": "HL7 FHIR Proficiency / HL7 FHIR R4 Implementer / Microsoft FHIR / Smile CDR HAPI"
+    },
+    "tags": ["HL7", "FHIR", "Interoperability", "EHR", "SMART on FHIR", "OAuth2", "Bulk Data", "CDS Hooks", "HAPI FHIR", "Healthcare"]
   }
 ]

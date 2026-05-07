@@ -1,0 +1,607 @@
+{
+  "slug": "hl7-fhir",
+  "title": "HL7 FHIR Practitioner",
+  "headline": "Roadmap HL7 FHIR: hiểu sâu chuẩn dữ liệu y tế và vận hành được trong production (R4 + R5)",
+  "description": "Lộ trình HL7 FHIR end-to-end cho Việt Nam: từ nền tảng interoperability y tế (HL7 v2, CDA, terminology), kiến trúc Resource/RESTful API, profiling/Implementation Guide, SMART on FHIR/OAuth2, Bulk Data, CDS Hooks tới vận hành HAPI FHIR/Azure FHIR/GCP Healthcare API trong môi trường thật, mapping với BHYT/VNeID/EHR theo Quyết định 3516/QĐ-BYT.",
+  "category": "skill",
+  "intro": "HL7 FHIR là chuẩn tích hợp dữ liệu y tế hiện đại nhất hiện nay. Tính tới 2026, FHIR R4 vẫn là phiên bản chủ đạo ở 31+ quốc gia, R5 đang được áp dụng dần và R6 đã có pre-release. CMS, ONC (Hoa Kỳ), NHS (Anh), EHDS (EU), MOHW Đài Loan, Singapore HSA, MyHealth Malaysia đều chọn FHIR. Tại Việt Nam, Quyết định 3516/QĐ-BYT (11/2025) định hướng FHIR là chuẩn dữ liệu cho hệ sinh thái y tế số 2025-2030, kết nối VNeID Sổ Sức Khoẻ Điện tử và HSDT (hồ sơ sức khoẻ điện tử). Roadmap này giúp bạn không chỉ đọc spec mà còn dựng được FHIR server, viết Implementation Guide cho Việt Nam, bảo mật bằng SMART on FHIR và đưa hệ thống vào vận hành.",
+  "why_now": "Năm 2026, Việt Nam đã triển khai 34+ triệu Sổ Sức Khoẻ Điện tử trên VNeID (theo dữ liệu Bộ Y tế tháng 1/2026), Quyết định 3516/QĐ-BYT yêu cầu chuẩn hoá kiến trúc số y tế và đẩy mạnh nền tảng EHR/telemedicine quốc gia. Quy định 21st Century Cures Act (Hoa Kỳ), EHDS (EU) đều chọn FHIR làm chuẩn dữ liệu. Cùng lúc, các nền tảng AI y tế (clinical LLM, RAG y khoa, decision support) cần FHIR như nguồn dữ liệu chuẩn hoá. Người làm được FHIR thực chiến đang cực kỳ khan hiếm — đây là thời điểm vàng để học.",
+  "icon": "🏥",
+  "theme": "rose",
+  "stats": {
+    "phases": 7,
+    "duration": "6-10 tháng",
+    "level": "Software/Data Engineer hoặc BA y tế -> Production FHIR Practitioner",
+    "certs": "HL7 FHIR Proficiency / HL7 FHIR R4 Implementer / Microsoft FHIR / Smile CDR HAPI"
+  },
+  "tags": [
+    "HL7",
+    "FHIR",
+    "Interoperability",
+    "EHR",
+    "SMART on FHIR",
+    "OAuth2",
+    "Bulk Data",
+    "CDS Hooks",
+    "HAPI FHIR",
+    "Healthcare",
+    "Vietnam Health"
+  ],
+  "tracks": [
+    {
+      "id": "beginner",
+      "label": "Track A - Beginner",
+      "target": "Software/Data engineer hoặc BA chưa từng làm dữ liệu y tế, muốn học FHIR từ đầu.",
+      "weeklyHours": "6-8 giờ/tuần",
+      "focusPhases": [1, 2, 3, 4],
+      "outcomes": [
+        "Đọc hiểu Resource, Bundle, Reference, search params và RESTful API của FHIR",
+        "Dựng được HAPI FHIR server local và CRUD/search được Patient, Observation, Encounter",
+        "Có 1 case study tích hợp dữ liệu bệnh nhân theo chuẩn FHIR R4"
+      ]
+    },
+    {
+      "id": "transitioner",
+      "label": "Track B - Transitioner",
+      "target": "Người đã làm HL7 v2, integration engineer, EHR developer hoặc BA y tế muốn lên Senior/Production FHIR.",
+      "weeklyHours": "5-7 giờ/tuần",
+      "focusPhases": [3, 4, 5, 6, 7],
+      "outcomes": [
+        "Viết được Implementation Guide bằng FHIR Shorthand/SUSHI và validate Resource",
+        "Triển khai SMART on FHIR + OAuth2 + Bulk Data Export trong môi trường có HIPAA/PDPA/Nghị định 13",
+        "Vận hành FHIR server (HAPI / Azure FHIR / GCP Healthcare API) với observability và terminology server, mapping với BHYT/VNeID"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "Năm 2026 nên học FHIR R4 hay R5?",
+      "answer": "Học R4 trước. R4 là bản chủ đạo trong production ở 31+ quốc gia, được hầu hết IG (US Core, IPS, AU Core, IPA) và cloud (Azure FHIR, GCP Healthcare API, AWS HealthLake) hỗ trợ ổn định. R5 đang được áp dụng dần với cải tiến SubscriptionTopic và clinical reasoning, R6 đang ở pre-release. Khi nắm vững R4 thì sang R5 chỉ là delta."
+    },
+    {
+      "question": "FHIR khác HL7 v2 và CDA ở điểm nào?",
+      "answer": "HL7 v2 dùng pipe-delimited message qua MLLP, mạnh ở môi trường bệnh viện cũ nhưng khó mở rộng. CDA dùng XML cho clinical document. FHIR dùng RESTful API + JSON/XML, có Resource độc lập, dễ kết hợp với web/mobile/cloud, là nền tảng cho SMART, Bulk Data, CDS Hooks và AI y tế hiện đại."
+    },
+    {
+      "question": "Có cần biết y khoa mới học được FHIR không?",
+      "answer": "Không cần là bác sĩ, nhưng cần hiểu workflow lâm sàng cơ bản (admission/encounter, observation, medication, lab order/result, claim) và biết các bộ mã ICD-10, SNOMED CT, LOINC, RxNorm để chọn đúng coding system khi mô hình hoá Resource."
+    },
+    {
+      "question": "Nên bắt đầu từ HAPI FHIR, Azure FHIR hay GCP Healthcare API?",
+      "answer": "Học miễn phí với HAPI FHIR (mã nguồn mở, Java) để hiểu cơ chế. Khi đi production, chọn theo cloud của tổ chức: Azure Health Data Services nếu đã dùng Azure, GCP Healthcare API nếu cần BigQuery/AI, hoặc tự host HAPI/Smile CDR khi cần kiểm soát dữ liệu trong nước (PDPA/Nghị định 13/2023)."
+    },
+    {
+      "question": "FHIR có giúp ích gì cho AI y tế?",
+      "answer": "Rất nhiều. FHIR cung cấp dữ liệu bệnh nhân chuẩn hoá cho RAG y khoa, LLM clinical summary, clinical decision support qua CDS Hooks, và pipeline phân tích qua Bulk Data Export sang lakehouse/BigQuery. Không có FHIR thì AI y tế phải xử lý dữ liệu dị bản rất tốn công."
+    },
+    {
+      "question": "FHIR áp dụng vào bối cảnh Việt Nam ra sao?",
+      "answer": "Quyết định 3516/QĐ-BYT (11/2025) định hướng kiến trúc số y tế 2025-2030 với data làm trung tâm. VNeID đã có Sổ Sức Khoẻ Điện tử với 34M+ bản ghi (1/2026). FHIR là cầu nối giữa hệ thống HIS/LIS/RIS hiện tại (chủ yếu HL7 v2) với HSDT quốc gia, BHYT điện tử và các nền tảng AI/telemedicine — bằng cách viết IG nội địa kế thừa IPS và mapping danh mục Bộ Y tế (DVKT, danh mục thuốc, dân tộc, địa giới)."
+    }
+  ],
+  "phases": [
+    {
+      "phase": 1,
+      "title": "Healthcare Interoperability Foundation",
+      "subtitle": "Bối cảnh chuẩn dữ liệu y tế và vị trí của FHIR",
+      "duration": "2-3 tuần",
+      "theme": "rose",
+      "goals": [
+        "Hiểu lý do cần interoperability và các chuẩn HL7 v2, v3, CDA, FHIR",
+        "Nắm các bộ terminology y tế: ICD-10/11, SNOMED CT, LOINC, RxNorm, UCUM",
+        "Hiểu workflow lâm sàng và actor cơ bản: patient, practitioner, encounter, order, result"
+      ],
+      "deliverables": [
+        "Comparison map HL7 v2 / CDA / FHIR (transport, payload, use case)",
+        "Glossary terminology + sơ đồ luồng dữ liệu trong 1 bệnh viện điển hình"
+      ],
+      "projects": [
+        "Vẽ data flow một ca khám ngoại trú: đăng ký -> khám -> chỉ định CLS -> kê đơn -> thanh toán BHYT, chỉ ra điểm nào cần FHIR Resource gì."
+      ],
+      "items": [
+        {
+          "name": "HL7 FHIR tổng quan và vì sao quan trọng năm 2026",
+          "detail": "Hiểu lịch sử HL7 v2 -> v3 -> CDA -> FHIR, vị trí FHIR trong hệ sinh thái y tế số toàn cầu và Việt Nam (Quyết định 3516/QĐ-BYT, VNeID Sổ Sức Khoẻ Điện tử).",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "3h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["HL7 FHIR Overview", "HIMSS Interoperability Levels", "Quyết định 3516/QĐ-BYT"],
+          "resourceLinks": [
+            { "label": "HL7 FHIR tổng quan: vì sao quan trọng năm 2026 và bối cảnh Việt Nam", "url": "/blog/hl7-fhir-tong-quan-vi-sao-quan-trong", "type": "article" }
+          ],
+          "learningSteps": [
+            "Đọc 4 mức interoperability của HIMSS và xác định tổ chức bạn đang ở mức nào",
+            "Phân biệt R4 (chủ đạo), R5 (đang nổi), R6 (pre-release) và lý do nên bắt đầu với R4",
+            "Liên hệ với bối cảnh Việt Nam: VNeID, HSDT, Quyết định 3516/QĐ-BYT, Decision 749/QĐ-TTg"
+          ],
+          "quiz": [
+            {
+              "q": "Mức interoperability nào yêu cầu hai hệ thống hiểu cùng nghĩa của dữ liệu, không chỉ trao đổi được?",
+              "options": ["Foundational", "Structural", "Semantic", "Organizational"],
+              "answer": 2,
+              "explanation": "Semantic interoperability đòi hỏi dùng chung terminology (SNOMED, LOINC, ICD) để cùng hiểu nghĩa, không chỉ cùng định dạng."
+            },
+            {
+              "q": "Năm 2026, phiên bản FHIR nào được khuyên dùng cho production mới?",
+              "options": ["DSTU2", "R4 (4.0.1)", "R5 (5.0.0)", "R6 (pre-release)"],
+              "answer": 1,
+              "explanation": "R4 vẫn là chủ đạo ở 31+ quốc gia, được hỗ trợ tốt nhất bởi IG và cloud services. R5 đang nổi dần."
+            }
+          ]
+        },
+        {
+          "name": "HL7 v2, CDA và vị trí của FHIR",
+          "detail": "So sánh message HL7 v2 (pipe-delimited, MLLP), document CDA (XML) và resource FHIR (REST + JSON), khi nào dùng cái nào, đặc biệt trong bối cảnh chuyển đổi tại Việt Nam.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "4h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["HL7 v2 ADT/ORU sample", "CDA CCD sample", "FHIR Bundle sample"],
+          "resourceLinks": [
+            { "label": "So sánh HL7 v2, CDA và FHIR: chọn chuẩn nào cho dự án y tế", "url": "/blog/hl7-v2-cda-fhir-so-sanh", "type": "article" }
+          ],
+          "learningSteps": [
+            "Đọc 1 message HL7 v2 ADT^A01 và xác định MSH, PID, PV1",
+            "Đọc 1 CDA Continuity of Care Document và nhận biết structuredBody/section",
+            "Đọc 1 FHIR Bundle transaction chứa Patient + Encounter + Observation"
+          ],
+          "quiz": [
+            {
+              "q": "FHIR khác HL7 v2 ở điểm cốt lõi nào?",
+              "options": [
+                "FHIR dùng pipe-delimited, v2 dùng JSON",
+                "FHIR là RESTful API với Resource độc lập, v2 là message pipe-delimited qua MLLP",
+                "FHIR không hỗ trợ XML",
+                "v2 không chạy được trong bệnh viện"
+              ],
+              "answer": 1,
+              "explanation": "FHIR đưa dữ liệu y tế lên mô hình RESTful Resource hiện đại, dễ dùng với web, mobile, cloud và AI."
+            }
+          ]
+        },
+        {
+          "name": "Terminology y tế: ICD, SNOMED CT, LOINC, RxNorm, UCUM",
+          "detail": "Hiểu vai trò từng bộ mã, code system identifier dùng trong FHIR (CodeableConcept, Coding) và khi nào chọn bộ nào. Ánh xạ sang danh mục thuốc/DVKT của Bộ Y tế Việt Nam.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "4h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["WHO ICD-11 browser", "SNOMED CT browser", "LOINC search", "RxNorm browser"],
+          "resourceLinks": [
+            { "label": "Terminology y tế cho FHIR: ICD, SNOMED CT, LOINC, RxNorm, UCUM", "url": "/blog/terminology-y-te-icd-snomed-loinc-rxnorm", "type": "article" }
+          ],
+          "learningSteps": [
+            "Map 5 chẩn đoán phổ biến sang ICD-10 và SNOMED CT",
+            "Map 5 xét nghiệm phổ biến sang LOINC code",
+            "Map đơn vị đo (mmHg, mg/dL) sang UCUM",
+            "Viết 1 CodeableConcept FHIR có 2 Coding (ICD-10 + SNOMED)"
+          ],
+          "quiz": [
+            {
+              "q": "Bộ mã nào phù hợp nhất để biểu diễn KẾT QUẢ xét nghiệm như 'Glucose in blood'?",
+              "options": ["ICD-10", "SNOMED CT", "LOINC", "RxNorm"],
+              "answer": 2,
+              "explanation": "LOINC là chuẩn quốc tế cho lab observation và clinical measurement."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "title": "FHIR Core Concepts",
+      "subtitle": "Resource, Datatype, Reference, Bundle và mô hình RESTful",
+      "duration": "3-4 tuần",
+      "theme": "rose",
+      "goals": [
+        "Đọc hiểu cấu trúc Resource, Element, Datatype và Reference",
+        "Phân biệt Resource type và Profile, hiểu cardinality, must-support, slicing cơ bản",
+        "Đọc và viết được Bundle (searchset, transaction, document, message)"
+      ],
+      "deliverables": [
+        "Cheat sheet 30 Resource phổ biến và mục đích",
+        "Mẫu Bundle transaction tạo Patient + Encounter + Observation"
+      ],
+      "projects": [
+        "Mô hình hoá 1 ca khám ngoại trú thành Bundle FHIR R4 hoàn chỉnh, đọc được trên FHIR validator."
+      ],
+      "items": [
+        {
+          "name": "Anatomy của Resource, Datatype, Reference và Bundle",
+          "detail": "Hiểu metadata, narrative, extension, modifierExtension; nắm các datatype quan trọng (Identifier, HumanName, CodeableConcept, Quantity, Period, Reference); 4 loại Bundle (searchset, transaction, document, message) và khi nào dùng.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["FHIR R4 spec - Resource", "FHIR Datatypes", "FHIR Bundle"],
+          "resourceLinks": [
+            { "label": "FHIR Core Concepts: Resource, Datatype, Reference và Bundle", "url": "/blog/fhir-resource-bundle-reference-cot-loi", "type": "article" }
+          ],
+          "learningSteps": [
+            "Đọc Patient JSON mẫu, đánh dấu meta, identifier, name, telecom, address",
+            "Phân biệt extension và modifierExtension (cái nào BẮT BUỘC phải hiểu)",
+            "Viết transaction Bundle tạo cùng lúc Patient + Encounter + Observation với fullUrl tạm",
+            "POST Bundle vào HAPI FHIR test server và quan sát response"
+          ],
+          "quiz": [
+            {
+              "q": "modifierExtension khác extension thường ở điểm gì?",
+              "options": [
+                "Không khác gì",
+                "modifierExtension thay đổi ý nghĩa của resource và bắt buộc consumer phải hiểu",
+                "modifierExtension chỉ dùng cho test",
+                "extension mới được phép trong FHIR R5"
+              ],
+              "answer": 1,
+              "explanation": "modifierExtension có thể đảo ngược nghĩa nên consumer chưa hiểu được PHẢI từ chối xử lý resource."
+            },
+            {
+              "q": "Sự khác biệt chính giữa Bundle.type = transaction và batch là gì?",
+              "options": [
+                "Không khác gì",
+                "Transaction là all-or-nothing (rollback nếu lỗi), batch xử lý từng entry độc lập",
+                "Batch chỉ dùng cho FHIR R5",
+                "Transaction không hỗ trợ POST"
+              ],
+              "answer": 1,
+              "explanation": "Transaction đảm bảo atomic, batch không đảm bảo atomic — chọn theo yêu cầu nghiệp vụ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "title": "RESTful API & Search Mastery",
+      "subtitle": "Search, paging, _include/_revinclude, transaction, history, GraphQL",
+      "duration": "3-4 tuần",
+      "theme": "rose",
+      "goals": [
+        "Viết search query phức tạp với chained search, modifier, _has, _filter",
+        "Dùng _include/_revinclude để lấy resource liên quan trong 1 round-trip",
+        "Triển khai pagination, history, conditional update và transaction nâng cao"
+      ],
+      "deliverables": [
+        "Cheat sheet search params cho 10 Resource thường dùng",
+        "Postman/HTTPie collection 30 query mẫu"
+      ],
+      "projects": [
+        "Viết API service trả về toàn bộ HbA1c trong 12 tháng gần nhất kèm Patient và Encounter (1 query, dùng _include)."
+      ],
+      "items": [
+        {
+          "name": "FHIR REST API và Search Mastery",
+          "detail": "GET/POST/PUT/PATCH/DELETE, conditional create/update, vread, history; CapabilityStatement; date prefix/modifier, chained search, _include/_revinclude, _summary/_elements, pagination, _history, optimistic concurrency.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["FHIR RESTful API spec", "FHIR Search spec"],
+          "resourceLinks": [
+            { "label": "FHIR REST API và Search nâng cao: từ CRUD đến chained search", "url": "/blog/fhir-rest-api-search-mastery", "type": "article" }
+          ],
+          "learningSteps": [
+            "Gọi GET [base]/metadata để đọc CapabilityStatement",
+            "POST tạo Patient, GET đọc lại, PUT cập nhật, GET _history xem versions",
+            "Thử conditional create với If-None-Exist trên identifier",
+            "Viết query Observation?code=4548-4&date=ge2025-01-01&patient=Patient/123",
+            "Encounter?_include=Encounter:patient&_include=Encounter:participant",
+            "Patient?_revinclude=Observation:patient để lấy Observation thuộc Patient"
+          ],
+          "quiz": [
+            {
+              "q": "Khi cần lấy mọi Observation thuộc 1 Patient trong 1 query, nên dùng?",
+              "options": ["_include", "_revinclude", "_filter", "_summary"],
+              "answer": 1,
+              "explanation": "_revinclude lấy resource tham chiếu NGƯỢC tới resource match — chính là Observation tham chiếu Patient."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "title": "Resource Modeling & Clinical Domain",
+      "subtitle": "Mô hình hoá dữ liệu lâm sàng bằng các Resource cốt lõi",
+      "duration": "4-5 tuần",
+      "theme": "rose",
+      "goals": [
+        "Mô hình hoá 1 ca lâm sàng đầy đủ bằng các Resource: Patient, Encounter, Observation, Condition, Procedure, MedicationRequest, AllergyIntolerance, DiagnosticReport, ServiceRequest, Coverage, Claim",
+        "Biết chọn coding system đúng cho từng Resource (SNOMED, LOINC, ICD, RxNorm)",
+        "Mapping với danh mục Bộ Y tế Việt Nam và hệ thống BHYT/VNeID"
+      ],
+      "deliverables": [
+        "Resource mapping cho 5 use case: ngoại trú, nội trú, lab, đơn thuốc, BHYT",
+        "Repository sample resource JSON kèm checklist required field"
+      ],
+      "projects": [
+        "Mô hình hoá hồ sơ 1 bệnh nhân tiểu đường: Patient + 5 Observation (HbA1c, glucose, BP) + Condition (E11) + MedicationRequest (Metformin) + 2 Encounter, validate pass FHIR R4."
+      ],
+      "items": [
+        {
+          "name": "Mô hình hoá dữ liệu lâm sàng bằng FHIR Resource",
+          "detail": "Patient/Practitioner/Organization/Location, Encounter/Condition/Procedure, Observation/DiagnosticReport/ServiceRequest, MedicationRequest/MedicationDispense/AllergyIntolerance — chọn coding system đúng và pattern thường dùng.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "10h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["FHIR Clinical module", "FHIR Diagnostics module", "FHIR Medications module"],
+          "resourceLinks": [
+            { "label": "Mô hình hoá lâm sàng với FHIR: Patient, Encounter, Observation, Medication", "url": "/blog/fhir-resource-modeling-clinical-domain", "type": "article" }
+          ],
+          "learningSteps": [
+            "Định nghĩa identifier system cho CCCD, BHYT, mã bệnh nhân nội bộ",
+            "Tạo Encounter ngoại trú + nội trú với class, status, period, location",
+            "Viết Condition với clinicalStatus, verificationStatus, ICD-10 + SNOMED",
+            "Viết Observation huyết áp dùng component (systolic + diastolic) + LOINC",
+            "Viết MedicationRequest với dosageInstruction (timing, doseAndRate, route)"
+          ],
+          "quiz": [
+            {
+              "q": "Khi biểu diễn huyết áp tâm thu/tâm trương trong Observation, nên dùng cấu trúc nào?",
+              "options": [
+                "Hai Observation riêng biệt là cách DUY NHẤT",
+                "Một Observation với hai component (systolic, diastolic) là cách phổ biến và khuyến nghị",
+                "Nhét cả vào valueString",
+                "Dùng extension"
+              ],
+              "answer": 1,
+              "explanation": "Spec FHIR khuyến nghị 1 Observation 'Blood pressure panel' (LOINC 85354-9) với 2 component."
+            }
+          ]
+        },
+        {
+          "name": "FHIR cho Việt Nam: BHYT, VNeID, danh mục Bộ Y tế",
+          "detail": "Mô hình hoá thẻ BHYT vào Coverage, Claim cho lượt khám với danh mục DVKT/thuốc Bộ Y tế, mapping VNeID Sổ Sức Khoẻ Điện tử và HSDT theo Quyết định 3516/QĐ-BYT.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "5h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["FHIR Financial module", "Quyết định 3516/QĐ-BYT", "VNeID Sổ Sức Khoẻ Điện tử"],
+          "resourceLinks": [
+            { "label": "FHIR cho Việt Nam: BHYT, VNeID Sổ Sức Khoẻ Điện tử và HSDT", "url": "/blog/fhir-bhyt-vneid-viet-nam", "type": "article" }
+          ],
+          "learningSteps": [
+            "Map cấu trúc thẻ BHYT vào Coverage (subscriberId, payor, period)",
+            "Tạo Claim cho 1 lượt khám ngoại trú với danh mục DVKT",
+            "Phác thảo extension cho thông tin riêng của BHXH/MOH Việt Nam",
+            "Vẽ flow: HIS bệnh viện -> FHIR -> HSDT quốc gia -> VNeID app"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "title": "Profiling, Implementation Guides & Validation",
+      "subtitle": "FHIR Shorthand, SUSHI, US Core, IPS và validator",
+      "duration": "4-5 tuần",
+      "theme": "rose",
+      "goals": [
+        "Viết Profile bằng FHIR Shorthand (FSH) và build IG bằng SUSHI + IG Publisher",
+        "Áp dụng IG nổi tiếng: US Core, International Patient Summary (IPS), AU Core",
+        "Validate Resource bằng FHIR Validator (CLI, Java, online) và xử lý OperationOutcome"
+      ],
+      "deliverables": [
+        "Mini Implementation Guide 'VN Outpatient' chứa profile Patient/Encounter/Observation",
+        "Pipeline CI validate Resource sample vs profile"
+      ],
+      "projects": [
+        "Viết IG nội bộ cho 1 use case (ví dụ Telehealth Vietnam) gồm 3 profile + 2 ValueSet + 1 sample Bundle, publish HTML."
+      ],
+      "items": [
+        {
+          "name": "Profiling, Implementation Guide với FSH + SUSHI + IG Publisher",
+          "detail": "StructureDefinition (cardinality, must-support, slicing, binding), FHIR Shorthand DSL, SUSHI biên dịch, IG Publisher build website, áp dụng US Core/IPS/AU Core, validate bằng official FHIR Validator + Inferno.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "10h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["FHIR Profiling guide", "FSH Spec", "SUSHI", "IG Publisher", "US Core IG", "IPS IG"],
+          "resourceLinks": [
+            { "label": "Viết FHIR Implementation Guide với FSH, SUSHI và IG Publisher", "url": "/blog/fhir-profiling-implementation-guide-fsh-sushi", "type": "article" }
+          ],
+          "learningSteps": [
+            "Đọc StructureDefinition của US Core Patient và IPS Patient",
+            "Cài SUSHI và init IG mẫu",
+            "Viết FSH cho VN-Patient profile + 1 Extension + 1 ValueSet",
+            "Build IG bằng IG Publisher và mở HTML output",
+            "Tải validator_cli.jar, validate sample Patient vs base FHIR R4 và profile",
+            "Tích hợp validator vào CI (GitHub Actions) cho repository IG"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "title": "Security, SMART on FHIR, Bulk Data, CDS Hooks",
+      "subtitle": "Bảo mật, ủy quyền, chia sẻ dữ liệu lớn và clinical decision support",
+      "duration": "4-5 tuần",
+      "theme": "rose",
+      "goals": [
+        "Triển khai SMART on FHIR App Launch + Backend Services bằng OAuth2/OIDC",
+        "Cấu hình Bulk Data Export ($export) cho phân tích/AI pipeline",
+        "Tích hợp CDS Hooks vào EHR workflow",
+        "Đáp ứng Nghị định 13/2023, HIPAA, GDPR cho hệ thống y tế"
+      ],
+      "deliverables": [
+        "Demo SMART standalone launch + EHR launch app",
+        "Job Bulk Data Export sang object storage + parquet pipeline",
+        "1 CDS Hook service trả Card cảnh báo tương tác thuốc"
+      ],
+      "projects": [
+        "Xây 1 SMART on FHIR app cho phép bác sĩ xem hồ sơ bệnh nhân tiểu đường, có CDS Hook nhắc HbA1c quá hạn."
+      ],
+      "items": [
+        {
+          "name": "SMART on FHIR: App Launch + Backend Services + OAuth2",
+          "detail": "Standalone launch và EHR launch, scope syntax (patient/Observation.rs, user/*.read, launch/patient), authorization code + PKCE, SMART Backend Services với JWT RS384 cho service-to-service, token introspection.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["SMART App Launch IG", "SMART Backend Services"],
+          "resourceLinks": [
+            { "label": "SMART on FHIR: App Launch, Backend Services và OAuth2 từ A đến Z", "url": "/blog/smart-on-fhir-oauth2-backend-services", "type": "article" }
+          ],
+          "learningSteps": [
+            "Đọc scope syntax: patient/Observation.rs, user/*.read, launch/patient",
+            "Cài 1 SMART sandbox (SMART Health IT) và đăng ký app",
+            "Implement client OAuth2 + PKCE, lấy access token rồi gọi FHIR API",
+            "Tạo cặp khoá RS384, đăng ký public key với authorization server",
+            "Tạo JWT client assertion và đổi access token",
+            "Gọi $export (Bulk Data) bằng access token"
+          ],
+          "quiz": [
+            {
+              "q": "Trong SMART Backend Services, client xác thực với Auth Server bằng cách nào?",
+              "options": [
+                "Client secret cố định",
+                "JWT signed bằng private key (RS384/ES384) gửi như client_assertion",
+                "Username + password",
+                "API key trong header"
+              ],
+              "answer": 1,
+              "explanation": "Backend Services dùng asymmetric: client tự sign JWT bằng private key, server xác thực bằng public key đã đăng ký."
+            }
+          ]
+        },
+        {
+          "name": "Bulk Data Export ($export), Async API và CDS Hooks",
+          "detail": "$export cho System/Group/Patient, polling job, NDJSON output, ingest sang lakehouse/BigQuery cho AI/analytics. CDS Hooks (patient-view, order-sign, order-select), Card structure, suggestion, tích hợp EHR.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "6h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["FHIR Bulk Data IG", "CDS Hooks spec"],
+          "resourceLinks": [
+            { "label": "FHIR Bulk Data Export và CDS Hooks: từ phân tích đến decision support", "url": "/blog/fhir-bulk-data-export-cds-hooks", "type": "article" }
+          ],
+          "learningSteps": [
+            "Kick-off $export request với Prefer: respond-async",
+            "Poll status URL tới khi hoàn tất, tải NDJSON",
+            "Ingest NDJSON vào BigQuery/Delta Lake với schema FHIR",
+            "Đăng ký discovery endpoint trả về services array (CDS Hooks)",
+            "Implement service trả Card cảnh báo HbA1c > 9 cần tái khám",
+            "Test với CDS Hooks Sandbox"
+          ]
+        },
+        {
+          "name": "Security, Privacy, Audit cho FHIR (HIPAA/GDPR/Nghị định 13)",
+          "detail": "Consent resource, AuditEvent, Provenance; mapping tới HIPAA Privacy/Security, GDPR, Nghị định 13/2023 Việt Nam; PHI redaction cho AI; consent management; minimum necessary scope.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "5h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["FHIR Security & Privacy module", "Nghị định 13/2023/NĐ-CP"],
+          "resourceLinks": [
+            { "label": "FHIR Security, Privacy và compliance Việt Nam: HIPAA, GDPR, Nghị định 13", "url": "/blog/fhir-security-privacy-vietnam-nd13", "type": "article" }
+          ],
+          "learningSteps": [
+            "Vẽ Consent flow: opt-in/opt-out, scope theo loại dữ liệu",
+            "Ghi AuditEvent cho mọi truy cập PHI",
+            "Đối chiếu yêu cầu Nghị định 13 Việt Nam với cấu hình bảo mật FHIR",
+            "Áp dụng minimum necessary scope cho mỗi SMART app/service"
+          ],
+          "quiz": [
+            {
+              "q": "Resource nào dùng để ghi LẠI mọi truy cập dữ liệu y tế phục vụ audit trail?",
+              "options": ["Consent", "AuditEvent", "Provenance", "Communication"],
+              "answer": 1,
+              "explanation": "AuditEvent ghi sự kiện truy cập/sửa/xoá; Provenance ghi nguồn gốc/derive của resource."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "title": "Production: HAPI, Cloud FHIR Services & Operations",
+      "subtitle": "Triển khai, observability, terminology server, migration HL7 v2 → FHIR và tích hợp AI",
+      "duration": "5-6 tuần",
+      "theme": "rose",
+      "goals": [
+        "Dựng và tune HAPI FHIR JPA Server cho production (Postgres, partition, indexing)",
+        "Lựa chọn giữa Azure Health Data Services / GCP Healthcare API / AWS HealthLake / Smile CDR",
+        "Tích hợp terminology server (Snowstorm, Ontoserver) và migration HL7 v2 -> FHIR (Mirth/NextGen Connect, FHIRWORKS)",
+        "Đưa FHIR vào pipeline AI/RAG y khoa và observability"
+      ],
+      "deliverables": [
+        "Reference architecture FHIR production (HA, backup, observability, IAM)",
+        "Sizing & cost estimate cho 1 hệ thống 1 triệu bệnh nhân/năm",
+        "Runbook incident: latency cao, validation fail, terminology miss"
+      ],
+      "projects": [
+        "Triển khai HAPI FHIR + Postgres + Keycloak (SMART) + Snowstorm + Grafana/Prometheus trên K8s, ingest dữ liệu HL7 v2 ADT/ORU bằng Mirth, expose Bulk Data cho 1 BI/AI pipeline."
+      ],
+      "items": [
+        {
+          "name": "HAPI FHIR và Cloud FHIR Services trong production",
+          "detail": "HAPI FHIR JPA Server (schema, partitioning, search index, subscription, interceptor, performance tuning) so với Azure Health Data Services / GCP Healthcare API / AWS HealthLake / Smile CDR — chọn cái gì cho dự án Việt Nam.",
+          "type": "tool",
+          "level": "advanced",
+          "estimatedTime": "10h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["HAPI FHIR documentation", "Azure FHIR docs", "GCP Healthcare docs", "AWS HealthLake docs"],
+          "resourceLinks": [
+            { "label": "HAPI FHIR và Cloud FHIR (Azure/GCP/AWS) trong production", "url": "/blog/hapi-fhir-azure-gcp-aws-production", "type": "article" }
+          ],
+          "learningSteps": [
+            "Chạy HAPI FHIR JPA Server trên Postgres với Docker Compose",
+            "Bật partition theo tenant/organization",
+            "Viết interceptor authorization theo SMART scope",
+            "Tune index cho search params hay dùng (patient, code, date)",
+            "Tạo Azure FHIR service và POST Patient bằng SMART backend service",
+            "Stream FHIR sang BigQuery (GCP) để phân tích cohort",
+            "So sánh chi phí và tính năng (Bulk, $convert-data, $anonymize)"
+          ]
+        },
+        {
+          "name": "FHIR cho AI: RAG y khoa, clinical LLM, decision support",
+          "detail": "Dùng FHIR làm source-of-truth cho RAG y khoa, vector hoá clinical note (DocumentReference) + structured FHIR, đưa kết quả LLM trở lại EHR qua CDS Hooks. PHI redaction, consent, audit cho mọi prompt/response.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "6h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["FHIR + LLM patterns", "Microsoft Health Bot", "$anonymize operation"],
+          "resourceLinks": [
+            { "label": "FHIR cho AI: RAG y khoa, Clinical LLM và Decision Support an toàn", "url": "/blog/fhir-ai-rag-clinical-llm", "type": "article" }
+          ],
+          "learningSteps": [
+            "Bulk export Observation/Condition/MedicationRequest -> lakehouse",
+            "Embed clinical note (DocumentReference.content) -> vector DB",
+            "Build RAG trả về plan chăm sóc và đẩy gợi ý qua CDS Hook Card",
+            "Đảm bảo PHI redaction + audit cho mọi prompt/response"
+          ],
+          "quiz": [
+            {
+              "q": "Khi đưa dữ liệu FHIR vào pipeline AI/RAG, ưu tiên kỹ thuật nào để giảm rủi ro lộ PHI?",
+              "options": [
+                "Đẩy nguyên payload PHI vào prompt",
+                "De-identify/anonymize ($anonymize) + minimum necessary scope + audit log",
+                "Tắt audit để chạy nhanh hơn",
+                "Bỏ qua consent vì là use case AI"
+              ],
+              "answer": 1,
+              "explanation": "Best practice: minimum necessary, de-identify khi có thể, log AuditEvent, tôn trọng Consent — đặc biệt khi LLM là bên thứ ba."
+            }
+          ]
+        },
+        {
+          "name": "Chứng chỉ HL7 FHIR và cộng đồng",
+          "detail": "Chuẩn bị cho HL7 FHIR Proficiency, FHIR R4 Implementer, Microsoft FHIR; tham gia HL7 chat.fhir.org, Connectathon, đóng góp IG cho cộng đồng Việt Nam.",
+          "type": "cert",
+          "level": "advanced",
+          "estimatedTime": "ongoing",
+          "recommendedFor": ["transitioner"],
+          "resources": ["HL7 Education", "chat.fhir.org", "FHIR Connectathon"],
+          "learningSteps": [
+            "Đăng ký HL7 FHIR Proficiency Exam",
+            "Tham gia 1 Connectathon (online) với 1 use case track",
+            "Đóng góp issue/PR cho 1 IG hoặc HAPI FHIR"
+          ]
+        }
+      ]
+    }
+  ]
+}
