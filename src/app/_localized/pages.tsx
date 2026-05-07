@@ -31,7 +31,7 @@ import {
   getTagBySlug,
   type TagStats,
 } from "@/lib/data";
-import { LOCALE_HREFLANG, localizedPath, type Locale } from "@/lib/i18n/config";
+import { LOCALE_HREFLANG, LOCALES, localizedPath, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import {
   SITE_URL,
@@ -110,28 +110,46 @@ export function localizedStaticPageParams() {
 
 export function localizedBlogMetadata(locale: Locale): Metadata {
   const dict = getDictionary(locale);
+  const canonical = href(locale, "/blog/");
   return {
     title: dict.nav.blog,
     description: dict.home.latest_posts,
-    alternates: { canonical: href(locale, "/blog/") },
+    alternates: {
+      canonical,
+      languages: Object.fromEntries(
+        LOCALES.map((loc) => [LOCALE_HREFLANG[loc], `${SITE_URL}${href(loc, "/blog/")}`])
+      ),
+    },
   };
 }
 
 export function localizedSeriesMetadata(locale: Locale): Metadata {
   const dict = getDictionary(locale);
+  const canonical = href(locale, "/series/");
   return {
     title: dict.nav.series,
     description: dict.home.popular_series,
-    alternates: { canonical: href(locale, "/series/") },
+    alternates: {
+      canonical,
+      languages: Object.fromEntries(
+        LOCALES.map((loc) => [LOCALE_HREFLANG[loc], `${SITE_URL}${href(loc, "/series/")}`])
+      ),
+    },
   };
 }
 
 export function localizedTagsMetadata(locale: Locale): Metadata {
   const dict = getDictionary(locale);
+  const canonical = href(locale, "/tags/");
   return {
     title: "Tags",
     description: dict.home.explore_topics,
-    alternates: { canonical: href(locale, "/tags/") },
+    alternates: {
+      canonical,
+      languages: Object.fromEntries(
+        LOCALES.map((loc) => [LOCALE_HREFLANG[loc], `${SITE_URL}${href(loc, "/tags/")}`])
+      ),
+    },
   };
 }
 
