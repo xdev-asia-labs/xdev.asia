@@ -13,13 +13,39 @@ const legacyContentHosts = ["https://x-lms.test", "http://x-lms.test", "https://
 
 type CollectionIndex = {
   slugToRelativePath: Map<string, string>;
+  slugToFilePath: Map<string, string>;
   relativePaths: string[];
   relativePathSet: Set<string>;
+  relativePathToFilePath: Map<string, string>;
 };
 
 const collectionIndexCache = new Map<string, CollectionIndex>();
 
 function getCollectionDir(collection: string): string {
+  if (collection === "blog" || collection === "series" || collection === "pages") {
+    return path.join(contentRoot, collection);
+  }
+
+  for (const localePrefix of ["en", "ja", "zh-tw"]) {
+    if (collection === `${localePrefix}/blog`) {
+      return path.join(contentRoot, localePrefix, "blog");
+    }
+    if (collection === `${localePrefix}/series`) {
+      return path.join(contentRoot, localePrefix, "series");
+    }
+    if (collection === `${localePrefix}/pages`) {
+      return path.join(contentRoot, localePrefix, "pages");
+    }
+    if (collection.startsWith(`${localePrefix}/series/`)) {
+      const seriesRelativePath = collection.slice(`${localePrefix}/series/`.length);
+      return path.join(contentRoot, localePrefix, "series", seriesRelativePath);
+    }
+  }
+
+  if (collection.startsWith("series/")) {
+    return path.join(contentRoot, "series", collection.slice("series/".length));
+  }
+
   return path.join(contentRoot, collection);
 }
 
@@ -50,30 +76,47 @@ function buildCollectionIndex(collection: string): CollectionIndex {
   if (!fs.existsSync(directory)) {
     return {
       slugToRelativePath: new Map<string, string>(),
+      slugToFilePath: new Map<string, string>(),
       relativePaths: [],
       relativePathSet: new Set<string>(),
+      relativePathToFilePath: new Map<string, string>(),
     };
   }
 
   const relativePaths = walkDirectoryForMdx(directory).sort();
   const slugToRelativePath = new Map<string, string>();
+  const slugToFilePath = new Map<string, string>();
+  const relativePathToFilePath = new Map<string, string>();
 
   for (const relativePath of relativePaths) {
+    relativePathToFilePath.set(relativePath, path.join(directory, `${relativePath}.md`));
+  }
+
+  for (const relativePath of relativePaths) {
+    const filePath = relativePathToFilePath.get(relativePath);
+    if (!filePath) continue;
+
     if (!relativePath.includes("/")) {
       slugToRelativePath.set(relativePath, relativePath);
+      slugToFilePath.set(relativePath, filePath);
       continue;
     }
 
     if (relativePath.endsWith("/index")) {
       const slug = relativePath.slice(0, -"/index".length).split("/").at(-1);
-      if (slug) slugToRelativePath.set(slug, relativePath);
+      if (slug) {
+        slugToRelativePath.set(slug, relativePath);
+        slugToFilePath.set(slug, filePath);
+      }
     }
   }
 
   return {
     slugToRelativePath,
+    slugToFilePath,
     relativePaths,
     relativePathSet: new Set(relativePaths),
+    relativePathToFilePath,
   };
 }
 
@@ -91,11 +134,9 @@ export function listMdxSlugs(collection: string): string[] {
 }
 
 export function readMdxDocument<T>(collection: string, slug: string): { data: T; content: string } | null {
-  const collectionDir = getCollectionDir(collection);
-  const relativePath = getCollectionIndex(collection).slugToRelativePath.get(slug);
-  if (!relativePath) return null;
+  const filePath = getCollectionIndex(collection).slugToFilePath.get(slug);
+  if (!filePath) return null;
 
-  const filePath = path.join(collectionDir, `${relativePath}.md`);
   const source = fs.readFileSync(filePath, "utf-8");
   const document = matter(source);
   return {
@@ -110,9 +151,9 @@ export function listMdxRelativePaths(collection: string): string[] {
 
 export function readMdxDocumentByRelativePath<T>(collection: string, relativePath: string): { data: T; content: string } | null {
   const index = getCollectionIndex(collection);
-  if (!index.relativePathSet.has(relativePath)) return null;
+  const filePath = index.relativePathToFilePath.get(relativePath);
+  if (!filePath) return null;
 
-  const filePath = path.join(getCollectionDir(collection), `${relativePath}.md`);
   const source = fs.readFileSync(filePath, "utf-8");
   const document = matter(source);
   return {
