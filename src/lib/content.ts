@@ -85,10 +85,20 @@ function buildSlugMap(
     }
 
     if (relativePath.endsWith("/index")) {
-      const slug = relativePath.slice(0, -"/index".length).split("/").at(-1);
-      if (slug) {
-        slugToRelativePath.set(slug, relativePath);
-        slugToFilePath.set(slug, filePath);
+      const compoundSlug = relativePath.slice(0, -"/index".length);
+      const leafSlug = compoundSlug.split("/").at(-1);
+
+      // Register the compound slug (e.g. "architecture/omop-cdm-...") so that
+      // callers using nested directory paths can resolve the correct file.
+      slugToRelativePath.set(compoundSlug, relativePath);
+      slugToFilePath.set(compoundSlug, filePath);
+
+      // Also register the leaf-only slug for backwards compatibility with code
+      // that resolves series by their bare slug. Avoid clobbering an existing
+      // entry that already maps to the same compound key.
+      if (leafSlug && leafSlug !== compoundSlug && !slugToRelativePath.has(leafSlug)) {
+        slugToRelativePath.set(leafSlug, relativePath);
+        slugToFilePath.set(leafSlug, filePath);
       }
     }
   }

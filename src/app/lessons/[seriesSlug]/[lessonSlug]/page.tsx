@@ -1,13 +1,9 @@
-import { LocalizedLessonPage } from "../../../_localized/pages";
-import { getSeriesLessonSlugs } from "@/lib/data";
+import { LocalizedLessonPage, localizedLessonStaticParams } from "../../../_localized/pages";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getSeriesLessonSlugs().map(({ seriesSlug, lessonSlug }) => ({
-    seriesSlug,
-    lessonSlug,
-  }));
+  return localizedLessonStaticParams("vi");
 }
 
 export default function Page({
