@@ -1,9 +1,10 @@
 export const dynamic = "force-static";
+export const revalidate = 3600;
 
 import { getAllPosts } from "@/lib/data";
 import { localizedPath, LOCALES, type Locale } from "@/lib/i18n/config";
+import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
-const SITE_URL = "https://xdev.asia";
 const NEWS_LANGUAGE: Record<Locale, string> = {
   vi: "vi",
   en: "en",
@@ -22,6 +23,7 @@ function escapeXml(str: string): string {
 
 export function GET() {
   // Google News sitemap should only include articles from the last 2 days
+  const now = new Date();
   const twoDaysAgo = new Date();
   twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
@@ -29,7 +31,8 @@ export function GET() {
     getAllPosts(locale)
       .filter((post) => {
         if (!post.published_at) return false;
-        return new Date(post.published_at) >= twoDaysAgo;
+        const publishedAt = new Date(post.published_at);
+        return publishedAt >= twoDaysAgo && publishedAt <= now;
       })
       .map((post) => ({ locale, post }))
   )
@@ -52,7 +55,7 @@ export function GET() {
     <loc>${escapeXml(loc)}</loc>
     <news:news>
       <news:publication>
-        <news:name>xDev Asia</news:name>
+        <news:name>${escapeXml(SITE_NAME)}</news:name>
         <news:language>${NEWS_LANGUAGE[locale]}</news:language>
       </news:publication>
       <news:publication_date>${pubDate}</news:publication_date>
@@ -71,6 +74,7 @@ ${urlEntries}
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
+      "Cache-Control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }

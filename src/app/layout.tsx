@@ -16,6 +16,7 @@ import {
   localePrefix as getLocalePrefix,
   type Locale,
 } from "@/lib/i18n/config";
+import { DISCOVER_ROBOTS, SITE_URL } from "@/lib/seo";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -39,7 +40,6 @@ const navTopicsByLocale = Object.fromEntries(
   ])
 ) as Record<Locale, NavTopic[]>;
 const siteContextJson = JSON.stringify(buildSearchIndex());
-const SITE_URL = "https://xdev.asia";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -58,6 +58,7 @@ export const metadata: Metadata = {
       ])
     ),
   },
+  robots: DISCOVER_ROBOTS,
 };
 
 /**

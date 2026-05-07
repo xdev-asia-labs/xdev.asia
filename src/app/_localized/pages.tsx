@@ -12,6 +12,7 @@ import {
   getAllPosts,
   getAllSeries,
   getAvailableTopics,
+  getAuthorById,
   getLesson,
   getPost,
   getPostLanguageLinks,
@@ -30,14 +31,20 @@ import {
   getTagBySlug,
   type TagStats,
 } from "@/lib/data";
-import { LOCALE_HREFLANG, LOCALE_HTML_LANG, localizedPath, type Locale } from "@/lib/i18n/config";
+import { LOCALE_HREFLANG, localizedPath, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getValidImageUrl } from "@/utils/image";
+import {
+  SITE_URL,
+  buildArticleJsonLd,
+  buildArticleMetadata,
+  buildBreadcrumbJsonLd,
+  getPostImageUrl,
+  jsonLdScriptContent,
+} from "@/lib/seo";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-const SITE_URL = "https://xdev.asia";
 
 function prefix(locale: Locale) {
   return `/${locale}`;
@@ -185,25 +192,16 @@ export async function localizedBlogPostMetadata(
   const languageAlternates = Object.fromEntries(
     languageLinks.map((link) => [LOCALE_HREFLANG[link.locale], `${SITE_URL}${link.href}`])
   );
+  const defaultLanguageUrl =
+    languageLinks.find((link) => link.locale === "vi")?.href || `/blog/${slug}/`;
 
-  return {
-    title: post.title,
-    description: post.excerpt || post.title,
-    alternates: {
-      canonical: canonicalUrl,
-      languages: {
-        ...languageAlternates,
-        "x-default": `${SITE_URL}/blog/${slug}/`,
-      },
-    },
-    openGraph: {
-      title: post.title,
-      description: post.excerpt || post.title,
-      url: canonicalUrl,
-      siteName: "xDev Asia",
-      type: "article",
-    },
-  };
+  return buildArticleMetadata({
+    post,
+    locale,
+    canonicalUrl,
+    languageAlternates,
+    xDefaultUrl: `${SITE_URL}${defaultLanguageUrl}`,
+  });
 }
 
 export async function localizedSeriesDetailMetadata(
@@ -520,43 +518,29 @@ export async function LocalizedBlogPostPage({
   if (!post) notFound();
   const dict = getDictionary(locale);
   const canonicalUrl = `${SITE_URL}${href(locale, `/blog/${slug}/`)}`;
-  const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
-  const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
-
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    headline: post.title,
-    description: post.excerpt || post.title,
-    image: imageUrl,
-    datePublished: post.published_at || post.created_at,
-    dateModified: post.published_at || post.created_at,
-    author: {
-      "@type": "Person",
-      name: post.author.name,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "xDev Asia",
-      url: SITE_URL,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE_URL}/images/logo/logo-vertical-light.png`,
-      },
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": canonicalUrl,
-    },
-    inLanguage: LOCALE_HTML_LANG[locale],
-    isAccessibleForFree: true,
-  };
+  const fullAuthor = getAuthorById(post.author.id);
+  const imageUrl = getPostImageUrl(post);
+  const articleJsonLd = buildArticleJsonLd({
+    post,
+    locale,
+    canonicalUrl,
+    fullAuthor,
+  });
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "xDev", item: `${SITE_URL}${href(locale, "/")}` },
+    { name: dict.nav.blog, item: `${SITE_URL}${href(locale, "/blog/")}` },
+    { name: post.title, item: canonicalUrl },
+  ]);
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScriptContent(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScriptContent(breadcrumbJsonLd) }}
       />
       <nav className="flex items-center gap-2 text-xs font-medium text-zinc-500 mb-8">
         <Link href={href(locale, "/")} className="hover:text-brand-600 transition-colors">
@@ -585,6 +569,19 @@ export async function LocalizedBlogPostPage({
         currentLocale={locale}
         className="mb-8"
       />
+      {post.featured_image && (
+        <div className="mb-10 rounded-2xl border border-zinc-200 bg-surface-50 p-1.5 shadow-lg">
+          <Image
+            src={imageUrl}
+            alt={post.title}
+            width={1200}
+            height={630}
+            sizes="(min-width: 1024px) 896px, calc(100vw - 32px)"
+            priority
+            className="h-auto w-full rounded-xl"
+          />
+        </div>
+      )}
       <ContentRenderer html={post.content} />
     </article>
   );

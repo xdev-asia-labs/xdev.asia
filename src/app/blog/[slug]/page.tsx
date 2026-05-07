@@ -1,4 +1,4 @@
-import { InArticleAd, SidebarAd, BannerAd, MultiplexAd } from "@/components/AdUnit";
+import { BannerAd, InArticleAd, MultiplexAd, SidebarAd } from "@/components/AdUnit";
 import AISummary from "@/components/AISummary";
 import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
@@ -16,6 +16,13 @@ import TextToSpeech from "@/components/TextToSpeech";
 import TranslateButton from "@/components/TranslateButton";
 import { formatDate, getAllPosts, getAuthorById, getPost, getPostLanguageLinks, getPostSlugs } from "@/lib/data";
 import { LOCALE_HREFLANG } from "@/lib/i18n/config";
+import {
+    SITE_URL,
+    buildArticleJsonLd,
+    buildArticleMetadata,
+    buildBreadcrumbJsonLd,
+    jsonLdScriptContent,
+} from "@/lib/seo";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -28,62 +35,24 @@ export function generateStaticParams() {
     return getPostSlugs().map((slug) => ({ slug }));
 }
 
-const SITE_URL = "https://xdev.asia";
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const post = getPost(slug);
     if (!post) return {};
 
     const canonicalUrl = `${SITE_URL}/blog/${slug}/`;
-    const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
-    const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
     const languageLinks = getPostLanguageLinks(post).filter((link) => link.available);
     const languageAlternates = Object.fromEntries(
         languageLinks.map((link) => [LOCALE_HREFLANG[link.locale], `${SITE_URL}${link.href}`])
     );
 
-    return {
-        title: post.title,
-        description: post.excerpt || post.title,
-        alternates: {
-            canonical: canonicalUrl,
-            languages: {
-                ...languageAlternates,
-                "x-default": canonicalUrl,
-            },
-        },
-        openGraph: {
-            title: post.title,
-            description: post.excerpt || post.title,
-            url: canonicalUrl,
-            siteName: "xDev Asia",
-            locale: "vi_VN",
-            type: "article",
-            ...(post.published_at ? { publishedTime: post.published_at } : {}),
-            authors: [post.author.name],
-            images: [
-                {
-                    url: imageUrl,
-                    width: 1200,
-                    height: 630,
-                    alt: post.title,
-                },
-            ],
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: post.title,
-            description: post.excerpt || post.title,
-            images: [imageUrl],
-        },
-        robots: {
-            index: true,
-            follow: true,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-        },
-    };
+    return buildArticleMetadata({
+        post,
+        locale: "vi",
+        canonicalUrl,
+        languageAlternates,
+        xDefaultUrl: canonicalUrl,
+    });
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -100,61 +69,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const fullAuthor = getAuthorById(post.author.id);
 
     const canonicalUrl = `${SITE_URL}/blog/${slug}/`;
-    const rawImageUrl = getValidImageUrl(post.featured_image ?? null, slug);
-    const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
-
-    const articleJsonLd = {
-        "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        headline: post.title,
-        description: post.excerpt || post.title,
-        image: imageUrl,
-        datePublished: post.published_at || post.created_at,
-        dateModified: post.published_at || post.created_at,
-        author: {
-            "@type": "Person",
-            name: post.author.name,
-            ...(fullAuthor?.avatar ? { image: fullAuthor.avatar.startsWith("http") ? fullAuthor.avatar : `${SITE_URL}${fullAuthor.avatar}` } : {}),
-            url: `${SITE_URL}/gioi-thieu/`,
-        },
-        publisher: {
-            "@type": "Organization",
-            name: "xDev Asia",
-            url: SITE_URL,
-            logo: {
-                "@type": "ImageObject",
-                url: `${SITE_URL}/images/logo/logo-vertical-light.png`,
-            },
-        },
-        mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": canonicalUrl,
-        },
-        isAccessibleForFree: true,
-        ...(post.category ? { articleSection: post.category.name } : {}),
-        inLanguage: "vi",
-        ...(post.tags.length > 0 ? { keywords: post.tags.map((t) => t.name).join(", ") } : {}),
-    };
-
-    const breadcrumbJsonLd = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Trang chủ", item: SITE_URL },
-            { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog/` },
-            { "@type": "ListItem", position: 3, name: post.title, item: canonicalUrl },
-        ],
-    };
+    const articleJsonLd = buildArticleJsonLd({
+        post,
+        locale: "vi",
+        canonicalUrl,
+        fullAuthor,
+    });
+    const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+        { name: "Trang chủ", item: SITE_URL },
+        { name: "Blog", item: `${SITE_URL}/blog/` },
+        { name: post.title, item: canonicalUrl },
+    ]);
 
     return (
         <div>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: jsonLdScriptContent(articleJsonLd) }}
             />
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: jsonLdScriptContent(breadcrumbJsonLd) }}
             />
             {/* Reading progress bar */}
             <ReadingProgress />
@@ -243,11 +178,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {post.featured_image && (
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
                     <div className="rounded-2xl shadow-lg border border-zinc-200 bg-surface-50 p-1.5">
-                        <img
+                        <Image
                             src={getValidImageUrl(post.featured_image, post.slug)}
                             alt={post.title}
+                            width={1200}
+                            height={630}
+                            sizes="(min-width: 1024px) 1024px, calc(100vw - 32px)"
+                            priority
                             className="w-full h-auto rounded-xl"
-                            loading="eager"
                         />
                     </div>
                 </div>

@@ -11,8 +11,7 @@ import {
   getAvailableTopics,
 } from "@/lib/data";
 import { LOCALES, LOCALE_HREFLANG, localePrefix } from "@/lib/i18n/config";
-
-const SITE_URL = "https://xdev.asia";
+import { SITE_URL, getPostImageUrl } from "@/lib/seo";
 
 const homepageAlternates = {
   languages: Object.fromEntries(
@@ -72,6 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: post.published_at || now,
       changeFrequency: "monthly" as const,
       priority: 0.8,
+      ...(post.featured_image ? { images: [getPostImageUrl(post)] } : {}),
       alternates: {
         languages: {
           ...languageAlternates,

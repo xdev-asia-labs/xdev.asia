@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts, getAllSeries, getSettings } from "@/lib/data";
+import { SITE_URL, jsonLdScriptContent } from "@/lib/seo";
 import { IconGitHub, IconArrowRight, IconBook, IconCode } from "@/components/Icons";
-
-const SITE_URL = "https://xdev.asia";
 
 export const metadata: Metadata = {
     title: "Giới thiệu — Duy Tran",
@@ -57,7 +56,7 @@ export default function AboutPage() {
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: jsonLdScriptContent(jsonLd) }}
             />
 
             {/* ─── Hero ─── */}

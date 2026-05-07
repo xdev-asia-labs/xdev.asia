@@ -73,6 +73,25 @@ export default function FooterClient({
     activeLocale === DEFAULT_LOCALE
       ? settings.site_tagline || settings.site_description || strings.tagline
       : activeStrings.tagline;
+  const googleSourceLabel =
+    {
+      vi: "Ưu tiên trên Google",
+      en: "Preferred on Google",
+      ja: "Google で優先",
+      "zh-tw": "Google 優先來源",
+    }[activeLocale] || "Preferred on Google";
+  const exploreLinks = [
+    { href: localizedHref("/blog/"), label: activeStrings.blog },
+    { href: localizedHref("/series/"), label: activeStrings.series },
+    { href: "/luyen-thi/", label: activeStrings.exam_prep },
+    { href: "/bookmarks/", label: activeStrings.saved },
+    { href: localizedHref("/search/"), label: activeStrings.search },
+    {
+      href: "https://www.google.com/preferences/source?q=xdev.asia",
+      label: googleSourceLabel,
+      external: true,
+    },
+  ];
 
   const socialLinks = [
     { url: socialGithub, icon: IconGitHub, label: "GitHub" },
@@ -123,17 +142,22 @@ export default function FooterClient({
           <div>
             <h4 className="footer-heading">{activeStrings.explore}</h4>
             <ul className="space-y-2.5">
-              {[
-                { href: localizedHref("/blog/"), label: activeStrings.blog },
-                { href: localizedHref("/series/"), label: activeStrings.series },
-                { href: "/luyen-thi/", label: activeStrings.exam_prep },
-                { href: "/bookmarks/", label: activeStrings.saved },
-                { href: localizedHref("/search/"), label: activeStrings.search },
-              ].map((link) => (
+              {exploreLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm transition-colors">
-                    {link.label}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link href={link.href} className="text-sm transition-colors">
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

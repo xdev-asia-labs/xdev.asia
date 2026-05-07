@@ -9,12 +9,11 @@ import { formatDate, getAllPosts, getAllSeries, getSeriesByCategory, getSettings
 import { buildKnowledgeGraph } from "@/lib/graph";
 import { DEFAULT_LOCALE, localizedPath, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { SITE_URL, jsonLdScriptContent } from "@/lib/seo";
 import { getValidImageUrl } from "@/utils/image";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
-const SITE_URL = "https://xdev.asia";
 
 const HOME_COPY: Record<Locale, {
     knowledgeTitle: string;
@@ -221,7 +220,7 @@ export function HomePage({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: jsonLdScriptContent(jsonLd) }}
             />
             {/* ─── Hero ─── */}
             <HeroBanner2026
