@@ -1,0 +1,481 @@
+{
+  "slug": "omop-cdm",
+  "title": "OMOP CDM & OHDSI Practitioner",
+  "headline": "Roadmap OMOP CDM 5.4: chuẩn hoá dữ liệu y tế cho nghiên cứu thực chứng (RWE) và AI lâm sàng",
+  "description": "Lộ trình OMOP Common Data Model end-to-end cho Việt Nam: từ Standardized Vocabularies (SNOMED, RxNorm, LOINC, ICD), 37 bảng CDM 5.4, ETL với WhiteRabbit/RabbitInAHat/USAGI/Perseus, đến ATLAS cohort builder, Data Quality Dashboard, HADES analytics (PLE/PLP/characterization), federated network và mapping FHIR↔OMOP cho HSDT/BHYT theo Quyết định 3516/QĐ-BYT.",
+  "category": "skill",
+  "intro": "OMOP Common Data Model là chuẩn dữ liệu y tế phục vụ nghiên cứu thực chứng (Real-World Evidence - RWE) và phân tích quan sát quy mô lớn. Khác với HL7 FHIR (chuẩn trao đổi dữ liệu vận hành), OMOP CDM tối ưu cho phân tích đa nguồn: bạn chuyển dữ liệu HIS/EHR/claim về cùng schema, cùng vocabulary, sau đó chạy 1 nghiên cứu trên hàng trăm tổ chức cùng lúc. Cộng đồng OHDSI (Observational Health Data Sciences and Informatics) đã chuẩn hoá hơn 800 triệu bệnh nhân toàn cầu (2026). EHDEN (EU), N3C (Mỹ), DARWIN EU (regulatory) đều dùng OMOP. Roadmap này giúp bạn đi từ con số 0 đến triển khai được CDM cho 1 bệnh viện/HSDT VN, viết ETL, chạy ATLAS cohort và phân tích bằng HADES.",
+  "why_now": "Năm 2026, OMOP đã trở thành chuẩn de-facto cho nghiên cứu RWE: FDA Sentinel mở rộng dùng OMOP, EMA DARWIN EU phát hành nghiên cứu trên CDM, EHDEN với 200+ data partner. Tại Việt Nam, Quyết định 3516/QĐ-BYT (11/2025) định hướng kiến trúc số y tế lấy data làm trung tâm — OMOP là lựa chọn tự nhiên cho phân tích/nghiên cứu khi đã có FHIR cho vận hành. Thêm vào đó, các nền tảng AI y tế cần dữ liệu chuẩn hoá từ nhiều nguồn để training mà không leak PHI: OMOP với phenotype standardized + federated analytics là giải pháp lý tưởng. Người làm OMOP thực chiến tại VN gần như chưa có — cơ hội lớn cho data engineer/researcher tiên phong.",
+  "icon": "🧬",
+  "theme": "emerald",
+  "stats": {
+    "phases": 7,
+    "duration": "5-9 tháng",
+    "level": "Data/Software Engineer hoặc nghiên cứu viên y tế -> Production OMOP Practitioner",
+    "certs": "OHDSI EHDEN Academy / Coursera OMOP CDM / OHDSI Annual Tutorial"
+  },
+  "tags": [
+    "OMOP",
+    "CDM",
+    "OHDSI",
+    "ATLAS",
+    "HADES",
+    "ETL",
+    "RWE",
+    "Healthcare",
+    "Vocabulary",
+    "PostgreSQL",
+    "Vietnam Health"
+  ],
+  "tracks": [
+    {
+      "id": "beginner",
+      "label": "Track A - Beginner",
+      "target": "Data/Software engineer hoặc nghiên cứu viên y tế chưa làm OMOP, muốn dựng được CDM cho 1 nguồn dữ liệu thật.",
+      "weeklyHours": "6-8 giờ/tuần",
+      "focusPhases": [1, 2, 3, 4],
+      "outcomes": [
+        "Hiểu OHDSI ecosystem, mục tiêu RWE và sự khác nhau giữa OMOP, FHIR, i2b2, PCORnet, Sentinel",
+        "Đọc/viết SQL trên 37 bảng CDM 5.4 và lookup vocabulary trên Athena",
+        "Hoàn thành 1 ETL pipeline từ source HIS demo về OMOP CDM với data quality tối thiểu"
+      ]
+    },
+    {
+      "id": "transitioner",
+      "label": "Track B - Transitioner",
+      "target": "Người đã làm data warehouse y tế hoặc HL7/FHIR muốn lên Production OMOP Engineer/Researcher.",
+      "weeklyHours": "5-7 giờ/tuần",
+      "focusPhases": [3, 4, 5, 6, 7],
+      "outcomes": [
+        "Vận hành ATLAS + WebAPI + Data Quality Dashboard + ACHILLES trong môi trường thật",
+        "Viết HADES script (R) cho characterization, population-level effect estimation và patient-level prediction",
+        "Triển khai bridge FHIR↔OMOP cho HSDT/BHYT, federated analytics trong network OHDSI VN"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "OMOP CDM khác HL7 FHIR như thế nào?",
+      "answer": "FHIR là chuẩn TRAO ĐỔI dữ liệu vận hành thời gian thực (REST API, Resource độc lập). OMOP CDM là chuẩn LƯU TRỮ phân tích — toàn bộ dữ liệu được chuẩn hoá về cùng schema (37 bảng) và cùng vocabulary (Standardized Concepts) để chạy nghiên cứu trên nhiều tổ chức. Hai chuẩn bổ trợ nhau: FHIR cho EHR/HIS, OMOP cho data lake nghiên cứu. Có thể bridge bằng FHIR-OMOP-on-FHIR project (HL7 + OHDSI)."
+    },
+    {
+      "question": "Năm 2026 nên dùng CDM 5.4 hay v6?",
+      "answer": "Dùng CDM 5.4 cho production. Hầu hết tool OHDSI (ATLAS, HADES, Data Quality Dashboard) đã ổn định trên 5.4. CDM v6 có thay đổi datetime, COST/CARE_SITE và các trường mới nhưng adoption còn thấp. v6 đang được rework thành các phiên bản tiếp; theo dõi nhưng chưa nên migrate vội."
+    },
+    {
+      "question": "Có thể chạy OMOP trên cloud không?",
+      "answer": "Có, rất phổ biến. Postgres on EC2/Cloud SQL/Azure Database, Redshift/BigQuery/Snowflake/Databricks đều support được CDM. ATLAS chạy trên Tomcat/Docker. EHDEN cung cấp Broadsea Docker compose để dựng nhanh. Lưu ý compliance theo Nghị định 13/2023 với dữ liệu nhạy cảm."
+    },
+    {
+      "question": "Mất bao lâu để ETL 1 nguồn dữ liệu mới về OMOP?",
+      "answer": "Trung bình 3-6 tháng cho lần đầu (1 source EHR vừa). Bao gồm: source profiling (WhiteRabbit), thiết kế mapping (RabbitInAHat), code mapping (USAGI), triển khai SQL/dbt, kiểm chuẩn dữ liệu (DQ Dashboard), chạy ACHILLES. Lần sau cùng nguồn nhanh hơn nhiều khi đã có template."
+    },
+    {
+      "question": "Việt Nam có dùng OMOP không?",
+      "answer": "Đến 2026, một số nhóm nghiên cứu (ĐHQG, BV ĐHYHN, viện y tế công cộng) đã thử nghiệm. Hệ thống quốc gia chưa chính thức chọn nhưng Quyết định 3516/QĐ-BYT mở đường cho data lake y tế quốc gia — nơi OMOP rất phù hợp. BHYT điện tử + HSDT trên VNeID cung cấp dataset khổng lồ; nếu được chuẩn hoá theo OMOP sẽ là tài sản nghiên cứu vô giá."
+    },
+    {
+      "question": "Cần biết R không khi học OMOP?",
+      "answer": "Track Beginner không bắt buộc — bạn có thể dừng ở SQL + ATLAS. Track Transitioner cần R cơ bản để dùng HADES (CohortMethod, PatientLevelPrediction, FeatureExtraction). Có thể dùng HADES qua Python wrapper nhưng R vẫn là first-class."
+    }
+  ],
+  "phases": [
+    {
+      "phase": 1,
+      "title": "OHDSI Foundation & RWE",
+      "subtitle": "Bối cảnh nghiên cứu thực chứng và vai trò OMOP CDM",
+      "duration": "2 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Hiểu RWE/RWD và lý do cần CDM",
+        "Phân biệt OMOP với i2b2, PCORnet, Sentinel, FHIR",
+        "Nắm hệ sinh thái OHDSI: tools, network, governance"
+      ],
+      "deliverables": [
+        "1-pager so sánh OMOP / i2b2 / PCORnet / Sentinel / FHIR",
+        "Sơ đồ OHDSI ecosystem stack"
+      ],
+      "projects": [
+        "Chọn 1 nghiên cứu RWE đã publish và xác định: nguồn dữ liệu, CDM dùng, tool, kết quả. Viết 1-page summary."
+      ],
+      "items": [
+        {
+          "name": "OMOP CDM tổng quan và vì sao cần chuẩn hoá",
+          "detail": "Hiểu lịch sử OMOP từ Observational Medical Outcomes Partnership đến cộng đồng OHDSI, vai trò trong RWE/RWD, vì sao cần chuẩn hoá schema + vocabulary để chạy nghiên cứu đa nguồn.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "3h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["OHDSI Book of OHDSI", "OMOP CDM 5.4 spec", "DARWIN EU overview"],
+          "resourceLinks": [
+            { "label": "OMOP CDM tổng quan: vì sao cần chuẩn hoá dữ liệu y tế cho RWE", "url": "/blog/omop-cdm-tong-quan-vi-sao-can-chuan-hoa", "type": "article" }
+          ],
+          "learningSteps": [
+            "Đọc Chương 1-2 Book of OHDSI (open source)",
+            "Phân biệt RWD (raw) và RWE (insight có context)",
+            "Vẽ 3 use case OMOP: drug safety, comparative effectiveness, patient-level prediction"
+          ],
+          "quiz": [
+            {
+              "q": "OMOP CDM được thiết kế chủ yếu cho mục đích gì?",
+              "options": ["Trao đổi dữ liệu thời gian thực", "Phân tích quan sát đa nguồn (RWE)", "Lưu trữ ảnh DICOM", "Quản lý quy trình nội trú"],
+              "answer": 1,
+              "explanation": "OMOP tối ưu cho phân tích quan sát chuẩn hoá đa nguồn, không thay thế FHIR cho vận hành."
+            }
+          ]
+        },
+        {
+          "name": "OMOP vs FHIR vs i2b2 vs PCORnet vs Sentinel",
+          "detail": "So sánh các Common Data Model phổ biến: mục tiêu, governance, vocabulary, schema, tool, use case khác nhau. Khi nào chọn OMOP?",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "3h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["OHDSI CDM comparison", "PCORnet docs", "Sentinel CDM"],
+          "resourceLinks": [
+            { "label": "So sánh OMOP, FHIR, i2b2, PCORnet, Sentinel: chọn CDM nào", "url": "/blog/omop-vs-fhir-vs-i2b2-pcornet", "type": "article" }
+          ],
+          "learningSteps": [
+            "Lập bảng so sánh schema/vocabulary/community size",
+            "Xác định case dùng FHIR vs OMOP trong cùng tổ chức",
+            "Đọc về FHIR-OMOP-on-FHIR working group"
+          ],
+          "quiz": [
+            {
+              "q": "Trong cùng tổ chức, FHIR và OMOP nên đóng vai trò nào?",
+              "options": ["Thay thế nhau", "FHIR cho vận hành EHR, OMOP cho phân tích/RWE", "Chỉ cần FHIR là đủ", "Chỉ cần OMOP"],
+              "answer": 1,
+              "explanation": "Hai chuẩn bổ trợ nhau, mỗi cái tối ưu cho mục đích khác nhau."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "title": "Standardized Vocabularies & Athena",
+      "subtitle": "Hiểu Concept, Vocabulary, Domain — trái tim của OMOP",
+      "duration": "3-4 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Hiểu Concept, Standard vs Source, Domain, Vocabulary, Concept Class",
+        "Sử dụng Athena để tải/lookup vocabulary",
+        "Map source code (ICD-10 VN, danh mục thuốc BYT) sang Standard Concept"
+      ],
+      "deliverables": [
+        "1 file mapping ICD-10 VN -> SNOMED CT cho 50 chẩn đoán phổ biến",
+        "1 USAGI session đã save với 30 mapping thuốc"
+      ],
+      "projects": [
+        "Tải vocabulary từ Athena, import Postgres, viết 5 query lookup concept (theo code, theo synonym, theo ancestor)."
+      ],
+      "items": [
+        {
+          "name": "Standardized Vocabularies sâu: SNOMED, RxNorm, LOINC, ICD và Athena",
+          "detail": "Vai trò từng vocabulary, chuẩn hoá Standard Concept, hierarchy CONCEPT_ANCESTOR, CONCEPT_RELATIONSHIP, lookup workflow trên Athena, các vocabulary mất phí (SNOMED license cho VN).",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Athena - athena.ohdsi.org", "OHDSI Vocabulary GitHub", "SNOMED VN affiliate"],
+          "resourceLinks": [
+            { "label": "Standardized Vocabularies & Athena: trái tim của OMOP CDM", "url": "/blog/omop-standardized-vocabularies-athena", "type": "article" }
+          ],
+          "learningSteps": [
+            "Tạo account Athena, tải vocabulary subset (SNOMED + ICD10 + LOINC + RxNorm)",
+            "Import vào Postgres bằng script OHDSI/CommonDataModel",
+            "Viết SQL lookup: từ source code sang standard concept_id, lấy descendants"
+          ],
+          "quiz": [
+            {
+              "q": "Sự khác nhau giữa Standard Concept và Source Concept là gì?",
+              "options": [
+                "Standard là đúng, Source là sai",
+                "Standard dùng để phân tích thống nhất; Source là code gốc trong nguồn dữ liệu",
+                "Standard chỉ dùng SNOMED",
+                "Source là code đã obsolete"
+              ],
+              "answer": 1,
+              "explanation": "Standard Concept là code đã được OHDSI chọn làm chuẩn; Source giữ lại code gốc để truy vết."
+            }
+          ]
+        },
+        {
+          "name": "USAGI và workflow code mapping",
+          "detail": "Cách dùng USAGI để map code source (vd ICD-10 Việt Nam, danh mục DVKT, danh mục thuốc Bộ Y tế) sang Standard Concept. Quy trình review, accept, export.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["USAGI GitHub", "OHDSI Themis conventions"],
+          "learningSteps": [
+            "Cài USAGI",
+            "Import 50 ICD-10 VN, run search, review match",
+            "Export CSV mapping và import vào CONCEPT/SOURCE_TO_CONCEPT_MAP"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "title": "OMOP CDM 5.4 Tables Deep Dive",
+      "subtitle": "37 bảng theo nhóm: Clinical, Health System, Health Economics, Vocabulary, Derived, Metadata",
+      "duration": "4-5 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Đọc/viết SQL trên Person, Visit, Condition, Drug, Procedure, Measurement, Observation",
+        "Hiểu các bảng nâng cao: Device, Note, Specimen, Death, Episode",
+        "Hiểu Derived (Drug_Era, Condition_Era, Dose_Era, Cohort)"
+      ],
+      "deliverables": [
+        "1 bộ SQL truy vấn 10 chỉ số dịch tễ học (incidence, prevalence) trên CDM mẫu",
+        "1 ER diagram đánh dấu FK quan trọng giữa các bảng"
+      ],
+      "projects": [
+        "Trên Eunomia (CDM mẫu OHDSI), viết SQL: 'Tìm bệnh nhân tiểu đường type 2 đang dùng Metformin trong 90 ngày qua'."
+      ],
+      "items": [
+        {
+          "name": "Core Clinical Tables: Person, Visit, Condition, Drug, Procedure, Measurement, Observation",
+          "detail": "Cấu trúc, FK, bắt buộc/tuỳ chọn, quy tắc ETL Themis, ví dụ SQL phân tích. Phân biệt Measurement vs Observation, Drug_Exposure vs Drug_Era.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["OMOP CDM 5.4 spec", "Themis conventions"],
+          "resourceLinks": [
+            { "label": "OMOP Core Clinical Tables: Person, Visit, Condition, Drug, Measurement, Observation", "url": "/blog/omop-core-clinical-tables-deep-dive", "type": "article" }
+          ],
+          "learningSteps": [
+            "Vẽ ER diagram 7 bảng core",
+            "Cài Eunomia, chạy 10 query mẫu",
+            "Đọc Themis conventions cho Drug_Exposure và Measurement"
+          ],
+          "quiz": [
+            {
+              "q": "Drug_Era khác Drug_Exposure ở chỗ nào?",
+              "options": [
+                "Era là từng lần kê đơn",
+                "Era là khoảng thời gian liên tục bệnh nhân ở trên cùng một thuốc, được tính từ nhiều Drug_Exposure",
+                "Era chỉ dùng cho vaccine",
+                "Era là bảng metadata"
+              ],
+              "answer": 1,
+              "explanation": "Drug_Era gộp các Drug_Exposure liên tục thành 1 khoảng để phân tích."
+            }
+          ]
+        },
+        {
+          "name": "Extended Clinical Tables: Device, Note, NLP, Specimen, Death, Episode",
+          "detail": "Các bảng mở rộng, NOTE_NLP cho phân tích văn bản lâm sàng, EPISODE cho cancer/COVID, DEATH với cause_concept_id.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": ["transitioner"]
+        },
+        {
+          "name": "Health System & Health Economics tables",
+          "detail": "LOCATION, CARE_SITE, PROVIDER, PAYER_PLAN_PERIOD, COST. Áp dụng cho dữ liệu BHYT Việt Nam: payer = BHYT, cost = chi phí KCB.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "3h",
+          "recommendedFor": ["transitioner"]
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "title": "ETL Mastery",
+      "subtitle": "Từ source HIS/EHR/claim sang CDM với WhiteRabbit/RabbitInAHat/USAGI/SQL/Perseus/dbt",
+      "duration": "6-8 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Profile source dữ liệu bằng WhiteRabbit",
+        "Thiết kế mapping bằng RabbitInAHat",
+        "Triển khai ETL bằng SQL/Perseus/dbt và validate"
+      ],
+      "deliverables": [
+        "Tài liệu ETL Specification (table-level + column-level mapping)",
+        "Pipeline ETL idempotent, có CI/CD và data quality gate"
+      ],
+      "projects": [
+        "ETL 1 dataset HIS demo (vd MIMIC-IV demo) sang CDM 5.4 và validate bằng DataQualityDashboard."
+      ],
+      "items": [
+        {
+          "name": "WhiteRabbit + RabbitInAHat + USAGI + Perseus: bộ công cụ ETL OHDSI",
+          "detail": "Workflow chuẩn: scan source bằng WhiteRabbit, design mapping bằng RabbitInAHat, code mapping bằng USAGI, triển khai SQL/Perseus, ghi tài liệu ETL spec. Lưu ý hiệu suất khi scan dataset lớn.",
+          "type": "tool",
+          "level": "advanced",
+          "estimatedTime": "10h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["WhiteRabbit GitHub", "Perseus EHDEN"],
+          "resourceLinks": [
+            { "label": "OMOP ETL Mastery: WhiteRabbit, RabbitInAHat, USAGI, Perseus", "url": "/blog/omop-etl-whiterabbit-usagi-perseus", "type": "article" }
+          ],
+          "learningSteps": [
+            "Scan 1 dataset HIS bằng WhiteRabbit, sinh report HTML",
+            "Design table mapping bằng RabbitInAHat, lưu file json",
+            "Map 50 code bằng USAGI, accept/review",
+            "Triển khai ETL SQL với CommonDataModel DDL"
+          ]
+        },
+        {
+          "name": "ETL bằng dbt và CI/CD",
+          "detail": "Pattern hiện đại: dùng dbt models (staging -> intermediate -> CDM), test data quality, version control trên Git, CI/CD chạy ETL incremental, snapshot vocabulary.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "6h",
+          "recommendedFor": ["transitioner"]
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "title": "ATLAS, ACHILLES & Data Quality",
+      "subtitle": "Cohort builder, characterization, data profiling và quality gate",
+      "duration": "3-4 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Cài ATLAS + WebAPI + Postgres, kết nối tới CDM",
+        "Định nghĩa cohort, chạy characterization, incidence rate",
+        "Chạy ACHILLES + Data Quality Dashboard và đọc kết quả"
+      ],
+      "deliverables": [
+        "ATLAS deployment có 1+ user thật",
+        "Báo cáo Data Quality Dashboard cho dataset bạn ETL"
+      ],
+      "projects": [
+        "Định nghĩa cohort 'Diabetes type 2 không có CKD' bằng ATLAS, export concept set, chạy incidence."
+      ],
+      "items": [
+        {
+          "name": "ATLAS deployment + WebAPI + Broadsea",
+          "detail": "Cài ATLAS qua Broadsea Docker, cấu hình WebAPI, security, source CDM connection, user roles. Bước phổ biến lỗi.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Broadsea GitHub", "ATLAS docs"],
+          "resourceLinks": [
+            { "label": "ATLAS, Data Quality Dashboard và ACHILLES: vận hành OMOP analytics", "url": "/blog/omop-atlas-cohort-data-quality", "type": "article" }
+          ],
+          "learningSteps": [
+            "Clone Broadsea, chạy docker compose up",
+            "Kết nối CDM source, ACHILLES warm-up",
+            "Tạo concept set, cohort definition, generate"
+          ]
+        },
+        {
+          "name": "Data Quality Dashboard (DQD) và ACHILLES",
+          "detail": "Hơn 3000 check tự động: plausibility, conformance, completeness. Đọc kết quả, set threshold, fix iterative.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": ["beginner", "transitioner"]
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "title": "HADES Analytics & Network Studies",
+      "subtitle": "Population-Level Effect Estimation, Patient-Level Prediction, Characterization",
+      "duration": "4-6 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Sử dụng FeatureExtraction, CohortMethod, PatientLevelPrediction, SelfControlledCaseSeries",
+        "Hiểu propensity score, negative control, calibration",
+        "Tham gia 1 network study OHDSI để chạy phân tích federated"
+      ],
+      "deliverables": [
+        "1 báo cáo characterization + 1 PLE notebook",
+        "1 PLP model với AUROC + calibration plot"
+      ],
+      "projects": [
+        "Replicate 1 phần của OHDSI PIONEER hoặc DARWIN EU study trên Eunomia."
+      ],
+      "items": [
+        {
+          "name": "HADES: phân tích RWE bằng R",
+          "detail": "Bộ R packages của OHDSI: FeatureExtraction, CohortMethod, PatientLevelPrediction, SelfControlledCaseSeries, EvidenceSynthesis. Cài đặt, chạy demo trên Eunomia.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "10h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["HADES website", "OHDSI tutorial videos"],
+          "resourceLinks": [
+            { "label": "HADES Analytics: PLE, PLP, Characterization với R cho OMOP", "url": "/blog/omop-hades-r-analytics-ple-plp", "type": "article" }
+          ],
+          "learningSteps": [
+            "Cài R + DatabaseConnector + HADES",
+            "Chạy CohortMethod tutorial",
+            "Chạy PatientLevelPrediction tutorial"
+          ]
+        },
+        {
+          "name": "Network studies & federated analytics",
+          "detail": "Cách OHDSI chạy 1 nghiên cứu trên 50+ data partner mà không di chuyển dữ liệu: study package -> mỗi partner chạy local -> tổng hợp result. Liên hệ EHDEN, DARWIN EU.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "5h",
+          "recommendedFor": ["transitioner"]
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "title": "Production, FHIR↔OMOP & Vietnam Context",
+      "subtitle": "Triển khai production, bridge với FHIR, và áp dụng cho HSDT/BHYT theo Quyết định 3516/QĐ-BYT",
+      "duration": "3-4 tuần",
+      "theme": "emerald",
+      "goals": [
+        "Triển khai CDM Postgres tuned cho hàng triệu Person",
+        "Bridge FHIR↔OMOP cho dataflow giữa EHR vận hành và data lake nghiên cứu",
+        "Mapping danh mục Bộ Y tế VN, BHYT vào OMOP"
+      ],
+      "deliverables": [
+        "Runbook production: backup, monitoring, vocabulary upgrade, security",
+        "Bridge service FHIR Bulk Export -> OMOP ETL incremental",
+        "Vietnam ETL playbook (ICD-10 VN, danh mục thuốc, dân tộc, địa giới hành chính)"
+      ],
+      "projects": [
+        "Pilot CDM cho 1 bệnh viện hoặc viện nghiên cứu VN với dataset 10k bệnh nhân thật, chạy 1 nghiên cứu RWE."
+      ],
+      "items": [
+        {
+          "name": "Production OMOP: Postgres tuning, deployment, security",
+          "detail": "Schema partition, indexing trên Concept và Person, parallel query, backup, vocabulary upgrade workflow, security theo Nghị định 13/2023, audit access.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "6h",
+          "recommendedFor": ["transitioner"],
+          "resourceLinks": [
+            { "label": "OMOP Production: Postgres tuning, deployment và bảo mật cho VN", "url": "/blog/omop-production-postgres-tuning-deployment", "type": "article" }
+          ]
+        },
+        {
+          "name": "FHIR ↔ OMOP bridge",
+          "detail": "Mapping FHIR Resource sang OMOP table tương ứng (Patient->Person, Encounter->Visit, Condition->Condition_Occurrence, MedicationRequest/Statement->Drug_Exposure, Observation->Measurement/Observation), HL7 FHIR-OMOP-on-FHIR project, công cụ Pathling, Snowflake Healthcare Data Cloud.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "5h",
+          "recommendedFor": ["transitioner"],
+          "resourceLinks": [
+            { "label": "FHIR ↔ OMOP bridge: kết nối EHR vận hành với data lake nghiên cứu", "url": "/blog/omop-fhir-mapping-bridge", "type": "article" }
+          ]
+        },
+        {
+          "name": "OMOP cho Việt Nam: BHYT, HSDT, danh mục Bộ Y tế",
+          "detail": "Mapping ICD-10 VN sang SNOMED, danh mục thuốc Bộ Y tế sang RxNorm, danh mục DVKT sang SNOMED/CPT4, dân tộc/địa giới sang Concept VN custom. Use case: phân tích BHYT, nghiên cứu dịch tễ tại VN, kết nối với HSDT trên VNeID.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "5h",
+          "recommendedFor": ["transitioner"],
+          "resourceLinks": [
+            { "label": "OMOP CDM cho Việt Nam: BHYT, HSDT và Quyết định 3516/QĐ-BYT", "url": "/blog/omop-viet-nam-bhyt-hsdt", "type": "article" }
+          ]
+        }
+      ]
+    }
+  ]
+}

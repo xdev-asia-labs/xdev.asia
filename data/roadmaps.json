@@ -43,5 +43,20 @@
       "certs": "HL7 FHIR Proficiency / HL7 FHIR R4 Implementer / Microsoft FHIR / Smile CDR HAPI"
     },
     "tags": ["HL7", "FHIR", "Interoperability", "EHR", "SMART on FHIR", "OAuth2", "Bulk Data", "CDS Hooks", "HAPI FHIR", "Healthcare"]
+  },
+  {
+    "slug": "omop-cdm",
+    "title": "OMOP CDM & OHDSI Practitioner",
+    "description": "Lộ trình OMOP CDM 5.4 + OHDSI end-to-end: Standardized Vocabularies/Athena, 37 bảng CDM, ETL với WhiteRabbit/USAGI/Perseus, ATLAS cohort, Data Quality Dashboard, HADES analytics (PLE, PLP, characterization), FHIR↔OMOP bridge và áp dụng cho HSDT/BHYT Việt Nam.",
+    "category": "skill",
+    "icon": "🧬",
+    "theme": "emerald",
+    "stats": {
+      "phases": 7,
+      "duration": "5-9 tháng",
+      "level": "Data/Software Engineer hoặc nghiên cứu viên y tế -> Production OMOP Practitioner",
+      "certs": "OHDSI EHDEN Academy / Coursera OMOP"
+    },
+    "tags": ["OMOP", "CDM", "OHDSI", "ATLAS", "HADES", "ETL", "RWE", "Healthcare", "Vocabulary", "Vietnam Health"]
   }
 ]

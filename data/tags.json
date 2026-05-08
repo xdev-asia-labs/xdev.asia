@@ -158,5 +158,37 @@
   {
     "name": "DevOps",
     "slug": "devops"
+  },
+  {
+    "name": "OMOP",
+    "slug": "omop"
+  },
+  {
+    "name": "OHDSI",
+    "slug": "ohdsi"
+  },
+  {
+    "name": "CDM",
+    "slug": "cdm"
+  },
+  {
+    "name": "ATLAS",
+    "slug": "atlas"
+  },
+  {
+    "name": "HADES",
+    "slug": "hades"
+  },
+  {
+    "name": "RWE",
+    "slug": "rwe"
+  },
+  {
+    "name": "Vocabulary",
+    "slug": "vocabulary"
+  },
+  {
+    "name": "ETL",
+    "slug": "etl"
   }
 ]
