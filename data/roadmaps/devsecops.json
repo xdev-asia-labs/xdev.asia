@@ -1,0 +1,983 @@
+{
+  "slug": "devsecops",
+  "title": "DevSecOps Engineer",
+  "headline": "Roadmap DevSecOps: nhúng bảo mật vào toàn bộ SDLC từ code đến runtime",
+  "description": "Lộ trình DevSecOps end-to-end: shift-left security trong SDLC, threat modeling, SAST/DAST/SCA, secret & dependency management, container & IaC security, supply chain (SLSA/SBOM, sigstore), runtime defense, incident response và compliance (ISO 27001, SOC 2, PCI DSS, NĐ 13/2023).",
+  "category": "role",
+  "intro": "DevSecOps Engineer là vai trò 'nối' giữa Development, Security và Operations: biến security từ checklist cuối kỳ thành guardrail tự động chạy trong pipeline, trên cluster và tại runtime. Mục tiêu không phải là chặn release, mà là cho team dev sửa lỗi sớm, có metric rõ và để security control trở thành thuộc tính mặc định của hệ thống.",
+  "why_now": "Năm 2026, supply chain attack (xz, npm/pypi typosquat, build poisoning) tăng mạnh; quy định ngày càng siết (EU CRA, US EO 14028 đòi hỏi SBOM, NĐ 13/2023 và Luật Dữ liệu cá nhân của Việt Nam). Pipeline không có SCA/SAST/secret-scan và cluster không có policy gần như chắc chắn sẽ có CVE high tồn tại nhiều tháng. DevSecOps Engineer là người đảm bảo security control tự động hoá, đo được và scale theo số repo/cluster.",
+  "icon": "🛡️",
+  "theme": "indigo",
+  "stats": {
+    "phases": 7,
+    "duration": "6-10 tháng",
+    "level": "DevOps/Security Engineer -> Production DevSecOps Engineer",
+    "certs": "CKS / AWS Security Specialty / GIAC GCSA / ISC2 CSSLP / Practical DevSecOps CDP"
+  },
+  "tags": [
+    "DevSecOps",
+    "Shift-Left",
+    "SAST",
+    "DAST",
+    "SCA",
+    "SBOM",
+    "SLSA",
+    "Container Security",
+    "IaC Security",
+    "Supply Chain",
+    "Threat Modeling",
+    "Compliance"
+  ],
+  "tracks": [
+    {
+      "id": "beginner",
+      "label": "Track A - DevOps Engineer",
+      "target": "DevOps/Platform Engineer đã quen CI/CD, Docker, Kubernetes, muốn nhúng security control vào pipeline và cluster.",
+      "weeklyHours": "6-8 giờ/tuần",
+      "focusPhases": [1, 2, 3, 4, 5],
+      "outcomes": [
+        "Bật SAST/SCA/secret-scan trong CI và xử lý finding theo severity",
+        "Build container image có baseline hardening, scan trivy/grype và sign với cosign",
+        "Áp dụng IaC scanning (Checkov/tfsec) và policy-as-code (OPA/Kyverno) cho cluster"
+      ]
+    },
+    {
+      "id": "transitioner",
+      "label": "Track B - Security Engineer",
+      "target": "Application/Cloud Security Engineer muốn vận hành security control ở quy mô nhiều team, nhiều repo, nhiều cluster.",
+      "weeklyHours": "5-7 giờ/tuần",
+      "focusPhases": [2, 4, 5, 6, 7],
+      "outcomes": [
+        "Vận hành threat modeling theo team với STRIDE/LINDDUN và risk register sống",
+        "Triển khai supply chain security: SBOM, SLSA level, sigstore, in-toto attestation",
+        "Quản trị compliance ISO 27001 / SOC 2 / PCI DSS / NĐ 13 với evidence tự động từ pipeline"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "DevSecOps khác Application Security thế nào?",
+      "answer": "AppSec tập trung vào lỗ hổng ứng dụng (OWASP Top 10, secure coding, pentest). DevSecOps rộng hơn: nhúng security control vào toàn bộ vòng đời phần mềm — từ requirement, code, build, deploy đến runtime — và biến security thành tự động hoá trong pipeline/platform. AppSec là một mảng lớn của DevSecOps."
+    },
+    {
+      "question": "Cần biết code không?",
+      "answer": "Cần đủ để đọc code, viết script, viết policy (Rego/Kyverno YAML), tự động hoá pipeline và hiểu finding của SAST/SCA. Không cần là full-stack developer nhưng nên thoải mái với Python/Go/Bash, Git và một ngôn ngữ ứng dụng phổ biến trong tổ chức."
+    },
+    {
+      "question": "Bắt đầu từ đâu nếu công ty chưa có gì?",
+      "answer": "Phase 1-2: bật secret-scanning + dependency-scanning trên repo (rẻ, dễ thắng nhanh), viết policy branch protection và xác định 1 threat model cho service quan trọng nhất. Sau đó mới mở rộng SAST/DAST, container và IaC scanning. Tránh bật toàn bộ tool một lúc gây alert fatigue."
+    },
+    {
+      "question": "DevSecOps có thay thế đội Security không?",
+      "answer": "Không. DevSecOps Engineer là cầu nối, giúp scale security control. Đội Security vẫn cần cho threat intelligence, IR, red team, GRC. DevSecOps giúp giảm tải việc kiểm tra thủ công lặp lại bằng cách tự động hoá."
+    },
+    {
+      "question": "Cert nào nên ưu tiên?",
+      "answer": "Nếu thiên về Kubernetes/cloud-native: CKS (Certified Kubernetes Security). Cloud: AWS Security Specialty / Azure SC-100. Foundation chương trình: Practical DevSecOps CDP, GIAC GCSA. Code-centric: ISC2 CSSLP. Không cần collect hết — chọn 1-2 phù hợp với job target."
+    }
+  ],
+  "phases": [
+    {
+      "phase": 1,
+      "title": "DevSecOps Foundation",
+      "subtitle": "Tư duy shift-left, SDLC, mô hình DevSecOps trưởng thành",
+      "duration": "2-3 tuần",
+      "theme": "indigo",
+      "goals": [
+        "Hiểu vì sao security cần được nhúng vào SDLC thay vì kiểm cuối",
+        "Phân biệt vai trò DevSecOps với SRE, AppSec, SOC, GRC",
+        "Đánh giá maturity hiện tại của tổ chức và xác định baseline"
+      ],
+      "deliverables": [
+        "1-pager mô tả SDLC + security control điểm",
+        "Maturity assessment v1 (BSIMM/OWASP SAMM-lite)"
+      ],
+      "projects": [
+        "Chọn 1 service và vẽ pipeline hiện tại + ghi lại tất cả nơi có thể chèn security control."
+      ],
+      "items": [
+        {
+          "name": "DevSecOps là gì và shift-left mindset",
+          "detail": "Hiểu lịch sử từ DevOps -> DevSecOps, vì sao 'security as gate' cuối kỳ không scale; shift-left không có nghĩa là đẩy việc cho dev mà là tự động hoá control gần thời điểm sinh lỗi nhất.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "3h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["DORA report", "OWASP DevSecOps Maturity Model", "BSIMM"],
+          "learningSteps": [
+            "Đọc OWASP DevSecOps Guideline mục Overview",
+            "Vẽ SDLC: requirement -> design -> code -> build -> test -> deploy -> runtime, đánh dấu security activity ở mỗi bước",
+            "Liệt kê 5 anti-pattern: security review chỉ trước go-live, ticket Jira thay vì tự động, blocking pipeline mà không guidance, scan nhưng không triage, dashboard không có owner"
+          ],
+          "quiz": [
+            {
+              "q": "Shift-left security đúng nhất là gì?",
+              "options": [
+                "Đẩy toàn bộ trách nhiệm security cho dev",
+                "Tự động hoá control ở giai đoạn sớm và cung cấp feedback gần thời điểm lập trình",
+                "Bỏ pentest cuối kỳ",
+                "Chỉ scan ở môi trường production"
+              ],
+              "answer": 1,
+              "explanation": "Shift-left = phát hiện và fix sớm bằng tự động hoá có ngữ cảnh, không phải bỏ activity sau hay đổ trách nhiệm."
+            }
+          ],
+          "lab": "Vẽ SDLC + control map cho 1 service đang vận hành",
+          "artifact": "SDLC diagram + control matrix",
+          "checklist": ["nêu được top 3 control thiếu và thứ tự ưu tiên triển khai"]
+        },
+        {
+          "name": "Maturity model: BSIMM, OWASP SAMM, DSOMM",
+          "detail": "So sánh các maturity model phổ biến, cách dùng để đánh giá hiện trạng và lập roadmap nâng cấp dần.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "4h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["OWASP SAMM 2.0", "BSIMM 14", "OWASP DSOMM"],
+          "learningSteps": [
+            "Đọc tổng quan SAMM (Governance/Design/Implementation/Verification/Operations)",
+            "Tự chấm điểm 1 lần cho team hiện tại với SAMM-lite",
+            "Viết lộ trình 3 quý nâng từ Level 1 -> Level 2 cho 2-3 practice ưu tiên"
+          ],
+          "quiz": [
+            {
+              "q": "Mục đích chính của SAMM/BSIMM là gì?",
+              "options": [
+                "Cấp chứng chỉ cho nhân viên",
+                "Đánh giá hiện trạng và xác định bước cải tiến tiếp theo",
+                "Thay thế tool SAST",
+                "Tự động fix CVE"
+              ],
+              "answer": 1,
+              "explanation": "Maturity model dùng để định vị hiện trạng và lên kế hoạch cải tiến dần, không thay tool kỹ thuật."
+            }
+          ],
+          "lab": "Chấm SAMM-lite cho team",
+          "artifact": "Maturity assessment report + roadmap quarterly"
+        },
+        {
+          "name": "Vai trò DevSecOps trong tổ chức",
+          "detail": "Phân biệt DevSecOps với SRE, Platform Engineer, AppSec, Cloud Security, SOC, GRC; mô hình team (embedded, central, guild) và RACI cho security activity.",
+          "type": "skill",
+          "level": "basic",
+          "estimatedTime": "3h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Team Topologies", "Google SRE book ch.20", "OWASP DevSecOps roles"],
+          "learningSteps": [
+            "Vẽ org chart hiện tại + chỉ ra ai chịu trách nhiệm CVE, secret leak, IR, compliance",
+            "Chọn mô hình tham chiếu: embedded vs central + security champion guild",
+            "Soạn RACI cho 5 hoạt động: triage CVE, threat model, IR, audit log review, key rotation"
+          ],
+          "quiz": [
+            {
+              "q": "Mô hình 'security champion' phù hợp khi nào?",
+              "options": [
+                "Khi muốn tập trung mọi quyết định security về 1 đội nhỏ",
+                "Khi cần scale kiến thức security tới nhiều product team mà giữ được tốc độ ship",
+                "Khi không có team security",
+                "Khi đã có CISO"
+              ],
+              "answer": 1,
+              "explanation": "Security champion là dev được trao kiến thức/thẩm quyền cơ bản về security trong mỗi team — giúp scale mà không tạo bottleneck."
+            }
+          ],
+          "lab": "Soạn RACI cho 5 security activity của 1 product team",
+          "artifact": "RACI matrix + đề xuất operating model"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "title": "Threat Modeling & Secure Design",
+      "subtitle": "Phát hiện rủi ro ngay từ giai đoạn thiết kế",
+      "duration": "3-4 tuần",
+      "theme": "violet",
+      "goals": [
+        "Vẽ data flow diagram (DFD) và áp dụng STRIDE để phân loại threat",
+        "Lập risk register có owner, mitigation và residual risk",
+        "Áp dụng secure design principles (least privilege, defense in depth, fail secure)"
+      ],
+      "deliverables": [
+        "Threat model v1 cho 1 service quan trọng",
+        "Risk register sống với top 10 risk + mitigation"
+      ],
+      "projects": [
+        "Threat model đầy đủ cho 1 web app + DB + queue + S3, dùng OWASP Threat Dragon hoặc Microsoft TMT."
+      ],
+      "items": [
+        {
+          "name": "STRIDE, LINDDUN, PASTA",
+          "detail": "Hiểu các framework threat modeling: STRIDE cho threat phổ thông, LINDDUN cho privacy, PASTA cho risk-centric. Khi nào dùng cái nào.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Threat Modeling: Designing for Security - Adam Shostack", "OWASP Threat Modeling Cheat Sheet"],
+          "learningSteps": [
+            "Đọc chương 1-3 Threat Modeling Designing for Security",
+            "Apply STRIDE cho 1 endpoint upload file",
+            "So sánh kết quả với LINDDUN khi endpoint xử lý PII"
+          ],
+          "quiz": [
+            {
+              "q": "STRIDE viết tắt cho threat nào sau đây không có?",
+              "options": ["Spoofing", "Tampering", "Repudiation", "Encryption"],
+              "answer": 3,
+              "explanation": "STRIDE = Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege."
+            }
+          ],
+          "lab": "STRIDE cho 1 endpoint quan trọng",
+          "artifact": "Threat model markdown với DFD + threat list + mitigation"
+        },
+        {
+          "name": "Data Flow Diagram và trust boundary",
+          "detail": "Vẽ DFD đúng cấp độ, xác định trust boundary và phân loại dữ liệu (public, internal, confidential, restricted/PII/PHI).",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["OWASP Threat Dragon", "Microsoft Threat Modeling Tool", "draw.io + threat-model template"],
+          "learningSteps": [
+            "Vẽ DFD level 0 và level 1 cho 1 service",
+            "Đánh dấu trust boundary giữa user/web/app/db/3rd-party",
+            "Phân loại dữ liệu chảy qua từng boundary"
+          ],
+          "quiz": [
+            {
+              "q": "Trust boundary là gì?",
+              "options": [
+                "Đường viền sơ đồ",
+                "Ranh giới giữa các vùng có mức tin cậy khác nhau, nơi cần kiểm tra/xác thực dữ liệu",
+                "Firewall vật lý",
+                "VPN tunnel"
+              ],
+              "answer": 1,
+              "explanation": "Tại trust boundary cần áp dụng AuthN/AuthZ, validation, encryption phù hợp."
+            }
+          ],
+          "lab": "Vẽ DFD + trust boundary cho 1 service",
+          "artifact": "DFD diagram + data classification table"
+        },
+        {
+          "name": "Secure design principles và risk scoring (CVSS, DREAD, OWASP Risk)",
+          "detail": "Áp dụng least privilege, defense in depth, fail secure, secure default; chấm điểm rủi ro với CVSS v3.1/v4 và OWASP Risk Rating.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["NIST SP 800-160", "FIRST CVSS calculator", "OWASP Risk Rating Methodology"],
+          "learningSteps": [
+            "Áp dụng 5 secure design principle cho 1 module mới",
+            "Chấm CVSS cho 3 finding gần nhất và so sánh với rating tự đánh giá",
+            "Xây risk register format (id, threat, likelihood, impact, owner, mitigation, residual)"
+          ],
+          "quiz": [
+            {
+              "q": "Nguyên tắc 'fail secure' có nghĩa là gì?",
+              "options": [
+                "Không bao giờ fail",
+                "Khi xảy ra lỗi, hệ thống mặc định ở trạng thái an toàn (deny) thay vì cho phép",
+                "Tự động khôi phục",
+                "Báo lỗi chi tiết cho user"
+              ],
+              "answer": 1,
+              "explanation": "Fail secure: khi gặp lỗi/uncertain, mặc định từ chối thay vì allow."
+            }
+          ],
+          "lab": "Chấm CVSS cho 3 vulnerability và viết risk register",
+          "artifact": "Risk register v1"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "title": "Secure Code & CI Pipeline",
+      "subtitle": "SAST, SCA, secret scanning, dependency và license trong CI",
+      "duration": "4-5 tuần",
+      "theme": "blue",
+      "goals": [
+        "Bật SAST cho ngôn ngữ chính của tổ chức và xử lý finding",
+        "Bật SCA + license check, có policy theo severity",
+        "Bật secret scanning ở pre-commit + CI + repo-wide"
+      ],
+      "deliverables": [
+        "Pipeline template có SAST/SCA/secret scan cho 1 ngôn ngữ chính",
+        "Policy severity và SLA fix rõ ràng",
+        "Báo cáo finding ban đầu + trend"
+      ],
+      "projects": [
+        "Triển khai Semgrep + Trivy + Gitleaks cho 1 monorepo, gắn quality gate trên Pull Request."
+      ],
+      "items": [
+        {
+          "name": "SAST với Semgrep, CodeQL, Sonar",
+          "detail": "So sánh tool SAST phổ biến, cách viết rule riêng (Semgrep YAML, CodeQL QL), cách giảm false positive bằng baseline + rule tuning.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Semgrep Registry", "GitHub CodeQL docs", "SonarQube docs"],
+          "learningSteps": [
+            "Bật Semgrep CI cho 1 repo, chọn ruleset OWASP Top 10",
+            "Viết 1 custom rule chặn pattern nội bộ (vd: log secrets)",
+            "Áp dụng baseline để chỉ block diff mới, không vỡ build cũ"
+          ],
+          "quiz": [
+            {
+              "q": "Cách giảm alert fatigue khi mới bật SAST hiệu quả nhất?",
+              "options": [
+                "Tắt rule khó",
+                "Dùng baseline + chỉ block finding mới trên PR và xếp finding cũ vào backlog có owner",
+                "Bỏ qua tất cả CRITICAL",
+                "Chuyển sang tool khác mỗi tháng"
+              ],
+              "answer": 1,
+              "explanation": "Baseline + delta scan giúp team tập trung fix lỗi mới và giảm regression mà không vỡ velocity."
+            }
+          ],
+          "lab": "Bật Semgrep + 1 custom rule trên repo",
+          "artifact": "PR template + workflow file + baseline file"
+        },
+        {
+          "name": "SCA & SBOM: Trivy, Grype, Syft, Dependency-Track",
+          "detail": "Phát hiện CVE trong dependency, sinh SBOM CycloneDX/SPDX, theo dõi long-tail trong Dependency-Track, license compliance.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Trivy docs", "Anchore Grype/Syft", "OWASP Dependency-Track"],
+          "learningSteps": [
+            "Sinh SBOM CycloneDX cho 1 service bằng Syft",
+            "Scan SBOM bằng Grype và đẩy vào Dependency-Track",
+            "Cấu hình policy: chặn CRITICAL có fix trong 7 ngày, HIGH 30 ngày"
+          ],
+          "quiz": [
+            {
+              "q": "SBOM giúp ích gì cho ứng phó vulnerability mới?",
+              "options": [
+                "Tự động vá lỗi",
+                "Cho biết nhanh hệ thống có dùng package bị CVE hay không và ở phiên bản nào",
+                "Thay thế firewall",
+                "Tăng performance"
+              ],
+              "answer": 1,
+              "explanation": "Có SBOM giúp trả lời 'chúng ta có bị ảnh hưởng?' trong vài phút thay vì vài ngày."
+            }
+          ],
+          "lab": "Sinh SBOM + scan + đẩy Dependency-Track",
+          "artifact": "Pipeline tạo SBOM + dashboard finding"
+        },
+        {
+          "name": "Secret scanning & secret management",
+          "detail": "Pre-commit hook (gitleaks, detect-secrets), repo-wide scan, rotation, secret management với Vault/AWS Secrets Manager/SOPS, IAM policy least privilege.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["gitleaks", "trufflehog", "HashiCorp Vault", "Mozilla SOPS"],
+          "learningSteps": [
+            "Cài gitleaks ở pre-commit + CI",
+            "Audit lịch sử git tìm secret leak (git log, BFG)",
+            "Migrate 1 service sang Vault + dynamic credential cho DB"
+          ],
+          "quiz": [
+            {
+              "q": "Khi phát hiện secret bị commit vào lịch sử git, bước đầu tiên cần làm là gì?",
+              "options": [
+                "Xoá commit và chối",
+                "Rotate ngay secret bị lộ, sau đó remove khỏi lịch sử và audit usage",
+                "Đổi repo private",
+                "Bỏ qua nếu commit cũ"
+              ],
+              "answer": 1,
+              "explanation": "Coi như đã bị lộ — rotation trước, dọn lịch sử và audit truy cập sau."
+            }
+          ],
+          "lab": "Bật gitleaks pre-commit + migrate 1 secret sang Vault",
+          "artifact": "Pre-commit config + secret rotation runbook"
+        },
+        {
+          "name": "Pipeline security & branch protection",
+          "detail": "Bảo vệ pipeline khỏi pipeline attack: required review, signed commit, ephemeral runner, OIDC thay long-lived key, least-privilege token, pinned action SHA.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["GitHub OIDC docs", "OWASP Top 10 CI/CD Risks", "SLSA source requirements"],
+          "learningSteps": [
+            "Bật branch protection: required review + status check + signed commit",
+            "Thay GitHub Action third-party tag bằng pinned commit SHA",
+            "Migrate AWS deploy sang OIDC federation thay vì IAM access key"
+          ],
+          "quiz": [
+            {
+              "q": "Vì sao nên pin GitHub Action theo commit SHA thay vì tag?",
+              "options": [
+                "Tag dễ bị repo owner override gây supply chain attack",
+                "SHA ngắn hơn",
+                "Tag không hoạt động",
+                "SHA chạy nhanh hơn"
+              ],
+              "answer": 0,
+              "explanation": "Tag có thể bị move; SHA bất biến giúp bảo vệ khỏi supply chain trên CI."
+            }
+          ],
+          "lab": "Audit 1 workflow GitHub Action và harden",
+          "artifact": "Hardened workflow file + branch protection config"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "title": "Container, Image & Kubernetes Security",
+      "subtitle": "Hardening image, runtime policy, network policy, secret in cluster",
+      "duration": "4-6 tuần",
+      "theme": "cyan",
+      "goals": [
+        "Build image tối thiểu, non-root, scan và sign",
+        "Áp dụng admission policy (Kyverno/OPA Gatekeeper) cho cluster",
+        "Bật network policy, runtime monitor (Falco) và audit log"
+      ],
+      "deliverables": [
+        "Base image template + Dockerfile guidelines",
+        "Cluster baseline policy với Kyverno",
+        "Runtime monitoring với Falco + alert"
+      ],
+      "projects": [
+        "Hardening 1 cluster K8s theo CIS Benchmark + cài đặt admission policy + Falco."
+      ],
+      "items": [
+        {
+          "name": "Container image hardening và distroless",
+          "detail": "Multi-stage build, non-root, drop capabilities, minimize layer, distroless/Chainguard image, pin digest, no shell trong runtime image.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Google Distroless", "Chainguard Images", "Docker best practices"],
+          "learningSteps": [
+            "Refactor 1 Dockerfile sang multi-stage + distroless",
+            "Đảm bảo USER non-root, readOnlyRootFilesystem, drop ALL caps",
+            "Pin base image theo digest"
+          ],
+          "quiz": [
+            {
+              "q": "Lợi ích chính của distroless image là gì?",
+              "options": [
+                "Image nhanh build hơn",
+                "Giảm attack surface (không shell, không package manager) và ít CVE OS-level",
+                "Tăng tốc network",
+                "Bắt buộc cho Kubernetes"
+              ],
+              "answer": 1,
+              "explanation": "Distroless loại bỏ binary không cần thiết, giảm CVE OS và khó tấn công khi RCE."
+            }
+          ],
+          "lab": "Refactor 1 Dockerfile sang distroless multi-stage",
+          "artifact": "Dockerfile baseline + linting hadolint"
+        },
+        {
+          "name": "Image scanning, signing với Cosign và Sigstore",
+          "detail": "Scan image với Trivy/Grype, sign với cosign keyless (OIDC), verify trong admission, attach SBOM/attestation in-toto.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Sigstore Cosign", "in-toto attestation spec", "Trivy"],
+          "learningSteps": [
+            "Sign 1 image bằng cosign keyless với OIDC GitHub",
+            "Verify signature trong Kyverno policy",
+            "Attach SBOM CycloneDX làm attestation"
+          ],
+          "quiz": [
+            {
+              "q": "Cosign keyless dùng cơ chế nào để xác thực ai sign?",
+              "options": [
+                "API key tĩnh",
+                "OIDC identity (GitHub Actions/Google) + Fulcio cấp short-lived cert",
+                "PGP key cá nhân",
+                "Mật khẩu admin"
+              ],
+              "answer": 1,
+              "explanation": "Keyless signing dựa OIDC và short-lived cert do Fulcio cấp, log vào Rekor — bỏ gánh quản lý private key."
+            }
+          ],
+          "lab": "Sign image + verify policy",
+          "artifact": "Cosign workflow + Kyverno verifyImages policy"
+        },
+        {
+          "name": "Kubernetes admission policy với Kyverno và OPA Gatekeeper",
+          "detail": "Áp dụng Pod Security Standards (restricted), policy disallow privileged, require resource limits, require labels, image registry allowlist.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Kyverno policies catalog", "Kubernetes Pod Security Standards", "OPA Gatekeeper"],
+          "learningSteps": [
+            "Cài Kyverno + apply pod-security restricted",
+            "Viết policy: chặn image không từ registry nội bộ",
+            "Audit cluster hiện tại trước khi enforce"
+          ],
+          "quiz": [
+            {
+              "q": "Chiến lược triển khai admission policy an toàn nhất là?",
+              "options": [
+                "Enforce ngay tất cả cluster",
+                "Triển khai ở chế độ audit trước, đo violation, fix workload, rồi enforce dần",
+                "Chỉ apply trên dev",
+                "Bỏ qua nếu nhiều violation"
+              ],
+              "answer": 1,
+              "explanation": "Audit trước -> fix -> enforce giúp tránh outage và tạo buy-in."
+            }
+          ],
+          "lab": "Apply Kyverno policy ở chế độ audit, đo, rồi enforce 1 policy",
+          "artifact": "Policy bundle + violation report"
+        },
+        {
+          "name": "Network policy, runtime monitor (Falco) và Cilium Tetragon",
+          "detail": "Default-deny network policy, mTLS giữa service (Linkerd/Istio mesh), runtime detection với Falco rule, Cilium L7 policy.",
+          "type": "tool",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["Falco rules", "Cilium docs", "Linkerd security"],
+          "learningSteps": [
+            "Apply default-deny NetworkPolicy cho 1 namespace",
+            "Cài Falco + bật rule shell-in-container",
+            "Stream alert sang Slack/SIEM"
+          ],
+          "quiz": [
+            {
+              "q": "Vì sao runtime detection vẫn cần khi đã có image scanning?",
+              "options": [
+                "Image scan chỉ thấy known CVE và không phát hiện hành vi bất thường khi container đang chạy",
+                "Vì runtime nhanh hơn",
+                "Vì image scan không hỗ trợ K8s",
+                "Vì Falco bắt buộc theo luật"
+              ],
+              "answer": 0,
+              "explanation": "Runtime detection bắt 0-day, misconfig active, lateral movement — bổ sung cho scan tĩnh."
+            }
+          ],
+          "lab": "Cài Falco + alert vào Slack",
+          "artifact": "Falco custom ruleset + alert dashboard"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "title": "Cloud, IaC & Supply Chain Security",
+      "subtitle": "Hardening cloud, IaC scan, SLSA, attestation, build provenance",
+      "duration": "4-6 tuần",
+      "theme": "teal",
+      "goals": [
+        "Áp dụng IaC scan (Checkov, tfsec, KICS) trong CI",
+        "Đạt SLSA Build Level 2-3 cho ít nhất 1 service",
+        "Cấu hình cloud baseline (CIS Benchmark, Landing Zone)"
+      ],
+      "deliverables": [
+        "Pipeline IaC có scan + drift detection",
+        "Build provenance + attestation cho artifact",
+        "Cloud baseline guardrails (SCP/Azure Policy/Org Policy)"
+      ],
+      "projects": [
+        "Đưa 1 Terraform module lên SLSA Build L3 với GitHub OIDC + cosign + provenance."
+      ],
+      "items": [
+        {
+          "name": "IaC security: Terraform, CloudFormation, Bicep",
+          "detail": "Scan tĩnh với Checkov/tfsec/KICS, plan policy với OPA conftest, drift detection và state security (encryption + lock).",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Checkov", "tfsec/Trivy IaC", "OPA conftest"],
+          "learningSteps": [
+            "Bật Checkov trên repo Terraform",
+            "Viết 1 OPA policy chặn S3 bucket public",
+            "Bật drift detection bằng terraform plan trong CI nightly"
+          ],
+          "quiz": [
+            {
+              "q": "Drift detection trong IaC giúp gì?",
+              "options": [
+                "Phát hiện thay đổi thủ công ngoài Terraform có thể gây rủi ro",
+                "Tự động revert mọi thay đổi",
+                "Tăng tốc apply",
+                "Backup state"
+              ],
+              "answer": 0,
+              "explanation": "Drift = trạng thái thật khác state IaC, dễ tạo lỗ hổng (vd: bucket bị mở public bằng tay)."
+            }
+          ],
+          "lab": "Thêm Checkov + 1 OPA conftest rule",
+          "artifact": "CI workflow IaC scan + OPA policy"
+        },
+        {
+          "name": "Supply chain security: SLSA, SBOM, in-toto, sigstore",
+          "detail": "Hiểu SLSA level 1-4, build hermetic, provenance, in-toto attestation và verify chain trước deploy.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "7h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["slsa.dev", "sigstore.dev", "in-toto.io"],
+          "learningSteps": [
+            "Đọc spec SLSA và xác định level hiện tại của 1 build",
+            "Sinh provenance bằng GitHub provenance generator",
+            "Verify provenance + signature trước deploy bằng cosign verify-attestation"
+          ],
+          "quiz": [
+            {
+              "q": "SLSA Build Level 3 yêu cầu chính là gì?",
+              "options": [
+                "Build chạy trên máy dev",
+                "Build trong môi trường isolated/hardened, có provenance không thể giả mạo",
+                "Không cần test",
+                "Phải có tester thủ công"
+              ],
+              "answer": 1,
+              "explanation": "SLSA L3 cần hardened build platform và provenance signed, không thể bị inject."
+            }
+          ],
+          "lab": "Sinh + verify provenance cho 1 artifact",
+          "artifact": "Build workflow có provenance + cosign verify"
+        },
+        {
+          "name": "Cloud baseline: CIS Benchmark, Landing Zone, SCP",
+          "detail": "Áp dụng baseline AWS/Azure/GCP với CIS, Landing Zone đa account, Service Control Policy/Org Policy/Azure Policy chặn region/service không phép.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "8h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["AWS Security Reference Architecture", "CIS AWS/Azure/GCP Foundations Benchmark", "Steampipe/Prowler"],
+          "learningSteps": [
+            "Chạy Prowler/Steampipe scan 1 account và xếp finding",
+            "Viết 3 SCP/Org Policy: chặn region, chặn root key, ép tag",
+            "Soạn Landing Zone baseline OU + guardrails"
+          ],
+          "quiz": [
+            {
+              "q": "SCP trong AWS Organizations có vai trò gì?",
+              "options": [
+                "Cấp quyền cho IAM user",
+                "Đặt giới hạn quyền tối đa (deny boundary) cho account/OU",
+                "Tăng quota",
+                "Thay thế VPC"
+              ],
+              "answer": 1,
+              "explanation": "SCP là guardrail chặn tối đa, IAM trong account chỉ có thể nhận trong giới hạn SCP."
+            }
+          ],
+          "lab": "Prowler scan + viết 3 SCP",
+          "artifact": "Baseline policy bundle + finding report"
+        },
+        {
+          "name": "Secret rotation & key management (KMS/HSM)",
+          "detail": "Envelope encryption, KMS key policy, key rotation tự động, BYOK/HYOK, customer-managed key cho dữ liệu nhạy cảm theo NĐ 13/2023.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["AWS KMS docs", "Azure Key Vault", "GCP Cloud KMS"],
+          "learningSteps": [
+            "Tạo CMK + key policy least privilege",
+            "Bật automatic rotation 1 năm",
+            "Audit ai dùng key bằng CloudTrail/Activity Log"
+          ],
+          "quiz": [
+            {
+              "q": "Envelope encryption hoạt động như thế nào?",
+              "options": [
+                "DEK mã hoá data, KEK mã hoá DEK, KEK lưu/quản lý ở KMS",
+                "Mã hoá 2 lần với cùng key",
+                "Không cần KMS",
+                "Mã hoá ở client only"
+              ],
+              "answer": 0,
+              "explanation": "Envelope encryption tách quản lý DEK và KEK, dễ rotate và audit."
+            }
+          ],
+          "lab": "Tạo CMK + key policy + bật rotation",
+          "artifact": "Key inventory + rotation runbook"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "title": "Runtime, DAST, Observability & Incident Response",
+      "subtitle": "Phòng thủ runtime, DAST, logging, IR và post-mortem",
+      "duration": "4-5 tuần",
+      "theme": "rose",
+      "goals": [
+        "Bật DAST/IAST cho web app quan trọng",
+        "Tập trung log/audit, alert dựa baseline hành vi",
+        "Có runbook IR, tabletop exercise và post-mortem chuẩn"
+      ],
+      "deliverables": [
+        "DAST scan định kỳ + finding triage",
+        "SIEM alert quan trọng + on-call rotation",
+        "IR runbook + post-mortem template"
+      ],
+      "projects": [
+        "Tổ chức 1 tabletop exercise mô phỏng container compromise + viết post-mortem."
+      ],
+      "items": [
+        {
+          "name": "DAST với ZAP, Burp + IAST overview",
+          "detail": "Authenticated DAST, API DAST với spec OpenAPI, baseline scan trong CI, deep scan định kỳ; vai trò IAST agent.",
+          "type": "tool",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["OWASP ZAP", "Burp Suite", "Contrast Security"],
+          "learningSteps": [
+            "Chạy ZAP baseline scan trong CI cho 1 web app staging",
+            "Cấu hình authenticated scan với token",
+            "Thực hiện 1 lần API scan với OpenAPI"
+          ],
+          "quiz": [
+            {
+              "q": "Vì sao DAST chỉ chạy 1 lần mỗi quý là không đủ?",
+              "options": [
+                "Vì release liên tục, vulnerability mới xuất hiện sau mỗi thay đổi UI/API",
+                "DAST không tốn tài nguyên",
+                "DAST đã thay thế SAST",
+                "DAST không cần auth"
+              ],
+              "answer": 0,
+              "explanation": "Chạy DAST sát tần suất release giúp bắt regression mới."
+            }
+          ],
+          "lab": "ZAP baseline trong CI",
+          "artifact": "ZAP workflow + finding triage backlog"
+        },
+        {
+          "name": "Logging, audit, SIEM và detection engineering",
+          "detail": "Chuẩn log JSON + correlation id, audit log K8s, CloudTrail/Activity Log, gom về SIEM (ELK/Splunk/Wazuh), viết detection rule MITRE ATT&CK.",
+          "type": "skill",
+          "level": "advanced",
+          "estimatedTime": "8h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["Sigma rules", "MITRE ATT&CK", "Wazuh"],
+          "learningSteps": [
+            "Bật K8s audit policy ở mức Metadata",
+            "Stream log về SIEM với schema chuẩn",
+            "Viết 3 detection rule: brute force, lateral movement, secret access bất thường"
+          ],
+          "quiz": [
+            {
+              "q": "MITRE ATT&CK dùng để làm gì trong detection?",
+              "options": [
+                "Map tactic/technique của attacker để biết thiếu detection ở đâu",
+                "Tự động fix CVE",
+                "Thay thế firewall",
+                "Quản lý ticket"
+              ],
+              "answer": 0,
+              "explanation": "ATT&CK giúp đánh giá coverage detection theo TTP của attacker thực tế."
+            }
+          ],
+          "lab": "Viết 3 Sigma rule + đánh giá coverage ATT&CK",
+          "artifact": "Detection rule pack + coverage map"
+        },
+        {
+          "name": "Incident Response & post-mortem blameless",
+          "detail": "Vòng IR (PICERL), severity matrix, on-call, communication, evidence preservation, post-mortem blameless và corrective action.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["NIST SP 800-61", "Google SRE post-mortem", "PagerDuty IR docs"],
+          "learningSteps": [
+            "Viết IR runbook cho 1 scenario (secret leak)",
+            "Tổ chức tabletop exercise 1 giờ",
+            "Viết post-mortem theo template + corrective action có owner & deadline"
+          ],
+          "quiz": [
+            {
+              "q": "Mục tiêu post-mortem blameless là gì?",
+              "options": [
+                "Tìm người để phạt",
+                "Học từ sự cố và cải tiến hệ thống/quy trình mà không tạo culture đổ lỗi",
+                "Bỏ qua sự cố",
+                "Báo cáo sếp"
+              ],
+              "answer": 1,
+              "explanation": "Blameless giúp người liên quan kể trung thực, từ đó tìm root cause hệ thống."
+            }
+          ],
+          "lab": "Tabletop exercise 1 scenario + post-mortem",
+          "artifact": "IR runbook + post-mortem template"
+        },
+        {
+          "name": "Bug bounty, pentest và red/purple team",
+          "detail": "Vai trò pentest định kỳ, bug bounty (HackerOne/Intigriti/local VietBugBounty), responsible disclosure policy, purple team exercise.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["HackerOne triage guide", "PTES", "MITRE Caldera"],
+          "learningSteps": [
+            "Soạn responsible disclosure / security.txt cho website",
+            "Chuẩn bị scope + rules of engagement cho pentest",
+            "Đề xuất 1 purple team exercise giữa SOC và red team"
+          ],
+          "quiz": [
+            {
+              "q": "Purple team khác red team thế nào?",
+              "options": [
+                "Là 1 team trộn red + blue cùng chia sẻ kỹ thuật để cải thiện detection",
+                "Là red team mặc đồng phục tím",
+                "Chỉ tấn công không phòng thủ",
+                "Chỉ làm compliance"
+              ],
+              "answer": 0,
+              "explanation": "Purple team tập trung học chéo và improve detection/response, không chỉ chấm điểm."
+            }
+          ],
+          "lab": "Soạn security.txt + scope pentest",
+          "artifact": "Disclosure policy + pentest scope doc"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "title": "Compliance, Governance & Program Scaling",
+      "subtitle": "ISO 27001, SOC 2, PCI DSS, NĐ 13/2023 và scale DevSecOps program",
+      "duration": "4-6 tuần",
+      "theme": "amber",
+      "goals": [
+        "Map control của ISO 27001 / SOC 2 / PCI DSS / NĐ 13 vào pipeline & cluster",
+        "Tự động sinh evidence từ pipeline cho audit",
+        "Scale DevSecOps qua security champion, metric và OKR"
+      ],
+      "deliverables": [
+        "Control mapping table với evidence tự động",
+        "DevSecOps metric dashboard (MTTR vuln, mean time to detect, scan coverage)",
+        "Security champion program v1"
+      ],
+      "projects": [
+        "Lập gói evidence tự động cho 5 control SOC 2 từ pipeline + cluster + IAM."
+      ],
+      "items": [
+        {
+          "name": "ISO 27001, SOC 2, PCI DSS overview cho engineer",
+          "detail": "Hiểu cấu trúc Annex A của ISO 27001:2022, Trust Service Criteria của SOC 2, 12 yêu cầu PCI DSS v4 và cách map về control kỹ thuật.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "6h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["ISO/IEC 27001:2022", "AICPA SOC 2", "PCI DSS v4.0"],
+          "learningSteps": [
+            "Map 10 control Annex A vào tool/pipeline đã có",
+            "Liệt kê gap chính và prioritize",
+            "Soạn evidence template cho 5 control quan trọng"
+          ],
+          "quiz": [
+            {
+              "q": "Lợi ích của 'compliance as code' là gì?",
+              "options": [
+                "Sinh evidence tự động từ pipeline/IaC, giảm công thu thập thủ công khi audit",
+                "Bỏ qua audit",
+                "Tự động pass audit",
+                "Thay thế kiểm toán viên"
+              ],
+              "answer": 0,
+              "explanation": "Evidence tự động giúp audit nhanh hơn và phản ánh trạng thái thực tế."
+            }
+          ],
+          "lab": "Map 10 control vào tool có sẵn",
+          "artifact": "Control mapping spreadsheet + evidence sample"
+        },
+        {
+          "name": "Nghị định 13/2023 và Luật Dữ liệu cá nhân Việt Nam",
+          "detail": "Yêu cầu cốt lõi của NĐ 13/2023: phân loại dữ liệu cá nhân (cơ bản/nhạy cảm), DPIA, lưu trú, retention, breach notification 72h; điều khoản chuyển dữ liệu xuyên biên giới.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "5h",
+          "recommendedFor": ["beginner", "transitioner"],
+          "resources": ["Nghị định 13/2023/NĐ-CP", "Luật Dữ liệu cá nhân (dự thảo/ban hành)"],
+          "learningSteps": [
+            "Phân loại dữ liệu cá nhân của 1 sản phẩm",
+            "Soạn DPIA-lite cho 1 tính năng có PII",
+            "Viết playbook breach notification trong 72h"
+          ],
+          "quiz": [
+            {
+              "q": "Theo NĐ 13/2023, bên Kiểm soát dữ liệu cần làm gì khi xảy ra vi phạm?",
+              "options": [
+                "Không cần báo nếu nhỏ",
+                "Thông báo cho cơ quan chuyên trách trong vòng 72 giờ kể từ khi biết",
+                "Chờ 30 ngày",
+                "Chỉ báo nội bộ"
+              ],
+              "answer": 1,
+              "explanation": "NĐ 13 yêu cầu thông báo trong 72 giờ, tương tự GDPR."
+            }
+          ],
+          "lab": "DPIA-lite cho 1 tính năng có PII",
+          "artifact": "DPIA template + breach playbook 72h"
+        },
+        {
+          "name": "DevSecOps metrics và OKR",
+          "detail": "Đo lường: MTTR vuln theo severity, scan coverage, % service có threat model, % image signed, % cluster có policy enforce, secret leak per quarter, IR drill cadence.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["DORA metrics", "Google SRE workbook", "OWASP DSOMM"],
+          "learningSteps": [
+            "Chọn 6-8 metric phù hợp giai đoạn hiện tại",
+            "Setup dashboard (Grafana / DefectDojo / Dependency-Track)",
+            "Viết OKR quý cho DevSecOps team"
+          ],
+          "quiz": [
+            {
+              "q": "Metric phù hợp đo hiệu quả DevSecOps là?",
+              "options": [
+                "Số scan đã chạy",
+                "MTTR vuln theo severity và % finding xử lý đúng SLA",
+                "Số tool đã mua",
+                "Số cuộc họp"
+              ],
+              "answer": 1,
+              "explanation": "Metric tốt phản ánh outcome (sửa nhanh, đúng hạn), không phải hoạt động."
+            }
+          ],
+          "lab": "Setup dashboard với 6 metric + OKR quý",
+          "artifact": "Metric dashboard + OKR doc"
+        },
+        {
+          "name": "Security champion program và scaling DevSecOps",
+          "detail": "Tuyển/training security champion theo team, brown bag, internal CTF, secure coding workshop, gameday, recognition và career path.",
+          "type": "skill",
+          "level": "intermediate",
+          "estimatedTime": "4h",
+          "recommendedFor": ["transitioner"],
+          "resources": ["OWASP Security Champions Playbook", "Google security blog", "Practical DevSecOps champion guide"],
+          "learningSteps": [
+            "Soạn job description + cam kết thời gian (5-10%) cho champion",
+            "Lên lộ trình training 6 tháng cho champion mới",
+            "Tổ chức 1 internal CTF nhỏ 1 buổi"
+          ],
+          "quiz": [
+            {
+              "q": "Yếu tố thành công quan trọng nhất của program champion là?",
+              "options": [
+                "Sếp ép tham gia",
+                "Có support thời gian, tài liệu, mentor và recognition rõ ràng",
+                "Chỉ chọn người giỏi nhất",
+                "Trả thêm tiền"
+              ],
+              "answer": 1,
+              "explanation": "Champion cần thời gian + cộng đồng + ghi nhận để duy trì lâu dài."
+            }
+          ],
+          "lab": "Soạn champion JD + CTF mini",
+          "artifact": "Champion program doc + CTF scenario"
+        }
+      ]
+    }
+  ]
+}

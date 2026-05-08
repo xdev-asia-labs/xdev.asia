@@ -58,5 +58,20 @@
       "certs": "OHDSI EHDEN Academy / Coursera OMOP"
     },
     "tags": ["OMOP", "CDM", "OHDSI", "ATLAS", "HADES", "ETL", "RWE", "Healthcare", "Vocabulary", "Vietnam Health"]
+  },
+  {
+    "slug": "devsecops",
+    "title": "DevSecOps Engineer",
+    "description": "Lộ trình DevSecOps end-to-end: shift-left security trong SDLC, threat modeling, SAST/DAST/SCA, secret & dependency management, container & IaC security, supply chain (SLSA/SBOM), runtime defense, incident response và compliance (ISO 27001, SOC 2, PCI DSS, NĐ 13/2023).",
+    "category": "role",
+    "icon": "🛡️",
+    "theme": "indigo",
+    "stats": {
+      "phases": 7,
+      "duration": "6-10 tháng",
+      "level": "DevOps/Security Engineer -> Production DevSecOps Engineer",
+      "certs": "CKS / AWS Security Specialty / GIAC GCSA / ISC2 CSSLP / Practical DevSecOps CDP"
+    },
+    "tags": ["DevSecOps", "Shift-Left", "SAST", "DAST", "SCA", "SBOM", "SLSA", "Container Security", "IaC Security", "Supply Chain", "Threat Modeling", "Compliance"]
   }
 ]
