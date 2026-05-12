@@ -24,69 +24,138 @@ course:
 ![NOC theo dõi 24/7 và DR site mirror dữ liệu](/storage/uploads/2026/05/his/bai-48-van-hanh-247-dr-downtime-workflow.png)
 
 
-Cấp cứu, sản, ICU không có "giờ làm việc". Mất HIS:
+## Mục tiêu bài học
 
-- Không kê thuốc → không phát thuốc.
-- Không có y lệnh → không truyền dịch.
-- Không in được giấy ra viện → BN tắc.
-- Không thanh toán → mất doanh thu.
+- Thiết kế kiến trúc **HA (High Availability)** + **DR (Disaster Recovery)** cho HIS chạy 24/7.
+- Xác định RPO/RTO theo mức độ quan trọng từng module.
+- Triển khai **downtime procedure** (BCP — Business Continuity Plan) cho các kịch bản mất hệ thống.
+- Tổ chức **diễn tập downtime** định kỳ — yêu cầu của TT 46/2018 + ISO 27031.
+- Vận hành NOC (Network Operations Center) 24/7 với on-call rotation, runbook, post-mortem.
 
-## SLA tham khảo
+## Bối cảnh
 
-| Hệ thống | Uptime | RPO | RTO |
+- HIS down 1 giờ ở BV 1000 giường = ~50-150 BN bị ảnh hưởng + nguy cơ an toàn.
+- Sự cố hạ tầng (mất điện, đứt cáp, ransomware) đã xảy ra ở nhiều BV VN 2022-2025.
+- BYT yêu cầu BV có quy trình downtime + diễn tập định kỳ (TT 46/2018).
+- Ransomware Conti/Lockbit/BlackCat tấn công y tế Mỹ-EU mạnh; VN chưa nhiều nhưng đã bắt đầu.
+
+## RPO / RTO theo module
+
+| Module | RPO | RTO | Mức quan trọng |
 | --- | --- | --- | --- |
-| HIS core (EMR + Order) | 99.9 % | 5 phút | 30 phút |
-| LIS / RIS / PACS | 99.5 % | 15 phút | 1 giờ |
-| Billing / BHYT | 99 % | 1 giờ | 4 giờ |
-| Mobile / Web BN | 99 % | 15 phút | 1 giờ |
+| EMR / Order | ≤ 5 phút | ≤ 15 phút | CRITICAL |
+| Pharmacy / eMAR | ≤ 5 phút | ≤ 15 phút | CRITICAL |
+| LIS (kết quả CLS) | ≤ 15 phút | ≤ 30 phút | HIGH |
+| Billing / BHYT | ≤ 1h | ≤ 4h | MEDIUM |
+| MRA / Reports | ≤ 4h | ≤ 24h | LOW |
+| PACS imaging | ≤ 15 phút | ≤ 1h | HIGH |
+| Tele-consult | ≤ 5 phút | ≤ 30 phút | HIGH |
 
-## Kiến trúc HA
+RPO = Recovery Point Objective (mất tối đa bao nhiêu data); RTO = Recovery Time Objective (downtime tối đa).
 
-- Active-Active hoặc Active-Standby cho App.
-- DB replication đồng bộ (vd. PostgreSQL streaming, Oracle Data Guard).
-- Load balancer + health check.
-- Storage redundancy (RAID, replication).
+## Kiến trúc HA + DR
 
-## DR Site
+```
+         Active Site (DC1)               Passive Site (DC2 - DR)
+   ┌──────────────────────┐         ┌──────────────────────┐
+   │  Load Balancer (HA)  │         │  Load Balancer       │
+   │  App servers (N+1)    │         │  App servers (warm)  │
+   │  DB Primary (Postgres)│ ◄────► │  DB Replica (sync ≤  │
+   │  Pacemaker/Patroni    │  WAN    │  1s lag)             │
+   │  Object Storage       │         │  Object Storage      │
+   └──────────────────────┘         └──────────────────────┘
+            │                                  │
+            └──────── Backup → S3 / Tape ──────┘
+                       (3-2-1: 3 copies, 2 media, 1 offsite)
+```
 
-- Site dự phòng cách ≥ 30 km (tốt nhất khác vùng điện lực).
-- Replication async với độ trễ chấp nhận được.
-- Diễn tập DR ≥ 1 lần/năm — failover thật, không chỉ "trên giấy".
+Khuyến nghị: **DC chính + DC DR cách ≥ 100km** (nếu BV lớn) hoặc ít nhất 2 phòng máy khác nhau (BV vừa).
 
-## Downtime kế hoạch
+## Downtime procedure (BCP)
 
-- Lịch maintenance vào khung ít hoạt động (2–5 giờ sáng).
-- Thông báo trước 7–14 ngày cho các khoa.
-- Kế hoạch rollback rõ ràng.
+3 cấp downtime:
 
-## Downtime ngoài kế hoạch
+| Cấp | Mô tả | Thời gian | Hành động |
+| --- | --- | --- | --- |
+| Brief | < 30 phút, dự đoán recover sớm | < 30 phút | hold dữ liệu, không in giấy |
+| Extended | 30 phút - 4 giờ | 0.5-4h | activate paper forms cấp cứu, ICU dùng giấy |
+| Catastrophic | > 4h hoặc data loss | > 4h | full BCP, tổ chức điều hành thủ công, thông báo BYT |
 
-Quy trình "Code Yellow" (HIS down):
+Tài liệu BCP cần có:
+- Danh sách form giấy "downtime kit" tại mỗi khoa (đơn thuốc, y lệnh, kết quả CLS giả lập).
+- Quy trình ai báo ai, thứ tự gọi.
+- Quy trình "catch-up": khi hệ thống về, ai nhập backlog, deadline bao lâu.
+- Communication template gửi BN/cộng đồng nếu downtime kéo dài.
 
-1. Xác nhận sự cố — gọi NOC.
-2. Thông báo loa toàn BV: kích hoạt **chế độ giấy**.
-3. Các khoa dùng mẫu giấy in sẵn (đã chuẩn bị từ trước).
-4. ER / ICU có printer offline với template biểu mẫu.
-5. Khi HIS phục hồi, **back-entry** dữ liệu giấy vào hệ thống.
+## Diễn tập downtime
 
-Chuẩn bị bộ "downtime kit" cho từng khoa: mẫu giấy, hướng dẫn, danh sách BN đang điều trị (in cuối ngày).
+- Tần suất: ≥ 2 lần/năm (sáng + trưa hoặc đêm).
+- Bắt đầu nhỏ: 1 khoa 30 phút → mở rộng toàn BV 2-4 giờ.
+- Đo: thời gian khôi phục, sai sót khi catch-up, NV còn nhớ form giấy không.
+- Post-mortem báo cáo Giám đốc.
 
-## Monitoring & Alerting
+## Bảo mật & phòng ransomware
 
-- APM (Datadog, Dynatrace, Elastic APM) — theo dõi response time, error rate.
-- Synthetic monitoring — bot thử login, đặt lịch giả mỗi 5 phút.
-- On-call rotation 24/7 với escalation path.
+- Backup **immutable** (S3 Object Lock, Veeam hardened repo) — ransomware không xoá được.
+- Test restore hàng tháng — backup không test = không có backup.
+- EDR (CrowdStrike / Defender / Sentinel) trên mọi server và endpoint BV cấp.
+- Network segmentation: medical devices VLAN tách app servers.
+- Patching cadence: critical patch trong 7 ngày, others trong 30 ngày.
+- Phishing simulation cho NV — y tế là nạn nhân hàng đầu của ransomware.
 
-## Backup
+## NOC + On-call
 
-- Full DB hàng đêm + WAL liên tục.
-- Backup PACS: 3-2-1.
-- Test restore định kỳ — backup không restore được = không có backup.
+- 24/7 NOC team (in-house hoặc outsourced).
+- Monitoring: Grafana + Prometheus + Alertmanager / Datadog.
+- Runbook cho mỗi alert: cách diagnose, cách mitigate.
+- On-call rotation với escalation policy.
+- Post-mortem **blameless** sau mỗi incident SEV1/SEV2.
 
-## Bài học vận hành
+## Sai lầm thường gặp
 
-- HIS down 1 giờ vào giờ cao điểm = hỗn loạn lớn → mọi quyết định kiến trúc đều phải nghĩ đến HA.
-- "Chế độ giấy" không phải dự phòng "đẹp" — phải drill thật để mọi điều dưỡng biết làm.
-- Sau mỗi sự cố: **postmortem không đổ lỗi**, tập trung cải tiến hệ thống.
+1. Backup chỉ 1 site (cùng phòng máy) → cháy = mất hết.
+2. Không test restore → backup hỏng mà không biết.
+3. Diễn tập downtime "trên giấy" không thực sự → khi xảy ra, chaos.
+4. Khi downtime, NV không nhớ form giấy → bệnh án bị bỏ trống.
+5. Catch-up sau downtime không có deadline → dữ liệu sai sự thật.
+6. Không có EDR → ransomware mã hoá DB chính + replica cùng lúc.
+7. Patch chậm → CVE bị khai thác.
 
-> **Hết series.** Cảm ơn bạn đã theo dõi! Series tiếp theo có thể đi sâu vào: kiến trúc kỹ thuật HIS hiện đại (microservice, event-driven), HL7 FHIR R4 chi tiết, hoặc xây EMR mã nguồn mở (OpenMRS, OpenEMR).
+## Output / Deliverables
+
+- Kiến trúc HA + DR documented.
+- BCP + downtime kit cho mỗi khoa.
+- Lịch diễn tập + post-mortem.
+- NOC 24/7 + runbook + on-call rotation.
+- Backup policy + monthly restore test.
+- Security stack (EDR, segmentation, MFA).
+
+## UAT checklist
+
+- [ ] Failover DC1 → DC2 trong RTO ≤ 15 phút (test simulator).
+- [ ] Restore DB từ backup tháng trước thành công.
+- [ ] Diễn tập downtime 2 giờ → ICU/ER vẫn hoạt động an toàn.
+- [ ] Catch-up dữ liệu sau diễn tập đúng 100%.
+- [ ] EDR phát hiện malware giả lập trong 5 phút.
+- [ ] Patch CVE critical trong 7 ngày.
+
+## KPI
+
+| Chỉ số | Mục tiêu |
+| --- | --- |
+| Uptime HIS / năm | ≥ 99.9% (≤ 8.76h downtime/năm) |
+| RPO module CRITICAL | ≤ 5 phút |
+| RTO module CRITICAL | ≤ 15 phút |
+| % backup restore test thành công | 100% |
+| % NV qua đào tạo BCP | ≥ 90% |
+| Sự cố security có lộ data | 0 |
+
+## Cơ sở pháp lý 2026
+
+- **Luật An ninh mạng 24/2018/QH14** + **NĐ 53/2022**.
+- **Luật KCB 15/2023/QH15** — Điều 110 ứng dụng CNTT.
+- **Thông tư 46/2018/TT-BYT** — yêu cầu DR/backup cho EMR.
+- **Nghị định 13/2023/NĐ-CP** — bảo vệ DLCN.
+- **Quyết định 06/QĐ-TTg/2022** — bảo mật dữ liệu tích hợp với CSDLQG.
+- **Thông tư 12/2022/TT-BTTTT** — bảo đảm an toàn hệ thống thông tin theo cấp độ.
+- **ISO 27001 / ISO 27031 / ISO 22301** — chuẩn quốc tế tham chiếu.
