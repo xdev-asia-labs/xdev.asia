@@ -46,6 +46,7 @@ export interface HeaderStrings {
     blog: string;
     series: string;
     exam_prep: string;
+    domain: string;
     roadmap: string;
     about: string;
     topics: string;
@@ -60,6 +61,7 @@ const DEFAULT_STRINGS: HeaderStrings = {
     blog: "Bài viết",
     series: "Khoá học",
     exam_prep: "Luyện thi",
+    domain: "Lĩnh vực",
     roadmap: "Roadmap",
     about: "Về tôi",
     topics: "Chủ đề",
@@ -91,6 +93,7 @@ export default function Header({
         blog: activeDict.nav.blog,
         series: activeDict.nav.series,
         exam_prep: activeDict.nav.exam_prep,
+        domain: activeDict.nav.domain,
         roadmap: activeDict.nav.roadmap,
         about: activeDict.nav.about,
         topics: activeDict.nav.topics,
@@ -108,6 +111,7 @@ export default function Header({
         { href: localizedHref("/series/"), label: activeStrings.series },
         { href: "/luyen-thi/", label: activeStrings.exam_prep },
         { href: "/roadmap/", label: activeStrings.roadmap },
+        { href: localizedHref("/series/domain/"), label: activeStrings.domain },
         { href: localizedHref("/pages/ve-toi/"), label: activeStrings.about },
     ];
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -78,6 +78,7 @@ export default function RootLayout({
     blog: dict.nav.blog,
     series: dict.nav.series,
     exam_prep: dict.nav.exam_prep,
+    domain: dict.nav.domain,
     roadmap: dict.nav.roadmap,
     about: dict.nav.about,
     topics: dict.nav.topics,
