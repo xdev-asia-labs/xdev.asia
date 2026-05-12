@@ -1,6 +1,7 @@
 import BookmarkButton from "@/components/BookmarkButton";
 import ContentLanguageSwitcher from "@/components/ContentLanguageSwitcher";
 import ContentRenderer from "@/components/ContentRenderer";
+import DomainSeriesLayout from "@/components/DomainSeriesLayout";
 import GiscusComments from "@/components/GiscusComments";
 import { IconBook, IconChevronRight, IconClock, IconEye, IconStar } from "@/components/Icons";
 import { SeriesProgressBar, LessonCheckbox } from "@/components/SeriesProgress";
@@ -64,6 +65,19 @@ export default async function SeriesDetailPage({ params }: { params: Promise<{ c
     const categories = getSeriesCategories();
     const cat = categories.find((c) => c.slug === category);
     const fullAuthor = getAuthorById(series.author.id);
+
+    // GitBook-style layout for domain category
+    if (category === "domain") {
+        return (
+            <DomainSeriesLayout
+                series={series}
+                category={category}
+                categoryName={cat?.name || category}
+                fullAuthor={fullAuthor || null}
+                siteUrl={SITE_URL}
+            />
+        );
+    }
 
     const levelLabels: Record<string, string> = {
         beginner: "Cơ bản",
