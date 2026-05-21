@@ -10,6 +10,7 @@ const KNOWN_SLUGS = [
     "dieu-khoan-su-dung",
     "chinh-sach-quyen-rieng-tu",
     "privacy-policy",
+    "tim-mau-vui-privacy-policy",
     "your-privacy-choices",
     "xoa-du-lieu-nguoi-dung",
     "ve-toi",
