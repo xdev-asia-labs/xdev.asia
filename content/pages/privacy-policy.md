@@ -2,99 +2,128 @@
 id: 019cb2b9-4dbc-7130-87da-99941035784c
 title: Privacy Policy
 slug: privacy-policy
-excerpt: >-
-  Privacy Policy for xDev LMS mobile application - Apple App Store & Google Play
-  Store.
+excerpt: Privacy Policy for xDev Asia website, services, and mobile applications.
 featured_image: null
 template: default
 show_in_header: false
 show_in_footer: true
 sort_order: 10
-meta: null
-published_at: '2026-03-03T08:03:34.000000Z'
+meta:
+  meta_title: Privacy Policy — xDev Asia
+  meta_description: Privacy Policy for xDev Asia website, services, and mobile applications.
+published_at: '2026-05-22T00:00:00.000000Z'
 ---
 
 # Privacy Policy
-**Last updated:** March 3, 2026
-**Effective date:** March 3, 2026
 
-xDev ("we", "our", or "us") operates the xDev mobile application and website (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
+**Last updated:** May 22, 2026
+
+xDev Asia ("xDev", "we", "our", or "us") operates the website [https://xdev.asia](https://xdev.asia), related online services, and mobile applications published by xDev Asia, including educational apps and games. This Privacy Policy explains what information may be collected, how it is used, and what choices you have.
 
 ## 1. Information We Collect
 
-### 1.1 Personal Data
-While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you:
-- **Account Information:** Name, email address, password (encrypted)
-- **Profile Information:** Avatar, bio (optional)
-- **Payment Information:** Processed securely by third-party payment providers. We do not store credit card details.
+The information we collect depends on how you use our website, services, or apps.
 
-### 1.2 Usage Data
-We automatically collect information about how you access and use the Service:
-- Course enrollment and progress data
-- Lesson completion records
-- Quiz attempts and scores
-- Device information (device type, operating system, browser type)
-- IP address and approximate location
-- Access times and referring URLs
+### 1.1 Information You Provide
 
-### 1.3 Cookies and Tracking Technologies
-We use cookies and similar tracking technologies to maintain your session and improve the user experience. You can control cookies through your browser settings.
+When a feature requires an account or direct contact, we may collect information you provide, such as:
 
-## 2. How We Use Your Information
-We use the collected data for the following purposes:
-- To provide, maintain, and improve the Service
-- To personalize your learning experience
-- To process transactions and send related information
-- To send notifications about courses, updates, and important changes
-- To provide customer support
-- To detect, prevent, and address technical issues and fraud
-- To analyze usage patterns and improve our content
+- Name or display name
+- Email address
+- Profile information, if you choose to add it
+- Support messages or other information you send to us
 
-## 3. Data Sharing and Disclosure
-We do **not** sell, trade, or rent your personal data to third parties. We may share your information only in the following circumstances:
-- **Service Providers:** With trusted third-party companies that assist us in operating the Service (payment processing, email delivery, analytics)
-- **Legal Requirements:** If required by law, regulation, or legal process
-- **Safety:** To protect the rights, property, or safety of xDev, our users, or others
-- **Business Transfers:** In connection with a merger, acquisition, or sale of assets
+Some xDev Asia apps do not require an account and do not ask users to provide personal information.
 
-## 4. Data Retention
-We retain your personal data only for as long as necessary to fulfill the purposes outlined in this policy. Course progress and certificates are retained for the lifetime of your account. You may request deletion of your account and associated data at any time.
+### 1.2 Website and Service Usage Data
 
-## 5. Data Security
-We implement industry-standard security measures to protect your personal data:
-- SSL/TLS encryption for all data in transit
-- Encrypted password storage (bcrypt hashing)
-- Regular security audits and updates
-- Access controls and authentication protocols
-However, no method of transmission over the Internet is 100% secure. We cannot guarantee absolute security.
+When you use our website or online services, we may collect technical and usage data, such as:
 
-## 6. Children's Privacy
-Our Service is not directed to individuals under the age of 13. We do not knowingly collect personal data from children under 13. If we become aware that we have collected personal data from a child under 13, we will take steps to delete such information.
+- Device type, browser type, operating system, and language settings
+- IP address and approximate location derived from IP address
+- Pages viewed, links clicked, referring URLs, and access times
+- Course progress, bookmarks, quiz results, or similar learning activity when those features are available
+- Error logs, performance data, and diagnostics
 
-## 7. Third-Party Services
-Our Service may contain links to third-party websites or services. We are not responsible for the privacy practices of these third parties. We encourage you to review their privacy policies.
+### 1.3 Mobile App Data
 
-### Third-party services we use:
-- **Google Analytics:** For usage analytics ([Google Privacy Policy](https://policies.google.com/privacy))
-- **Payment Providers:** For secure payment processing
+Our mobile apps may store app progress locally on your device, such as game score, settings, stars, streaks, or completed activities. In apps that do not use an account, this local progress is not automatically sent to xDev Asia servers.
 
-## 8. International Data Transfers
-Your information may be transferred to and maintained on servers located outside of your country. We ensure appropriate safeguards are in place to protect your data in accordance with this privacy policy.
+Some apps may use third-party services such as Google AdMob for advertising. These services may collect or process data according to their own policies and SDK behavior, including technical identifiers, advertising data, product interaction data, approximate location, crash data, performance data, and diagnostics.
 
-## 9. Your Rights
-You have the following rights regarding your personal data:
-- **Access:** Request a copy of the personal data we hold about you
-- **Correction:** Request correction of inaccurate or incomplete data
-- **Deletion:** Request deletion of your personal data
-- **Portability:** Request a copy of your data in a portable format
-- **Objection:** Object to processing of your personal data
-- **Withdrawal:** Withdraw consent for data processing at any time
-To exercise any of these rights, please contact us at the email address below.
+## 2. Cookies, Analytics, and Advertising
 
-## 10. Changes to This Privacy Policy
-We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date. You are advised to review this Privacy Policy periodically.
+Our website may use cookies or similar technologies to keep the site working, remember preferences, measure traffic, improve content, and show ads.
+
+We may use third-party services including:
+
+- Google Analytics or similar analytics tools
+- Google AdSense for website ads
+- Google AdMob for mobile app ads
+- Firebase or similar infrastructure for authentication, data storage, performance, or diagnostics when needed
+- Hosting, CDN, email, payment, or support providers
+
+Where applicable, apps designed for children are configured to avoid personalized advertising and to use child-directed or under-age treatment settings available in the advertising SDK.
+
+## 3. How We Use Information
+
+We use collected information to:
+
+- Provide, operate, and improve the website, services, and apps
+- Save user preferences and progress where a feature supports it
+- Respond to support requests
+- Monitor security, prevent abuse, and fix technical issues
+- Understand usage patterns and improve content or product quality
+- Show and measure advertising where ads are enabled
+- Comply with legal obligations
+
+## 4. Sharing of Information
+
+We do not sell personal information. We may share information only in limited cases:
+
+- With service providers that help us operate the website, services, apps, analytics, ads, hosting, payment, email, or support systems
+- When required by law, regulation, legal process, or government request
+- To protect the rights, safety, property, or security of xDev Asia, our users, or the public
+- In connection with a business transfer such as merger, acquisition, or asset sale
+
+Third-party services process information according to their own privacy policies.
+
+## 5. Children's Privacy
+
+Some xDev Asia mobile apps may be designed for children or family use. We do not knowingly ask children to provide personal information in those apps. If a parent or guardian believes a child has provided personal information to us, please contact us and we will review and delete it where appropriate.
+
+For child-oriented apps that include ads, we configure available advertising settings to limit ad personalization and use child-appropriate treatment where supported.
+
+## 6. Data Retention
+
+We keep information only as long as needed for the purposes described in this policy, unless a longer retention period is required by law. Local app progress stored on your device can usually be removed by deleting the app or clearing app data from the device settings.
+
+## 7. Data Security
+
+We use reasonable technical and organizational measures to protect information. However, no method of transmission or storage is completely secure, so we cannot guarantee absolute security.
+
+## 8. Your Choices and Rights
+
+Depending on your location, you may have rights to access, correct, delete, export, or object to certain processing of your personal information.
+
+You can also:
+
+- Manage cookies and tracking controls in your browser settings
+- Use operating system settings to reset advertising identifiers or limit ad tracking where available
+- Delete local app data by uninstalling the app or clearing app storage
+- Contact us to request deletion of account-related data, where applicable
+
+## 9. Third-Party Links
+
+Our website, services, or apps may link to third-party websites or services. We are not responsible for the privacy practices of those third parties. Please review their policies before using their services.
+
+## 10. Changes to This Policy
+
+We may update this Privacy Policy from time to time. The latest version will be posted on this page with an updated "Last updated" date.
 
 ## 11. Contact Us
-If you have any questions about this Privacy Policy, please contact us:
+
+If you have questions about this Privacy Policy or want to make a privacy request, please contact us:
+
 - **Website:** [https://xdev.asia](https://xdev.asia)
 - **Email:** duy@xdev.asia
