@@ -10,6 +10,7 @@ const KNOWN_SLUGS = [
     "dieu-khoan-su-dung",
     "chinh-sach-quyen-rieng-tu",
     "privacy-policy",
+    "arrow-escape-puzzle-privacy",
     "your-privacy-choices",
     "xoa-du-lieu-nguoi-dung",
     "ve-toi",

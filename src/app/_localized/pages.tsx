@@ -102,6 +102,7 @@ export function localizedStaticPageParams() {
     { slug: "dieu-khoan-su-dung" },
     { slug: "chinh-sach-quyen-rieng-tu" },
     { slug: "privacy-policy" },
+    { slug: "arrow-escape-puzzle-privacy" },
     { slug: "your-privacy-choices" },
     { slug: "xoa-du-lieu-nguoi-dung" },
     { slug: "ve-toi" },
