@@ -19,6 +19,15 @@ const homepageAlternates = {
   ),
 };
 
+const timMauVuiAlternates = {
+  languages: Object.fromEntries(
+    LOCALES.map((loc) => [
+      LOCALE_HREFLANG[loc],
+      `${SITE_URL}${localePrefix(loc)}/games/tim-mau-vui/`,
+    ])
+  ),
+};
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date().toISOString();
 
@@ -54,6 +63,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
+    },
+    {
+      url: `${SITE_URL}/games/tim-mau-vui/`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: timMauVuiAlternates,
+      images: [`${SITE_URL}/images/games/tim-mau-vui/app-icon.png`],
     },
   ];
 

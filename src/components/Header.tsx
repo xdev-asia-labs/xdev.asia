@@ -46,6 +46,7 @@ export interface HeaderStrings {
     blog: string;
     series: string;
     exam_prep: string;
+    game: string;
     domain: string;
     roadmap: string;
     about: string;
@@ -61,6 +62,7 @@ const DEFAULT_STRINGS: HeaderStrings = {
     blog: "Bài viết",
     series: "Khoá học",
     exam_prep: "Luyện thi",
+    game: "Game",
     domain: "Lĩnh vực",
     roadmap: "Roadmap",
     about: "Về tôi",
@@ -90,18 +92,19 @@ export default function Header({
     const activePrefix = getLocalePrefix(activeLocale);
     const activeDict = getClientDictionary(activeLocale);
     const activeStrings: HeaderStrings = {
-        blog: activeDict.nav.blog,
-        series: activeDict.nav.series,
-        exam_prep: activeDict.nav.exam_prep,
-        domain: activeDict.nav.domain,
-        roadmap: activeDict.nav.roadmap,
-        about: activeDict.nav.about,
-        topics: activeDict.nav.topics,
-        view_all_posts: activeDict.nav.view_all_posts,
-        search: activeDict.nav.search,
-        mcp: activeDict.nav.mcp,
-        skip_to_content: activeDict.nav.skip_to_content,
-        toggle_menu: activeDict.nav.toggle_menu,
+        blog: activeDict.nav.blog ?? strings.blog,
+        series: activeDict.nav.series ?? strings.series,
+        exam_prep: activeDict.nav.exam_prep ?? strings.exam_prep,
+        game: activeDict.nav.game ?? strings.game,
+        domain: activeDict.nav.domain ?? strings.domain,
+        roadmap: activeDict.nav.roadmap ?? strings.roadmap,
+        about: activeDict.nav.about ?? strings.about,
+        topics: activeDict.nav.topics ?? strings.topics,
+        view_all_posts: activeDict.nav.view_all_posts ?? strings.view_all_posts,
+        search: activeDict.nav.search ?? strings.search,
+        mcp: activeDict.nav.mcp ?? strings.mcp,
+        skip_to_content: activeDict.nav.skip_to_content ?? strings.skip_to_content,
+        toggle_menu: activeDict.nav.toggle_menu ?? strings.toggle_menu,
     };
     const localizedPrefix = activePrefix || localePrefix;
     const activeTopics = topicsByLocale?.[activeLocale] ?? topics;
@@ -111,6 +114,7 @@ export default function Header({
         { href: localizedHref("/series/"), label: activeStrings.series },
         { href: "/luyen-thi/", label: activeStrings.exam_prep },
         { href: "/roadmap/", label: activeStrings.roadmap },
+        { href: localizedHref("/games/tim-mau-vui/"), label: activeStrings.game },
         { href: localizedHref("/series/domain/"), label: activeStrings.domain },
         { href: localizedHref("/pages/ve-toi/"), label: activeStrings.about },
     ];
@@ -135,7 +139,8 @@ export default function Header({
 
     // Close mobile menu on route change
     useEffect(() => {
-        closeAll();
+        const timer = window.setTimeout(closeAll, 0);
+        return () => window.clearTimeout(timer);
     }, [pathname, closeAll]);
 
     const isActive = (href: string) => pathname.startsWith(href.replace(/\/$/, ""));
