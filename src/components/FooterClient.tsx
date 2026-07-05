@@ -10,7 +10,6 @@ import {
   IconFacebook,
   IconGitHub,
   IconLinkedIn,
-  IconTelegram,
   IconTikTok,
   IconYouTube,
 } from "./Icons";
@@ -65,7 +64,6 @@ export default function FooterClient({
   const socialYoutube = settings.social_youtube_url || settings.youtube_url;
   const socialTiktok = settings.social_tiktok_url || settings.tiktok_url;
   const socialLinkedin = settings.social_linkedin_url || settings.linkedin_url;
-  const socialTelegram = settings.telegram_url;
   const contactGithub = settings.contact_github_url || settings.github_url;
   const contactLinkedin = settings.contact_linkedin_url || settings.linkedin_url;
   const contactFacebook = settings.contact_facebook_url || settings.facebook_url;
@@ -99,7 +97,6 @@ export default function FooterClient({
     { url: socialYoutube, icon: IconYouTube, label: "YouTube" },
     { url: socialTiktok, icon: IconTikTok, label: "TikTok" },
     { url: socialLinkedin, icon: IconLinkedIn, label: "LinkedIn" },
-    { url: socialTelegram, icon: IconTelegram, label: "Telegram" },
   ].filter((s) => s.url);
 
   return (

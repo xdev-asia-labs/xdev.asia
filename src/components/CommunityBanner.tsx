@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { IconFacebook, IconTelegram } from "./Icons";
+import { IconFacebook } from "./Icons";
 
 const DISMISS_KEY = "community-banner-dismissed";
 const DISMISS_DAYS = 7; // show again after 7 days
@@ -71,15 +71,6 @@ export default function CommunityBanner() {
                         >
                             <IconFacebook size={14} />
                             Like Page
-                        </a>
-                        <a
-                            href="https://t.me/+jVJjeTRPIgEyYTJl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-[#26A5E4] hover:bg-[#1E96D1] transition-colors shadow-sm"
-                        >
-                            <IconTelegram size={14} />
-                            Telegram
                         </a>
                     </div>
                 </div>
