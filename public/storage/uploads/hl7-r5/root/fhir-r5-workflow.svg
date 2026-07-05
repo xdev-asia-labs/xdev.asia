@@ -1,0 +1,439 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D32F2F" />
+      <stop offset="100%" stop-color="#F44336" />
+    </linearGradient>
+    
+    <linearGradient id="systemGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1976D2" />
+      <stop offset="100%" stop-color="#42A5F5" />
+    </linearGradient>
+    
+    <linearGradient id="resourceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7B1FA2" />
+      <stop offset="100%" stop-color="#9C27B0" />
+    </linearGradient>
+    
+    <linearGradient id="apiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#388E3C" />
+      <stop offset="100%" stop-color="#4CAF50" />
+    </linearGradient>
+    
+    <linearGradient id="securityGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFA000" />
+      <stop offset="100%" stop-color="#FFC107" />
+    </linearGradient>
+    
+    <linearGradient id="exchangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0097A7" />
+      <stop offset="100%" stop-color="#00BCD4" />
+    </linearGradient>
+    
+    <!-- Shadows -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <!-- Animations -->
+    <style type="text/css">
+      @keyframes dash {
+        to {
+          stroke-dashoffset: -30;
+        }
+      }
+      
+      .flow-line {
+        animation: dash 3s linear infinite;
+      }
+      
+      @keyframes gentle-pulse {
+        0% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.03); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.9; }
+      }
+      
+      .pulse {
+        animation: gentle-pulse 3s ease-in-out infinite;
+        transform-origin: center;
+        transform-box: fill-box;
+      }
+      
+      @keyframes fadeInOut {
+        0% { opacity: 0.8; }
+        50% { opacity: 1; }
+        100% { opacity: 0.8; }
+      }
+      
+      .fade-in-out {
+        animation: fadeInOut 4s ease-in-out infinite;
+      }
+      
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      
+      .rotate {
+        animation: rotate 30s linear infinite;
+        transform-origin: center;
+      }
+      
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
+      }
+      
+      .float {
+        animation: float 5s ease-in-out infinite;
+      }
+      
+      @keyframes highlight {
+        0% { fill-opacity: 0.7; }
+        50% { fill-opacity: 1; }
+        100% { fill-opacity: 0.7; }
+      }
+      
+      .highlight {
+        animation: highlight 4s ease-in-out infinite;
+      }
+      
+      @keyframes moveAlong {
+        0% { 
+          offset-distance: 0%;
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% { 
+          offset-distance: 100%;
+          opacity: 0;
+        }
+      }
+      
+      .move-along-path1 {
+        offset-path: path('M180,120 C280,120 350,170 400,250');
+        animation: moveAlong 5s infinite;
+      }
+      
+      .move-along-path2 {
+        offset-path: path('M200,550 C280,550 350,450 400,380');
+        animation: moveAlong 5s infinite;
+        animation-delay: 0.5s;
+      }
+      
+      .move-along-path3 {
+        offset-path: path('M800,120 C700,120 650,170 600,250');
+        animation: moveAlong 5s infinite;
+        animation-delay: 1s;
+      }
+      
+      .move-along-path4 {
+        offset-path: path('M780,550 C700,550 650,450 600,380');
+        animation: moveAlong 5s infinite;
+        animation-delay: 1.5s;
+      }
+      
+      .move-along-path5 {
+        offset-path: path('M400,320 C450,350 550,350 600,320');
+        animation: moveAlong 4s infinite;
+        animation-delay: 2s;
+      }
+      
+      .move-along-path6 {
+        offset-path: path('M600,320 C550,290 450,290 400,320');
+        animation: moveAlong 4s infinite;
+        animation-delay: 4s;
+      }
+    </style>
+    
+    <!-- Icon patterns -->
+    <pattern id="patternGrid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="50" height="50" fill="#fcfcfc"/>
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="700" fill="url(#patternGrid)" rx="0" ry="0" />
+  
+  <!-- Header -->
+  <rect x="50" y="30" width="900" height="80" fill="url(#headerGradient)" rx="12" ry="12" filter="url(#shadow)" class="pulse" />
+  <rect x="55" y="35" width="890" height="70" rx="10" ry="10" fill="#FFFFFF" opacity="0.1" />
+  <text x="500" y="80" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="white" text-anchor="middle" filter="url(#shadow)">HL7 FHIR R5 Workflow</text>
+  
+  <!-- Center FHIR Processing Hub -->
+  <g transform="translate(500, 350)">
+    <!-- Background hub circle -->
+    <circle cx="0" cy="0" r="100" fill="#FFFFFF" stroke="#F44336" stroke-width="3" filter="url(#shadow)" />
+    
+    <!-- Rotating elements -->
+    <g class="rotate">
+      <circle cx="0" cy="0" r="120" fill="none" stroke="#F44336" stroke-width="2" stroke-dasharray="3,5" opacity="0.3" />
+      <circle cx="0" cy="0" r="140" fill="none" stroke="#F44336" stroke-width="1" stroke-dasharray="2,8" opacity="0.2" />
+    </g>
+    
+    <!-- FHIR Logo -->
+    <g class="float" transform="translate(0, -20)">
+      <rect x="-50" y="-25" width="100" height="50" fill="url(#headerGradient)" rx="8" ry="8" filter="url(#shadow)" />
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" text-anchor="middle">FHIR</text>
+    </g>
+    
+    <!-- Process icons inside the hub -->
+    <g transform="translate(0, 35)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333" text-anchor="middle">R5 Processing</text>
+      
+      <!-- Small processing icons -->
+      <g class="fade-in-out" transform="translate(-40, 20)" style="animation-delay: 0s;">
+        <circle cx="0" cy="0" r="15" fill="#E3F2FD" stroke="#1976D2" stroke-width="2" />
+        <path d="M-6,-3 L0,-9 L6,-3 M0,-9 L0,9" stroke="#1976D2" stroke-width="2" fill="none" />
+      </g>
+      
+      <g class="fade-in-out" transform="translate(0, 20)" style="animation-delay: 0.5s;">
+        <circle cx="0" cy="0" r="15" fill="#E8F5E9" stroke="#388E3C" stroke-width="2" />
+        <path d="M-6,0 L0,6 L6,0 L0,-6 Z" stroke="#388E3C" stroke-width="2" fill="none" />
+      </g>
+      
+      <g class="fade-in-out" transform="translate(40, 20)" style="animation-delay: 1s;">
+        <circle cx="0" cy="0" r="15" fill="#FFF3E0" stroke="#FFA000" stroke-width="2" />
+        <path d="M-6,0 A6,6 0 1,0 6,0 A6,6 0 1,0 -6,0" stroke="#FFA000" stroke-width="2" fill="none" />
+      </g>
+    </g>
+  </g>
+  
+  <!-- Client Systems -->
+  <g transform="translate(150, 120)">
+    <rect x="-80" y="-50" width="160" height="100" rx="10" ry="10" fill="url(#systemGradient)" filter="url(#shadow)" class="pulse" />
+    <rect x="-76" y="-46" width="152" height="92" rx="8" ry="8" fill="#FFFFFF" opacity="0.1" />
+    <text x="0" y="-20" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">EHR Systems</text>
+    
+    <!-- Computer icon -->
+    <g transform="translate(0, 10)">
+      <rect x="-30" y="-20" width="60" height="40" rx="2" ry="2" fill="#FFFFFF" opacity="0.9" />
+      <rect x="-20" y="-15" width="40" height="25" fill="#1976D2" opacity="0.7" />
+      <rect x="-25" y="20" width="50" height="5" rx="1" ry="1" fill="#FFFFFF" opacity="0.9" />
+    </g>
+    
+    <!-- Flow path to center -->
+    <path d="M30,0 C130,0 200,50 250,130" fill="none" stroke="#1976D2" stroke-width="3" stroke-dasharray="7,5" class="flow-line" opacity="0.7" />
+    
+    <!-- Moving data packet -->
+    <g>
+      <circle class="move-along-path1" cx="0" cy="0" r="8" fill="#1976D2" filter="url(#glow)" />
+    </g>
+  </g>
+  
+  <!-- Patient Apps -->
+  <g transform="translate(150, 550)">
+    <rect x="-80" y="-50" width="160" height="100" rx="10" ry="10" fill="url(#resourceGradient)" filter="url(#shadow)" class="pulse" />
+    <rect x="-76" y="-46" width="152" height="92" rx="8" ry="8" fill="#FFFFFF" opacity="0.1" />
+    <text x="0" y="-20" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">Patient Apps</text>
+    
+    <!-- Mobile device icon -->
+    <g transform="translate(0, 10)">
+      <rect x="-15" y="-25" width="30" height="50" rx="3" ry="3" fill="#FFFFFF" opacity="0.9" />
+      <rect x="-12" y="-22" width="24" height="38" fill="#9C27B0" opacity="0.7" />
+      <circle cx="0" cy="20" r="3" fill="#FFFFFF" opacity="0.9" />
+    </g>
+    
+    <!-- Flow path to center -->
+    <path d="M30,0 C130,0 200,-50 250,-170" fill="none" stroke="#9C27B0" stroke-width="3" stroke-dasharray="7,5" class="flow-line" opacity="0.7" />
+    
+    <!-- Moving data packet -->
+    <g>
+      <circle class="move-along-path2" cx="0" cy="0" r="8" fill="#9C27B0" filter="url(#glow)" />
+    </g>
+  </g>
+  
+  <!-- Healthcare Providers -->
+  <g transform="translate(850, 120)">
+    <rect x="-80" y="-50" width="160" height="100" rx="10" ry="10" fill="url(#apiGradient)" filter="url(#shadow)" class="pulse" />
+    <rect x="-76" y="-46" width="152" height="92" rx="8" ry="8" fill="#FFFFFF" opacity="0.1" />
+    <text x="0" y="-20" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">Healthcare Providers</text>
+    
+    <!-- Hospital/provider icon -->
+    <g transform="translate(0, 10)">
+      <path d="M-25,-15 H25 V25 H-25 Z" fill="#FFFFFF" opacity="0.9" />
+      <path d="M-5,-15 V25 M-25,5 H25" stroke="#4CAF50" stroke-width="3" opacity="0.9" />
+      <circle cx="10" cy="-5" r="7" fill="#4CAF50" opacity="0.7" />
+    </g>
+    
+    <!-- Flow path to center -->
+    <path d="M-30,0 C-130,0 -200,50 -250,130" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="7,5" class="flow-line" opacity="0.7" />
+    
+    <!-- Moving data packet -->
+    <g>
+      <circle class="move-along-path3" cx="0" cy="0" r="8" fill="#4CAF50" filter="url(#glow)" />
+    </g>
+  </g>
+  
+  <!-- Health Information Exchanges -->
+  <g transform="translate(850, 550)">
+    <rect x="-80" y="-50" width="160" height="100" rx="10" ry="10" fill="url(#exchangeGradient)" filter="url(#shadow)" class="pulse" />
+    <rect x="-76" y="-46" width="152" height="92" rx="8" ry="8" fill="#FFFFFF" opacity="0.1" />
+    <text x="0" y="-20" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">Health Information</text>
+    <text x="0" y="-2" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">Exchanges</text>
+    
+    <!-- Network/exchange icon -->
+    <g transform="translate(0, 15)">
+      <circle cx="-20" cy="-10" r="10" fill="#FFFFFF" opacity="0.9" />
+      <circle cx="20" cy="-10" r="10" fill="#FFFFFF" opacity="0.9" />
+      <circle cx="0" cy="15" r="10" fill="#FFFFFF" opacity="0.9" />
+      <path d="M-20,-10 L20,-10 L0,15 Z" stroke="#00BCD4" stroke-width="3" fill="none" opacity="0.9" />
+    </g>
+    
+    <!-- Flow path to center -->
+    <path d="M-30,0 C-130,0 -200,-50 -250,-170" fill="none" stroke="#00BCD4" stroke-width="3" stroke-dasharray="7,5" class="flow-line" opacity="0.7" />
+    
+    <!-- Moving data packet -->
+    <g>
+      <circle class="move-along-path4" cx="0" cy="0" r="8" fill="#00BCD4" filter="url(#glow)" />
+    </g>
+  </g>
+  
+  <!-- FHIR Resource Types -->
+  <g transform="translate(500, 200)">
+    <rect x="-200" y="-40" width="400" height="60" rx="8" ry="8" fill="#FFFFFF" filter="url(#shadow)" />
+    <text x="0" y="-15" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333333" text-anchor="middle">FHIR R5 Resources</text>
+    
+    <g transform="translate(-160, 15)">
+      <circle cx="0" cy="0" r="18" fill="#E3F2FD" stroke="#1976D2" stroke-width="2" class="highlight" />
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1976D2" text-anchor="middle">Patient</text>
+    </g>
+    
+    <g transform="translate(-80, 15)">
+      <circle cx="0" cy="0" r="18" fill="#E8F5E9" stroke="#388E3C" stroke-width="2" class="highlight" style="animation-delay: 0.5s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#388E3C" text-anchor="middle">Encounter</text>
+    </g>
+    
+    <g transform="translate(0, 15)">
+      <circle cx="0" cy="0" r="18" fill="#FFF3E0" stroke="#FFA000" stroke-width="2" class="highlight" style="animation-delay: 1s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFA000" text-anchor="middle">Observation</text>
+    </g>
+    
+    <g transform="translate(80, 15)">
+      <circle cx="0" cy="0" r="18" fill="#E1F5FE" stroke="#0288D1" stroke-width="2" class="highlight" style="animation-delay: 1.5s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#0288D1" text-anchor="middle">Medication</text>
+    </g>
+    
+    <g transform="translate(160, 15)">
+      <circle cx="0" cy="0" r="18" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="2" class="highlight" style="animation-delay: 2s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#7B1FA2" text-anchor="middle">Condition</text>
+    </g>
+  </g>
+  
+  <!-- FHIR APIs -->
+  <g transform="translate(500, 500)">
+    <rect x="-200" y="-40" width="400" height="60" rx="8" ry="8" fill="#FFFFFF" filter="url(#shadow)" />
+    <text x="0" y="-15" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333333" text-anchor="middle">FHIR R5 API Operations</text>
+    
+    <g transform="translate(-160, 15)">
+      <rect x="-30" y="-15" width="60" height="30" rx="5" ry="5" fill="#E3F2FD" stroke="#1976D2" stroke-width="2" class="highlight" />
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#1976D2" text-anchor="middle">search</text>
+    </g>
+    
+    <g transform="translate(-80, 15)">
+      <rect x="-30" y="-15" width="60" height="30" rx="5" ry="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="2" class="highlight" style="animation-delay: 0.5s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#388E3C" text-anchor="middle">create</text>
+    </g>
+    
+    <g transform="translate(0, 15)">
+      <rect x="-30" y="-15" width="60" height="30" rx="5" ry="5" fill="#FFF3E0" stroke="#FFA000" stroke-width="2" class="highlight" style="animation-delay: 1s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFA000" text-anchor="middle">update</text>
+    </g>
+    
+    <g transform="translate(80, 15)">
+      <rect x="-30" y="-15" width="60" height="30" rx="5" ry="5" fill="#E1F5FE" stroke="#0288D1" stroke-width="2" class="highlight" style="animation-delay: 1.5s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#0288D1" text-anchor="middle">read</text>
+    </g>
+    
+    <g transform="translate(160, 15)">
+      <rect x="-30" y="-15" width="60" height="30" rx="5" ry="5" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="2" class="highlight" style="animation-delay: 2s;"/>
+      <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#7B1FA2" text-anchor="middle">delete</text>
+    </g>
+  </g>
+  
+  <!-- R5 Workflow Features -->
+  <g transform="translate(320, 350)">
+    <!-- Connection between hub and workflow -->
+    <path d="M0,0 C-50,-30 -150,-30 -200,0" fill="none" stroke="#455A64" stroke-width="3" stroke-dasharray="7,5" class="flow-line" opacity="0.7" />
+    
+    <!-- Moving data packet -->
+    <g>
+      <circle class="move-along-path5" cx="0" cy="0" r="8" fill="#455A64" filter="url(#glow)" />
+    </g>
+    <g>
+      <circle class="move-along-path6" cx="0" cy="0" r="8" fill="#455A64" filter="url(#glow)" />
+    </g>
+    
+    <!-- Workflow component -->
+    <g transform="translate(-100, 0)">
+      <rect x="-80" y="-120" width="160" height="240" rx="10" ry="10" fill="#FFFFFF" stroke="#455A64" stroke-width="2" filter="url(#shadow)" />
+      <text x="0" y="-100" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#455A64" text-anchor="middle">FHIR R5 Workflow</text>
+      
+      <!-- Workflow steps -->
+      <g transform="translate(0, -70)">
+        <rect x="-60" y="-12" width="120" height="24" rx="4" ry="4" fill="#FAFAFA" stroke="#455A64" stroke-width="1" class="highlight" />
+        <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" fill="#455A64" text-anchor="middle">Request Processing</text>
+      </g>
+      
+      <g transform="translate(0, -30)">
+        <rect x="-60" y="-12" width="120" height="24" rx="4" ry="4" fill="#FAFAFA" stroke="#455A64" stroke-width="1" class="highlight" style="animation-delay: 0.5s;"/>
+        <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" fill="#455A64" text-anchor="middle">Authentication</text>
+      </g>
+      
+      <g transform="translate(0, 10)">
+        <rect x="-60" y="-12" width="120" height="24" rx="4" ry="4" fill="#FAFAFA" stroke="#455A64" stroke-width="1" class="highlight" style="animation-delay: 1s;"/>
+        <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" fill="#455A64" text-anchor="middle">Resource Validation</text>
+      </g>
+      
+      <g transform="translate(0, 50)">
+        <rect x="-60" y="-12" width="120" height="24" rx="4" ry="4" fill="#FAFAFA" stroke="#455A64" stroke-width="1" class="highlight" style="animation-delay: 1.5s;"/>
+        <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" fill="#455A64" text-anchor="middle">Data Operations</text>
+      </g>
+      
+      <g transform="translate(0, 90)">
+        <rect x="-60" y="-12" width="120" height="24" rx="4" ry="4" fill="#FAFAFA" stroke="#455A64" stroke-width="1" class="highlight" style="animation-delay: 2s;"/>
+        <text x="0" y="5" font-family="Arial, sans-serif" font-size="12" fill="#455A64" text-anchor="middle">Response Formatting</text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- R5 Security Features -->
+  <g transform="translate(680, 350)">
+    <!-- Connection between hub and security -->
+    <path d="M0,0 C50,-30 150,-30 200,0" fill="none" stroke="#FF9800" stroke-width="3" stroke-dasharray="7,5" class="flow-line" opacity="0.7" />
+    
+    <!-- Security component -->
+    <g transform="translate(100, 0)">
+      <rect x="-80" y="-120" width="160" height="240" rx="10" ry="10" fill="#FFFFFF" stroke="#FF9800" stroke-width="2" filter="url(#shadow)" />
+      <text x="0" y="-100" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FF9800" text-anchor="middle">FHIR R5 Security</text>
+      
+      <!-- Security features -->
+      <g transform="translate(0, -70)">
+        <circle cx="0" cy="0" r="25" fill="#FFF3E0" stroke="#FF9800" stroke-width="2" class="highlight" />
+        <path d="M-8,-5 A10,10 0 1,1 8,-5 L0,5 Z" stroke="#FF9800" stroke-width="2" fill="#FF9800" opacity="0.7" />
+        <text x="0" y="20" font-family="Arial, sans-serif" font-size="11" fill="#FF9800" text-anchor="middle">OAuth 2.0</text>
+      </g>
+      
+      <g transform="translate(0, -10)">
+        <circle cx="0" cy="0" r="25" fill="#FFF3E0" stroke="#FF9800" stroke-width="2" class="highlight" style="animation-delay: 0.5s;"/>
+        <path d="M-8,-8 h16 v16 h-16 z" stroke="#FF9800" stroke-width="2" fill="#FF9800" opacity="0.7" />
+        <text x="0" y="20" font-family="Arial, sans-serif" font-size="11" fill="#FF9800" text-anchor="middle">SMART</text>
+      </g>
+      
+      <g transform="translate(0, 50)">
+        <circle cx="0" cy="0" r="25" fill="#FFF3E0" stroke="#FF9800" stroke-width="2" class="highlight" style="animation-delay: 1s;"/>
+        <path d="M-5,-10 A10,10 0 0,0 -10,-5 v10 A10,10 0 0,0 -5,10 h10 A10,10 0 0,0 10,5 v-10 A10,10 0 0,0 5,-10 z" stroke="#FF9800" stroke-width="2" fill="#FF9800" opacity="0.7" />
+        <rect x="-2" y="-5" width

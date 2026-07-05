@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <!-- Background -->
+  <rect width="900" height="600" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="450" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">
+    Các phần Normative trong FHIR R5
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="450" y="70" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#555">
+    Phần chuẩn hóa không thay đổi đáng kể trong tương lai, đảm bảo khả năng tương thích dài hạn
+  </text>
+  
+  <!-- FHIR Component Diagram -->
+  <rect x="100" y="100" width="700" height="60" rx="5" fill="#2c3e50" fill-opacity="0.9"/>
+  <text x="450" y="140" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">
+    FHIR R5
+  </text>
+  
+  <!-- Architecture Components -->
+  <!-- RESTful API -->
+  <rect x="150" y="180" width="200" height="70" rx="5" fill="#27ae60" fill-opacity="0.9"/>
+  <text x="250" y="210" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">
+    RESTful API
+  </text>
+  <text x="250" y="230" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">
+    Normative từ R4
+  </text>
+  
+  <!-- Data Types -->
+  <rect x="400" y="180" width="200" height="70" rx="5" fill="#27ae60" fill-opacity="0.9"/>
+  <text x="500" y="210" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">
+    Data Types
+  </text>
+  <text x="500" y="230" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">
+    Normative từ R4
+  </text>
+  
+  <!-- Core Resources -->
+  <rect x="650" y="180" width="200" height="70" rx="5" fill="#27ae60" fill-opacity="0.9"/>
+  <text x="750" y="210" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">
+    Core Resources
+  </text>
+  <text x="750" y="230" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">
+    Nhiều đã Normative
+  </text>
+  
+  <!-- Detail Sections -->
+  <!-- Clinical Resources -->
+  <rect x="100" y="290" width="250" height="240" rx="5" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+  <rect x="100" y="290" width="250" height="40" rx="5" fill="#3498db" fill-opacity="0.9"/>
+  <text x="225" y="315" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">
+    Clinical Resources
+  </text>
+  
+  <rect x="120" y="340" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="225" y="360" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Patient (Normative)
+  </text>
+  
+  <rect x="120" y="375" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="225" y="395" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Observation (Normative)
+  </text>
+  
+  <rect x="120" y="410" width="210" height="30" rx="3" fill="#2980b9" fill-opacity="0.7"/>
+  <text x="225" y="430" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Condition (Trial Use)
+  </text>
+  
+  <rect x="120" y="445" width="210" height="30" rx="3" fill="#2980b9" fill-opacity="0.7"/>
+  <text x="225" y="465" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    MedicationRequest (Trial Use)
+  </text>
+  
+  <rect x="120" y="480" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="225" y="500" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    AllergyIntolerance (Normative)
+  </text>
+  
+  <!-- Foundation Resources -->
+  <rect x="370" y="290" width="250" height="240" rx="5" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+  <rect x="370" y="290" width="250" height="40" rx="5" fill="#3498db" fill-opacity="0.9"/>
+  <text x="495" y="315" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">
+    Foundation Resources
+  </text>
+  
+  <rect x="390" y="340" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="495" y="360" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    StructureDefinition (Normative)
+  </text>
+  
+  <rect x="390" y="375" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="495" y="395" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    ValueSet (Normative)
+  </text>
+  
+  <rect x="390" y="410" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="495" y="430" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    CapabilityStatement (Normative)
+  </text>
+  
+  <rect x="390" y="445" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="495" y="465" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    CodeSystem (Normative)
+  </text>
+  
+  <rect x="390" y="480" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="495" y="500" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Bundle (Normative)
+  </text>
+  
+  <!-- Administrative Resources -->
+  <rect x="640" y="290" width="250" height="240" rx="5" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+  <rect x="640" y="290" width="250" height="40" rx="5" fill="#3498db" fill-opacity="0.9"/>
+  <text x="765" y="315" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">
+    Administrative Resources
+  </text>
+  
+  <rect x="660" y="340" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="765" y="360" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Practitioner (Normative)
+  </text>
+  
+  <rect x="660" y="375" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="765" y="395" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Organization (Normative)
+  </text>
+  
+  <rect x="660" y="410" width="210" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="765" y="430" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Location (Normative)
+  </text>
+  
+  <rect x="660" y="445" width="210" height="30" rx="3" fill="#2980b9" fill-opacity="0.7"/>
+  <text x="765" y="465" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Appointment (Trial Use)
+  </text>
+  
+  <rect x="660" y="480" width="210" height="30" rx="3" fill="#2980b9" fill-opacity="0.7"/>
+  <text x="765" y="500" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Schedule (Trial Use)
+  </text>
+  
+  <!-- Legend -->
+  <rect x="250" y="550" width="160" height="30" rx="3" fill="#27ae60" fill-opacity="0.7"/>
+  <text x="330" y="570" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">
+    Normative
+  </text>
+  
+  <rect x="430" y="550" width="160" height="30" rx="3" fill="#2980b9" fill-opacity="0.7"/>
+  <text x="510" y="570" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">
+    Trial Use
+  </text>
+  
+  <text x="450" y="600" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#555">
+    * Đây là danh sách không đầy đủ của một số tài nguyên quan trọng
+  </text>
+</svg>

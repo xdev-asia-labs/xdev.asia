@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f8f9fa" rx="10" ry="10" />
+  <!-- Title -->
+<text x="400" y="40" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">FHIR Interoperability Architecture</text>
+  <!-- Healthcare Systems Box -->
+  <rect x="50" y="80" width="700" height="370" fill="#e6f7ff" stroke="#0056b3" stroke-width="2" rx="10" ry="10" />
+  <text x="400" y="105" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#0056b3">Healthcare Ecosystem</text>
+  <!-- FHIR Server -->
+  <rect x="320" y="130" width="160" height="120" fill="#0056b3" stroke="#003366" stroke-width="2" rx="8" ry="8" />
+  <text x="400" y="155" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">FHIR Server</text>
+  <text x="400" y="185" font-family="Arial" font-size="12" text-anchor="middle" fill="white">Resources</text>
+  <text x="400" y="205" font-family="Arial" font-size="12" text-anchor="middle" fill="white">RESTful API</text>
+  <text x="400" y="225" font-family="Arial" font-size="12" text-anchor="middle" fill="white">Terminology</text>
+  <!-- Hospital System -->
+  <rect x="100" y="180" width="120" height="80" fill="#ffffff" stroke="#666" stroke-width="2" rx="8" ry="8" />
+  <text x="160" y="215" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Hospital EHR</text>
+  <line x1="220" y1="210" x2="320" y2="190" stroke="#333" stroke-width="2" stroke-dasharray="5,5" />
+  <text x="270" y="180" font-family="Arial" font-size="12" transform="rotate(-10, 270, 180)" fill="#333">REST API</text>
+  <!-- Clinic System -->
+  <rect x="100" y="320" width="120" height="80" fill="#ffffff" stroke="#666" stroke-width="2" rx="8" ry="8" />
+  <text x="160" y="355" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Clinic System</text>
+  <line x1="220" y1="340" x2="320" y2="230" stroke="#333" stroke-width="2" stroke-dasharray="5,5" />
+  <text x="270" y="300" font-family="Arial" font-size="12" transform="rotate(25, 270, 300)" fill="#333">REST API</text>
+  <!-- Mobile App -->
+  <rect x="580" y="180" width="120" height="80" fill="#ffffff" stroke="#666" stroke-width="2" rx="8" ry="8" />
+  <text x="640" y="215" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Mobile App</text>
+  <line x1="580" y1="210" x2="480" y2="190" stroke="#333" stroke-width="2" stroke-dasharray="5,5" />
+  <text x="530" y="180" font-family="Arial" font-size="12" transform="rotate(10, 530, 180)" fill="#333">REST API</text>
+  <!-- Analytics -->
+  <rect x="580" y="320" width="120" height="80" fill="#ffffff" stroke="#666" stroke-width="2" rx="8" ry="8" />
+  <text x="640" y="355" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Analytics</text>
+  <line x1="580" y1="340" x2="480" y2="230" stroke="#333" stroke-width="2" stroke-dasharray="5,5" />
+  <text x="530" y="300" font-family="Arial" font-size="12" transform="rotate(-25, 530, 300)" fill="#333">REST API</text>
+  <!-- FHIR Resources -->
+  <rect x="320" y="310" width="160" height="100" fill="#ffffff" stroke="#0056b3" stroke-width="2" rx="8" ry="8" />
+  <text x="400" y="330" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#0056b3">FHIR Resources</text>
+  <!-- Resource Icons -->
+  <rect x="340" y="345" width="30" height="25" fill="#ff9900" rx="4" ry="4" />
+  <text x="355" y="362" font-family="Arial" font-size="10" text-anchor="middle" fill="white">Patient</text>
+  <rect x="380" y="345" width="40" height="25" fill="#66cc33" rx="4" ry="4" />
+  <text x="400" y="362" font-family="Arial" font-size="10" text-anchor="middle" fill="white">Observation</text>
+  <rect x="430" y="345" width="30" height="25" fill="#cc3366" rx="4" ry="4" />
+  <text x="445" y="362" font-family="Arial" font-size="10" text-anchor="middle" fill="white">Care</text>
+  <rect x="340" y="375" width="35" height="25" fill="#3366cc" rx="4" ry="4" />
+  <text x="357" y="392" font-family="Arial" font-size="10" text-anchor="middle" fill="white">Encounter</text>
+  <rect x="385" y="375" width="40" height="25" fill="#9933cc" rx="4" ry="4" />
+  <text x="405" y="392" font-family="Arial" font-size="10" text-anchor="middle" fill="white">Medication</text>
+  <rect x="435" y="375" width="30" height="25" fill="#33cccc" rx="4" ry="4" />
+  <text x="450" y="392" font-family="Arial" font-size="10" text-anchor="middle" fill="white">Device</text>
+  <!-- Footer -->
+<text x="400" y="480" font-family="Arial" font-size="16" font-style="italic" text-anchor="middle" fill="#666">Enabling seamless healthcare data exchange across systems</text>
+</svg>

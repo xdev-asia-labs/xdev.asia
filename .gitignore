@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# scratch / import artifacts
+/tmp/
+/hl7.akitect.io-main.zip
+
 # debug
 npm-debug.log*
 yarn-debug.log*

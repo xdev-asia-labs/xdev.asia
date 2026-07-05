@@ -112,6 +112,7 @@ export default function Header({
     const navLinks = [
         { href: localizedHref("/blog/"), label: activeStrings.blog },
         { href: localizedHref("/series/"), label: activeStrings.series },
+        { href: localizedHref("/series/architecture/hl7-fhir-r5-chuyen-sau/"), label: "HL7" },
         { href: "/luyen-thi/", label: activeStrings.exam_prep },
         { href: "/roadmap/", label: activeStrings.roadmap },
         { href: localizedHref("/games/tim-mau-vui/"), label: activeStrings.game },

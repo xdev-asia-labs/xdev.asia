@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800">
+  <!-- Background -->
+  <rect width="1000" height="800" fill="#FFFFFF"/>
+  
+  <!-- Title -->
+  <rect x="50" y="30" width="900" height="60" rx="10" fill="#3949AB"/>
+  <text x="500" y="70" font-family="Arial, sans-serif" font-size="26" font-weight="bold" text-anchor="middle" fill="#FFFFFF">Mô hình tài nguyên FHIR R5: Cấu trúc và Ứng dụng</text>
+  
+  <!-- HL7 FHIR Logo (Stylized) -->
+  <rect x="860" y="45" width="70" height="30" rx="5" fill="#FFFFFF"/>
+  <text x="895" y="67" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#3949AB">FHIR R5</text>
+  
+  <!-- Central Resource Structure -->
+  <rect x="400" y="120" width="200" height="80" rx="10" fill="#C5CAE9" stroke="#3949AB" stroke-width="2"/>
+  <text x="500" y="160" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#283593">Resource</text>
+  <text x="500" y="185" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#283593">Tài nguyên cốt lõi</text>
+  
+  <!-- Resource Properties -->
+  <rect x="200" y="240" width="600" height="60" rx="10" fill="#E8EAF6" stroke="#3949AB" stroke-width="2"/>
+  <text x="500" y="275" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#283593">Thuộc tính cơ bản: id, meta, text, extension, ...</text>
+  
+  <!-- Resource Categories -->
+  <rect x="50" y="340" width="900" height="60" rx="10" fill="#3949AB"/>
+  <text x="500" y="380" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#FFFFFF">Các nhóm tài nguyên FHIR R5</text>
+  
+  <!-- Clinical Resources -->
+  <rect x="70" y="430" width="250" height="280" rx="10" fill="#BBDEFB" stroke="#1976D2" stroke-width="2"/>
+  <text x="195" y="460" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1565C0">Nhóm lâm sàng</text>
+  
+  <rect x="90" y="480" width="210" height="40" rx="5" fill="#E3F2FD" stroke="#1976D2" stroke-width="1"/>
+  <text x="195" y="505" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#1565C0">Patient</text>
+  
+  <rect x="90" y="530" width="210" height="40" rx="5" fill="#E3F2FD" stroke="#1976D2" stroke-width="1"/>
+  <text x="195" y="555" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#1565C0">Observation</text>
+  
+  <rect x="90" y="580" width="210" height="40" rx="5" fill="#E3F2FD" stroke="#1976D2" stroke-width="1"/>
+  <text x="195" y="605" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#1565C0">Condition</text>
+  
+  <rect x="90" y="630" width="210" height="40" rx="5" fill="#E3F2FD" stroke="#1976D2" stroke-width="1"/>
+  <text x="195" y="655" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#1565C0">Procedure</text>
+  
+  <!-- Administrative Resources -->
+  <rect x="375" y="430" width="250" height="280" rx="10" fill="#C8E6C9" stroke="#388E3C" stroke-width="2"/>
+  <text x="500" y="460" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#2E7D32">Nhóm hành chính</text>
+  
+  <rect x="395" y="480" width="210" height="40" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="500" y="505" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2E7D32">Organization</text>
+  
+  <rect x="395" y="530" width="210" height="40" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="500" y="555" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2E7D32">Practitioner</text>
+  
+  <rect x="395" y="580" width="210" height="40" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="500" y="605" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2E7D32">Encounter</text>
+  
+  <rect x="395" y="630" width="210" height="40" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="500" y="655" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2E7D32">Location</text>
+  
+  <!-- Infrastructure Resources -->
+  <rect x="680" y="430" width="250" height="280" rx="10" fill="#FFECB3" stroke="#FFA000" stroke-width="2"/>
+  <text x="805" y="460" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#F57C00">Nhóm hạ tầng</text>
+  
+  <rect x="700" y="480" width="210" height="40" rx="5" fill="#FFF8E1" stroke="#FFA000" stroke-width="1"/>
+  <text x="805" y="505" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#F57C00">Bundle</text>
+  
+  <rect x="700" y="530" width="210" height="40" rx="5" fill="#FFF8E1" stroke="#FFA000" stroke-width="1"/>
+  <text x="805" y="555" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#F57C00">OperationOutcome</text>
+  
+  <rect x="700" y="580" width="210" height="40" rx="5" fill="#FFF8E1" stroke="#FFA000" stroke-width="1"/>
+  <text x="805" y="605" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#F57C00">CapabilityStatement</text>
+  
+  <rect x="700" y="630" width="210" height="40" rx="5" fill="#FFF8E1" stroke="#FFA000" stroke-width="1"/>
+  <text x="805" y="655" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#F57C00">Subscription</text>
+  
+  <!-- R5 New Features -->
+  <rect x="50" y="730" width="900" height="50" rx="10" fill="#D1C4E9" stroke="#673AB7" stroke-width="2"/>
+  <text x="500" y="760" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#4527A0">Tính năng mới R5: Kiểu dữ liệu mở rộng, MetadataResource, Mô hình sự kiện được cải tiến</text>
+  
+  <!-- Connection lines -->
+  <line x1="500" y1="200" x2="500" y2="240" stroke="#3949AB" stroke-width="2"/>
+  <line x1="500" y1="300" x2="500" y2="340" stroke="#3949AB" stroke-width="2"/>
+  <line x1="195" y1="400" x2="195" y2="430" stroke="#3949AB" stroke-width="2"/>
+  <line x1="500" y1="400" x2="500" y2="430" stroke="#3949AB" stroke-width="2"/>
+  <line x1="805" y1="400" x2="805" y2="430" stroke="#3949AB" stroke-width="2"/>
+  <line x1="500" y1="710" x2="500" y2="730" stroke="#3949AB" stroke-width="2"/>
+</svg>
